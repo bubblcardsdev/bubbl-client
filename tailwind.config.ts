@@ -49,9 +49,9 @@ export default {
     },
   },
 
-  backgroundSize: {
-    "100%": '100%',
-  },
+  // backgroundSize: {
+  //   "100%": '100%',
+  // },
   plugins: [
 
     function ({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string>>) => void }) {
