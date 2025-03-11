@@ -1,0 +1,70 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@import "../src/components/shopPage/bannerSection/bannerSection.css";
+@import "../src/components/footerPage/FooterPage.css";
+/* @import "~slick-carousel/slick/slick.css"; */
+@import "../src/components/contact/Contact.css";
+@import "../src/components/shopPage/cardSection/cardSection.css";
+@import "../src/components/shopPage/cardSection/cards/cards.css";
+
+/* @import "~slick-carousel/slick/slick-theme.css";   */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --MenuItemBgHover: #7D2FE2,;
+  --inter-font: "Inter", sans-serif;
+}
+
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+/* Hide all scrollbars but still allow scrolling */
+html, body {
+  overflow: auto;
+ /* Allow scrolling */
+  scrollbar-width: none;
+  font-family: var(--inter-font);
+ /* For Firefox */
+  ;
+}
+
+/* For Webkit browsers (Chrome, Safari) */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+  width:0;
+ /* Hide scrollbar */
+  ;
+}
+/* hidden Scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Light background */
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background:transparent; /* Gray thumb */
+  border-radius: 10px;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: transparent; /* Darker on hover */
+}
+
