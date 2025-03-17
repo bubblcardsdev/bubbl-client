@@ -1,0 +1,3 @@
+interface BreadCrumbsProps {
+    value: string;
+  }

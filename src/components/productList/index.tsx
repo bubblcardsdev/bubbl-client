@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import Footer from '../footerPage/footerPage'
 import BuleCard from '../../assets/product/productCardImg/basiccard.png'
@@ -7,10 +7,14 @@ import Bubbl_basic_card from './bubblBasicCard/bubblBasicCard'
 import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
 import Arrow_icon from '../../assets/icons/productIcon/productList_Arrow_icon'
+import BreadCrumbs from '../common/BreadCrumbs/BreadCrumbs';
+import { useRouter } from 'next/router';
+// import { log } from 'console';
 const CircleContainer = (props: any) => {
   const { colors } = props
   const [hovered, setHovered] = useState(false);
   const [currentImgae, setCurrentImage] = useState("primary")
+  
   return (
     <div
       className="relative max-w-[300px] z-10  "
@@ -55,6 +59,18 @@ const steps = [
   },
 ];
 const ProductList = () => {
+  const router = useRouter();
+   const [selectedCard,setSelectedCard] =useState<string>("Bubbl Basic")
+  useEffect(()=>{
+    if(router?.query?.id){
+  const cardType = Products.find((e)=>e.id.toString() === router?.query?.id)?.title || ""
+setSelectedCard(cardType)
+    }
+
+  },[])
+  
+console.log(router.query.id,"/path");
+
   const colors = [
     { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
     { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
@@ -106,45 +122,31 @@ const ProductList = () => {
       //   secondaryImage: MetalCardFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
+    {
+      id: 5,
+      name: "Socket",
+      title: "Bubbl Socket",
+      price: "Rs.799",
+      image: BuleCard,
+      discount: "18.77%",
+      colors: [],
+    },
+    {
+      id: 6,
+      name: "Tile",
+      title: "Bubbl Tile",
+      price: "Rs.1999",
+      image: BuleCard,
+      discount: "18.77%",
+      // secondaryImage: TileV2FrontBack,
+      colors: [],
+    },
   ];
   return (
     <>
-      <div className='max-w-[1300px] mx-auto p-3 mt-[80px] '>
-        <div className='ml-4 flex  items-center space-x-2'><a className='inter text-[14px] text-gray-400'>ProductList</a>
-          <span className='text-center '><Arrow_icon /></span>
-          <a className='inter text-[16px] text-black text-semibold'>Basic card</a>
-        </div>
-        {/* <div className="flex">
-          <div className=" w-full  rounded-lg  flex  gap-14">
-            <div className="w-full p-4 ">
-              <div className="relative bg-[#EFEFEF] rounded-2xl p-4 w-full">
-                <Image
-                  src={BuleCard}
-                  alt="Bubbl Card"
-                  width={400}
-                  height={400}
-                  className="rounded-md h-[350px] object-fill w-full "
-                />
-                <div className="flex justify-center mt-2">
-                  <div className="h-1 w-14 bg-gray-300 rounded-full mr-2 p-1"></div>
-                  <div className="h-1 w-14 bg-purple-500 rounded-full p-1"></div>
-                </div>
-              </div>
-              <p className="text-center text-sm mt-2">( Front View )</p>
-              <div className="mt-6 flex gap-4 justify-center items-centerF">
-                <button className="border border-black px-[55px] py-2 rounded-md md:text-nowrap sm:text-nowrap xs:text-nowrap">Add to cart</button>
-                <button className="bg-black text-white px-[55px] py-2 rounded-md">Buy now</button>
-              </div>
-            </div>
-            <div className='w-[80%]'>
-              right side
-              <Bubbl_basic_card />
-              <Bubbl_Full_custom />
-              <Bubbl_Name_custom />
-            </div>
-          </div>
-        </div> */}
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4">
+      <div className='max-w-[1300px] w-full mx-auto pt-[70px] sm:pt-[80px] md:pt-[8%] px-3 sm:px-4 md:px-6 pb-3'>
+        <BreadCrumbs  value={selectedCard}/>   
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-8 p-4 ">
           {/* Left Section - Image */}
           <div className="w-full md:w-1/2">
             <div className="relative bg-[#EFEFEF] rounded-2xl p-4 w-full">
@@ -193,43 +195,6 @@ const ProductList = () => {
             </div>
           </div>
         </section>
-        {/* <div className="w-full mt-10">
-          <>
-            <h2 className="text-xl sm:text-2xl font-bold inter text-[#333333] py-6">
-              Similar Items You Might Also Like
-            </h2>
-
-            <div className="flex space-x-4 overflow-x-auto md:grid md:grid-cols-4 sm:grid-cols-3 xs:grid-2 gap-4 my-4 scrollbar-hide  hide-scrollbar">
-              {Products.map((product) => (
-                <div key={product.id} className="card-parent-container flex-none w-[250px] md:w-auto ">
-                  <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 pb-2 mt-4 ">
-                    <div
-                      className="flex justify-center items-center">
-                      <Image src={product.image} alt={product.name} className="h-[200px] object-contain" />
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5">
-                        <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[16px]">{product.name}</p>
-                      </div>
-                      <div className="flex justify-center items-center relative border border-red-500">
-                        {product?.colors && product?.colors.length > 0 && <CircleContainer colors={product?.colors} />}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between pt-4">
-                    <div className="px-2">
-                      <h3 className="text-md text-[#9F9F9F] inter">{product.title}</h3>
-                      <p className="text-black inter font-[600] text-[18px]">{product.price}</p>
-                    </div>
-                    <div className="px-2">
-                      <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter">{product.discount}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        </div> */}
         <div className="w-full mt-10">
           <>
             <h2 className="text-xl sm:text-2xl font-bold inter text-[#333333] py-6">
@@ -239,7 +204,7 @@ const ProductList = () => {
             {/* Scrollable container for small screens */}
             <div className="flex space-x-4 overflow-x-auto md:grid md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-3 gap-4 my-4 scrollbar-hide hide-scrollbar">
               {Products.map((product) => (
-                <div key={product.id} className="card-parent-container flex-none w-[120px] sm:w-[180px] md:w-auto">
+                <div key={product.id} className="card-parent-container flex-none w-[120px] sm:w-[180px] md:w-auto" >
                   <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 pb-2 mt-4">
                     {/* Image - Always visible */}
                     <div className="flex justify-center items-center">

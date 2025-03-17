@@ -6,8 +6,8 @@ import Card from '../../assets/product/productCardImg/basiccard.png'
 const PaymentResponse = () => {
   return (
     <>
-      <div className='flex flex-col justify-center items-center h-screen w-full max-w-[1300px] mx-auto'>
-        <div className="bg-white p-4  mt-24   h-fit sm:px-6 xs:px-6 ">
+      <div className='flex flex-col justify-center items-center  w-full max-w-[1300px] mx-auto'>
+        <div className="bg-white p-4  pt-[80px] sm:px-6 xs:px-6 ">
           <div className="shadow-2xl  w-[380px] max-w-md text-center relative  rounded-t-2xl ">
             <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg- p-3 rounded-full border border-white shadow-lg">
               <CheckCircle className="text-green-400  w-8 h-8" size={24} />

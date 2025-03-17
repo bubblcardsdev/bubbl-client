@@ -86,7 +86,7 @@ function Cards() {
           image: FullCustomCard,
           discount: "18.77%",
           secondaryImage: FullCustomCardFrontBack,
-          colors: [],
+          colors: ["red","blue","white"],
         },
         {
           id: 2,
@@ -96,7 +96,7 @@ function Cards() {
           image: BubblBasicCardBlack,
           discount: "18.77%",
           secondaryImage: BubblBasicCardBlackFrontBack,
-          colors: [],
+          colors: ["red","blue","white"],
         },
         {
           id: 3,
@@ -106,7 +106,7 @@ function Cards() {
           image: MetalCard,
           discount: "18.77%",
           secondaryImage: MetalCardFrontBack,
-          colors: [],
+          colors: ["red","blue","white","black","gold","gray"],
         },
       ],
     },
@@ -121,7 +121,7 @@ function Cards() {
           image: BlueCard,
           discount: "18.77%",
           secondaryImage: BlueCardFrontBack,
-          colors: [],
+          colors: ["red","blue","white"],
         },
         {
           id: 5,
@@ -131,7 +131,7 @@ function Cards() {
           image: socket,
           discount: "18.77%",
           secondaryImage: socketFrontBack,
-          colors: [],
+          colors: ["red","blue","white"],
         },
         {
           id: 6,
@@ -141,7 +141,7 @@ function Cards() {
           image: TileV2,
           discount: "18.77%",
           secondaryImage: TileV2FrontBack,
-          colors: [],
+          colors: ["red","blue","white"],
         },
       ],
     },
@@ -170,25 +170,43 @@ function Cards() {
                 className="card-parent-container px-2 cursor-pointer"
                 onClick={() => handleCardClick(card.id)}
               >
-                <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 gap-x-6 pb-2">
-                  <div
-                    onMouseEnter={() => setHoverImage(card.id)}
-                    onMouseLeave={() => setHoverImage(null)}
-                    className="flex justify-center items-center px-2 py-2"
-                  >
-                    <Image
-                      src={card.image}
-                      alt={card.name}
-                      width={500}
-                      height={500}
-                      className="h-[300px] w-[500px] object-contain transition-transform duration-500"
-                      style={{
-                        opacity: hoverImage === card.id ? 0.9 : 1,
-                        transform: hoverImage === card.id ? "scale(1.05)" : "scale(1)",
-                      }}
-                    />
-                  </div>
-                </div>
+              <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 gap-x-6 pb-2">
+  <div
+    onMouseEnter={() => setHoverImage(card.id)}
+    onMouseLeave={() => setHoverImage(null)}
+    className="flex justify-center items-center px-2 py-2"
+  >
+    <Image
+      src={card.image}
+      alt={card.name}
+      width={500}
+      height={500}
+      className="h-[300px] w-[500px] object-contain transition-transform duration-500"
+      style={{
+        opacity: hoverImage === card.id ? 0.9 : 1,
+        transform: hoverImage === card.id ? "scale(1.05)" : "scale(1)",
+      }}
+    />
+  </div>
+
+  {/* Positioned span at bottom-left */}
+  <span className="absolute bottom-2 left-2 bg-white text-[#666666] px-3 py-1 rounded-md shadow text-xs font-medium">
+    {card?.name}
+  </span>
+  <span className="absolute bottom-5 right-2">
+    <CircleContainer colors={card?.colors} />
+  </span>
+</div>
+
+                <div className="flex justify-between w-full mt-2">
+  <div className="text-[#666666] text-[15px]">{card?.title}</div>
+  <div className="bg-[#9747FF] text-white  rounded-md font-semibold cursor-pointer hover:bg-[#7a34cc]">
+    <span className="text-xs p-2">
+    {card?.discount}
+    </span>
+  </div>
+</div>
+<span >{card?.price}</span>
               </div>
             ))}
           </div>

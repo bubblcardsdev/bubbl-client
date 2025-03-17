@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import BuleCard from '../../../assets/product/productCardImg/basiccard.png'
 import Image from 'next/image';
 
 const materials = [
