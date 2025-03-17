@@ -1,4 +1,4 @@
-import PaymentPage from '../../src/components/paymentResponse/paymentResponsePage'
+import PaymentPage from '../../src/components/paymentResponse'
 export default function Payment() {
 
   return (

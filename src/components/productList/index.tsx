@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react'
 import Image from 'next/image';
-import Footer from '../footerPage/footerPage'
+import Footer from '../footerPage/index'
 import BuleCard from '../../assets/product/productCardImg/basiccard.png'
-import Bubbl_basic_card from './bubblBasicCard/bubblBasicCard'
-import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
-import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
+import Bubbl_basic_card from './components/bubblBasicCard'
+// import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
+// import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
 import Arrow_icon from '../../assets/icons/productIcon/productList_Arrow_icon'
 const CircleContainer = (props: any) => {
   const { colors } = props
@@ -193,49 +193,11 @@ const ProductList = () => {
             </div>
           </div>
         </section>
-        {/* <div className="w-full mt-10">
-          <>
-            <h2 className="text-xl sm:text-2xl font-bold inter text-[#333333] py-6">
-              Similar Items You Might Also Like
-            </h2>
-
-            <div className="flex space-x-4 overflow-x-auto md:grid md:grid-cols-4 sm:grid-cols-3 xs:grid-2 gap-4 my-4 scrollbar-hide  hide-scrollbar">
-              {Products.map((product) => (
-                <div key={product.id} className="card-parent-container flex-none w-[250px] md:w-auto ">
-                  <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 pb-2 mt-4 ">
-                    <div
-                      className="flex justify-center items-center">
-                      <Image src={product.image} alt={product.name} className="h-[200px] object-contain" />
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5">
-                        <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[16px]">{product.name}</p>
-                      </div>
-                      <div className="flex justify-center items-center relative border border-red-500">
-                        {product?.colors && product?.colors.length > 0 && <CircleContainer colors={product?.colors} />}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between pt-4">
-                    <div className="px-2">
-                      <h3 className="text-md text-[#9F9F9F] inter">{product.title}</h3>
-                      <p className="text-black inter font-[600] text-[18px]">{product.price}</p>
-                    </div>
-                    <div className="px-2">
-                      <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter">{product.discount}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        </div> */}
         <div className="w-full mt-10">
           <>
             <h2 className="text-xl sm:text-2xl font-bold inter text-[#333333] py-6">
               Similar Items You Might Also Like
             </h2>
-
             {/* Scrollable container for small screens */}
             <div className="flex space-x-4 overflow-x-auto md:grid md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-3 gap-4 my-4 scrollbar-hide hide-scrollbar">
               {Products.map((product) => (
@@ -249,8 +211,6 @@ const ProductList = () => {
                         className="h-[80px] sm:h-[150px] object-contain"
                       />
                     </div>
-
-
                     {/* Details - Hidden on small screens */}
                     <div className="hidden sm:block">
                       <div className="flex justify-between items-center">
@@ -261,7 +221,6 @@ const ProductList = () => {
                           {product?.colors && product?.colors.length > 0 && <CircleContainer colors={product?.colors} />}
                         </div>
                       </div>
-                     
                     </div>
                   </div>
                   <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[16px] lg:hidden">{product.name}</p>
