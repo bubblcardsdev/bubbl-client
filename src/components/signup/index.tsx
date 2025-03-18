@@ -379,8 +379,10 @@ function Signup() {
                         className="inline-block animate-wave delay-100 text:4xl"
                             role="img"
                             aria-label="waving-hand" 
-                            src={Hand.src}
+                            src='/hand.png'
                             alt="Hand icon"
+                            width={20}
+                            height={20}
                         />
                         <p className="text-[10px] text-center text-white">
                             Welcome {formData.name}
@@ -388,12 +390,14 @@ function Signup() {
                     </div>
                     <div className=" mt-[14px] relative w-50 p-2 rounded-lg shadow-lg  overflow-hidden bg-[#141414]">
                         <div className=" relative w-full pt-4 rounded-lg shadow-lg  overflow-hidden  bg-yellow-100 ">
-                            <div className=" absolute inset-0 w-full h-full bg-opacity-40 bg-center filter blur-[15px] bg-cover" style={{ backgroundImage: `url(${Profile.src})` }}></div>
+                            <div className=" absolute inset-0 w-full h-full bg-opacity-40 bg-center filter blur-[15px] bg-cover" style={{ backgroundImage: `./profile.png})` }}></div>
                             <div className="relative z-10">
                                 <Image
-                                    src={Profile.src}
+                                    src='/profile.png'
                                     alt="Profile"
                                     className="w-20 h-20 rounded-full mx-auto mb-4"
+                                    width={100}
+                                    height={100}
                                 />
                                 <h2 className="text-[18px] font-[700] text-center text-black mb-2">{formData.name}</h2>
                                 <p className="text-sm text-center  text-black ">{formData.role}</p>

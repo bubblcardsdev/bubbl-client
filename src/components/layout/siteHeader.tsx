@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../constant/constant";
-import { BubbleLogo, CartIcon } from "../common/icons";
+import { BubblLogo, CartIcon } from "../common/icons";
 
 
 
@@ -26,7 +26,7 @@ const SiteHeader = () => {
       {/* Logo */}
       <div className="text-xl font-bold">
         <span className={`tracking-wide ${isDarkTheme ? "invert" : ""}`}>
-          <BubbleLogo />
+          <BubblLogo />
         </span>
       </div>
       

@@ -1,8 +1,8 @@
 'use client';
 import React from 'react'
-import BannerSection from '@/src/components/shopPage/bannerSection/bannerSection'
-import Cardsection from '@/src/components/shopPage/cardSection/cardSection'
-import Footer from '@/src/components/footerPage/footerPage'
+import BannerSection from './components/bannerSection'
+import Cardsection from './components/cardSection'
+import Footer from '../footerPage/index'
 
 function ShopPage() {
   return (
