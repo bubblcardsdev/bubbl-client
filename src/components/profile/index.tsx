@@ -1,9 +1,9 @@
 'use client';
 import React from 'react'
-import ProfileFreeTemplate from './Template/profileFreeTemplate'
-import ProfileProTemplateTwo from './Template/profileProTemplateTwo'
-import ProfileProTemplateThree from './Template/profileProTemplateThree';
-import ProfileProTemplateOne from './Template/profileProTemplateOne';
+import ProfileFreeTemplate from './components/profileFreeTemplate'
+import ProfileProTemplateTwo from './components/profileProTemplateFive'
+import ProfileProTemplateThree from './components/profileProTemplateFour';
+import ProfileProTemplateOne from './components/profileProTemplateOne';
 const ProfileTemplate = () => {
   return (
     <div className='bg-[#ccc]'>
