@@ -52,35 +52,35 @@ const LoginPage = () => {
 
         {/* Form Container */}
         <div className="w-full max-w-xs md:w-[400px] flex-grow flex-col justify-center px-4">
-          <h1 className="text-2xl md:text-3xl mb-2 font-bold inter">Welcome Aboard!</h1>
-          <p className="mb-4 text-[#606060] md:text-[14px] text-sm font-[500] inter">Welcome About! Please enter your details.</p>
+          <h1 className="text-2xl md:text-3xl mb-2 font-bold ">Welcome Aboard!</h1>
+          <p className="mb-4 text-[#606060] md:text-[14px] text-sm font-[500] ">Welcome About! Please enter your details.</p>
 
           <form className="w-full" onSubmit={handleSubmit}>
-            <label className="block text-sm md:text-[14px] font-medium text-[#909090] inter">Email</label>
+            <label className="block text-sm md:text-[14px] font-medium text-[#909090]">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
               value={loginForm.email}
               onChange={handleEmailChange}
-              className={`w-full p-2 rounded-[10px] mt-[2px] bg-[#262626] inter text-white focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.emailError ? 'border border-red-500' : ''}`}
+              className={`w-full p-2 rounded-[10px] mt-[2px] bg-[#262626] text-white focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.emailError ? 'border border-red-500' : ''}`}
             />
-            {errors.emailError && <p className="text-red-500 text-[12px] inter mt-[8px]">{errors.emailError}</p>}
+            {errors.emailError && <p className="text-red-500 text-[12px] mt-[8px]">{errors.emailError}</p>}
 
-            <label className="block text-sm md:text-[14px] mt-[14px] font-medium text-[#909090] inter">Password</label>
+            <label className="block text-sm md:text-[14px] mt-[14px] font-medium text-[#909090]">Password</label>
             <input
               type="password"
               placeholder="Enter your password"
               value={loginForm.password}
               onChange={handlePasswordChange}
-              className={`w-full p-2 rounded-[10px] mt-[2px] bg-[#262626] inter text-white focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.passwordError ? 'border border-red-500' : ''}`}
+              className={`w-full p-2 rounded-[10px] mt-[2px] bg-[#262626]  text-white focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.passwordError ? 'border border-red-500' : ''}`}
             />
-            {errors.passwordError && <p className="text-red-500 text-[12px] inter mt-[5px]">{errors.passwordError}</p>}
+            {errors.passwordError && <p className="text-red-500 text-[12px]  mt-[5px]">{errors.passwordError}</p>}
 
-            <a href="/forgot-password" className="text-[#4B2380] text-[14px] mb-4 block inter mt-[16px] font-[500]">Forgot password?</a>
+            <a href="/forgot-password" className="text-[#4B2380] text-[14px] mb-4 block  mt-[16px] font-[500]">Forgot password?</a>
 
             <button
               type="submit"
-              className="w-full p-2 inter bg-[#ac6dfe] text-white text-[14px] rounded-[10px] hover:bg-[#7939CC]focus:outline-none focus:ring-2 focus:ring-purple-500">
+              className="w-full p-2  bg-[#ac6dfe] text-white text-[14px] rounded-[10px] hover:bg-[#7939CC]focus:outline-none focus:ring-2 focus:ring-purple-500">
               Log in
             </button>
 
@@ -97,16 +97,16 @@ const LoginPage = () => {
               </button>
             </div>
 
-            <p className="text-center text-sm font-[500] mt-4 inter text-[#606060]">
-              Don’t have an account? <a href="/signup" className="text-[#4B2380] font-[500] inter">Sign up</a>
+            <p className="text-center text-sm font-[500] mt-4  text-[#606060]">
+              Don’t have an account? <a href="/signup" className="text-[#4B2380] font-[500] ">Sign up</a>
             </p>
           </form>
         </div>
 
         {/* Footer */}
         <div className="flex justify-between w-full text-gray-500 text-xs mt-auto py-4">
-          <p className='inter'>bubbl 2025</p>
-          <a href="mailto:help@bubbl.cards" className='inter'>help@bubbl.cards</a>
+          <p>bubbl 2025</p>
+          <a href="mailto:help@bubbl.cards" >help@bubbl.cards</a>
         </div>
       </div>
 

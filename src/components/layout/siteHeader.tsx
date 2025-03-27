@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
-import { themeObject } from "../constant/constant";
+import { themeObject } from "../common/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
 
 
@@ -31,16 +31,16 @@ const SiteHeader = () => {
       </div>
       
       {/* Desktop Menu */}
-      <div className="hidden md:flex justify-between space-x-[13%]">
+      <div className="hidden md:flex justify-between gap-5">
         {["Shop", "Plans", "About"].map((item) => (
           <div 
             key={item} 
-            className={`flex items-center justify-center h-9 w-20 rounded-md cursor-pointer transition-all duration-300 ${
+            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${
               isDarkTheme 
-                ? "hover:bg-[#333333]" // Updated hover color for black background
+                ? "hover:bg-[#333333]" 
                 : "hover:bg-[#F3F3F3]"
             }`}
-          >
+         onClick={()=>pathname.push(`/${item.toLowerCase()}`)} >
             <span className="font-bold">{item}</span>
           </div>
         ))}
@@ -54,12 +54,12 @@ const SiteHeader = () => {
           className="text-xl hover:text-gray-600"
           style={{ color: isDarkTheme ? "white" : "black" }}
         >
-          <span className={`${theme === "white" ? "invert" : ""}`}>
+          <span className={`${theme === "white" ? "invert" : ""}`} onClick={()=>pathname.push("/cart")}>
             <CartIcon />
           </span>
         </button>
         {/* Login Button */}
-        <button className="px-4 py-2 bg-purple-500 text-white font-semibold rounded hover:bg-purple-600">
+        <button className="px-8 py-2 bg-[#9747FF] text-white  rounded-[10px] hover:bg-purple-500" onClick={()=>pathname.push("/login")}>
           Login
         </button>
       </div>
@@ -79,17 +79,18 @@ const SiteHeader = () => {
       {/* Mobile Menu Drawer */}
      <div
   className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-    isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+    isMenuOpen ? "max-h-96" : "max-h-0"
   }`}
   style={{ backgroundColor: theme }}
 >
-  <div className="flex flex-col items-center space-y-2 ">
+  <div className="flex flex-col items-center space-y-2 py-[20px]">
     {["Shop", "Plans", "About", "Cart", "Login"].map((item) => (
       <div
         key={item}
-        className={`w-full px-6 py-2 text-center cursor-pointer transition-all duration-300 ${
+        className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${
           isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
         }`}
+        onClick={()=>pathname.push(`/${item.toLowerCase()}`)} 
       >
         <span className="font-bold">{item}</span>
       </div>

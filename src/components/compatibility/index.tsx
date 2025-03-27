@@ -46,31 +46,30 @@ const devices = [
   {
     brand: <SamsungIcon />,
     models: [
-     ' Note 8',
-'      Note 9',      
-    '  Note 10',
-      
-      'Note 10+',
-      
-    '  Note 20 Models',
-      
-      'and all future Samsung Phones',
+      " Note 8",
+      "      Note 9",
+      "  Note 10",
+
+      "Note 10+",
+
+      "  Note 20 Models",
+
+      "and all future Samsung Phones",
     ],
   },
   {
     brand: <Google />,
     models: [
-     ' Pixel/XL',
-      'Pixel 2/2XL',
-      
-      'Pixel 3/3XL',
-      
-      'Pixel 3A/3aXL',
-      
-      'Pixel 4',
-      
-     ' and all future Pixel Phones',
-    
+      " Pixel/XL",
+      "Pixel 2/2XL",
+
+      "Pixel 3/3XL",
+
+      "Pixel 3A/3aXL",
+
+      "Pixel 4",
+
+      " and all future Pixel Phones",
     ],
   },
   {
@@ -240,11 +239,11 @@ const CompatibilityPage = () => {
   };
   return (
     <section className=" bg-black text-white">
-      <div className=" bg-black text-white p-4 md:p-12 ">
+      <div className=" bg-black text-white p-0 md:p-12  ">
         <div className="max-w-[1300px] mx-auto mt-[80px] ">
-          <nav className="text-gray-400 text-sm mb-4 ">
+          {/* <nav className="text-gray-400 text-sm mb-4 ">
             Home &gt; Device List
-          </nav>
+          </nav> */}
           <h1 className="text-3xl md:text-4xl font-bold mb-4 mt-3">
             All Compatible Devices
           </h1>
@@ -286,8 +285,8 @@ const CompatibilityPage = () => {
             ))}
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </section>
   );
 };
