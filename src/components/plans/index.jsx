@@ -1,287 +1,220 @@
-"use client"
-import React, { useState } from 'react'
-import PricingPlan from './components/pricingPlans'
-import Footer from '../footerPage/index'
+"use client";
+import React, { useState } from "react";
+import PricingPlan from "./components/pricingPlans";
+import Footer from "../footerPage/index";
+import {FullArrowIcon,RightTickIcon,MessageIcon} from "../common/icons";
 function Plans() {
-  const [planIndex, setPlanIndex] = useState(0)
+  const [planIndex, setPlanIndex] = useState(0);
   const data = [
     {
-      name: 'Base price',
-      free: 'Free',
-      pro: '₹720/month',
-      custom: 'Custom'
+      name: "Base price",
+      free: "Free",
+      pro: "₹720/month",
+      custom: "Custom",
     },
     {
-      name: 'Monthly active users included',
-      free: '50',
-      pro: '6,000',
-      custom: 'Custom'
+      name: "Monthly active users included",
+      free: "50",
+      pro: "6,000",
+      custom: "Custom",
     },
     {
-      name: 'Monthly active users overage rate',
-      free: '-',
-      pro: '₹0.12 per user',
-      custom: 'Custom'
+      name: "Monthly active users overage rate",
+      free: "-",
+      pro: "₹0.12 per user",
+      custom: "Custom",
     },
     {
-      name: 'Monthly active users cap',
-      free: '50',
-      pro: '25,000',
-      custom: 'Unlimited'
+      name: "Monthly active users cap",
+      free: "50",
+      pro: "25,000",
+      custom: "Unlimited",
     },
     {
-      name: 'Simultaneous connections per room',
-      free: '10',
-      pro: '50',
-      custom: 'Custom'
+      name: "Simultaneous connections per room",
+      free: "10",
+      pro: "50",
+      custom: "Custom",
     },
     {
-      name: 'Simultaneous connections per project',
-      free: '1,000',
-      pro: '100,000',
-      custom: 'Unlimited'
+      name: "Simultaneous connections per project",
+      free: "1,000",
+      pro: "100,000",
+      custom: "Unlimited",
     },
     {
-      name: 'Projects',
-      free: '2',
-      pro: '100',
-      custom: '100'
+      name: "Projects",
+      free: "2",
+      pro: "100",
+      custom: "100",
     },
     {
-      name: 'Comments',
-      free: '✓',
-      pro: '✓',
-      custom: '✓'
+      name: "Mentions",
+      free: "✓",
+      pro: "✓",
+      custom: "✓",
     },
     {
-      name: 'Mentions',
-      free: '✓',
-      pro: '✓',
-      custom: '✓'
+      name: "Resolve threads",
+      free: "✓",
+      pro: "✓",
+      custom: "✓",
     },
     {
-      name: 'Resolve threads',
-      free: '✓',
-      pro: '✓',
-      custom: '✓'
+      name: "Emoji reactions",
+      free: "✓",
+      pro: "✓",
+      custom: "✓",
     },
     {
-      name: 'Emoji reactions',
-      free: '✓',
-      pro: '✓',
-      custom: '✓'
+      name: "Custom metadata",
+      free: "✓",
+      pro: "✓",
+      custom: "✓",
     },
-    {
-      name: 'Custom metadata',
-      free: '✓',
-      pro: '✓',
-      custom: '✓'
-    },
-  ]
+  ];
 
   const selectedIndex = (index) => {
-    setPlanIndex(index)
-  }
+    setPlanIndex(index);
+  };
   return (
     <div className="bg-black ">
       <div className="py-20 lg:px-16 md:px-14 sm:px-10 xs:px-1  flex flex-col gap-y-16 max-w-[1300px] mx-auto">
         <section id="plansBlackBg" className="flex flex-col justify-center">
           <div className=" text-center">
-            <p className="text-[#9747FF] inter p-4 text-2xl">Pricings</p>
-            <p className="text-white text-5xl font-bold inter ">
+            <p className="text-[#9747FF] p-4 text-2xl">Pricings</p>
+            <p className="text-white text-5xl font-bold ">
               Level up with Bubbl pro{" "}
             </p>
-            <p className="text-gray-400  mt-8 inter">
+            <p className="text-gray-400  mt-8">
               Use the core product for free, forever.{" "}
             </p>
           </div>
         </section>
         <PricingPlan />
         {/* table */}
-        <section  className=" bg-black text-gray-300 lg:block md:block sm:hidden xs:hidden">
-          <div className="max-w-7xl mx-auto">
+        <section className=" bg-black text-gray-300 lg:block md:block sm:hidden xs:hidden">
+          <div className="max-w-6xl mx-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b border-zinc-800 ">
                   <th className="p-4 text-left"></th>
-                  <th className="p-4 text-left">
+                  <th className="p-4 text-left w-[250px]">
                     <div className="space-y-2">
-                      <h2 className="text-xl font-semibold text-white inter">
+                      <h2 className="text-xl font-semibold text-white ">
                         Starter
                       </h2>
                       <a
                         href="#"
-                        className="text-sm text-gray-400 hover:text-white inline-flex items-center inter"
+                        className="text-sm text-gray-400 hover:text-white inline-flex items-center underline"
                       >
                         Start building for free
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 ml-1"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </a>
+                        <span className="px-2"><FullArrowIcon /></span>
+                        </a>
                     </div>
                   </th>
-                  <th className="p-4 text-left bg-[#0F0F10] rounded-t-lg">
+                  <th className="p-4 text-left bg-[#0F0F10] rounded-t-lg border-t-white w-[250px]">
                     <div className="space-y-2">
                       <h2 className="text-xl font-semibold text-white">Pro</h2>
                       <a
                         href="#"
-                        className="text-sm text-gray-400 hover:text-white inline-flex items-cente inter"
+                        className="text-sm text-gray-400 hover:text-white inline-flex items-center underline "
                       >
                         Sign up
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 ml-1"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
+                       <span className="px-2"><FullArrowIcon /></span>
+
                       </a>
                     </div>
                   </th>
-                  <th className="p-4 text-left">
+                  <th className="p-4 text-left w-[250px]">
                     <div className="space-y-2 ">
-                      <h2 className="text-xl font-semibold text-white inter">
+                      <h2 className="text-xl font-semibold text-white ">
                         Enterprise
                       </h2>
                       <a
                         href="#"
-                        className="text-sm text-gray-400 hover:text-white inline-flex items-center inter"
+                        className="text-sm text-gray-400 hover:text-white inline-flex items-center underline"
                       >
                         Contact us
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 ml-1"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </a>
+                        <span className="px-2"><FullArrowIcon /></span>
+                        </a>
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Base price</td>
-                  <td className="p-4 inter">Free</td>
-                  <td className="p-4 bg-[#1D1D1D] inter">₹720/month</td>
-                  <td className="p-4 inter">Custom</td>
+                  <td className="p-4">Base price</td>
+                  <td className="p-4">Free</td>
+                  <td className="p-4 bg-[#0F0F10]">₹720/month</td>
+                  <td className="p-4">Custom</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Monthly active users included</td>
-                  <td className="p-4 inter">50</td>
-                  <td className="p-4 bg-[#1D1D1D] inter">6,000</td>
-                  <td className="p-4 inter">Custom</td>
+                  <td className="p-4">Monthly active users included</td>
+                  <td className="p-4 ">50</td>
+                  <td className="p-4 bg-[#0F0F10] ">6,000</td>
+                  <td className="p-4">Custom</td>
                 </tr>
-                <tr className="border-b inter border-zinc-800 ">
-                  <td className="p-4 inter">
-                    Monthly active users overage rate
-                  </td>
-                  <td className="p-4 inter">-</td>
-                  <td className="p-4 inter bg-[#1D1D1D]">₹0.12 per user</td>
-                  <td className="p-4 inter">Custom</td>
-                </tr>
-                <tr className="border-b border-zinc-800  inter">
-                  <td className="p-4 inter">Monthly active users cap</td>
-                  <td className="p-4 inter">50</td>
-                  <td className="p-4 inter bg-[#1D1D1D]">25,000</td>
-                  <td className="p-4 inter">Unlimited</td>
-                </tr>
-                <tr className="border-b inter border-zinc-800 ">
-                  <td className="p-4 inter">
-                    Simultaneous connections per room
-                  </td>
-                  <td className="p-4 inter">10</td>
-                  <td className="p-4 inter bg-[#1D1D1D]">50</td>
-                  <td className="p-4 inter">Custom</td>
-                </tr>
-                <tr className="border-b inter border-zinc-800 ">
-                  <td className="p-4 inter">
-                    Simultaneous connections per project
-                  </td>
-                  <td className="p-4 inter">1,000</td>
-                  <td className="p-4 inter bg-[#1D1D1D]">100,000</td>
-                  <td className="p-4 inter">Unlimited</td>
+                <tr className="border-b  border-zinc-800 ">
+                  <td className="p-4 ">Monthly active users overage rate</td>
+                  <td className="p-4">-</td>
+                  <td className="p-4  bg-[#0F0F10]">₹0.12 per user</td>
+                  <td className="p-4 ">Custom</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Projects</td>
-                  <td className="p-4 inter">2</td>
-                  <td className="p-4 inter bg-[#1D1D1D]">100</td>
-                  <td className="p-4 inter">100</td>
+                  <td className="p-4">Monthly active users cap</td>
+                  <td className="p-4">50</td>
+                  <td className="p-4  bg-[#0F0F10]">25,000</td>
+                  <td className="p-4 ">Unlimited</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4">
-                    <div className="flex items-center">
-                      <span className="mr-2 inter">Comments</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-gray-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  </td>
-                  <td className="p-4">✓</td>
-                  <td className="p-4 bg-[#1D1D1D]">✓</td>
-                  <td className="p-4">✓</td>
+                  <td className="p-4 ">Simultaneous connections per room</td>
+                  <td className="p-4 ">10</td>
+                  <td className="p-4  bg-[#0F0F10]">50</td>
+                  <td className="p-4 ">Custom</td>
+                </tr>
+                <tr className="border-b  border-zinc-800 ">
+                  <td className="p-4 ">Simultaneous connections per project</td>
+                  <td className="p-4 ">1,000</td>
+                  <td className="p-4  bg-[#0F0F10]">100,000</td>
+                  <td className="p-4 ">Unlimited</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Mentions</td>
-                  <td className="p-4">✓</td>
-                  <td className="p-4 bg-[#1D1D1D]">✓</td>
-                  <td className="p-4">✓</td>
+                  <td className="p-4 ">Projects</td>
+                  <td className="p-4 ">2</td>
+                  <td className="p-4  bg-[#0F0F10]">100</td>
+                  <td className="p-4">100</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Resolve threads</td>
-                  <td className="p-4">✓</td>
-                  <td className="p-4 bg-[#1D1D1D]">✓</td>
-                  <td className="p-4">✓</td>
+                  <td className="p-4 i">Mentions</td>
+                  <td className="p-4">&#10003;</td>
+                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4">&#10003;</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Emoji reactions</td>
-                  <td className="p-4">✓</td>
-                  <td className="p-4 bg-[#1D1D1D]">✓</td>
-                  <td className="p-4">✓</td>
+                  <td className="p-4 ">Resolve threads</td>
+                  <td className="p-4">&#10003;</td>
+                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4">&#10003;</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
-                  <td className="p-4 inter">Custom metadata</td>
-                  <td className="p-4">✓</td>
-                  <td className="p-4 bg-[#1D1D1D]">✓</td>
-                  <td className="p-4">✓</td>
+                  <td className="p-4 ">Emoji reactions</td>
+                  <td className="p-4">&#10003;</td>
+                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4">&#10003;</td>
+                </tr>
+                <tr className="border-b border-zinc-800 ">
+                  <td className="p-4 ">Custom metadata</td>
+                  <td className="p-4">&#10003;</td>
+                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4">&#10003;</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </section>
         {/* moblie response */}
-        <section
-          className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide"
-        >
+        <section className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide">
           {/* Sticky Buttons */}
           <div className="lg:hidden md:hidden sm:flex xs:flex justify-between items-center sm:px-4 xs:px-[5px] xs:gap-x-2 sticky top-0 z-10 bg-black py-2">
             <button
@@ -322,12 +255,12 @@ function Plans() {
                   {planIndex == 0 && (
                     <th className="p-4 text-center">
                       <div className="space-y-2">
-                        <h2 className="text-xl font-semibold text-white inter">
+                        <h2 className="text-xl font-semibold text-white">
                           Starter
                         </h2>
                         <a
                           href="#"
-                          className="text-sm text-gray-400 hover:text-white inline-flex items-center inter"
+                          className="text-sm text-gray-400 hover:text-white inline-flex items-center "
                         >
                           Start building for free
                           <svg
@@ -354,7 +287,7 @@ function Plans() {
                         </h2>
                         <a
                           href="#"
-                          className="text-sm text-gray-400 hover:text-white inline-flex items-cente inter"
+                          className="text-sm text-gray-400 hover:text-white inline-flex items-cente "
                         >
                           Sign up
                           <svg
@@ -376,12 +309,12 @@ function Plans() {
                   {planIndex == 2 && (
                     <th className="p-4 text-center">
                       <div className="space-y-2">
-                        <h2 className="text-xl font-semibold text-white inter">
+                        <h2 className="text-xl font-semibold text-white ">
                           Enterprise
                         </h2>
                         <a
                           href="#"
-                          className="text-sm text-gray-400 hover:text-white inline-flex items-center inter"
+                          className="text-sm text-gray-400 hover:text-white inline-flex items-center "
                         >
                           Contact us
                           <svg
@@ -408,21 +341,15 @@ function Plans() {
                   data?.map((value, index) => {
                     return (
                       <tr key={index}>
-                        <td className="p-4 inter">{value?.name}</td>
+                        <td className="p-4 ">{value?.name}</td>
                         {planIndex == 0 && (
-                          <td className="p-4 inter text-center">
-                            {value?.free}
-                          </td>
+                          <td className="p-4  text-center">{value?.free}</td>
                         )}
                         {planIndex == 1 && (
-                          <td className="p-4 inter text-center">
-                            {value?.pro}
-                          </td>
+                          <td className="p-4  text-center">{value?.pro}</td>
                         )}
                         {planIndex == 2 && (
-                          <td className="p-4 inter text-center">
-                            {value?.custom}
-                          </td>
+                          <td className="p-4 text-center">{value?.custom}</td>
                         )}
                       </tr>
                     );
@@ -432,7 +359,7 @@ function Plans() {
           </div>
         </section>
         {/* search */}
-        <div className=" bg-[rgb(11,11,11)] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
+        <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
           <div className="w-full">
             <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
               Join 2,000+ Bubbl Community
@@ -466,11 +393,12 @@ function Plans() {
             </p>
           </div>
         </div>
+        <div className="bg-black ">
+          <Footer />
+        </div>
       </div>
-      {/* footer */}
-      <Footer />
     </div>
-  )
+  );
 }
 
-export default Plans
+export default Plans;

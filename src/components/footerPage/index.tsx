@@ -4,8 +4,8 @@ import {BubblLogo,CallIcon,MailIcon,GitIcon,LinkedinIcon,TwitterIcon,FacebookIco
 
 function productFooterSection() {
   return (
-    <section className="bg-black mt-5 px-[10vw] py-[5vh] md:mt-10 md:px-[26px]">
-      <footer className="bg-black text-white p-0 max-w-[1300px] mx-auto ">
+    <section className="mt-5  py-[5vh] md:mt-10  max-w-[1300px] mx-auto bg-black">
+      <footer className=" text-white">
         <div className="w-full flex flex-wrap gap-y-[6vh] justify-between">
           {/* Left Section */}
           <div className="flex flex-col gap-[5vh]">
@@ -14,23 +14,24 @@ function productFooterSection() {
               Design amazing digital experiences that create more happy in the
               world.
             </p>
-            <div className="grid xs:grid-cols-2 sm:grid-cols-3 xl:grid-cols-6  gap-[15px] w-full text-['#E4E7EC'] ">
-              <a href="#" className="hover:text-white">
+            <div className="sm:grid xs:grid xs:grid-cols-2 sm:grid-cols-3 xl:flex  xl:gap-[2rem] sm:gap-[15px] xs:gap-[15px] w-full text-['#E4E7EC'] ">
+            {/* <div className="w-full text-['#E4E7EC'] flex gap-[2rem] md:flex-row sm:flex-row xs:flex-col"> */}
+              <a href="/shop" className="hover:text-white">
                 Shop
               </a>
-              <a href="#" className="hover:text-white">
+              <a href="/plans" className="hover:text-white">
                 Plans
               </a>
               <a href="#" className="hover:text-white">
                 How it Works
               </a>
-              <a href="#" className="hover:text-white">
+              <a href="/compatibility" className="hover:text-white">
                 Compatability
               </a>
               <a href="#" className="hover:text-white">
                 Our Story
               </a>
-              <a href="#" className="hover:text-white">
+              <a href="/contact" className="hover:text-white">
                 Contact Us
               </a>
             </div>
@@ -73,9 +74,9 @@ function productFooterSection() {
           <p className="text-['#98A2B3']">Bubbl 2024. All rights reserved</p>
           <p className="text-['#98A2B3']">Powered By: XPULSAR TECHNOLOGIES PVT. LTD</p>
           <div className="flex flex-row gap-[15px]">
-            <p className="text-['#98A2B3']">Terms and conditions</p>
-            <p className="text-['#98A2B3']">Privacy Policy</p>
-            <p className="text-['#98A2B3']">Refund Policy</p>
+            <a className="text-['#98A2B3']">Terms and conditions</a>
+            <a className="text-['#98A2B3']">Privacy Policy</a>
+            <a className="text-['#98A2B3']">Refund Policy</a>
           </div>
         </div>
       </footer>

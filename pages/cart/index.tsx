@@ -1,8 +1,9 @@
-import Cart from '../../src/components/cart'
+import SiteLayout from "@/src/components/layout/siteLayout";
+import Cart from "../../src/components/cart";
 export default function CartPage() {
-
   return (
-        <Cart/>
-  )
-
-} 
+    <SiteLayout>
+      <Cart />
+    </SiteLayout>
+  );
+}

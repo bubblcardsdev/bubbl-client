@@ -126,7 +126,7 @@ function Signup() {
       }, [step, formData]);
     return (
 
-        <div className="flex h-screen flex-col md:flex-row font-inter overflow-hidden">
+        <div className="flex h-screen flex-col md:flex-row  overflow-hidden">
             <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-8 h-full">
                 <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
                     <Bubbl_logo />
@@ -142,32 +142,32 @@ function Signup() {
                     <div className="text-start mb-2">
                         {step === 1 && (
                             <>
-                                <h1 className="text-2xl font-bold  inter">Welcome Aboard!</h1>
-                                <p className="text-[#606060] text-sm font-[500] inter mt-[10px] leading-[1.3]">
+                                <h1 className="text-2xl font-bold  ">Welcome Aboard!</h1>
+                                <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
                                     Let's set up your account for a seamless experience
                                 </p>
                             </>
                         )}
                         {step === 2 && (
                             <>
-                                <h1 className="text-2xl font-bold  inter">Your Work, Your Way</h1>
-                                <p className="text-[#606060] text-sm font-[500] inter mt-[10px] leading-[1.3]">
+                                <h1 className="text-2xl font-bold ">Your Work, Your Way</h1>
+                                <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
                                     Describe your work to customize tools and resources
                                 </p>
                             </>
                         )}
                         {step === 3 && (
                             <>
-                                <h1 className="text-2xl font-bold inter">Let's Make Connection Simple</h1>
-                                <p className="text-[#606060] text-sm font-[500] inter mt-[10px] leading-[1.3]">
+                                <h1 className="text-2xl font-bold ">Let's Make Connection Simple</h1>
+                                <p className="text-[#606060] text-sm font-[500] mt-[10px] leading-[1.3]">
                                     Share your contact info to ensure smooth effortless connectivity
                                 </p>
                             </>
                         )}
                         {step === 4 && (
                             <>
-                                <h1 className="text-2xl font-bold inter">You're All Set</h1>
-                                <p className="text-[#606060] text-sm font-[500] inter mt-[10px] leading-[1.3]">
+                                <h1 className="text-2xl font-bold ">You're All Set</h1>
+                                <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
                                     Now, save your card by signing up below. Welcome to the future of networking.
                                 </p>
                             </>
@@ -178,7 +178,7 @@ function Signup() {
                             <div className="mb-6 mt-[30px]">
                                 <label
                                     htmlFor="name"
-                                    className="block text-sm font-medium text-[#909090] mb-2 inter "
+                                    className="block text-sm font-medium text-[#909090] mb-2 "
                                 >
                                     Full Name*
                                 </label>
@@ -187,12 +187,12 @@ function Signup() {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className={`w-full p-[10px]  rounded-[10px] bg-[#262626] inter font-[5px] text-gray-400 focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.name ? "border border-red-500" : ""
+                                    className={`w-full p-[10px]  rounded-[10px] bg-[#262626]  font-[5px] text-gray-400 focus:outline-none pl-[15px] placeholder:text-[13px] placeholder:text-[#666161] ${errors.name ? "border border-red-500" : ""
                                         }`}
                                     placeholder="Enter your name"
                                 />
                                 {errors.name && (
-                                    <p className="text-red-500 text-sm inter mt-1">{errors.name}</p>
+                                    <p className="text-red-500 text-sm  mt-1">{errors.name}</p>
                                 )}
                             </div>
                         )}
@@ -201,7 +201,7 @@ function Signup() {
                                 <div className="mb-6 mt-[20px]">
                                     <label
                                         htmlFor="role"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="ck text-sm font-medium text-[#909090] mb-2"
                                     >
                                         Your Role *
                                     </label>
@@ -211,7 +211,7 @@ function Signup() {
                                         value={formData.role}
                                         onChange={handleChange}
                                         placeholder="Enter your role"
-                                        className={`w-full p-[10px] rounded-[10px] inter bg-[#262626] text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.role ? "border border-red-500" : ""
+                                        className={`w-full p-[10px] rounded-[10px]  bg-[#262626] text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.role ? "border border-red-500" : ""
                                             }`}
                                     />
                                     {errors.role && (
@@ -221,7 +221,7 @@ function Signup() {
                                 <div className="mb-6 mt-[20px]">
                                     <label
                                         htmlFor="companyName"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="block text-sm font-medium text-[#909090] mb-2 "
                                     >
                                         Company Name *
                                     </label>
@@ -245,7 +245,7 @@ function Signup() {
                                 <div className="mb-6 mt-[20px]">
                                     <label
                                         htmlFor="email"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="block text-sm font-medium text-[#909090] mb-2 "
                                     >
                                         Email *
                                     </label>
@@ -255,17 +255,17 @@ function Signup() {
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="Enter your email"
-                                        className={`w-full p-[10px] rounded-[10px] bg-[#262626] text-white inter focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.email ? "border border-red-500" : ""
+                                        className={`w-full p-[10px] rounded-[10px] bg-[#262626] text-white  focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.email ? "border border-red-500" : ""
                                             }`}
                                     />
                                     {errors.email && (
-                                        <p className="text-red-500 text-[10px]  inter mt-1">{errors.email}</p>
+                                        <p className="text-red-500 text-[10px]  mt-1">{errors.email}</p>
                                     )}
                                 </div>
                                 <div className="mb-6 mt-[20px]">
                                     <label
                                         htmlFor="mobile"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="block text-sm font-medium text-[#909090] mb-2 "
                                     >
                                         Mobile Number *
                                     </label>
@@ -275,11 +275,11 @@ function Signup() {
                                         value={formData.mobile}
                                         onChange={handleChange}
                                         placeholder="Enter your mobile number"
-                                        className={`w-full p-[10px] rounded-[10px] bg-[#262626] inter  text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.mobile ? "border border-red-500" : ""
+                                        className={`w-full p-[10px] rounded-[10px] bg-[#262626]   text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.mobile ? "border border-red-500" : ""
                                             }`}
                                     />
                                     {errors.mobile && (
-                                        <p className="text-red-500 text-sm inter mt-1">{errors.mobile}</p>
+                                        <p className="text-red-500 text-sm  mt-1">{errors.mobile}</p>
                                     )}
                                 </div>
 
@@ -291,7 +291,7 @@ function Signup() {
                                 <div className="mb-6 mt-[20px]">
                                     <label
                                         htmlFor="email"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="block text-sm font-medium text-[#909090] mb-2 "
                                     >
                                         Email *
                                     </label>
@@ -301,17 +301,17 @@ function Signup() {
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="Enter your email"
-                                        className={`w-full p-2 rounded-[10px] bg-[#262626] inter text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.email ? "border border-red-500" : ""
+                                        className={`w-full p-2 rounded-[10px] bg-[#262626]  text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.email ? "border border-red-500" : ""
                                             }`}
                                     />
                                     {errors.email && (
-                                        <p className="text-red-500 inter text-sm mt-1">{errors.email}</p>
+                                        <p className="text-red-500  text-sm mt-1">{errors.email}</p>
                                     )}
                                 </div>
                                 <div className="mb-6">
                                     <label
                                         htmlFor="mobile"
-                                        className="block text-sm font-medium text-[#909090] mb-2 inter"
+                                        className="block text-sm font-medium text-[#909090] mb-2 "
                                     >
                                         Password *
                                     </label>
@@ -321,11 +321,11 @@ function Signup() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         placeholder="Enter your password"
-                                        className={`w-full p-2 rounded-[10px] bg-[#262626] inter text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.password ? "border border-red-500" : ""
+                                        className={`w-full p-2 rounded-[10px] bg-[#262626]  text-white focus:outline-none placeholder:text-[13px] pl-[15px] placeholder:text-[#666161] ${errors.password ? "border border-red-500" : ""
                                             }`}
                                     />
                                     {errors.password && (
-                                        <p className="text-red-500 text-sm inter mt-1">{errors.password}</p>
+                                        <p className="text-red-500 text-sm  mt-1">{errors.password}</p>
                                     )}
                                 </div>
                             </>
@@ -334,12 +334,12 @@ function Signup() {
                         {step === 4 ?
                             <button
                                 type="submit"
-                                className="w-full p-[10px] inter bg-[#7939CC] rounded-[10px] text-white text-[14px]  hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                className="w-full p-[10px]  bg-[#7939CC] rounded-[10px] text-white text-[14px]  hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
                             >
                                 Sign Up </button> :
                             <button
                                 type="submit"
-                                className="w-full p-[12px] inter bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                className="w-full p-[12px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
                             >
                                 Continue
                             </button>}
@@ -359,16 +359,16 @@ function Signup() {
                             </div>
                         )}
                         {(step === 4 || step === 1) && (
-                            <p className="text-center text-sm font-[500] mt-4 inter text-[#606060]">
-                                Already have an account? <a href="/signup" className="text-[#4B2380] inter">Login</a>
+                            <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
+                                Already have an account? <a href="/signup" className="text-[#4B2380] ">Login</a>
                             </p>
                         )}
 
                     </form>
                 </div>
                 <div className="flex justify-between w-full text-gray-500 text-xs mt-auto py-4 ">
-                    <p className='inter'>bubbl 2025</p>
-                    <a href="mailto:help@bubbl.cards" className='inter'>help@bubbl.cards</a>
+                    <p >bubbl 2025</p>
+                    <a href="mailto:help@bubbl.cards" >help@bubbl.cards</a>
                 </div>
             </div>
             {/* Right side profile page */}

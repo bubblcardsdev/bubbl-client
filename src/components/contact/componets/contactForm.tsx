@@ -91,35 +91,35 @@ const ContactForm = () => {
     <section  className="w-full bg-black flex flex-col items-center justify-center">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h3 className='text-[#9747FF] inter text-2xl'>Contact us</h3>
-          <h2 className="text-white text-3xl font-semibold mb-2 inter py-4">Get in touch</h2>
-          <p className="text-gray-400 inter">We'd love to hear from you. Please fill out this form.</p>
+          <h3 className='text-[#9747FF] text-2xl'>Contact us</h3>
+          <h2 className="text-white text-3xl font-semibold mb-2  py-4">Get in touch</h2>
+          <p className="text-gray-400 ">We'd love to hear from you. Please fill out this form.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="firstName" className="block text-sm text-gray-400 mb-1 inter">First name</label>
+              <label htmlFor="firstName" className="block text-sm text-gray-400 mb-1">First name</label>
               <input
                 type="text"
                 id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full bg-[#111111] inter rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                 placeholder="First name"
               />
               {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
             </div>
             <div>
-              <label htmlFor="lastName" className="block text-sm text-gray-400 mb-1 inter">Last name</label>
+              <label htmlFor="lastName" className="block text-sm text-gray-400 mb-1 ">Last name</label>
               <input
                 type="text"
                 id="lastName"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full bg-[#111111] inter rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                 placeholder="Last name"
               />
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -127,24 +127,24 @@ const ContactForm = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-400 mb-1 inter">Email</label>
+            <label htmlFor="email" className="block text-sm text-gray-400 mb-1">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#111111] inter rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+              className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
               placeholder="you@company.com"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm text-gray-400 mb-1 inter">Phone number</label>
+            <label htmlFor="phone" className="block text-sm text-gray-400 mb-1 ">Phone number</label>
             <div className="flex">
-              <select className="bg-[#111111] inter rounded-l-lg border border-none px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 border-r-0">
-                <option className='text-gray inter'>IND</option>
+              <select className="bg-[#111111] text-[14px] rounded-l-lg border border-none px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 border-r-0">
+                <option className='text-gray'>IND</option>
               </select>
               <input
                 type="tel"
@@ -152,7 +152,7 @@ const ContactForm = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full bg-[#111111] inter rounded-r-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-r-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
                 placeholder="+91 0000-00000"
               />
             </div>
@@ -160,14 +160,14 @@ const ContactForm = () => {
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-sm text-gray-400 mb-1 inter">Message</label>
+            <label htmlFor="message" className="block text-sm text-gray-400 mb-1 ">Message</label>
             <textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              className="w-full bg-[#111111] inter rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+              className="w-full bg-[#111111]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
             />
             {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
           </div>
@@ -179,11 +179,11 @@ const ContactForm = () => {
               name="privacy"
               checked={formData.privacy}
               onChange={handleChange}
-              className="rounded bg-[#111111] inter border-none text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+              className="rounded bg-[#111111]  border-none text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
             />
-            <label htmlFor="privacy" className="ml-2 text-sm text-gray-400 inter">
+            <label htmlFor="privacy" className="ml-2 text-sm text-gray-400 ">
               You agree to our friendly{' '}
-              <a href="/privacy-policy" className="text-gray-400 underline inter hover:text-purple-500">
+              <a href="/privacy-policy" className="text-gray-400 underline  hover:text-purple-500">
                 privacy policy
               </a>.
             </label>
@@ -192,7 +192,7 @@ const ContactForm = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 px-4 rounded-lg transition-colors inter"
+            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 px-4 rounded-lg transition-colors "
           >
             Send message
           </button>

@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
-// import './Contact.css'
 import ContactForm from "./componets/contactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Footer from "../footerPage/index";
-// import { Mail_icon } from "../common/icons";
 function ContactPage() {
   const [email, setEmail] = useState("");
   const handleSubmit = (e: any) => {
@@ -12,8 +10,8 @@ function ContactPage() {
     console.log("Email submitted:", email);
   };
   return (
-    <section className="w-full bg-[#000000] flex flex-col gap-[50px] ">
-      <div className="flex flex-col gap-[70px] pt-[20vh] px-[10vw]">
+    <section className="w-full bg-[#000000] flex flex-col gap-[50px]  ">
+      <div className="flex flex-col gap-[70px] pt-[20vh]  px-[3.5vw] max-w-[1300px] mx-auto w-full">
         <div className="text-center ">
           <h3 className="text-[#9747FF] text-3xl text-bold ">Contact us</h3>
           <p className="text-white lg:text-5xl font-bold mt-8 md:text-4xl sm:text-2xl xs:text-[26px]">
@@ -74,12 +72,12 @@ function ContactPage() {
           </div>
         </div>
         <ContactForm />
-        <div className=" bg-[rgb(11,11,11)] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14 mt-10">
+          <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14 ">
           <div className="w-full">
-            <h2 className="text-3xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
+            <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
               Join 2,000+ Bubbl Community
             </h2>
-            <p className="text-gray-400 text-[18px] tracking-[1px] pt-2 w-full  lg:text-left md:text-center sm:text-center xs:text-center text-sm">
+            <p className="text-gray-400 pt-2 w-full tracking-[1px] lg:text-left md:text-center sm:text-center xs:text-center text-sm">
               Stay in the loop with everything you need to know.
             </p>
           </div>
@@ -100,16 +98,18 @@ function ContactPage() {
                 Subscribe
               </button>
             </div>
-            <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full">
-              We care about your data in our{" "}
+            <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full ">
+              We care about your data in our
               <a href="#" className="underline hover:text-gray-300 ">
                 privacy policy
               </a>
             </p>
           </div>
         </div>
+        <div className="bg-black">
+        <Footer />
+        </div>
       </div>
-      <Footer />
     </section>
   );
 }
