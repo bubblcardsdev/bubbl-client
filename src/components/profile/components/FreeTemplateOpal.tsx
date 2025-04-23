@@ -20,7 +20,7 @@ import {
   Instagram_icon,
 } from "../../common/icons";
 
-function Profile() {
+const FreeTemplateOpal=()=>{
   const socialMedia = [
     { name: "Instagram", username: "@user name", icon: "/instagram.png" },
     { name: "Twitter", username: "@user name", icon: "/twitter.png" },
@@ -212,7 +212,8 @@ function Profile() {
                   <Googlepay_icon />
                 </div>
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
-                  <Phonepay_icon />
+                  <Phonepay_icon color='#8D00D2'/>
+                              
                 </div>
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
                   <Paytm_icon />
@@ -238,4 +239,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default FreeTemplateOpal;

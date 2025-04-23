@@ -19,7 +19,7 @@ import {
   FacebookFill_icon,
 } from "../../common/icons";
 import Logo from "../../../assets/product/productCardImg/Bubbl_band.png";
-const profileProTemplateTwo = () => {
+const ProTemplateSpahire = () => {
   const [openSection, setOpenSection] = useState("");
   const toggleSection = (section: any) => {
     setOpenSection(openSection === section ? "" : section);
@@ -33,12 +33,12 @@ const profileProTemplateTwo = () => {
       <div className="px-6 py-8 w-full space-y-3 bg-white">
         <div className="relative rounded-lg w-fit h-34 bg-[#ccc] flex items-center flex-row border">
           {/* Text Content */}
-          <div className="relative w-[300px] h-34 p-2">
+          <div className="relative w-[320px] h-34 p-2">
             <p className="text-lg font-bold text-purple-600">Your Name</p>
             <p className="text-[16px] text-gray-700">Designation</p>
             <p className="text-[14px] text-gray-600 w-[80%] ">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eius roundemod tempor incididunt
+              eius roundemod tempor incididunteibfwjk vrubvg hjckheirufjebrfliueehijbrln jjbviuwerihjfou iuhfpijebfiuhrub iuuhvijefviuhrp
             </p>
           </div>
           {/* Logo Div (Overlapping) */}
@@ -137,4 +137,4 @@ const profileProTemplateTwo = () => {
   );
 };
 
-export default profileProTemplateTwo;
+export default ProTemplateSpahire;

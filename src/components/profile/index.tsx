@@ -1,18 +1,20 @@
-'use client';
-import React from 'react'
-import ProfileFreeTemplate from './components/profileFreeTemplate'
-import ProfileProTemplateTwo from './components/profileProTemplateFive'
-import ProfileProTemplateThree from './components/profileProTemplateFour';
-import ProfileProTemplateOne from './components/profileProTemplateOne';
+"use client";
+import React from "react";
+import FreeTemplateOpal from "./components/FreeTemplateOpal";
+import ProTemplateSaphire from "./components/ProTemplateSaphire";
+import ProTemplateQuartz from "./components/ProTemplateQuartz";
+import FreeTemplateRuby from "./components/FreeTemplateRuby";
+import ProTemplateNeno from "./components/ProTemplateNeno";
 const ProfileTemplate = () => {
   return (
-    <div className='bg-[#ccc]'>
-        <ProfileFreeTemplate/>
-        {/* <ProfileProTemplateTwo/> */}
-       {/* <ProfileProTemplateThree/> */}
-       {/* <ProfileProTemplateOne/> */}
+    <div className="bg-[#ccc]">
+      {/* <FreeTemplateOpal/> */}
+      {/* <FreeTemplateRuby/> */}
+      {/* <ProTemplateSaphire /> */}
+      <ProTemplateQuartz/>
+      {/* <ProTemplateNeno/> */}
     </div>
-  )
-}
+  );
+};
 
-export default ProfileTemplate
+export default ProfileTemplate;
