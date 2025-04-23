@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import BuleCard from "../../../assets/product/productCardImg/basiccard.png";
 import Image from "next/image";
-
+import { IoFilter, IoClose } from "react-icons/io5";
+import { IoIosArrowDown } from "react-icons/io";
 const materials = [
   {
     id: "pvc",
@@ -72,6 +73,9 @@ const CircleContainer = (props: any) => {
   );
 };
 const BubblBasicCrd = (props: any) => {
+  const [isOpen, setIsOpen] = useState<any>(false);
+  const [selected, setSelected] = useState<any>("select your font");
+  const options = ["Amenti", "Roboto", "Montserrat"];
   const { selectedCard } = props;
   const [activeTab, setActiveTab] = useState("description");
   const [selectedColor, setSelectedColor] = useState("Blue");
@@ -95,8 +99,8 @@ const BubblBasicCrd = (props: any) => {
   }
 
   return (
-    <div className="">
-      <h1 className="text-[28px] font-semibold mt-0">{selectedCard}</h1>
+    <div className=" ">
+      <h1 className="text-[28px] font-semibold">{selectedCard}</h1>
       <p className="text-[#7F7F7F] text-[15px] font-[500] mt-2">
         Made with Recyclable PVC in a Matte finish with Spot UV coating.
       </p>
@@ -112,84 +116,140 @@ const BubblBasicCrd = (props: any) => {
         </p>
         <div className="flex gap-2 mt-4">
           {colors.map((item) => (
-            <div className={`flex items-center p-[2px] box-content rounded-full ${
-                item.name === selectedColor ? "border-2 border-black" : "border-2 border-white"
-              }`}>
-            <button
-              key={item.name}
-              className={`w-6 h-6 ${
-                item.color
-              } rounded-full`}
-              onClick={() => setSelectedColor(item.name)}
-            ></button>
+            <div
+              className={`flex items-center p-[2px] box-content rounded-full ${
+                item.name === selectedColor
+                  ? "border-2 border-black"
+                  : "border-2 border-white"
+              }`}
+            >
+              <button
+                key={item.name}
+                className={`w-6 h-6 ${item.color} rounded-full`}
+                onClick={() => setSelectedColor(item.name)}
+              ></button>
             </div>
           ))}
         </div>
       </div>
       {/* Material Selection */}
-      {/* <div className="mt-4">
-                <h3 className="font-semibold ">Card Material:</h3>
-                <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-3 mt-2  gap-y-4 gap-x-8">
-                    {materials.map((material) => (
-                        <button
-                            key={material.id}
-                            onClick={() => {
-                                setSelectedMaterial(material);
-                                setSelectedPattern(material.patterns[0]); 
-                            }}
-                            className={` bg-[#EFEFEF] border rounded-md ${selectedMaterial.id === material.id ? "border-[#9C4BFF]" : "border-gray-300 "}`}
-                        >
-                            <Image src={material?.image} alt={material?.name} width={100} height={100} className='block items-center justify-center' />
-                        </button>
-                    ))}
-                </div>
-            </div> */}
+      <div className="mt-4">
+        <h3 className="font-semibold ">Card Material:</h3>
+        <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 mt-2  gap-y-4 ">
+          {materials.map((material) => (
+            <button
+              key={material.id}
+              onClick={() => {
+                setSelectedMaterial(material);
+                setSelectedPattern(material.patterns[0]);
+              }}
+              className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${
+                selectedMaterial.id === material.id
+                  ? "border-[#9C4BFF]"
+                  : "border-gray-300 "
+              }`}
+            >
+              <Image
+                src={material?.image}
+                alt={material?.name}
+                width={100}
+                height={100}
+                className="block items-center justify-center"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
       {/* Pattern Selection */}
-      {/* <div className="mt-4">
-                <h3 className="font-semibold ">Select your Pattern</h3>
-                <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-3 w-full gap-y-4 gap-x-8 mt-4 ">
-                    {selectedMaterial.patterns.map((pattern) => (
-                        <div
-                            key={pattern}
-                            onClick={() => setSelectedPattern(pattern)}
-                            className={` border ${selectedPattern === pattern ? "border-[#9C4BFF]" :
-                                 "border-gray-300"} rounded-md bg-[#EFEFEF] flex items-center justify-center`}
-                        >
-                            <Image src={'/metalCards/patten1.png'} alt={pattern} className=" rounded-md"
-                                width={100}
-                                height={100} />
-                        </div>
-                    ))}
-                </div>
-            </div> */}
-      {/* Name Input */}
-      {/* <div className="mt-4">
-                <label className="block text-sm font-medium">Name</label>
-                <input type="text" placeholder="Your Name" className="w-full p-3 bg-[#F5F5F5] outline-none rounded-md mt-1 text-black text-sm" />
-            </div> */}
-      {/* Font Selection */}
-      {/* <div className="mt-4">
-                <label className="block text-sm font-medium">Font</label>
-                <select className="w-full p-3 bg-[#F5F5F5] rounded-md mt-1 outline-none">
-                    <option>Amenti</option>
-                    <option>Roboto</option>
-                    <option>Montserrat</option>
-                </select>
-            </div> */}
+      <div className="mt-4">
+        <h3 className="font-semibold ">Select your Pattern</h3>
+        <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 w-full gap-y-4 mt-4">
+          {selectedMaterial.patterns.map((pattern) => (
+            <div
+              key={pattern}
+              onClick={() => setSelectedPattern(pattern)}
+              className={` border w-4/5 ${
+                selectedPattern === pattern
+                  ? "border-[#9C4BFF]"
+                  : "border-gray-300"
+              } rounded-md bg-[#EFEFEF] flex items-center justify-center`}
+            >
+              <Image
+                src={"/metalCards/patten1.png"}
+                alt={pattern}
+                className=" rounded-md"
+                width={100}
+                height={100}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between mt-6 gap-6 p-1 rounded-lg">
+        {/* Name Input */}
+        <div className="w-full md:w-[70%]">
+          <label className="block text-sm font-medium text-gray-700">
+            Name
+          </label>
+          <input
+            type="text"
+            placeholder="Your Name"
+            className="w-full p-3 bg-[#F5F5F5]  outline-none rounded-md mt-1 text-black text-sm"
+          />
+        </div>
+
+        {/* Font Selector */}
+        <div className="relative w-full md:w-[30%] space-y-1">
+          <label className="block text-sm font-medium text-gray-700">
+            Font
+          </label>
+          <button
+            className="w-full px-4 py-3 bg-[#F5F5F5] rounded-lg flex justify-between items-center"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span className="text-gray-700 text-sm">{selected}</span>
+            <IoIosArrowDown className="text-gray-500" />
+          </button>
+
+          {/* Dropdown Menu */}
+          {isOpen && (
+            <ul className="absolute w-full mt-2  border bg-[#F5F5F5]  rounded-lg shadow-lg z-10">
+              {options.map((option, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
+                  onClick={() => {
+                    setSelected(option);
+                    setIsOpen(false);
+                  }}
+                >
+                  {option}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
       {/* Description */}
       <div className="mt-10 border-t pt-4">
         <div className="flex flex-row gap-8">
           <h2
             role="button"
             onClick={() => tabChanger("description")}
-            className={`font-semibold ${activeTab=="description"?"text-black":"text-gray-400"}`}
+            className={`font-semibold ${
+              activeTab == "description" ? "text-black" : "text-gray-400"
+            }`}
           >
             Description
           </h2>
           <h2
             role="button"
             onClick={() => tabChanger("product_details")}
-            className={`font-semibold ${activeTab=="product_details"?"text-black":"text-gray-400"}`}
+            className={`font-semibold ${
+              activeTab == "product_details" ? "text-black" : "text-gray-400"
+            }`}
           >
             Product Details
           </h2>
@@ -204,8 +264,18 @@ const BubblBasicCrd = (props: any) => {
           </p>
         )}
         {activeTab == "product_details" && (
-          <p className="text-[#7F7F7F] text-sm mt-2">
-            Enter Product Details Here !
+          <p className="text-[#7F7F7F] text-sm mt-2 s">
+            - NFC-based digital networking solution <br />
+            - E-business card
+            <br />
+            - Share contact information
+            <br />
+            - ⁠Share social media profiles effortlessly with a tap <br />
+            - Always editable and fully customizable templates <br />
+            - User-friendly website accessible on web and phones
+            <br />
+            - Modern, eco-friendly alternative to paper business cards
+            <br />- Elevate your networking game with innovation and simplicity
           </p>
         )}
       </div>

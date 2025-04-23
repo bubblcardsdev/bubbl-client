@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import SearchIcon from "../../../assets/icons/productIcon/Product_search_icon";
 import Cards from "./cards";
-import { IoFilter,IoClose } from "react-icons/io5";
+import { IoFilter, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-
 
 function CardSection() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +39,7 @@ function CardSection() {
             >
               <span className="hidden md:block"> {selected}</span>
               <span className="md:hidden text-lg -pr-4 ">
-                <IoFilter size={20} className=""/>
+                <IoFilter size={20} className="" />
               </span>
               <span className="hidden md:block">
                 <IoIosArrowDown />
@@ -48,7 +47,7 @@ function CardSection() {
             </button>
             {/* Dropdown Menu */}
             {isOpen && (
-              <ul className="absolute w-full mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg">
+              <ul className="absolute w-full mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg md:hidden sm:hidden xs:hidden">
                 {options.map((option, index) => (
                   <li
                     key={index}
@@ -65,31 +64,35 @@ function CardSection() {
             )}
             {/* mobile Dropdown Menu  */}
             {isOpen && (
-          <div className="absolute right-0 mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg sm:hidden w-48 p-2">
-            {/* Close Button */}
-            <div className="flex justify-between items-center border-b pb-2 mb-2">
-              <span className="text-lg font-semibold">Select an Option</span>
-              <button onClick={() => setIsOpen(false)} className="text-gray-600 hover:text-black">
-                <IoClose size={20} />
-              </button>
-            </div>
+              <div className="absolute right-0 mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg sm:hidden w-48 p-2">
+                <div className="flex justify-between items-center border-b pb-2 mb-2">
+                  <span className="text-lg font-semibold">
+                    Select an Option
+                  </span>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="text-gray-600 hover:text-black"
+                  >
+                    <IoClose size={20} />
+                  </button>
+                </div>
 
-            <ul className="text-left">
-              {options.map((option, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
-                  onClick={() => {
-                    setSelected(option);
-                    setIsOpen(false);
-                  }}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                <ul className="text-left">
+                  {options.map((option, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
+                      onClick={() => {
+                        setSelected(option);
+                        setIsOpen(false);
+                      }}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
         <Cards />

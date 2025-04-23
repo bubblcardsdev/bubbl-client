@@ -7,20 +7,19 @@ import {
   Qr_icon,
   CallProfileIcon,
   TwitterIcon,
-  Paytm_icon,
-  Phonepay_icon,
-  Googlepay_icon,
   LinledinFill_icon,
   MailProfileIcon,
   WebProfileIcon,
-  Arrow_icon,
   InstagramFill_icon,
-  WebIcon,
   WhatsappFill_icon,
   FacebookFill_icon,
+  Arrow_icon,
+  Paytm_icon,
+  Phonepay_icon,
+  Googlepay_icon,
 } from "../../common/icons";
 
-const profileProTemplateThree = () => {
+const ProTemplateQuartz = () => {
   const [openSection, setOpenSection] = useState("");
   const toggleSection = (section: any) => {
     setOpenSection(openSection === section ? "" : section);
@@ -168,4 +167,4 @@ const profileProTemplateThree = () => {
   );
 };
 
-export default profileProTemplateThree;
+export default ProTemplateQuartz;

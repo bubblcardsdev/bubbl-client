@@ -15,7 +15,6 @@ function productFooterSection() {
               world.
             </p>
             <div className="sm:grid xs:grid xs:grid-cols-2 sm:grid-cols-3 xl:flex  xl:gap-[2rem] sm:gap-[15px] xs:gap-[15px] w-full text-['#E4E7EC'] ">
-            {/* <div className="w-full text-['#E4E7EC'] flex gap-[2rem] md:flex-row sm:flex-row xs:flex-col"> */}
               <a href="/shop" className="hover:text-white">
                 Shop
               </a>
@@ -74,9 +73,9 @@ function productFooterSection() {
           <p className="text-['#98A2B3']">Bubbl 2024. All rights reserved</p>
           <p className="text-['#98A2B3']">Powered By: XPULSAR TECHNOLOGIES PVT. LTD</p>
           <div className="flex flex-row gap-[15px]">
-            <a className="text-['#98A2B3']">Terms and conditions</a>
-            <a className="text-['#98A2B3']">Privacy Policy</a>
-            <a className="text-['#98A2B3']">Refund Policy</a>
+            <a  href="/Termsandcondition" className="text-['#98A2B3']">Terms and conditions</a>
+            <a href="/privacyPolicy" className="text-['#98A2B3']">Privacy Policy</a>
+            <a href="" className="text-['#98A2B3']">Refund Policy</a>
           </div>
         </div>
       </footer>

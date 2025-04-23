@@ -84,10 +84,10 @@ function Plans() {
           <div className=" text-center">
             <p className="text-[#9747FF] p-4 text-2xl">Pricings</p>
             <p className="text-white text-5xl font-bold ">
-              Level up with Bubbl pro{" "}
+              Level up with Bubbl pro
             </p>
             <p className="text-gray-400  mt-8">
-              Use the core product for free, forever.{" "}
+              Use the core product for free, forever.
             </p>
           </div>
         </section>
@@ -393,12 +393,11 @@ function Plans() {
             </p>
           </div>
         </div>
-        <div className="bg-black ">
+        <div className="bg-black sm:px-2 xs:px-2">
           <Footer />
         </div>
       </div>
     </div>
   );
 }
-
 export default Plans;

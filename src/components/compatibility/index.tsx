@@ -238,9 +238,9 @@ const CompatibilityPage = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
-    <section className=" bg-black text-white">
-      <div className=" bg-black text-white p-0 md:p-12  ">
-        <div className="max-w-[1300px] mx-auto mt-[80px] ">
+    <section className=" bg-black text-whitew">
+      <div className=" bg-black text-white p-0  md:p-12 sm:px-8 xs:px-4  ">
+        <div className="max-w-[1300px] mx-auto lg:mt-[80px] md:mt-0 sm:mt-0 xs:mt-0">
           {/* <nav className="text-gray-400 text-sm mb-4 ">
             Home &gt; Device List
           </nav> */}
