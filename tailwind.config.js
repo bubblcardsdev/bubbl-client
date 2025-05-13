@@ -28,7 +28,16 @@ module.exports = {
         // => @media (min-width: 1600px) { ... }
         // 'mid': { 'raw': '(min-height: 650px)' },
         // => @media (min-heigt: 650px)
-      }
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 1s ease-out forwards',
+      },
     },
   },
   plugins: [],

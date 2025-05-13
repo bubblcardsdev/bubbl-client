@@ -4,7 +4,7 @@ import {BubblLogo,CallIcon,MailIcon,GitIcon,LinkedinIcon,TwitterIcon,FacebookIco
 
 function productFooterSection() {
   return (
-    <section className="mt-5  py-[5vh] md:mt-10  max-w-[1300px] mx-auto bg-black">
+    <section className="  py-[5vh]   max-w-[1300px] mx-auto bg-black">
       <footer className=" text-white">
         <div className="w-full flex flex-wrap gap-y-[6vh] justify-between">
           {/* Left Section */}

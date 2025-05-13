@@ -1,4 +1,5 @@
 import Arrow_icon from '@/src/assets/icons/productIcon/productList_Arrow_icon'
+import { BreadCrumbsProps } from '@/src/lib/interface';
 function BreadCrumbs(props:BreadCrumbsProps){
     console.log(props,"props");
     return(
