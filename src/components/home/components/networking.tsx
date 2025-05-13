@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SlideBar from "../../common/SlideBar";
 import TreeRow from "../../common/TreePopping";
-import DetailCard from "../MiddleSection/DetailCard";
 import Image from "next/image";
 
 const Networking = () => {
