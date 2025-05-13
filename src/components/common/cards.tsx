@@ -2,22 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import FullCustomCard from "../../../assets/product/productCardImg/fullCustom.png";
-import NameCustomCard from "../../../assets/product/productCardImg/metalCard.png";
-import BasicCard from '../../../assets/product/productCardImg/basiccard.png'
-import Scoket from '../../../assets/product/productCardImg/socket.png'
-import Tile from '../../../assets/product/productCardImg/tile.png'
-import Band from '../../../assets/product/productCardImg/band.png'
-import Standee from '../../../assets/product/productCardImg/standee.png'
-
-
-
-
-
-
 const CircleContainer = ({ colors }: { colors: string[] }) => {
   const [hovered, setHovered] = useState(false);
-
   return (
     <div
       className="relative max-w-[300px] z-10"
@@ -41,129 +27,16 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
   );
 };
 
-function Cards() {
+function Cards(props:any) {
+  const {data=[],title}=props
   const [hoverImage, setHoverImage] = useState<number | null>(null);
   const router = useRouter();
-
-  const title: Record<string, { title: string; description: string }> = {
-    custom_card: {
-      title: "Bubbl Custom Card",
-      description:
-        " Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today",
-    },
-    basic_card: {
-      title: "Bubbl Basic Card",
-      description:
-        "Pick from our line of Bubbl- Basics - Affordable, Eco-friendly and perfect for first time users who just want to get the feel of futuristic networking.",
-    },
-    bubbl_other_product: {
-      title: "Bubbl  other product",
-      description:
-        "Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today!",
-    },
-    bundle_devices: {
-      title: "Bubbl Bundle Device",
-      description:
-        "If you want to get a more than just one bubbl, don't worry, we have fan favourite bundles at great deals. Making new connections has never bees easier!",
-    },
-  };
-
-  const products = [
-    {
-      sectionType: "custom_card",
-      cards: [
-        {
-          id: 1,
-          name: "Full Custom",
-          title: "Bubbl Full Custom",
-          price: "Rs.999",
-          image: FullCustomCard,
-          discount: "18.77%",
-          secondaryImage: FullCustomCard,
-          colors: [],
-        },
-        {
-          id: 2,
-          name: "Name Custom",
-          title: "Bubbl Name Custom",
-          price: "Rs.799",
-          image: NameCustomCard,
-          discount: "18.77%",
-          secondaryImage: NameCustomCard,
-          colors: [],
-        },
-       
-      ],
-    },
-    {
-      sectionType: "basic_card",
-      cards: [
-        {
-          id: 4,
-          name: "Basic Card",
-          title: "Bubbl Basic Card",
-          price: "Rs.999",
-          image: BasicCard,
-          discount: "18.77%",
-          secondaryImage: BasicCard,
-          colors: ['black','blue','green','yellow','red','white','purple'],
-        },
-        {
-          id: 5,
-          name: "Socket",
-          title: "Bubbl Socket",
-          price: "Rs.799",
-          image: Scoket,
-          discount: "18.77%",
-          secondaryImage: Scoket,
-          colors: ['black','blue','green','yellow','red','white','purple'],
-        },
-        {
-          id: 6,
-          name: "Tile",
-          title: "Bubbl Tile",
-          price: "Rs.1999",
-          image: Tile,
-          discount: "18.77%",
-          secondaryImage: Tile,
-          colors: ['black','blue','green','yellow','red','white','purple'],
-        },
-      ],
-    },
-    {
-      sectionType: "bubbl_other_product",
-      cards: [
-        {
-          id: 5,
-          name: "Band",
-          title: "Bubbl Band",
-          price: "Rs.1499",
-          image: Band,
-          discount: "18.77%",
-          secondaryImage: Band,
-          colors: ['black','white'],
-        },
-        {
-          id: 6,
-          name: "Standee",
-          title: "Bubbl Standee",
-          price: "Rs.1499",
-          image: Standee,
-          discount: "18.77%",
-          secondaryImage: Standee,
-          colors: ['black','white'],
-        },
-      ],
-    },
-  ];
-
   const handleCardClick = (id: number) => {
     router.push(`/productList/${id}`);
   };
-
   return (
     <div className="w-full top-6">
-      {products.map((product, index) => (
+      {data.map((product:any, index:number) => (
         <div className="flex flex-col gap-6 w-full md:px-0"  key={index}>
           <div className="w-full mt-[60px] ml-0 ">
             <h1 className="w-full text-3xl text-black font-bold mb-2">
@@ -174,7 +47,7 @@ function Cards() {
             </p>
           </div>
           <div className="grid lg:grid-cols-[repeat(3,minmax(320px,1fr))] md:grid-cols-[repeat(2,minmax(320px,1fr))] sm:grid-cols-none xs:grid-cols-none gap-5 w-full box-border ">
-            {product.cards.map((card) => (
+            {product.cards.map((card:any) => (
               <div
                 key={card.id}
                 className="cursor-pointer w-full bg-white transition duration-300 ease-in-out"

@@ -1,16 +1,16 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect, useMemo } from "react";
-import Bubbl_logo from "../../assets/icons/homeIcon/bubbl_logo";
-import Google from "../../assets/icons/homeIcon/google_icon";
-import Facebook from "../../assets/icons/homeIcon/facebook_icon";
-import Linkedin from "../../assets/icons/homeIcon/linkedin_icon";
-import Hand from "../../assets/Homeimg/hand.png";
-import Profile from "../../assets/Homeimg/profile.png";
-import ShareIcon from "../../assets/icons/homeIcon/share_icon";
-import ScannerQrIcon from "../../assets/icons/homeIcon/scannerQr_icon";
-import ArrowIcon from "../../assets/icons/homeIcon/arrow_icon";
-
+// import Bubbl_logo from "../../assets/icons/homeIcon/bubbl_logo";
+// import Google from "../../assets/icons/homeIcon/google_icon";
+// import Facebook from "../../assets/icons/homeIcon/facebook_icon";
+// import Linkedin from "../../assets/icons/homeIcon/linkedin_icon";
+// import Hand from "../../assets/Homeimg/hand.png";
+// import Profile from "../../assets/Homeimg/profile.png";
+// import ShareIcon from "../../assets/icons/homeIcon/share_icon";
+// import ScannerQrIcon from "../../assets/icons/homeIcon/scannerQr_icon";
+// import ArrowIcon from "../../assets/icons/homeIcon/arrow_icon";
+import {BubblLogo,Google,FacebookIconbackgroundFill,LinkedinIconbackgroundFill,Share_icon,ScannerQr_icon,Arrow_icon} from '../common/icons'
 function Signup() {
   const [isShaking, setIsShaking] = useState(false);
   const [step, setStep] = useState(1);
@@ -136,7 +136,7 @@ function Signup() {
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden">
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
-          <Bubbl_logo />
+          {/* <Bubbl_logo /> */}
         </div>
         <div className="w-full max-w-xs md:w-[400px] flex-grow mt-[50px] flex-col justify-center px-4">
           <div className="flex justify-start space-x-2 mb-8">
@@ -393,10 +393,10 @@ function Signup() {
                   </span>
                 </button>
                 <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
-                  <Facebook />
+                  <FacebookIconbackgroundFill/>
                 </button>
                 <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
-                  <Linkedin />
+                  <LinkedinIconbackgroundFill/>
                 </button>
               </div>
             )}
@@ -463,10 +463,10 @@ function Signup() {
                 Save Contact
               </button>
               <button className="flex-grow flex-shrink-0 basis-1/5 h-10 bg-[#1F1F1F] rounded-lg text-white flex justify-center items-center">
-                <ShareIcon />
+                <Share_icon/>
               </button>
               <button className="flex-grow flex-shrink-0 basis-1/5 h-10 bg-[#1F1F1F] rounded-lg text-white flex justify-center items-center">
-                <ScannerQrIcon />
+                <ScannerQr_icon/>
               </button>
             </div>
           </div>
@@ -491,7 +491,7 @@ function Signup() {
                   <div className="flex items-center space-x-2 mt-2">
                     {/* <span className="text-gray-400 text-sm">1</span> */}
                     <span className="text-gray-500 text-sm">
-                      <ArrowIcon />
+                      <Arrow_icon />
                     </span>
                   </div>
                 </div>
@@ -520,7 +520,7 @@ function Signup() {
                   <div className="flex items-center space-x-2 mt-2">
                     {/* <span className="text-gray-400 text-sm">1</span> */}
                     <span className="text-gray-500 text-sm">
-                      <ArrowIcon />
+                    <Arrow_icon />
                     </span>
                   </div>
                 </div>

@@ -38,12 +38,12 @@ function productFooterSection() {
 
           {/* Right Section */}
           <div className="w-fit flex flex-col gap-y-[3vh]">
-            <h3 className="text-xl font-semibold text-left text-['#E4E7EC']   ">
+            <h3 className="text-xl font-semibold text-left text-['#E4E7EC']">
               Contact Us
             </h3>
             <div className="text-gray-400">
-              <p className="flex items-center mb-3 ">
-                <span className="mr-2 text-white  ">
+              <p className="flex items-center mb-3">
+                <span className="mr-2 text-white">
                   <CallIcon />
                 </span>
                <span className=" text-white ">  +91 7358108634</span>
@@ -66,7 +66,7 @@ function productFooterSection() {
           </div>
         </div>
         <div>
-          <hr className="my-8 border-gray-700  " />
+          <hr className="my-10 border-gray-700" />
         </div>
         {/* Bottom Section */}
         <div className="flex flex-wrap gap-y-[3vh] gap-x-[0vw] text-[13px] items-center justify-between text-gray-400">
