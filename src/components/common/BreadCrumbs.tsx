@@ -1,4 +1,5 @@
 import {FullArrowIcon,RightTickIcon,MessageIcon} from "../common/icons";
+import { BreadCrumbsProps } from '@/src/lib/interface';
 function BreadCrumbs(props:BreadCrumbsProps){
     console.log(props,"props");
     return(

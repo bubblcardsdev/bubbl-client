@@ -2,8 +2,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+
+
+
+
+
+
+
 const CircleContainer = ({ colors }: { colors: string[] }) => {
   const [hovered, setHovered] = useState(false);
+
   return (
     <div
       className="relative max-w-[300px] z-10"

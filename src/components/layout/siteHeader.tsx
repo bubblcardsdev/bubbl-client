@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
-import { themeObject } from "../common/constant";
+import { themeObject } from "../../lib/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
 
 
@@ -13,14 +13,16 @@ const SiteHeader = () => {
   console.log(pathname,"pathname")
   const theme = themeObject[pathname.pathname] || "white";
   console.log(theme,"theme")
-  const isDarkTheme = theme === "black";
+  const isDarkTheme = theme === "black" || theme === "linear-gradient(to right, #4A4A4A, #000000)";
+
+   
   return (
     <nav
       className={`flex items-center justify-between px-6 py-2 md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
       style={{
-        background: isDarkTheme ? "black" : "white",
+        background: theme,
         color: isDarkTheme ? "white" : "black",
-        borderBottom: `1px solid ${isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"}`, 
+        borderBottom: `1px solid ${isDarkTheme  ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"}`, 
       }}
     >
       {/* Logo */}
@@ -81,7 +83,7 @@ const SiteHeader = () => {
   className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
     isMenuOpen ? "max-h-96" : "max-h-0"
   }`}
-  style={{ backgroundColor: theme }}
+  style={{ backgroundColor: isDarkTheme ? "black" : "white"  }}
 >
   <div className="flex flex-col items-center space-y-2 py-[20px]">
     {["Shop", "Plans", "About", "Cart", "Login"].map((item) => (
