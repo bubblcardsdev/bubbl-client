@@ -46,9 +46,9 @@ export default function ProfileCard() {
           <button
             key={item.name}
             aria-label={`Select ${item.name}`}
-            className={`w-7 h-7 ${
+            className={`md:w-7 md:h-7 xs:w-5 xs:h-5 ${
               item.color
-            } rounded-full hover:scale-110 transition-all duration-200 ${
+            } rounded-full hover:scale-110 transition-all duration-200 xs: ${
               item.name === selected
                 ? "ring-2 ring-offset-2 ring-white shadow-lg scale-110"
                 : "hover:shadow-md"
@@ -83,7 +83,7 @@ export default function ProfileCard() {
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <div className="flex flex-col sm:flex-row md:gap-6 justify-center items-center">
           <ColorSelector
             title="Mode"
             items={mode}
