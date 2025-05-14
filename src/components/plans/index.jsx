@@ -79,7 +79,7 @@ function Plans() {
   };
   return (
     <div className="bg-black ">
-      <div className="py-20 lg:px-16 md:px-14 sm:px-10 xs:px-1  flex flex-col gap-y-16 max-w-[1300px] mx-auto">
+      <div className="py-20 lg:px-16 md:px-14 sm:px-10 xs:px-3  flex flex-col gap-y-16 max-w-[1300px] mx-auto">
         <section id="plansBlackBg" className="flex flex-col justify-center">
           <div className=" text-center">
             <p className="text-[#9747FF] p-4 text-2xl">Pricings</p>

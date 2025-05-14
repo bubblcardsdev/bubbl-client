@@ -25,7 +25,7 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
             className="absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]"
             style={{
               backgroundColor: color,
-              right: `${10 + index * 3}px`,
+              right:`${10 + index * 3}px`,
               transform: hovered ? `translateX(-${15 * index}px)` : "none",
             }}
             onClick={() => setHovered(false)}
@@ -35,86 +35,99 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
   );
 };
 
-function Cards(props:any) {
-  const {data=[],title}=props
-  const [hoverImage, setHoverImage] = useState<number | null>(null);
+function CardsReusable() {
   const router = useRouter();
+  const products = [
+    {
+      id: 4,
+      name: "Basic Card",
+      title: "Bubbl Basic Card",
+      price: "Rs.999",
+      image: "/productCardImg/basiccard.png",
+      discount: "18.77%",
+      secondaryImage:"/productCardImg/basiccard.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+    {
+      id: 5,
+      name: "Socket",
+      title: "Bubbl Socket",
+      price: "Rs.799",
+      image:"/productCardImg/socket.png" ,
+      discount: "18.77%",
+      secondaryImage: "/productCardImg/socket.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+    {
+      id: 6,
+      name: "Tile",
+      title: "Bubbl Tile",
+      price: "Rs.1999",
+      image:"/productCardImg/tile.png" ,
+      discount: "18.77%",
+      secondaryImage: "/productCardImg/tile.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+  ];
+
   const handleCardClick = (id: number) => {
     router.push(`/productList/${id}`);
   };
+
   return (
-    <div className="w-full top-6">
-      {data.map((product:any, index:number) => (
-        <div className="flex flex-col gap-6 w-full md:px-0"  key={index}>
-          <div className="w-full mt-[60px] ml-0 ">
-            <h1 className="w-full text-3xl text-black font-bold mb-2">
-              {title[product.sectionType]?.title}
-            </h1>
-            <p className="w-full text-[#7F7F7F] font-semibold text-[17px]">
-              {title[product.sectionType]?.description}
-            </p>
-          </div>
-          <div className="grid lg:grid-cols-[repeat(3,minmax(320px,1fr))] md:grid-cols-[repeat(2,minmax(320px,1fr))] sm:grid-cols-none xs:grid-cols-none gap-5 w-full box-border ">
-            {product.cards.map((card:any) => (
-              <div
-                key={card.id}
-                className="cursor-pointer w-full bg-white transition duration-300 ease-in-out"
-                onClick={() => handleCardClick(card.id)}
-              >
-                <div className="relative border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 gap-x-6 pb-2">
-                  <div
-                    onMouseEnter={() => setHoverImage(card.id)}
-                    onMouseLeave={() => setHoverImage(null)}
-                    className="flex justify-center items-center px-2 py-2"
-                  >
-                    <Image
-                      src={card.image}
-                      alt={card.name}
-                      width={500}
-                      height={500}
-                      className="h-[300px] w-[500px] object-contain transition-transform duration-500"
-                      style={{
-                        opacity: hoverImage === card.id ? 0.9 : 1,
-                        transform:
-                          hoverImage === card.id ? "scale(1.05)" : "scale(1)",
-                      }}
-                    />
-                  </div>
-                  <div className=" flex justify-between items-center ">
-                    <div className="w-max  border  rounded-lg  bg-white  lex items-center justify-center px-2 py-[4px] ml-2.5 ">
-                      <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[14px]">
-                        {card.name}
-                      </p>
-                    </div>
-                    <div className="flex justify-center items-center relative  ">
-                      {card?.colors && card?.colors?.length > 0 && (
-                        <CircleContainer colors={card?.colors} />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-between pt-4 ">
-                  <div className="px-2">
-                    <h3 className="text-md text-[#9F9F9F] inter">
-                      {card.title}
-                    </h3>
-                    <p className="text-black inter font-[600] text-[18px]  ">
-                      {card.price}
-                    </p>
-                  </div>
-                  <div className="px-2">
-                    <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
-                      {card.discount}
-                    </p>
-                  </div>
-                </div>
+    <div className="bg-black text-white">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 mx-auto xs:py-0 sm:py-10">
+      {products.map((card) => (
+        <div
+          key={card.id}
+          className="cursor-pointer w-full transition duration-300 ease-in-out"
+          onClick={() => handleCardClick(card.id)}  
+        >
+          <div className="bg-[#282828] border border-[#4F4F4F] rounded-[16px] hover:shadow-lg flex flex-col overflow-hidden">
+            <div
+              className="flex justify-center items-center p-4 group"
+            >
+              <Image
+                src={card.image}
+                alt={card.name}
+                width={500}
+                height={300}
+                className="w-full h-[250px] object-contain transition-transform duration-500 group-hover:scale-[1.2]"
+              />
+            </div>
+            <div className="flex justify-between items-center px-4 pb-3">
+              <div className="rounded-lg bg-[#333333] flex items-center justify-center px-3 py-1">
+                <p className="text-white text-sm font-medium m-0">
+                  {card.name}
+                </p>
               </div>
-            ))}
+              {card?.colors?.length > 0 && (
+                <div className="flex justify-center items-center">
+                  <CircleContainer colors={card.colors} />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-between pt-4 px-2">
+            <div>
+              <h3 className="text-md text-white font-medium">
+                {card.title}
+              </h3>
+              <p className="text-white font-semibold text-[18px]">
+                {card.price}
+              </p>
+            </div>
+            <div>
+              <p className="bg-[#9747FF] rounded-md text-white py-0.5 px-2 text-sm">
+                {card.discount}
+              </p>
+            </div>
           </div>
         </div>
       ))}
     </div>
+  </div>
   );
 }
 
-export default Cards;
+export default CardsReusable;
