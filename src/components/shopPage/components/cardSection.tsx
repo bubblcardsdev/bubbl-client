@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useMemo } from "react";
-import Cards from "../../common/cards";
 import { IoFilter, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import FullCustomCard from "../../../assets/product/productCardImg/fullCustom.png";
@@ -11,6 +10,7 @@ import Tile from "../../../assets/product/productCardImg/tile.png";
 import Band from "../../../assets/product/productCardImg/band.png";
 import Standee from "../../../assets/product/productCardImg/standee.png";
 import { searchIcon  } from "../../common/icons";
+import Products from "./products";
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
     title: "Bubbl Custom Card",
@@ -235,7 +235,7 @@ function CardSection() {
             )}
           </div>
         </div>
-        <Cards title={title} data={filteredProduct} />
+        <Products title={title} data={filteredProduct} />
         <div className="p-12 bg-[#F3F3F3]  rounded-lg mt-16  w-full ">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-gray-900 ">
