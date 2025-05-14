@@ -7,16 +7,14 @@ import {
   LinkedinColorIcon,
   LinkedinIcon,
 } from "../common/icons";
-import Bubbl_logo from "../../assets/icons/homeIcon/bubbl_logo";
+import {BubblLogo} from '../common/icons';
 
 const LoginPage = () => {
   const router = useRouter();
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
   const handleEmailChange = (e: any) => {
     const email = e.target.value;
     setLoginForm((prevState) => ({ ...prevState, email }));
@@ -25,7 +23,6 @@ const LoginPage = () => {
       emailError: emailRegex.test(email) ? "" : "Please enter a valid email",
     }));
   };
-
   const handlePasswordChange = (e: any) => {
     const password = e.target.value;
     setLoginForm((prevState) => ({ ...prevState, password }));
@@ -36,24 +33,19 @@ const LoginPage = () => {
         : "Password must be at least 8 characters long and include both letters and numbers",
     }));
   };
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (!errors.emailError && !errors.passwordError) {
       router.push("/signup");
     }
   };
-
   return (
     <div className="h-screen bg-black">
       <div className="flex  md:flex-row overflow-hidden">
-        {/* Left Side: Form */}
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
-          {/* Logo */}
           <div className="w-full flex justify-start sticky top-0">
-            <Bubbl_logo />
+            <BubblLogo />
           </div>
-          {/* Form Container */}
           <div className="w-full max-w-xs md:w-[400px] flex-col justify-center lg:px-0 ">
             <h1 className="text-2xl md:text-3xl mb-2 font-bold ">
               Welcome Aboard!
@@ -122,7 +114,6 @@ const LoginPage = () => {
                   <LinkedinColorIcon />
                 </button>
               </div>
-             
 
               <p className="text-center text-sm font-[500] mt-4  text-[#606060]">
                 Don’t have an account?{" "}
@@ -132,15 +123,11 @@ const LoginPage = () => {
               </p>
             </form>
           </div>
-
-          {/* Footer */}
           <div className="flex justify-between w-full text-gray-500 text-xs py-0 mx-auto">
             <p>bubbl 2025</p>
             <a href="mailto:help@bubbl.cards">help@bubbl.cards</a>
           </div>
         </div>
-
-        {/* Right Side: Image/Graphic */}
         <div className="hidden md:flex w-1/2 items-center justify-center bg-gray-800 h-screen ">
           <p className="text-center text-gray-400 text-xs mt-2">
             powered by bubbl.cards

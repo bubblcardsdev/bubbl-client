@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Bluecard from "../../assets/product/productCardImg/basiccard.png";
 import Footer from "../footerPage/index";
+import { Link } from "lucide-react";
 
 const CircleContainer = (props: any) => {
   const { colors } = props;
@@ -32,66 +34,66 @@ const CircleContainer = (props: any) => {
     </div>
   );
 };
-
+const cardsData: any = [
+  {
+    id: 1,
+    title: "Card",
+    description: "Bubbl basic card",
+    price: 699,
+    quantity: 1,
+    image: Bluecard,
+  },
+  {
+    id: 2,
+    title: "Card",
+    description: "Bubbl basic card",
+    price: "699",
+    quantity: 1,
+    image: Bluecard,
+  },
+];
 const Cart = (props: any) => {
   const [hoverImage, setHoverImage] = useState<any>("");
+  const [cards, setCards] = useState(cardsData);
+  const router = useRouter();
 
+  const handleBuyNow = () => {
+    router.push("/checkout");
+  };
   const handleHover = (id: any) => {
     setHoverImage(id);
   };
   const removeHandleHover = () => {
     setHoverImage("");
   };
-  const cardsData: any = [
-    {
-      id: 1,
-      title: "Card",
-      description: "Bubbl basic card",
-      price: "699",
-      quantity: 1,
-      image: Bluecard,
-    },
-    {
-      id: 2,
-      title: "Card",
-      description: "Bubbl basic card",
-      price: "699",
-      quantity: 1,
-      image: Bluecard,
-    },
-    // {
-    //   id: 2,
-    //   title: "Card",
-    //   description: "Bubbl basic card",
-    //   price: "699",
-    //   quantity: 1,
-    //   image: Bluecard,
-    // },
-    // {
-    //   id: 2,
-    //   title: "Card",
-    //   description: "Bubbl basic card",
-    //   price: "699",
-    //   quantity: 1,
-    //   image: Bluecard,
-    // },
-    // {
-    //   id: 2,
-    //   title: "Card",
-    //   description: "Bubbl basic card",
-    //   price: "699",
-    //   quantity: 1,
-    //   image: Bluecard,
-    // },
-    // {
-    //   id: 2,
-    //   title: "Card",
-    //   description: "Bubbl basic card",
-    //   price: "699",
-    //   quantity: 1,
-    //   image: Bluecard,
-    // },
-  ];
+  const handleIncrease = (id: number) => {
+    setCards((prev: any) => {
+      console.log(prev, "aa");
+      return prev.map((card: any) => {
+        if (id == card.id) {
+          return {
+            ...card,
+            quantity: card.quantity + 1,
+          };
+        }
+        return card;
+      });
+    });
+  };
+  const handleDecrease = (id: number) => {
+    console.log(id, "cards");
+    setCards((prev:any) =>
+      prev.map((card:any) =>
+        card.id === id && card.quantity > 1
+          ? { ...card, quantity: card.quantity - 1 }
+          : card
+      )
+    );
+  };
+  const handleRemove = (id: number) => {
+    setCards((prev:any) => prev.filter((card:any) => card.id !== id));
+  };
+
   const Products = [
     {
       id: 1,
@@ -120,7 +122,7 @@ const Cart = (props: any) => {
     },
   ];
   return (
-    <div className="py-3 h-screen 2">
+    <div className="py-3 h-screen">
       <div className="max-w-[1300px] mx-auto pt-[100px] mb-4 2xl:px-[20px] xl:px-[30px] lg:px-[100px] md:px-[20px] sm:px-[20px] xs:px-[20px]">
         <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
           <div className="w-full md:w-[60%] flex flex-col gap-3">
@@ -128,16 +130,16 @@ const Cart = (props: any) => {
             <h2 className="text-xl sm:text-2xl font-bold  text-[#333333]">
               Shopping cart (2)
             </h2>
-            <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold mt-2 ">
+            <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold mt-2">
               Cart it, Love it, Own it.
             </p>
             <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl">
-              {cardsData.map((value: any) => (
+              {cards.map((value: any) => (
                 <div
                   key={value.id}
-                  className="flex items-center  w-full xs:pl-1.5   "
+                  className="flex items-center  w-full xs:pl-1.5"
                 >
-                  <div className="rounded-[8px] w-[90px] h-[65px] flex items-center justify-center  box-border bg-[#E5E5E5]   ">
+                  <div className="rounded-[8px] w-[90px] h-[65px] flex items-center justify-center  box-border bg-[#E5E5E5]">
                     <Image
                       src={value?.image}
                       alt="card"
@@ -154,17 +156,34 @@ const Cart = (props: any) => {
                           Bubbl basic card
                         </p>
                       </div>
-                      <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2 ">
-                        <p className=" m-0 p-0">-</p>
-                        <p className=" m-0 p-0 text-[10px] text-center">1</p>
-                        <p className=" m-0 p-0">+</p>
+                      <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2">
+                        <p
+                          className=" m-0 p-0 cursor-pointer"
+                          onClick={() => handleDecrease(value.id)}
+                        >
+                          -
+                        </p>
+                        <p className=" m-0 p-0 text-[10px] text-center">
+                          {value.quantity}
+                        </p>
+                        <p
+                          className=" m-0 p-0 cursor-pointer"
+                          onClick={() => handleIncrease(value.id)}
+                        >
+                          +
+                        </p>
                       </div>
                     </div>
                     <div className=" flex  w-full gap-x-14 lg:px-8 sm:px-0 xs:px-0 lg:justify-around sm:justify-between xs:justify-between">
-                      <p className="font-extrabold text-black text-[20px]  sm:text-right sm:text-[14px] xs:text-[12px]">
-                        ₹699/-
+                      <p className="font-extrabold text-black lg:text-[20px]  sm:text-right sm:text-[14px] xs:text-[12px]">
+                        ₹{value.price * value.quantity}/-
                       </p>
-                      <p className="underline  text-[16px]sm:text-[14px] xs:text-[12px]">Remove</p>
+                      <p
+                        className="underline  text-[16px]sm:text-[14px] xs:text-[12px] cursor-pointer"
+                        onClick={() => handleRemove(value.id)}
+                      >
+                        Remove
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -185,15 +204,15 @@ const Cart = (props: any) => {
               <div className="space-y-4">
                 <div className="flex justify-between text-sm sm:text-base">
                   <p className=" text-[#7F7F7F]">Subtotal (1 item)</p>
-                  <p>$45.00</p>
+                  <p>₹45.00</p>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base">
                   <p className=" text-[#7F7F7F]">Shipping</p>
-                  <p>$5.00</p>
+                  <p>₹5.00</p>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base">
                   <p className=" text-[#7F7F7F]">Discount</p>
-                  <p>- $10.00</p>
+                  <p>- ₹10.00</p>
                 </div>
                 <div className="flex justify-between font-semibold text-sm sm:text-base">
                   <p>
@@ -202,18 +221,19 @@ const Cart = (props: any) => {
                       ( Incl of all Taxes )
                     </span>
                   </p>
-                  <p>$40.00</p>
+                  <p>₹40.00</p>
                 </div>
               </div>
-              <div>
-                <button className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700">
-                  Buy Now
-                </button>
-              </div>
+              <button
+                className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700"
+                onClick={handleBuyNow}
+              >
+                Buy Now
+              </button>
             </div>
           </div>
         </div>
-        <div className="w-full mt-10  sm:px-0 xs:pl-3">
+        {/* <div className="w-full mt-10  sm:px-0 xs:pl-3">
           <>
             <h2 className="text-xl sm:text-2xl font-bold  text-[#333333] py-6">
               Similar Items You Might Also Like
@@ -264,6 +284,66 @@ const Cart = (props: any) => {
                       </p>
                     </div>
                     <div className="px-2">
+                      <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
+                        {product.discount}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        </div> */}
+        <div className="w-full mt-10  sm:px-4 xs:pl-3 ">
+          <>
+            <h2 className="text-xl sm:text-2xl font-bold  text-[#333333] py-6">
+              Similar Items You Might Also Like
+            </h2>
+            <div className="grid grid-cols-3 lg:gap-x-10 md:lg:gap-x-10 overflow-auto sm:gap-x-10 xs:gap-x-2">
+              {Products.map((product: any) => (
+                <div
+                  key={product.id}
+                  className="card-parent-container flex-none  md:w-auto cursor-pointer
+                   w-full bg-white transition duration-300 ease-in-out  snap-start"
+                >
+                  <div
+                    className="relative mt-4 border bg-[#F3F3F3] w-full rounded-[10px] 
+                  hover:shadow-lg flex flex-col gap-4 xs:gap-0 gap-x-6 pb-2"
+                  >
+                    <div className="flex justify-center items-center  px-2 py-2">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={500}
+                        height={500}
+                        className=" object-contain transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="sm:block xs:block md:block lg:block">
+                      <div className="flex justify-between items-center">
+                        <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5 xs:hidden sm:hidden">
+                          <p className="w-max content p-0 m-0 text-[#8C8C8C] lg:text-[16px] md:text-[12px] sm:text-[12px] xs:text-[8px] ">
+                            {product.name}
+                          </p>
+                        </div>
+                        <div className="flex justify-center items-center relative sm:hidden xs:hidden ">
+                          {product?.colors && product?.colors?.length > 0 && (
+                            <CircleContainer colors={product?.colors} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between pt-4 lg:flex md:flex   ">
+                    <div className="px-2">
+                      <h3 className="lg:text-md text-[#9F9F9F] inter md:text-[14px] sm:text-[5px] xs:text-[5px]">
+                        {product.title}
+                      </h3>
+                      <p className="text-black inter font-[600] text-[18px] xs:hidden sm:hidden md:block lg:block">
+                        {product.price}
+                      </p>
+                    </div>
+                    <div className="px-2 xs:hidden sm:hidden md:block lg:block">
                       <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
                         {product.discount}
                       </p>

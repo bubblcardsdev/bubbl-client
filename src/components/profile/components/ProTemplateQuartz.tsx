@@ -75,7 +75,7 @@ const ProTemplateQuartz = () => {
                 <CallProfileIcon color={"#FFFFFF"} />
                 <span className="text-sm">Phone Number</span>
               </div>
-              <div className="absolute bg-[#D47DFF] py-[12px] px-[16px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
+              <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
                 <Arrow_icon
                   className={`transition-transform duration-300 ${
                     openSection === "phone" ? "rotate-180" : ""
@@ -92,7 +92,7 @@ const ProTemplateQuartz = () => {
                 <MailProfileIcon color={"#FFFFFF"} />
                 <span className="text-sm">Email ID</span>
               </div>
-              <div className="absolute bg-[#D47DFF] py-[12px] px-[16px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
+              <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
                 <Arrow_icon
                   className={`transition-transform duration-300 ${
                     openSection === "email" ? "rotate-180" : ""
@@ -109,7 +109,7 @@ const ProTemplateQuartz = () => {
                 <WebProfileIcon color={"#FFFFFF"} />
                 <span className="text-sm">Website</span>
               </div>
-              <div className="absolute bg-[#D47DFF] py-[12px] px-[16px] rounded-[100%] backdrop-blur-sm shadow-md -right-2  ">
+              <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2  ">
                 <Arrow_icon
                   className={`transition-transform duration-300 ${
                     openSection === "website" ? "rotate-180" : ""

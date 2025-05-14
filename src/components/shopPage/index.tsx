@@ -9,7 +9,7 @@ function ShopPage() {
     <>
       <BannerSection />
       <Cardsection />
-      <div className="bg-black px-4">
+      <div className="bg-black px-0">
         <Footer />
       </div>
     </>

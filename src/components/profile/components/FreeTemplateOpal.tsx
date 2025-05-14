@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import ProfileImg from "../../../assets/Homeimg/profile.png";
+import ProfileImg from "../../../../public/profile.png";
 import {
   Share_icon,
   Qr_icon,
