@@ -257,9 +257,9 @@ const Cart = (props: any) => {
                     <div className="border rounded-lg bg-white px-2 py-[4px]">
                       <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                     </div>
-                    {product.colors && product.colors.length > 0 && (
+                    {/* {product.colors && product.colors.length > 0 && (
                       <CircleContainer colors={product.colors} />
-                    )}
+                    )} */}
                   </div>
                 </div>
 
