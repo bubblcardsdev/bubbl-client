@@ -1,6 +1,6 @@
 import PostLoginLayout from "../../src/components/layout/postLoginLayout";
 import Overview from "@/src/components/overview";
-export default function DashboardSection() {
+export default function Overviewsection() {
   const pageData = {
     title: "Overview",
     name: "overview",

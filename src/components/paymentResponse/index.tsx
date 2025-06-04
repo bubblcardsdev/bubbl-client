@@ -99,16 +99,16 @@ const PaymentResponse = () => {
             </div>
           </div>
           <div className="flex justify-between mt-6 sm:px-4 xs:px-4 text-[14px]">
-            <button className="w-1/2 border border-black text-black py-2 rounded-lg mr-2 inter">
+            <button className="w-1/2 border border-black hover:border-hidden text-black py-2 rounded-lg mr-2 inter hover:bg-[#9747FF] hover:text-white">
               Login
             </button>
-            <button className="w-1/2 bg-[#292929] text-white py-2 rounded-lg inter">
+            <button className="w-1/2 bg-[#292929] text-white py-2 rounded-lg  hover:opacity-80">
               Back to Shop
             </button>
           </div>
         </div>
       </div>
-      <div className="bg-black lg:px-10 md:px-10 sm:px-10 xs:px-4">
+      <div className="bg-black lg:px-10 md:px-10 sm:px-10 xs:px-4 mt-10 ">
         <Footer />
       </div>
     </>

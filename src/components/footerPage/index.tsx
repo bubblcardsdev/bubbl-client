@@ -66,7 +66,7 @@ function productFooterSection() {
           </div>
         </div>
         <div>
-          <hr className="my-10 border-gray-700" />
+          <hr className="my-8 border-gray-700" />
         </div>
         {/* Bottom Section */}
         <div className="flex flex-wrap gap-y-[3vh] gap-x-[0vw] text-[13px] items-center justify-between text-gray-400">

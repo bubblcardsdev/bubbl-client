@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
         Privacy Policy
       </h1>
       <div className="max-w-5xl mx-auto flex flex-col gap-y-6 text-sm md:text-base leading-relaxed">
-        <h3 className="text-lg font-semibold">INTRODUCTION</h3>
+        <h3 className="text-lg font-[400]">INTRODUCTION</h3>
         <p>
           We value the trust you have placed in us. That is the reason we take
           utmost care for the protection of your data. This Privacy Policy
@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
           “Site”). Please read the following statement to learn about our
           information gathering and dissemination practices.
         </p>
-        <h3 className="text-lg font-semibold">SCOPE:</h3>
+        <h3 className="text-lg font-[400]">SCOPE:</h3>
         <p>
           When you visit the Site, we automatically collect certain information
           about your device, including information about your web browser, IP
@@ -27,7 +27,7 @@ const PrivacyPolicy = () => {
           about how you interact with the Site. We refer to this automatically
           collected information as “Device Information”.
         </p>
-        <h3 className="text-lg font-semibold">COLLECTION OF DATA:</h3>
+        <h3 className="text-lg font-[400]">COLLECTION OF DATA:</h3>
         <p>
           Usually, we collect Personal Data which includes but is not limited
           to:
@@ -97,7 +97,7 @@ const PrivacyPolicy = () => {
           transactions or of usage of data provided to gateway partner.
         </p>
 
-        <h3 className="text-lg font-semibold">USAGE OF COLLECTED INFORMATION:</h3>
+        <h3 className="text-lg font-[400]">USAGE OF COLLECTED INFORMATION:</h3>
         <p>We collect information for the following purposes:</p>
         <h3>a. To provide Services:</h3>
         <p>
@@ -118,20 +118,20 @@ const PrivacyPolicy = () => {
           You traverse Our Platform.
         </p>
 
-        <h3 className="text-lg font-semibold">b. To improve and optimize the Services:</h3>
+        <h3 className="text-lg font-[400]">b. To improve and optimize the Services:</h3>
         <p>
           We use the information we collect to improve the execution of each
           procedure, provide observations and recommendations, and to assist You
           in optimizing Your work processes.
         </p>
 
-        <h3 className="text-lg font-semibold">c. For research and development:</h3>
+        <h3 className="text-lg font-[400]">c. For research and development:</h3>
         <p>
           We are continually searching for approaches to make our Services more
           brilliant, quicker, secure, coordinated, and helpful to You.
         </p>
 
-        <h3 className="text-lg font-semibold">d. To communicate with You about the Services:</h3>
+        <h3 className="text-lg font-[400]">d. To communicate with You about the Services:</h3>
         <p>
           We use your contact information to send transactional communications
           via email and within the Services, including confirming Your
@@ -144,14 +144,14 @@ const PrivacyPolicy = () => {
           in most cases, you cannot opt out of them.
         </p>
 
-        <h3 className="text-lg font-semibold" > e. For Customer support:</h3>
+        <h3 className="text-lg font-[400]" > e. For Customer support:</h3>
         <p>
           We use your information to resolve technical issues You encounter, to
           respond to your requests for assistance, to analyze crash information,
           and to repair and improve the Services.
         </p>
 
-        <h3 className="text-lg font-semibold">f. For safety and security:</h3>
+        <h3 className="text-lg font-[400]">f. For safety and security:</h3>
         <p>
           We use information about you and your Service use to verify accounts
           and activity, to monitor suspicious or fraudulent activity and to
