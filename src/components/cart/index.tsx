@@ -82,8 +82,8 @@ const Cart = (props: any) => {
   };
   const handleDecrease = (id: number) => {
     console.log(id, "cards");
-    setCards((prev:any) =>
-      prev.map((card:any) =>
+    setCards((prev: any) =>
+      prev.map((card: any) =>
         card.id === id && card.quantity > 1
           ? { ...card, quantity: card.quantity - 1 }
           : card
@@ -91,7 +91,7 @@ const Cart = (props: any) => {
     );
   };
   const handleRemove = (id: number) => {
-    setCards((prev:any) => prev.filter((card:any) => card.id !== id));
+    setCards((prev: any) => prev.filter((card: any) => card.id !== id));
   };
 
   const Products = [
@@ -125,15 +125,15 @@ const Cart = (props: any) => {
     <div className="py-3 h-screen">
       <div className="max-w-[1300px] mx-auto pt-[100px] mb-4 2xl:px-[20px] xl:px-[30px] lg:px-[100px] md:px-[20px] sm:px-[20px] xs:px-[20px]">
         <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
-          <div className="w-full md:w-[60%] flex flex-col gap-3">
+          <div className="w-full md:w-[60%] flex flex-col gap-1">
             {/* Shopping Cart */}
             <h2 className="text-xl sm:text-2xl font-bold  text-[#333333]">
               Shopping cart (2)
             </h2>
-            <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold mt-2">
+            <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold py-0">
               Cart it, Love it, Own it.
             </p>
-            <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl">
+            <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl mt-[20px]">
               {cards.map((value: any) => (
                 <div
                   key={value.id}
@@ -190,7 +190,7 @@ const Cart = (props: any) => {
               ))}
             </div>
           </div>
-          <div className="w-full md:w-[40%] md:sticky top-[100px] flex flex-col gap-3">
+          <div className="w-full md:w-[40%] md:sticky top-[100px] flex flex-col gap-3 sm:mt-[20px] xs:mt-[20px]">
             <div className="w-full flex flex-col gap-8 xs:px-0 sticky top-0 ">
               <h2 className="text-xl sm:text-2xl font-bold">Order Summary</h2>
               <div className="flex items-center justify-between w-full p-3 px-4 bg-gray-100 rounded-[10px] ">
@@ -233,129 +233,53 @@ const Cart = (props: any) => {
             </div>
           </div>
         </div>
-        {/* <div className="w-full mt-10  sm:px-0 xs:pl-3">
-          <>
-            <h2 className="text-xl sm:text-2xl font-bold  text-[#333333] py-6">
-              Similar Items You Might Also Like
-            </h2>
-            <div
-              className="  flex space-x-4 overflow-x-auto md:grid  my-4 scrollbar-hide hide-scrollbar
-                                 lg:grid-cols-[repeat(auto-fit,minmax(320px,1fr))] md:grid-cols-none sm:grid-cols-none
-                                 xs:grid-cols-none gap-5 w-full box-borderover flow-x-auto scrollbar-hide hide-scrollbar snap-x snap-mandatory "
-            >
-              {Products.map((product: any) => (
-                <div
-                  key={product.id}
-                  className="card-parent-container flex-none  md:w-auto cursor-pointer w-full bg-white transition
-                                     duration-300 ease-in-out  sm:w-[200px] snap-start"
-                >
-                  <div className="relative mt-4 border bg-[#F3F3F3] rounded-[10px] hover:shadow-lg flex flex-col gap-4 gap-x-6 pb-2">
-                    <div className="flex justify-center items-center  px-2 py-2">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        width={500}
-                        height={500}
-                        className="h-[300px] w-[500px] object-contain transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="hidden sm:block">
-                      <div className="flex justify-between items-center">
-                        <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5">
-                          <p className="w-max content p-0 m-0 text-[#8C8C8C] lg:text-[16px] md:text-[12px]">
-                            {product.name}
-                          </p>
-                        </div>
-                        <div className="flex justify-center items-center relative">
-                          {product?.colors && product?.colors?.length > 0 && (
-                            <CircleContainer colors={product?.colors} />
-                          )}
-                        </div>
-                      </div>
-                    </div>
+        <div className="w-full mt-10 pl-2 pr-0">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
+            Similar Items You Might Also Like
+          </h2>
+          <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4 ">
+            {Products.map((product) => (
+              <div
+                key={product.id}
+                className="snap-start rounded-lg  transition duration-300 ease-in-out"
+              >
+                <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
+                  <div className="flex justify-center items-center px-2 py-2">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      width={400}
+                      height={400}
+                      className=" object-contain transition-transform duration-500"
+                    />
                   </div>
-                  <div className="flex justify-between pt-4 lg:flex md:flex  xs:hidden sm:hidden ">
-                    <div className="px-2">
-                      <h3 className="text-md text-[#9F9F9F] inter">
-                        {product.title}
-                      </h3>
-                      <p className="text-black inter font-[600] text-[18px]  ">
-                        {product.price}
-                      </p>
+                  <div className="px-2 flex justify-between items-center">
+                    <div className="border rounded-lg bg-white px-2 py-[4px]">
+                      <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                     </div>
-                    <div className="px-2">
-                      <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
-                        {product.discount}
-                      </p>
-                    </div>
+                    {product.colors && product.colors.length > 0 && (
+                      <CircleContainer colors={product.colors} />
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          </>
-        </div> */}
-        <div className="w-full mt-10  sm:px-4 xs:pl-3 ">
-          <>
-            <h2 className="text-xl sm:text-2xl font-bold  text-[#333333] py-6">
-              Similar Items You Might Also Like
-            </h2>
-            <div className="grid grid-cols-3 lg:gap-x-10 md:lg:gap-x-10 overflow-auto sm:gap-x-10 xs:gap-x-2">
-              {Products.map((product: any) => (
-                <div
-                  key={product.id}
-                  className="card-parent-container flex-none  md:w-auto cursor-pointer
-                   w-full bg-white transition duration-300 ease-in-out  snap-start"
-                >
-                  <div
-                    className="relative mt-4 border bg-[#F3F3F3] w-full rounded-[10px] 
-                  hover:shadow-lg flex flex-col gap-4 xs:gap-0 gap-x-6 pb-2"
-                  >
-                    <div className="flex justify-center items-center  px-2 py-2">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        width={500}
-                        height={500}
-                        className=" object-contain transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="sm:block xs:block md:block lg:block">
-                      <div className="flex justify-between items-center">
-                        <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5 xs:hidden sm:hidden">
-                          <p className="w-max content p-0 m-0 text-[#8C8C8C] lg:text-[16px] md:text-[12px] sm:text-[12px] xs:text-[8px] ">
-                            {product.name}
-                          </p>
-                        </div>
-                        <div className="flex justify-center items-center relative sm:hidden xs:hidden ">
-                          {product?.colors && product?.colors?.length > 0 && (
-                            <CircleContainer colors={product?.colors} />
-                          )}
-                        </div>
-                      </div>
-                    </div>
+
+                <div className="flex justify-between items-center pt-4 px-2">
+                  <div>
+                    <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
+                    <p className="text-black font-semibold text-lg">
+                      {product.price}
+                    </p>
                   </div>
-                  <div className="flex justify-between pt-4 lg:flex md:flex   ">
-                    <div className="px-2">
-                      <h3 className="lg:text-md text-[#9F9F9F] inter md:text-[14px] sm:text-[5px] xs:text-[5px]">
-                        {product.title}
-                      </h3>
-                      <p className="text-black inter font-[600] text-[18px] xs:hidden sm:hidden md:block lg:block">
-                        {product.price}
-                      </p>
-                    </div>
-                    <div className="px-2 xs:hidden sm:hidden md:block lg:block">
-                      <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
-                        {product.discount}
-                      </p>
-                    </div>
-                  </div>
+                  <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
+                    {product.discount}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="bg-black  md:px-4 sm:px-4 xs:px-4 ">
+      <div className="bg-black  md:px-4 sm:px-4 xs:px-4 mt-[65px]">
         <Footer />
       </div>
     </div>

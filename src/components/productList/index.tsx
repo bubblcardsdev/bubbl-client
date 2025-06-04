@@ -7,7 +7,7 @@ import BackCard from "../../assets/product/productCardImg/metalCard.png";
 import BubblCard from "./components/bubblCards";
 // import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 // import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
-import Arrow_icon from "../../assets/icons/productIcon/productList_Arrow_icon";
+import { Arrow_icon } from "../common/icons";
 import { BracesIcon } from "lucide-react";
 import BreadCrumbs from "../common/BreadCrumbs";
 import { useRouter } from "next/router";
@@ -41,23 +41,23 @@ const CircleContainer = (props: any) => {
 const steps = [
   {
     id: 1,
-    image: "/images/howItWorks_group_img.png",
+    image: "/bubbl_product.png",
     title: "Order your bubbl right now",
   },
   {
     id: 2,
-    image: "/images/howItWorks_qr_img.png",
+    image: "/mobileProfile.png",
     title:
       "Setup your digital business card through our website, no additional app needed",
   },
   {
     id: 3,
-    image: "/images/howItWorks_share_humman_img.png",
+    image: "/QR_scan.png",
     title: "Once delivered, scan QR and set up your profile details",
   },
   {
     id: 4,
-    image: "/images/howItWorks_template_img.png",
+    image: "/networking.png",
     title: "Network like a pro",
   },
 ];
@@ -127,10 +127,9 @@ const ProductList = () => {
       <div className="py-3 h-screen">
         <div className="max-w-[1300px] mx-auto pt-12 mb-4">
           <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px] p-4  ">
-          
             {/* Left Section - Image */}
             <div className="w-full md:w-1/2 md:sticky top-[85px] flex flex-col gap-3">
-            <BreadCrumbs value={selectedCard}></BreadCrumbs>
+              <BreadCrumbs value={selectedCard}></BreadCrumbs>
               <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 sm:px-0 xs:px-0 w-full ">
                 <Image
                   src={flippedImage}
@@ -160,10 +159,10 @@ const ProductList = () => {
                 ( {currentImgae} View )
               </p>
               <div className="mt-6 flex flex-col md:flex-row sm:flex-row xs:flex-row gap-4 justify-center md:px-4 sm:px-4 xs:px-4">
-                <button className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap">
+                <button className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden">
                   Add to cart
                 </button>
-                <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap">
+                <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:opacity-80">
                   Buy now
                 </button>
               </div>
@@ -198,65 +197,55 @@ const ProductList = () => {
               </div>
             </div>
           </section>
-          <div className="w-full mt-10  sm:px-4 xs:pl-3 ">
-            <>
-              <h2 className="text-xl sm:text-2xl font-bold  text-[#333333] py-6">
-                Similar Items You Might Also Like
-              </h2>
-              <div className="grid grid-cols-3 lg:gap-x-10 md:lg:gap-x-10 overflow-auto sm:gap-x-10 xs:gap-x-2">
-                {Products.map((product: any) => (
-                  <div
-                    key={product.id}
-                    className="card-parent-container flex-none  md:w-auto cursor-pointer w-full bg-white transition 
-                                             duration-300 ease-in-out  snap-start"
-                  >
-                    <div className="relative mt-4 border bg-[#F3F3F3] w-full rounded-[10px] hover:shadow-lg flex flex-col gap-4 xs:gap-0 gap-x-6 pb-2">
-                      <div className="flex justify-center items-center  px-2 py-2">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          width={500}
-                          height={500}
-                          className=" object-contain transition-transform duration-500"
-                        />
-                      </div>
-                      <div className="hidden sm:block xs:block">
-                        <div className="flex justify-between items-center">
-                          <div className="w-max border rounded-lg bg-white flex items-center justify-center px-2 py-[4px] ml-2.5">
-                            <p className="w-max content p-0 m-0 text-[#8C8C8C] lg:text-[16px] md:text-[12px] sm:text-[12px] xs:text-[8px]">
-                              {product.name}
-                            </p>
-                          </div>
-                          <div className="flex justify-center items-center relative sm:hidden xs:hidden ">
-                            {product?.colors && product?.colors?.length > 0 && (
-                              <CircleContainer colors={product?.colors} />
-                            )}
-                          </div>
-                        </div>
-                      </div>
+          <div className="w-full mt-10 pl-2 pr-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
+              Similar Items You Might Also Like
+            </h2>
+            <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4 ">
+              {Products.map((product) => (
+                <div
+                  key={product.id}
+                  className="snap-start rounded-lg  transition duration-300 ease-in-out"
+                >
+                  <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
+                    <div className="flex justify-center items-center px-2 py-2">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className=" object-contain transition-transform duration-500"
+                      />
                     </div>
-                    <div className="flex justify-between pt-4 lg:flex md:flex  xs:hidden sm:hidden ">
-                      <div className="px-2">
-                        <h3 className="text-md text-[#9F9F9F] inter">
-                          {product.title}
-                        </h3>
-                        <p className="text-black inter font-[600] text-[18px]  ">
-                          {product.price}
-                        </p>
+                    <div className="px-2 flex justify-between items-center">
+                      <div className="border rounded-lg bg-white px-2 py-[4px]">
+                        <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                       </div>
-                      <div className="px-2">
-                        <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
-                          {product.discount}
-                        </p>
-                      </div>
-                    </div>{" "}
+                      {product.colors && product.colors.length > 0 && (
+                        <CircleContainer colors={product.colors} />
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </>
+
+                  <div className="flex justify-between items-center pt-4 px-2">
+                    <div>
+                      <h3 className="text-sm text-[#9F9F9F]">
+                        {product.title}
+                      </h3>
+                      <p className="text-black font-semibold text-lg">
+                        {product.price}
+                      </p>
+                    </div>
+                    <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
+                      {product.discount}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="bg-black sm:px-3 xs:px-3">
+        <div className="bg-black sm:px-3 xs:px-3 mt-[65px]">
           <Footer />
         </div>
       </div>

@@ -3,20 +3,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-
-
-
-
-
-
 const CircleContainer = ({ colors }: { colors: string[] }) => {
-  const [hovered, setHovered] = useState(false);
+  // const [hovered, setHovered] = useState(false);
 
   return (
     <div
       className="relative max-w-[300px] z-10"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      // onMouseEnter={() => setHovered(true)}
+      // onMouseLeave={() => setHovered(false)}
     >
       {colors.length > 0 &&
         colors.map((color, index) => (
@@ -26,17 +20,18 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
             style={{
               backgroundColor: color,
               right: `${10 + index * 3}px`,
-              transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              // transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              transform: `translateX(-${15 * index}px)`,
             }}
-            onClick={() => setHovered(false)}
+            // onClick={() => setHovered(false)}
           />
         ))}
     </div>
   );
 };
 
-function Products(props:any) {
-  const {data=[],title}=props
+function Products(props: any) {
+  const { data = [], title } = props;
   const [hoverImage, setHoverImage] = useState<number | null>(null);
   const router = useRouter();
   const handleCardClick = (id: number) => {
@@ -44,18 +39,18 @@ function Products(props:any) {
   };
   return (
     <div className="w-full top-6">
-      {data.map((product:any, index:number) => (
-        <div className="flex flex-col gap-6 w-full md:px-0"  key={index}>
+      {data.map((product: any, index: number) => (
+        <div className="flex flex-col gap-6 w-full md:px-0" key={index}>
           <div className="w-full mt-[60px] ml-0 ">
             <h1 className="w-full text-3xl text-black font-bold mb-2">
               {title[product.sectionType]?.title}
             </h1>
-            <p className="w-full text-[#7F7F7F] font-semibold text-[17px]">
+            <p className="w-full text-[#7F7F7F]  text-[16px]">
               {title[product.sectionType]?.description}
             </p>
           </div>
           <div className="grid lg:grid-cols-[repeat(3,minmax(320px,1fr))] md:grid-cols-[repeat(2,minmax(320px,1fr))] sm:grid-cols-none xs:grid-cols-none gap-5 w-full box-border ">
-            {product.cards.map((card:any) => (
+            {product.cards.map((card: any) => (
               <div
                 key={card.id}
                 className="cursor-pointer w-full bg-white transition duration-300 ease-in-out"
@@ -72,7 +67,7 @@ function Products(props:any) {
                       alt={card.name}
                       width={500}
                       height={500}
-                      className="h-[300px] w-[500px] object-contain transition-transform duration-500"
+                      className=" object-cover transition-transform duration-500"
                       style={{
                         opacity: hoverImage === card.id ? 0.9 : 1,
                         transform:

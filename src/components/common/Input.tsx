@@ -1,5 +1,4 @@
 import React from 'react'
-import './css/Input.css'
 interface InputProps{
     className?:string
     placeholder?:string
@@ -16,9 +15,9 @@ interface InputProps{
 }
 
 const Input:React.FC<InputProps> = (props?:any) => {
-    const{className}=props
+    const{className,...rest}=props
   return (
-   <input className={`w-full h-11 rounded-[1vh] px-5 outline-none bg-gray-100 font-inter text-base transition duration-500 focus:border-gray-300 ${className}`} {...props}/> 
+   <input className={`w-full h-11 rounded-[14px] p-[10px_10px] outline-none bg-[#333333] font-inter text-base transition duration-500 focus:border-gray-300 ${className}`} {...rest}/> 
   )
 }
 

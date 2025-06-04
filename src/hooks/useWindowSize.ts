@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Size } from "../lib/interface";
 
-
-
 const useWindowSize = () => {
   const [size, setSize] = useState<Size>({
     width: undefined,
