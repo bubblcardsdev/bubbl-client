@@ -190,17 +190,7 @@ export default function CoverflowCarousel({ images }: CoverflowCarouselProps) {
           <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-gray-700" />
         </button>
 
-        {/* Touch navigation indicators for mobile */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1 sm:hidden z-30">
-          {images.map((_, index) => (
-            <div 
-              key={`dot-${index}`}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                currentIndex === index ? "bg-white w-4" : "bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
+       
 
         {/* Images */}
         <div

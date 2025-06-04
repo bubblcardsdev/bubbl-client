@@ -4,6 +4,7 @@ import { FAQItem } from "./interface";
 
 export const themeObject: { [key: string]: string } = {
     "/home": "linear-gradient(to right, #4A4A4A, #000000)",
+    "/":"linear-gradient(to right, #4A4A4A, #000000)",
     "/plans": "black",
     "/contact": "black",
     "/compatibility":"black"
@@ -78,6 +79,18 @@ export const LOGOS = [
       { logo: "/assets/Homeimg/mynerva.png", place: "Savfolt", width: 220, height: 110 },
       { logo: "/assets/Homeimg/thejo.png",   place: "Thejo",   width: 100, height: 50 },
       { logo: "/assets/Homeimg/mynerva.png",   place: "Thejo",    width: 220, height: 110  },
+      { logo: "/assets/Homeimg/safvolt.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/mynerva.png", place: "Savfolt", width: 220, height: 110 },
+        { logo: "/assets/Homeimg/safvolt.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/mynerva.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/thejo.png",   place: "Thejo",   width: 100, height: 50 },
+      { logo: "/assets/Homeimg/mynerva.png",   place: "Thejo",    width: 220, height: 110  },
+      { logo: "/assets/Homeimg/safvolt.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/mynerva.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/thejo.png",   place: "Thejo",   width: 100, height: 50 },
+      { logo: "/assets/Homeimg/mynerva.png",   place: "Thejo",    width: 220, height: 110  },
+      { logo: "/assets/Homeimg/safvolt.png", place: "Savfolt", width: 220, height: 110 },
+      { logo: "/assets/Homeimg/mynerva.png", place: "Savfolt", width: 220, height: 110 },
     ];
 
 
@@ -120,3 +133,145 @@ export const LOGOS = [
         "Bubbl offers both free and premium subscription options. The free tier provides basic digital business card functionality with limited customization. Our premium subscriptions unlock additional features such as advanced analytics, unlimited customization options, removal of Bubbl branding, and priority customer support. We offer monthly and annual subscription plans with discounts for annual commitments. For enterprise solutions, we provide custom pricing based on team size and specific requirements.",
     },
   ];
+
+
+
+  export const testimonial = [
+  {
+    id: 1,
+    src: "/HomePageIcons/Rasoee.png",
+    alt: "Rasone",
+    description:
+      "If you have an image and some text side by side, items-start ensures both start aligned from the top line, providing a clean and consistent visual layout in your UI components.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "kishorePulsar",
+    name: "Kishore",
+  },
+  {
+    id: 2,
+    src: "/HomePageIcons/boom.png",
+    alt: "Boom Card",
+    description:
+      "Aligning text and images properly ensures the UI feels balanced. Using flexbox utilities like items-start helps maintain top alignment across all elements within the container.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "ninaSunrise",
+    name: "Nina",
+  },
+  {
+    id: 3,
+    src: "/HomePageIcons/prateek.png",
+    alt: "Rasone",
+    description:
+      "Good alignment between text and images makes the content more readable and visually appealing. Flexbox’s items-start utility ensures the start of each element lines up neatly.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "jasonWright",
+    name: "Jason",
+  },
+  {
+    id: 4,
+    src: "/HomePageIcons/shradha.png",
+    alt: "Boom Cards",
+    description:
+      "Using consistent alignment in UI components leads to better user experience. Items-start is key when placing images next to text so everything starts from the same vertical baseline.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "lilyBloom",
+    name: "Lily",
+  },
+  {
+    id: 5,
+    src: "/HomePageIcons/Lanson.png",
+    alt: "Boom Cards",
+    description:
+      "Maintaining vertical alignment for mixed media content prevents awkward spacing. Flexbox utilities like items-start help achieve clean, professional layouts with minimal effort.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "michaelVoss",
+    name: "Michael",
+  },
+  {
+    id: 6,
+    src: "/HomePageIcons/Aroma.png",
+    alt: "Boom Cards",
+    description:
+      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "emmaDawn",
+    name: "Emma",
+  },
+  {
+    id: 7,
+    src: "/HomePageIcons/Aroma.png",
+    alt: "Boom Cards",
+    description:
+      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "emmaDawn",
+    name: "Emma",
+  },
+  {
+    id: 8,
+    src: "/HomePageIcons/Aroma.png",
+    alt: "Boom Cards",
+    description:
+      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "emmaDawn",
+    name: "Emma",
+  },
+  {
+    id: 9,
+    src: "/HomePageIcons/Aroma.png",
+    alt: "Boom Cards",
+    description:
+      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+    profile: "/HomePageIcons/treeImg.png",
+    username: "emmaDawn",
+    name: "Emma",
+  },
+
+];
+
+export const PRODUCTS = [
+    {
+      id: 4,
+      name: "Basic Card",
+      title: "Bubbl Basic Card",
+      price: "Rs.999",
+      image: "/productCardImg/basiccard.png",
+      discount: "18.77%",
+      secondaryImage:"/productCardImg/basiccard.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+    {
+      id: 5,
+      name: "Socket",
+      title: "Bubbl Socket",
+      price: "Rs.799",
+      image:"/productCardImg/socket.png" ,
+      discount: "18.77%",
+      secondaryImage: "/productCardImg/socket.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+    {
+      id: 6,
+      name: "Tile",
+      title: "Bubbl Tile",
+      price: "Rs.1999",
+      image:"/productCardImg/tile.png" ,
+      discount: "18.77%",
+      secondaryImage: "/productCardImg/tile.png",
+      colors: ['black','blue','green','yellow','red','white','purple'],
+    },
+  ];
+
+
+export const LOGIN_IMAGES = [
+  "/images/blackMetal.jpg",
+  "/images/green.jpg",
+  "/images/blueMetal.jpg",
+  "/images/metalicBlue.jpg",
+  "/images/mintBlue.jpg",
+  "/images/orangeMetal.jpg",
+  "/images/purpleMetal.jpg",
+  "/images/redMetal.jpg"
+];
+

@@ -7,8 +7,6 @@ import BackCard from "../../assets/product/productCardImg/metalCard.png";
 import BubblCard from "./components/bubblCards";
 // import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 // import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
-import Arrow_icon from "../../assets/icons/productIcon/productList_Arrow_icon";
-import { BracesIcon } from "lucide-react";
 import BreadCrumbs from "../common/BreadCrumbs";
 import { useRouter } from "next/router";
 const CircleContainer = (props: any) => {

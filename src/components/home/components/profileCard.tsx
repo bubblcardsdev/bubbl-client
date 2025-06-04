@@ -11,6 +11,10 @@ import {
 } from "@/src/lib/interface";
 import { imageObj } from "../../../lib/constant";
 import useWindowSize from "@/src/hooks/useWindowSize";
+import FadeInSection from "../../common/fadeInSection";
+import TranslateYwithFadeIn from "../../common/translate";
+import { ColorSelector, ModeColorSelector } from "../../common/ColorSelector";
+import ProfileCardAnimate from "../../common/profileCardAnimate";
 
 export default function ProfileCard() {
   const router = useRouter();
@@ -33,46 +37,29 @@ export default function ProfileCard() {
     { name: "White", color: "bg-white" },
   ];
 
-  const ColorSelector = <T extends string>({
-    title,
-    items,
-    selected,
-    setSelected,
-  }: ColorSelectorProps<T>) => (
-    <div className="flex flex-col items-center mb-6">
-      <h1 className="mb-3 font-semibold text-white">{title}</h1>
-      <div className="flex gap-3 flex-wrap justify-center p-2">
-        {items.map((item) => (
-          <button
-            key={item.name}
-            aria-label={`Select ${item.name}`}
-            className={`md:w-7 md:h-7 xs:w-5 xs:h-5 ${
-              item.color
-            } rounded-full hover:scale-110 transition-all duration-200 xs: ${
-              item.name === selected
-                ? "ring-2 ring-offset-2 ring-white shadow-lg scale-110"
-                : "hover:shadow-md"
-            }`}
-            onClick={() => setSelected(item.name)}
-          />
-        ))}
-      </div>
-    </div>
-  );
+  
   return (
-    <section className="bg-[#ffffff]">
+    <section className="bg-[#ffffff] overflow-hidden ">
+      {/* <ProfileCardAnimate> */}
+
     <div className="rounded-b-[3rem] bg-gradient-to-b from-[#000000] via-[#000000] via-50% to-[#9746FF] w-full px-8 py-12 min-h-[100vh] flex">
       <div className="w-full max-w-[1300px] m-auto">
-        <h4 className="text-white text-center text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight mb-5">
+        <TranslateYwithFadeIn>
+ <h4 className="text-white text-center text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight mb-5">
           Customize your Profile
-        </h4>
-        <h3 className="text-center mb-16 text-[#828282] text-xs sm:text-sm md:text-base font-semibold leading-relaxed">
+        </h4> 
+        </TranslateYwithFadeIn>
+       
+        <TranslateYwithFadeIn>
+  <h3 className="text-center mb-16 text-[#828282] text-xs sm:text-sm md:text-base font-semibold leading-relaxed">
           Customize every element to reflect your style, personality, and
           purpose.{(size?.width || 0) >= 576 && <br />} Make your profile as unique as
           you are!
         </h3>
+</TranslateYwithFadeIn>      
+<FadeInSection>
 
-        <div className="flex justify-center mb-8">
+     <div className="flex justify-center mb-8">
           <Image
             src={imageObj[selectedMode][selectedColor]}
             alt="profile"
@@ -83,8 +70,9 @@ export default function ProfileCard() {
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row md:gap-6 justify-center items-center">
-          <ColorSelector
+
+ <div className="flex flex-col sm:flex-row md:gap-6 justify-center items-center">
+          <ModeColorSelector
             title="Mode"
             items={mode}
             selected={selectedMode}
@@ -97,7 +85,9 @@ export default function ProfileCard() {
             setSelected={setSelectedColor}
           />
         </div>
-        <div className="flex justify-center mt-3">
+        </FadeInSection>
+   <TranslateYwithFadeIn>
+<div className="flex justify-center mt-3">
           <button
             className="px-4 sm:px-6 md:px-8 py-2 bg-[#9747FF] text-white text-sm sm:text-base rounded-[10px] hover:bg-purple-500 transition-colors"
             onClick={() => router.push("/shop")}
@@ -105,8 +95,12 @@ export default function ProfileCard() {
             Explore more
           </button>
         </div>
+   </TranslateYwithFadeIn>
+  
+      
       </div>
     </div>
+    {/* </ProfileCardAnimate> */}
     </section>
   );
 }
