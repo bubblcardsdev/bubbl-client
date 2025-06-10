@@ -99,14 +99,14 @@ export default function CoverflowCarousel({ images }: CoverflowCarouselProps) {
     
     const centerHeight = isMobile ? 300 : isTablet ? 400 : 485
     
-    const sideWidth = isMobile ? 20 : isTablet ? 30 : 40
+    const sideWidth = isMobile ? 20 : isTablet ? 60 : 60
     const sideHeight = isMobile ? 300 : isTablet ? 400 : 485
     
     const gapBetweenImages = isMobile 
       ? Math.min(20, containerWidth * 0.7) 
       : isTablet 
-        ? Math.min(30, containerWidth * 0.75) 
-        : Math.min(40, containerWidth * 0.8)
+        ? Math.min(40, containerWidth * 0.75) 
+        : Math.min(60, containerWidth * 0.8)
     
     // For circular effect - calculate shortest path distance
     const circularDiff = ((diff % totalImages) + totalImages) % totalImages
