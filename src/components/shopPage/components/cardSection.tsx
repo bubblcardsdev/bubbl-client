@@ -9,7 +9,7 @@ import Scoket from "../../../assets/product/productCardImg/socket.png";
 import Tile from "../../../assets/product/productCardImg/tile.png";
 import Band from "../../../assets/product/productCardImg/band.png";
 import Standee from "../../../assets/product/productCardImg/standee.png";
-import { searchIcon  } from "../../common/icons";
+import { SearchIcon  } from "../../common/icons";
 import Products from "./products";
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
@@ -43,7 +43,7 @@ const products = [
         name: "Full Custom",
         title: "Bubbl Full Custom",
         price: "Rs.999",
-        image: FullCustomCard,
+        image: '/sandee_white.png',
         discount: "18.77%",
         secondaryImage: FullCustomCard,
         colors: [],
@@ -53,7 +53,17 @@ const products = [
         name: "Name Custom",
         title: "Bubbl Name Custom",
         price: "Rs.799",
-        image: NameCustomCard,
+        image: '/red.png',
+        discount: "18.77%",
+        secondaryImage: NameCustomCard,
+        colors: [],
+      },
+           {
+        id: 3,
+        name: "Metal Custom",
+        title: "Bubbl Metal Custom",
+        price: "Rs.1499",
+        image: '/red.png',
         discount: "18.77%",
         secondaryImage: NameCustomCard,
         colors: [],
@@ -68,7 +78,7 @@ const products = [
         name: "Basic Card",
         title: "Bubbl Basic Card",
         price: "Rs.999",
-        image: BasicCard,
+        image: '/purple.png',
         discount: "18.77%",
         secondaryImage: BasicCard,
         colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
@@ -78,7 +88,7 @@ const products = [
         name: "Socket",
         title: "Bubbl Socket",
         price: "Rs.799",
-        image: Scoket,
+        image: '/red.png',
         discount: "18.77%",
         secondaryImage: Scoket,
         colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
@@ -88,7 +98,7 @@ const products = [
         name: "Tile",
         title: "Bubbl Tile",
         price: "Rs.1999",
-        image: Tile,
+        image: '/orange.png',
         discount: "18.77%",
         secondaryImage: Tile,
         colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
@@ -98,14 +108,14 @@ const products = [
   {
     sectionType: "bubbl_other_product",
     cards: [
-      {
+     {
         id: 5,
-        name: "Band",
-        title: "Bubbl Band",
+        name: "Standee",
+        title: "Bubbl Standee",
         price: "Rs.1499",
-        image: Band,
+        image: '/sandee_black.png',
         discount: "18.77%",
-        secondaryImage: Band,
+        secondaryImage: '/sandee_white.png',
         colors: ["black", "white"],
       },
       {
@@ -113,11 +123,12 @@ const products = [
         name: "Standee",
         title: "Bubbl Standee",
         price: "Rs.1499",
-        image: Standee,
+        image: '/sandee_black.png',
         discount: "18.77%",
-        secondaryImage: Standee,
+        secondaryImage: '/sandee_white.png',
         colors: ["black", "white"],
       },
+     
     ],
   },
 ];
@@ -137,7 +148,7 @@ function CardSection() {
   
     const search = searchProduct?.toString().trim().toLowerCase();
     if (!search) {
-      return products; // Return all if there's no search
+      return products; 
     }
   
     return products
@@ -149,7 +160,7 @@ function CardSection() {
           ? { ...section, cards: filteredCards }
           : null;
       })
-      .filter(Boolean); // remove empty sections
+      .filter(Boolean); 
   }, [products, searchProduct]);
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
@@ -158,12 +169,12 @@ function CardSection() {
           <div className="flex flex-col mb-4 md:mb-0  lg:w-2/5 w-full md:w-3/4 sm:w-3/4 xs:w-3/4">
             <div className="flex items-center w-full  h-12 bg-[#F5F5F5]  rounded-xl  ">
               <span className="px-4 ">
-                  {/* <searchIcon /> */}
+                  <SearchIcon  />
               </span>
               <input
                 type="text"
                 onChange={(e:any)=>setSearchProduct(e?.target?.value)}
-                className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden   "
+                className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden"
                 placeholder="Search bubbl product..."
               />
             </div>
@@ -171,7 +182,6 @@ function CardSection() {
               Result: 21 Products
             </p>
           </div>
-          {/* Dropdown */}
           <div className="relative w-12 md:w-48">
             <button
               className="w-full px-4 py-3 text-black bg-[#F5F5F5] rounded-xl flex justify-between items-center"
@@ -185,7 +195,6 @@ function CardSection() {
                 <IoIosArrowDown />
               </span>
             </button>
-            {/* Dropdown Menu */}
             {isOpen && (
               <ul className="absolute w-full mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg lg:block md:block sm:hidden xs:hidden">
                 {options.map((option, index) => (
@@ -202,7 +211,6 @@ function CardSection() {
                 ))}
               </ul>
             )}
-            {/* mobile Dropdown Menu  */}
             {isOpen && (
               <div className="absolute right-0 mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg sm:hidden w-48 p-2">
                 <div className="flex justify-between items-center border-b pb-2 mb-2">

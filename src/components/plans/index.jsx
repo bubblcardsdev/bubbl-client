@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import PricingPlan from "./components/pricingPlans";
 import Footer from "../footerPage/index";
-import {FullArrowIcon,RightTickIcon,MessageIcon} from "../common/icons";
+import { FullArrowIcon, RightTickIcon, MessageIcon } from "../common/icons";
 function Plans() {
   const [planIndex, setPlanIndex] = useState(0);
   const data = [
@@ -92,7 +92,6 @@ function Plans() {
           </div>
         </section>
         <PricingPlan />
-        {/* table */}
         <section className=" bg-black text-gray-300 lg:block md:block sm:hidden xs:hidden">
           <div className="max-w-6xl mx-auto">
             <table className="w-full border-collapse">
@@ -109,8 +108,10 @@ function Plans() {
                         className="text-sm text-gray-400 hover:text-white inline-flex items-center underline"
                       >
                         Start building for free
-                        <span className="px-2"><FullArrowIcon /></span>
-                        </a>
+                        <span className="px-2">
+                          <FullArrowIcon />
+                        </span>
+                      </a>
                     </div>
                   </th>
                   <th className="p-4 text-left bg-[#0F0F10] rounded-t-lg border-t-white w-[250px]">
@@ -121,8 +122,9 @@ function Plans() {
                         className="text-sm text-gray-400 hover:text-white inline-flex items-center underline "
                       >
                         Sign up
-                       <span className="px-2"><FullArrowIcon /></span>
-
+                        <span className="px-2">
+                          <FullArrowIcon />
+                        </span>
                       </a>
                     </div>
                   </th>
@@ -136,8 +138,10 @@ function Plans() {
                         className="text-sm text-gray-400 hover:text-white inline-flex items-center underline"
                       >
                         Contact us
-                        <span className="px-2"><FullArrowIcon /></span>
-                        </a>
+                        <span className="px-2">
+                          <FullArrowIcon />
+                        </span>
+                      </a>
                     </div>
                   </th>
                 </tr>
@@ -213,9 +217,7 @@ function Plans() {
             </table>
           </div>
         </section>
-        {/* moblie response */}
         <section className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide">
-          {/* Sticky Buttons */}
           <div className="lg:hidden md:hidden sm:flex xs:flex justify-between items-center sm:px-4 xs:px-[5px] xs:gap-x-2 sticky top-0 z-10 bg-black py-2">
             <button
               onClick={() => selectedIndex(0)}
@@ -246,7 +248,6 @@ function Plans() {
             </button>
           </div>
 
-          {/* Scrollable Table */}
           <div className="overflow-x-auto sm:overflow-x-hidden  overflow-y-auto">
             <table className="w-full border-collapse">
               <thead>
@@ -358,7 +359,6 @@ function Plans() {
             </table>
           </div>
         </section>
-        {/* search */}
         <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
           <div className="w-full">
             <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
@@ -380,22 +380,25 @@ function Plans() {
               />
               <button
                 type="submit"
-                className="px-7 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors lg:w-fit md:w-full sm:w-full xs:w-full"
+                className="px-7 py-2 bg-[#9747FF] text-white font-medium rounded-lg hover:bg-[#a66bf4] transition-colors lg:w-fit md:w-full sm:w-full xs:w-full"
               >
                 Subscribe
               </button>
             </div>
             <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full">
-              We care about your data in our{" "}
-              <a href="#" className="underline hover:text-gray-300 ">
+              We care about your data in our
+              <a
+                href="/privacyPolicy"
+                className="underline hover:text-[#a66bf4] "
+              >
                 privacy policy
               </a>
             </p>
           </div>
         </div>
-        <div className="bg-black sm:px-2 xs:px-2">
-          <Footer />
-        </div>
+      </div>
+      <div className="bg-black lg:px-[12px] sm:px-2 xs:px-2 w-full max-w-[1200px] mx-auto">
+        <Footer />
       </div>
     </div>
   );

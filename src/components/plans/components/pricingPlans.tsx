@@ -2,7 +2,6 @@ const PricingTable = () => {
     return (
         <div className=" flex items-center justify-center bg-black px-0">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
-                {/* Starter Plan */}
                 <div className="bg-black text-white p-6 rounded-[6px] border border-zinc-800 shadow-lg">
                     <h3 className="text-xl font-semibold ">Starter</h3>
                     <p className="text-gray-400 mt-2 ">For developers testing out <br/> Liveblocks locally.</p>
@@ -14,7 +13,6 @@ const PricingTable = () => {
                         <li>&#10003; Community support</li>
                     </ul>
                 </div>
-                {/* Pro Plan */}
                 <div className="bg-[#0F0F10] text-white p-6 rounded-[6px] border border-zinc-800   shadow-lg relative">
                     <span className="absolute top-4 right-4 bg-purple-600 text-xs text-white px-2 py-1 rounded-[10px] ">Most popular</span>
                     <h3 className="text-xl font-semibold ">Pro</h3>
@@ -27,7 +25,6 @@ const PricingTable = () => {
                         <li>&#10003; Email support</li>
                     </ul>
                 </div>
-                {/* Enterprise Plan */}
                 <div className="bg-black text-white p-6 rounded-[6px] border border-zinc-800 shadow-lg">
                     <h3 className="text-xl font-semibold ">Enterprise</h3>
                     <p className="text-gray-400 mt-2 ">For organizations that need more support and compliance features.</p>

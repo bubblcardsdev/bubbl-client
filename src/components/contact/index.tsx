@@ -58,13 +58,13 @@ function ContactPage() {
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mb-4">
                 <div className="w-10 h-10 rounded-full bg-purple-900/30 flex items-center justify-center ">
-                  <Phone className="w-6 h-6 text-purple-500" color='#9747FF' />
+                  <Phone className="w-6 h-6 text-[#9747FF]" color='#9747FF' />
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2 ">Phone</h3>
               <a
                 href="tel"
-                className="text-white hover:text-purple-400 transition-colors "
+                className="text-white hover:text-[#9747FF] transition-colors "
               >
                 +91 9876-543210
               </a>
@@ -88,19 +88,19 @@ function ContactPage() {
                 // value={email}
                 // onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="placeholder:text-[14px] w-full px-3 py-2 bg-[#111111] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-gray-400"
+                className="placeholder:text-[14px] w-full px-3 py-2 bg-[#111111] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9747FF] placeholder-gray-400"
                 required
               />
               <button
                 type="submit"
-                className="px-7 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors lg:w-fit md:w-full sm:w-full xs:w-full"
+                className="px-7 py-2 bg-[#9747FF] text-white font-medium rounded-lg hover:bg-[#AC6CFF] transition-colors lg:w-fit md:w-full sm:w-full xs:w-full"
               >
                 Subscribe
               </button>
             </div>
             <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full ">
               We care about your data in our
-              <a href="#" className="underline hover:text-gray-300 ">
+              <a href="/privacyPolicy" className="underline hover:text-[#AC6CFF] px-1 ">
                 privacy policy
               </a>
             </p>

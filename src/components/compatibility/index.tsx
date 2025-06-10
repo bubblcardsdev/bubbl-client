@@ -285,8 +285,8 @@ const CompatibilityPage = () => {
             ))}
           </div>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </section>
   );
 };

@@ -119,7 +119,7 @@ const ContactForm = () => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9747FF]"
                 placeholder="Last name"
               />
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
@@ -134,7 +134,7 @@ const ContactForm = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+              className="w-full bg-[#111111] placeholder:text-[14px]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9747FF]"
               placeholder="you@company.com"
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -143,7 +143,7 @@ const ContactForm = () => {
           <div>
             <label htmlFor="phone" className="block text-sm text-gray-400 mb-1 ">Phone number</label>
             <div className="flex">
-              <select className="bg-[#111111] text-[14px] rounded-l-lg border border-none px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 border-r-0">
+              <select className="bg-[#111111] text-[14px] rounded-l-lg border border-none px-3 py-2.5 text-white focus:outline-none focus:border-[#9747FF] border-r-0">
                 <option className='text-gray'>IND</option>
               </select>
               <input
@@ -152,7 +152,7 @@ const ContactForm = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-r-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="w-full bg-[#111111] placeholder:text-[14px]  rounded-r-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9747FF]"
                 placeholder="+91 0000-00000"
               />
             </div>
@@ -167,7 +167,7 @@ const ContactForm = () => {
               value={formData.message}
               onChange={handleChange}
               rows={4}
-              className="w-full bg-[#111111]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+              className="w-full bg-[#111111]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9747FF]"
             />
             {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
           </div>
@@ -179,11 +179,11 @@ const ContactForm = () => {
               name="privacy"
               checked={formData.privacy}
               onChange={handleChange}
-              className="rounded bg-[#111111]  border-none text-purple-500 focus:ring-purple-500 focus:ring-offset-0"
+              className="rounded bg-[#111111]  border-none text-white focus:ring-[#9747FF] focus:ring-offset-0"
             />
             <label htmlFor="privacy" className="ml-2 text-sm text-gray-400 ">
               You agree to our friendly{' '}
-              <a href="/privacy-policy" className="text-gray-400 underline  hover:text-purple-500">
+              <a href="/privacy-policy" className="text-gray-400 underline  hover:text-[#9747FF]">
                 privacy policy
               </a>.
             </label>
@@ -192,7 +192,7 @@ const ContactForm = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 px-4 rounded-lg transition-colors "
+            className="w-full bg-[#9747FF] hover:bg-[#9747FF] text-white py-2.5 px-4 rounded-lg transition-colors "
           >
             Send message
           </button>
