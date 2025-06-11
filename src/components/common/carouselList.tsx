@@ -99,14 +99,14 @@ export default function CoverflowCarousel({ images }: CoverflowCarouselProps) {
     
     const centerHeight = isMobile ? 300 : isTablet ? 400 : 485
     
-    const sideWidth = isMobile ? 20 : isTablet ? 30 : 40
+    const sideWidth = isMobile ? 20 : isTablet ? 60 : 60
     const sideHeight = isMobile ? 300 : isTablet ? 400 : 485
     
     const gapBetweenImages = isMobile 
       ? Math.min(20, containerWidth * 0.7) 
       : isTablet 
-        ? Math.min(30, containerWidth * 0.75) 
-        : Math.min(40, containerWidth * 0.8)
+        ? Math.min(40, containerWidth * 0.75) 
+        : Math.min(60, containerWidth * 0.8)
     
     // For circular effect - calculate shortest path distance
     const circularDiff = ((diff % totalImages) + totalImages) % totalImages
@@ -190,17 +190,7 @@ export default function CoverflowCarousel({ images }: CoverflowCarouselProps) {
           <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-gray-700" />
         </button>
 
-        {/* Touch navigation indicators for mobile */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1 sm:hidden z-30">
-          {images.map((_, index) => (
-            <div 
-              key={`dot-${index}`}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                currentIndex === index ? "bg-white w-4" : "bg-white/50"
-              }`}
-            />
-          ))}
-        </div>
+       
 
         {/* Images */}
         <div

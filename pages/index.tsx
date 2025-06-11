@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import ProductPage from "@/pages/shop/index";
 import SiteLayout from "@/src/components/layout/siteLayout";
+import Home from "@/src/components/home";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout() {
   return (
     <SiteLayout>
-      <ProductPage />
+      <Home />
     </SiteLayout>
   );
 }

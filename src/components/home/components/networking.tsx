@@ -2,6 +2,8 @@ import { useState } from "react";
 import SlideBar from "../../common/SlideBar";
 import TreeRow from "../../common/TreePopping";
 import Image from "next/image";
+import FadeInSection from "../../common/fadeInSection";
+import TranslateYwithFadeIn from "../../common/translate";
 
 const Networking = () => {
   const [employee, setEmployee] = useState<number>(10);
@@ -54,15 +56,24 @@ const Networking = () => {
     }
   }
   return (
-    <div className="w-full bg-[#ffffff] px-8 py-12 min-h-[100vh] flex">
+    <div className="w-full bg-[#ffffff] px-8 py-12 min-h-[100vh] flex overflow-hidden">
     <div className="w-full max-w-[1300px] m-auto">
-          <h4 className="text-black text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
+      <TranslateYwithFadeIn>
+ <h4 className="text-black text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-6">
         Networking Made <span className="text-[#76C535]">Eco friendly</span>
       </h4>
-      <h3 className="text-center text-[#828282] text-sm sm:text-base md:text-lg lg:text-xl font-semibold leading-relaxed xs:mb-12 sm:mb-16">
+      </TranslateYwithFadeIn>
+         
+     <TranslateYwithFadeIn>
+     <h3 className="text-center text-[#828282] text-sm sm:text-base md:text-lg lg:text-xl font-semibold leading-relaxed xs:mb-12 sm:mb-16">
         Step into the eco-friendly future of networking with Bubbl&apos;s
         digital business cards.
       </h3>
+     </TranslateYwithFadeIn>
+  
+
+
+    <FadeInSection>
 
       <div className="flex flex-col lg:flex-row w-full justify-center gap-[5%] items-center">
         {/* first box - responsive version */}
@@ -153,6 +164,7 @@ const Networking = () => {
           <TreeRow count={Math.floor(employee / 100)} />
         </div>
       </div>
+        </FadeInSection>
     </div>
     </div>
   );

@@ -14,13 +14,16 @@ import StickyPortion from "./components/stickyPortion";
 import ProfileCard from "./components/profileCard";
 const Home = () => {
   return (
-    <div className="w-full h-screen bg-black overflow-y-auto overflow-x-hidden">
+    <div className="w-full h-screen bg-black overflow-y-auto overflow-x-hidden font-inter">
       <HeroSection />
       <HowItWorks />
       <ValuedPartners />
       <OurProducts />
       <StickyPortion />
-      <ProfileCard />
+    
+ <ProfileCard />
+     
+     
       <Networking />
       <FutureNetworking />
       <TestiMonial />
