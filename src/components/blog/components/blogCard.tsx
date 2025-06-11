@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 interface BlogCardProps {
@@ -31,7 +32,7 @@ export default function BlogCard({
         alt="blog image"
         height={500}
         width={500}
-        className="w-full h-48 object-cover border"
+        className="w-full h-48 object-cover"
       />
       <div className="px-4 py-3 text-sm flex justify-between text-[#000] bg-white rounded-[0_0px_5px_5px]">
         <span className="font-semibold">
@@ -44,7 +45,7 @@ export default function BlogCard({
       <div className=" pb-4">
         <a
           href="#"
-          className="text-[#6F17EC] text-sm font-medium hover:underline"
+          className="text-[#9747FF] text-sm font-medium hover:underline"
         >
           Read post →
         </a>

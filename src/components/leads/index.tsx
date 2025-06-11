@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -104,11 +104,63 @@ const leads = [
   },
 ];
 
+const parseDate = (dateStr: any) => {
+  const map: any = {
+    "Just now": new Date(),
+    "A minute ago": new Date(Date.now() - 60 * 1000),
+    "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
+    "Yesterday": new Date(Date.now() - 24 * 60 * 60 * 1000),
+  };
+  if (map[dateStr]) return map[dateStr].getTime();
+  const parsed: any = new Date(dateStr);
+  return isNaN(parsed) ? 0 : parsed.getTime();
+};
+
+const sortData = (data: any, field: any, ascending: any) => {
+  return [...data].sort((a, b) => {
+    let aValue = a[field];
+    let bValue = b[field];
+
+    if (field === "date") {
+      aValue = parseDate(aValue);
+      bValue = parseDate(bValue);
+    } else {
+      aValue = aValue.toLowerCase();
+      bValue = bValue.toLowerCase();
+    }
+
+    if (aValue < bValue) return ascending ? -1 : 1;
+    if (aValue > bValue) return ascending ? 1 : -1;
+    return 0;
+  });
+};
+
 const Leads = () => {
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenAction, setIsOpenAction] = useState<any>(null)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState("name");
+  const [ascending, setAscending] = useState(true);
+  const [sortedLeads, setSortedLeads] = useState(sortData(leads, "name", true));
   const { width } = useWindowSize();
+
+  const handleSort = (field: any) => {
+    const isAscending = field === sortField ? !ascending : true;
+    setSortField(field);
+    setAscending(isAscending);
+    setSortedLeads(sortData(sortedLeads, field, isAscending));
+  };
+
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+  const leadsPerPage = 5;
+  const totalPages = Math.ceil(leads.length / leadsPerPage);
+
+  const paginatedLeads = sortedLeads.slice(
+    (currentPage - 1) * leadsPerPage,
+    currentPage * leadsPerPage
+  );
 
   const toggleCheckbox = (id: number) => {
     const updated = new Set(selectedLeads);
@@ -119,6 +171,24 @@ const Leads = () => {
     }
     setSelectedLeads(updated);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setIsOpenAction(null);
+      }
+    };
+
+    if (isOpenAction !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpenAction]);
+
+
   console.log(width);
   return (
     <div className="">
@@ -133,11 +203,14 @@ const Leads = () => {
           />
         </div>
         <div className="flex items-center space-x-2 ml-4 gap-3">
-          <button className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a]">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a]"
+          >
             <FilterIcon className="w-6 h-6" />
           </button>
           <div className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a] flex">
-            <span>
+            <span role="button" onClick={() => handleSort("name")}>
               <LeadsArrowIcon />
             </span>
           </div>
@@ -168,79 +241,97 @@ const Leads = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#323232]">
-            {leads.map((lead: any, index: number) => (
-              <tr
-                key={index}
-                className="group hover:bg-[#282828] transition-colors"
-              >
-                <td className="p-2">
-                  <input
-                    type="checkbox"
-                    className={`
-               accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente
-                ${
-                  selectedLeads.has(index)
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-                transition-opacity duration-200
-              `}
-                    checked={selectedLeads.has(index)}
-                    onChange={() => toggleCheckbox(index)}
-                  />
-                </td>
-                <td className="p-3 flex items-center gap-3">
-                  <img
-                    src={lead?.avatar}
-                    alt=""
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  {lead?.name}
-                </td>
-                <td className="p-2">{lead?.role}</td>
-                <td className="p-2">{lead?.orderId}</td>
-                <td className="p-2">{lead?.connection}</td>
-                <td className="p-2 flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-gray-400" />{" "}
-                  {lead?.date}
-                </td>
-                <td
-                  className={`
-                accent-black
-                ${
-                  selectedLeads.has(index)
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-                transition-opacity duration-200
-              `}
+            {paginatedLeads.map((lead: any, index: number) => {
+              const realIndex = (currentPage - 1) * leadsPerPage + index;
+              return (
+
+                <tr
+                  key={index}
+                  className="group hover:bg-[#282828] transition-colors"
                 >
-                  <LeadsTableMenuIcon />
-                </td>
-              </tr>
-            ))}
+                  <td className="p-2">
+                    <input
+                      type="checkbox"
+                      className={`
+               accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente
+                ${selectedLeads.has(index)
+                          ? "opacity-100"
+                          : "opacity-0 group-hover:opacity-100"
+                        }
+                transition-opacity duration-200
+              `}
+                      checked={selectedLeads.has(index)}
+                      onChange={() => toggleCheckbox(index)}
+                    />
+                  </td>
+                  <td className="p-3 flex items-center gap-3">
+                    <img
+                      src={lead?.avatar}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    {lead?.name}
+                  </td>
+                  <td className="p-2">{lead?.role}</td>
+                  <td className="p-2">{lead?.orderId}</td>
+                  <td className="p-2">{lead?.connection}</td>
+                  <td className="p-2 flex items-center gap-2">
+                    <CalendarDays className="w-3 h-4 text-gray-400" />{" "}
+                    {lead?.date}
+                  </td>
+                  <td
+                    className={`
+                    w-[100px]
+                accent-black
+               ${selectedLeads.has(index) || isOpenAction === index + 1
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100"}
+
+                transition-opacity duration-200
+              `}
+                  >
+                    <div ref={popoverRef} className="w-full relative flex items-center justify-center">
+                      <LeadsTableMenuIcon className="cursor-pointer " onClick={() => setIsOpenAction(isOpenAction === index+1 ? null : index+1)} />
+                      {isOpenAction && isOpenAction == index+1 && <div className="min-w-20 rounded-md py-2 px-5 bg-black absolute top-4 z-10">
+                        <p>Edit</p>
+                        <p>View</p>
+                      </div>}
+
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
         <div className="flex justify-between items-center mt-6 text-sm text-gray-400">
-          <button className="flex items-center gap-3 px-3 py-2 text-white bg-[#282828] rounded-md text-center">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md text-center ${currentPage === 1 ? "bg-[#444] text-gray-500 cursor-not-allowed" : "bg-[#282828] text-white"}`}
+          >
             <LeadsLeftIcon />
             Previous
           </button>
           <div className="flex gap-2">
-            {[1, 2, 3, 4, 5, 6].map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
-                className={`px-3 py-1 rounded-md ${
-                  page === 1 ? "bg-white text-black" : "hover:text-white"
-                }`}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 rounded-md ${page === currentPage ? "bg-white text-black" : "hover:text-white"
+                  }`}
               >
                 {page}
               </button>
             ))}
           </div>
-          <button className="flex items-center gap-3 px-3 py-2 text-black bg-white rounded-md">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-white text-black"}`}
+          >
             Next
-            <FullArrowIcon color={"#000000"} />
+            <FullArrowIcon color={currentPage === totalPages ? "#999" : "#000"} />
           </button>
         </div>
       </div>
@@ -251,7 +342,7 @@ const Leads = () => {
         // title="Edit  Profile"
         // title="view profile"
         className="lg:w-96 md:w-96 sm:w-full xs:w-full"
-        // width={width && width <= 576 ? "100%" : "550px"}
+      // width={width && width <= 576 ? "100%" : "550px"}
       >
         {/* <div className="">
           <div className=" h-[180px] w-full flex justify-center items-center px-4 ">
@@ -522,9 +613,8 @@ const Leads = () => {
         />
       )}
       <div
-        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-y-0" : "translate-y-full"
-        }`}
+        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-y-0" : "translate-y-full"
+          }`}
       >
         <div className="bg-[#1f1f1f] text-white rounded-t-2xl p-4">
           <div className="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-4 sticky top-0" />
@@ -549,23 +639,65 @@ const Leads = () => {
 
           <div className="mt-4">
             <div className="text-sm font-medium mt-2">Lead Type</div>
-            <select className="bg-[#2a2a2a] text-white p-3 rounded w-full mt-3 text-sm">
-              <option className="">Lead Capture Form</option>
-              <option>Manual Entry</option>
-            </select>
+            <div className="relative mt-3 w-full">
+              <select className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <option className="bg-[#9747FF] text-white hover:bg-[#9e76d2]">
+                  Lead Capture Form
+                </option>
+                <option>Manual Entry</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="mb-4">
             <div className="text-sm font-medium mt-3">Amount</div>
-            <select className="bg-[#2a2a2a] text-white p-3 rounded w-full text-sm mt-3">
+            {/* <select className="bg-[#2a2a2a] text-white p-3 rounded w-full text-sm mt-3">
               <option className="">Newest - oldest</option>
               <option>Oldest - newest</option>
-            </select>
+            </select> */}
+            <div className="relative mt-3 w-full">
+              <select className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <option className="bg-[#9747FF] text-white hover:bg-[#9e76d2]">
+                  Newest - oldest
+                </option>
+                <option>Oldest - newest</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-between items-center text-sm  ">
             <button className="text-purple-400">Reset All</button>
-            <button className="bg-purple-600 text-white px-2 py-2 rounded-lg ">
+            <button className="bg-[#9747FF] text-white px-2 py-2 rounded-lg ">
               Apply Filters(2)
             </button>
           </div>

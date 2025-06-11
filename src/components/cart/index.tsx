@@ -8,14 +8,14 @@ import { Link } from "lucide-react";
 
 const CircleContainer = (props: any) => {
   const { colors } = props;
-  const [hovered, setHovered] = useState(false);
+  // const [hovered, setHovered] = useState(false);
   // const colors = ["red", "blue", "green", "yellow", "purple"];
   console.log(colors, "colors");
   return (
     <div
       className="relative max-w-[300px] z-10  "
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      // onMouseEnter={() => setHovered(true)}
+      // onMouseLeave={() => setHovered(false)}
     >
       {colors &&
         colors.length > 0 &&
@@ -26,9 +26,10 @@ const CircleContainer = (props: any) => {
             style={{
               backgroundColor: color,
               right: `${10 + index * 3}px`,
-              transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              // transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              transform: `translateX(-${15 * index}px)`,
             }}
-            onClick={() => setHovered(false)}
+            // onClick={() => setHovered(false)}
           />
         ))}
     </div>
@@ -102,7 +103,7 @@ const Cart = (props: any) => {
       price: "Rs.999",
       image: Bluecard,
       discount: "18.77%",
-      // colors:["blue"]
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
       id: 2,
@@ -111,6 +112,7 @@ const Cart = (props: any) => {
       price: "Rs.799",
       image: Bluecard,
       discount: "18.77%",
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
       id: 3,
@@ -119,6 +121,7 @@ const Cart = (props: any) => {
       price: "Rs.1999",
       image: Bluecard,
       discount: "18.77%",
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
   ];
   return (
@@ -158,7 +161,7 @@ const Cart = (props: any) => {
                       </div>
                       <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2">
                         <p
-                          className=" m-0 p-0 cursor-pointer"
+                          className=" m-0 p-0 cursor-pointer bg-[]"
                           onClick={() => handleDecrease(value.id)}
                         >
                           -
@@ -257,9 +260,9 @@ const Cart = (props: any) => {
                     <div className="border rounded-lg bg-white px-2 py-[4px]">
                       <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                     </div>
-                    {/* {product.colors && product.colors.length > 0 && (
+                    {product.colors && product.colors.length > 0 && (
                       <CircleContainer colors={product.colors} />
-                    )} */}
+                    )}
                   </div>
                 </div>
 
