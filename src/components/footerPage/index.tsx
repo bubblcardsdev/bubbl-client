@@ -27,7 +27,7 @@ function productFooterSection() {
               <a href="/compatibility" className="hover:text-white">
                 Compatability
               </a>
-              <a href="#" className="hover:text-white">
+              <a href="/about" className="hover:text-white">
                 Our Story
               </a>
               <a href="/contact" className="hover:text-white">
@@ -75,7 +75,7 @@ function productFooterSection() {
           <div className="flex flex-row gap-[15px]">
             <a  href="/Termsandcondition" className="text-['#98A2B3']">Terms and conditions</a>
             <a href="/privacyPolicy" className="text-['#98A2B3']">Privacy Policy</a>
-            <a href="" className="text-['#98A2B3']">Refund Policy</a>
+            <a href="/refundPolicy" className="text-['#98A2B3']">Refund Policy</a>
           </div>
         </div>
       </footer>

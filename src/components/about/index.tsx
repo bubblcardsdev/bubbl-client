@@ -6,10 +6,12 @@ import {
   AboutHandIcon,
   AboutLightIcon,
   AboutCollaborationIcon,
-  AboutSustainabilityIcon,AboutWhyChooseIcon
+  AboutSustainabilityIcon,
+  AboutWhyChooseIcon,
 } from "../common/icons";
 import Footer from "../footerPage/index";
-const values = [
+import BubblCommunity from "../common/BubblCommunity";
+const AboutcardSection = [
   {
     title: "Simplicity",
     description:
@@ -66,7 +68,7 @@ const About = () => {
   return (
     <div className="bg-black">
       <div className=" text-white flex flex-col items-center p-8 mt-[40px] w-full max-w-[1200px] mx-auto">
-        <h1 className="text-5xl font-bold mb-0">About Us</h1>
+        <h1 className="text-5xl font-bold mb-0 mt-10">About Us</h1>
         <div className="relative top-10 -left-[550px] z-40">
           <div className=" font-bold py-2 px-4 rounded-lg  text-white">
             <Image
@@ -89,7 +91,7 @@ const About = () => {
             />
           </div>
           <div className="w-full md:w-1/2 space-y-4">
-            <p className="text-md">
+            <p className="text-md text-gray-300">
               At Xpulsar Technologies, we stand on a foundation of innovation
               and digital excellence. From cutting-edge software to smart
               physical products, Xpulsar powers future-ready solutions that help
@@ -98,14 +100,14 @@ const About = () => {
             <h2 className="text-xl font-semibold">
               Powered by Xpulsar Technologies
             </h2>
-            <p className="text-md">
+            <p className="text-md  text-gray-300">
               At Bubbl cards, we’re redefining how people connect with
               tap-and-go smart cards that blend technology, design, and
               sustainability. Whether you’re a professional, creator, or
               business, our NFC-enabled solutions make it effortless to share
               your identity in seconds—memorable, modern, and eco-friendly.
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-disc list-inside space-y-2  text-gray-300">
               <li>Instant Tap & Connect Cards</li>
               <li>Reusable, Sustainable, Smart</li>
               <li>Custom Features, Personalized Experiences</li>
@@ -137,7 +139,7 @@ const About = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6  mx-auto mt-16 px-2">
-            {values.map((item, i) => (
+            {AboutcardSection.map((item, i) => (
               <div
                 key={i}
                 className="relative  border border-gray-400 rounded-2xl p-6 text-left min-h-[260px]   transition overflow-hidden"
@@ -151,9 +153,9 @@ const About = () => {
           </div>
         </section>
         {/* section 3 */}
-        <section className="bg-black text-white px-4 py-12">
+        <section className="bg-black text-white px-0 py-8">
           <div className=" text-center">
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300 mb-6 px-[50px]">
               Bubbl cards stands out with advanced NFC technology and fully
               customizable designs that reflect your unique brand. We offer
               effortless, app-free digital sharing on all NFC devices, combined
@@ -161,10 +163,12 @@ const About = () => {
               professionals, we deliver superior quality and seamless networking
               experiences.
             </p>
-            <div className="text-left text-lg font-medium text-gray-500 mb-4 mt-4 flex gap-4">
-              <span><AboutWhyChooseIcon/></span> <span>Why choose us</span>
+            <div className="text-left text-lg font-medium text-gray-500 mb-4 mt-10 flex gap-4">
+              <span className="animate-slow-spin">
+                <AboutWhyChooseIcon  color={'#9747FF'}/>
+              </span>
+              <span>Why choose us</span>
             </div>
-
             <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] h-[400px]">
               {sections.map((sec) => (
                 <div
@@ -190,7 +194,8 @@ const About = () => {
             </div>
           </div>
         </section>
-        <div className=" bg-[#1D1D1D] rounded-xl mt-[50px] flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
+        <BubblCommunity/>
+        {/* <div className=" bg-[#1D1D1D] rounded-xl mt-[50px] flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
           <div className="w-full">
             <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
               Join 2,000+ Bubbl Community
@@ -218,13 +223,16 @@ const About = () => {
             </div>
             <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full">
               We care about your data in our
-              <a href="/privacyPolicy" className="underline hover:text-gray-300 px-1 ">
+              <a
+                href="/privacyPolicy"
+                className="underline hover:text-gray-300 px-1 "
+              >
                 privacy policy
               </a>
             </p>
           </div>
-        </div>
-        <div className="w-full mt-[50px]">
+        </div> */}
+        <div className="w-full mt-[100px]">
           <Footer />
         </div>
       </div>

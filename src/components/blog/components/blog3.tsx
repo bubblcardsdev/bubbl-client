@@ -1,10 +1,37 @@
+"use client";
 import React from "react";
-
+import Image from "next/image";
 function Blog3() {
   return (
     <div>
       <div>
-        <hr className="border-gray-400 mb-8" />
+        {" "}
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-[#9747FF] text-[18px] text-center">
+            Published 20 Jan 2022
+          </p>
+          <h1 className="text-[38px] font-bold text-center  text-white mb-3">
+            How NFC Technology is Transforming <br/>the way we network
+          </h1>
+          <p className="text-gray-300 text-center ">
+            Why Digital Business Cards Are the Smart Choice for Busy
+            Professionals
+          </p>
+        </div>
+        <div className="w-full  bg-[#1f2a40] rounded-lg overflow-hidden  mt-[40px]">
+          <div className="relative w-full h-full sm:h-96">
+            <Image
+              src="/Blog2.png"
+              alt="NFC Card"
+              layout="fill"
+              objectFit="cover"
+              className="object-center"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <hr className="border-gray-400 mb-4 mt-[40px]" />
         <h1 className="text-2xl sm:text-3xl font-semibold mb-6 text-white">
           Tapping into the Future – How NFC Technology is Transforming the Way
           We Network
