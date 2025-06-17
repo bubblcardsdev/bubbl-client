@@ -224,7 +224,7 @@ const Leads = () => {
       </div>
       <div className="w-full max-w-full mx-auto mt-4 rounded overflow-hidden lg:block md:block sm:hidden xs:hidden">
         <table className="w-full text-sm text-left text-white">
-          <thead className="bg-[#1C1C1C] text-[#777777] text-[14px] border-b-2 border-[#494949]">
+          <thead className="bg-[#1C1C1C] text-[#777777] text-[16px] border-b-2 border-[#494949]">
             <tr>
               <th className="p-3">
                 <input

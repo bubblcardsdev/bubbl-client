@@ -33,7 +33,7 @@ export default function NotFound() {
   
   {/* Button positioned at the bottom */}
   <div className="absolute bottom-[20%] left-0 right-0 flex justify-center">
-    <button className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none" onClick={()=>router.push("/home")}>
+    <button className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 focus:outline-none" onClick={()=>router.push("/")}>
       Back to Home
     </button>
   </div>

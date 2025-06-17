@@ -1,7 +1,17 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect, useMemo } from "react";
-import {BubblLogo,Google,FacebookIconbackgroundFill,LinkedinIconbackgroundFill,Share_icon,ScannerQr_icon,Arrow_icon, FacebookColorIcon, LinkedinColorIcon} from '../common/icons'
+import {
+  BubblLogo,
+  Google,
+  FacebookIconbackgroundFill,
+  LinkedinIconbackgroundFill,
+  Share_icon,
+  ScannerQr_icon,
+  Arrow_icon,
+  FacebookColorIcon,
+  LinkedinColorIcon,
+} from "../common/icons";
 function Signup() {
   const [isShaking, setIsShaking] = useState(false);
   const [step, setStep] = useState(1);
@@ -11,6 +21,7 @@ function Signup() {
     companyName: "",
     mobile: "",
     email: "",
+    conformPassword: "",
     password: "",
   });
 
@@ -20,6 +31,7 @@ function Signup() {
     companyName: "",
     mobile: "",
     email: "",
+    conformPassword: "",
     password: "",
   });
   console.log(formData, "formdata");
@@ -31,6 +43,7 @@ function Signup() {
       companyName: "",
       mobile: "",
       email: "",
+      conformPassword: "",
       password: "",
     };
 
@@ -76,6 +89,16 @@ function Signup() {
         isValid = false;
       }
 
+      if (!formData.conformPassword.trim()) {
+        newErrors.conformPassword = "password is required.";
+        isValid = false;
+      } else if (
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.conformPassword)
+      ) {
+        newErrors.conformPassword = "Enter a valid password address.";
+        isValid = false;
+      }
+
       if (!formData.password.trim()) {
         newErrors.password = "password is required.";
         isValid = false;
@@ -90,16 +113,16 @@ function Signup() {
     return isValid;
   };
 
-  // Handle input changes
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" }); // Clear error on input
   };
-  // Move to the next step
+ 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateFields()) {
-      if (step <= 4) setStep(step + 1); // Assuming 3 steps for this example
+      if (step <= 4) setStep(step + 1); 
     }
   };
   const stepperProgress = useMemo(() => {
@@ -127,7 +150,7 @@ function Signup() {
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
-            <BubblLogo color="white"  />
+          <BubblLogo color="white" />
         </div>
         <div className="w-full max-w-xs md:w-[400px] flex-grow mt-[50px] flex-col justify-center px-4">
           <div className="flex justify-start space-x-2 mb-8">
@@ -202,11 +225,11 @@ function Signup() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                 className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
-  errors.name
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                  className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
+                    errors.name
+                      ? "border border-red-500 focus:outline-none"
+                      : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                  }`}
                   placeholder="Enter your name"
                 />
                 {errors.name && (
@@ -230,10 +253,10 @@ function Signup() {
                     onChange={handleChange}
                     placeholder="Enter your role"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.role
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                      errors.role
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.role && (
                     <p className="text-red-500 text-sm mt-1">{errors.role}</p>
@@ -252,11 +275,11 @@ function Signup() {
                     value={formData.companyName}
                     onChange={handleChange}
                     placeholder="Enter your company name"
-                  className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.companyName
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                    className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
+                      errors.companyName
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.companyName && (
                     <p className="text-red-500 text-sm mt-1">
@@ -281,16 +304,14 @@ function Signup() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email"
-                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.email
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                    className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
+                      errors.email
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-sm  mt-1">
-                      {errors.email}
-                    </p>
+                    <p className="text-red-500 text-sm  mt-1">{errors.email}</p>
                   )}
                 </div>
                 <div className="mb-6 mt-[20px]">
@@ -307,10 +328,10 @@ function Signup() {
                     onChange={handleChange}
                     placeholder="Enter your mobile number"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.mobile
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                      errors.mobile
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.mobile && (
                     <p className="text-red-500 text-sm  mt-1">
@@ -327,7 +348,7 @@ function Signup() {
                     htmlFor="email"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    Email 
+                    Email
                   </label>
                   <input
                     type="text"
@@ -336,13 +357,38 @@ function Signup() {
                     onChange={handleChange}
                     placeholder="Enter your email"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.email
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                      errors.email
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.email && (
                     <p className="text-red-500  text-sm mt-1">{errors.email}</p>
+                  )}
+                </div>
+                <div className="mb-6">
+                  <label
+                    htmlFor="mobile"
+                    className="block text-sm font-medium text-[#909090] mb-2 "
+                  >
+                    ConformPassword <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.conformPassword}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
+                      errors.conformPassword
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
+                  />
+                  {errors.conformPassword && (
+                    <p className="text-red-500 text-sm  mt-1">
+                      {errors.conformPassword}
+                    </p>
                   )}
                 </div>
                 <div className="mb-6">
@@ -359,10 +405,10 @@ function Signup() {
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-  errors.password
-    ? "border border-red-500 focus:outline-none"
-    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-}`}
+                      errors.password
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
                   />
                   {errors.password && (
                     <p className="text-red-500 text-sm  mt-1">
@@ -370,7 +416,6 @@ function Signup() {
                     </p>
                   )}
                 </div>
-                
               </>
             )}
             {/* Continue Button */}
@@ -379,7 +424,7 @@ function Signup() {
                 type="submit"
                 className="w-full p-[10px]  bg-[#7939CC] rounded-[10px] text-white text-[14px]  hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-               Verify account
+                Verify account
               </button>
             ) : (
               <button
@@ -392,19 +437,22 @@ function Signup() {
 
             {/* Social Icons */}
             {step === 4 && (
-<div className="flex justify-around mt-[16px] space-x-4">
-<button className="py-2 px-0 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center ">
-
-<Image src="/images/googleLogo.png" height={20} width={20} alt="google" />
-
-</button>
-<button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
-<FacebookColorIcon />
-</button>
-<button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
-<LinkedinColorIcon />
-</button>
-</div>
+              <div className="flex justify-around mt-[16px] space-x-4">
+                <button className="py-2 px-0 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center ">
+                  <Image
+                    src="/images/googleLogo.png"
+                    height={20}
+                    width={20}
+                    alt="google"
+                  />
+                </button>
+                <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                  <FacebookColorIcon />
+                </button>
+                <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                  <LinkedinColorIcon />
+                </button>
+              </div>
             )}
             {(step === 4 || step === 1) && (
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
@@ -417,8 +465,10 @@ function Signup() {
           </form>
         </div>
         <div className="flex justify-between w-full text-gray-500 text-xs mt-auto py-4 ">
-        <p className="text-[14px]">© {new Date().getFullYear()} Bubbl</p>
-            <a  href="mailto:help@bubbl.cards" className="text-[14px]" >sales@bubbl.cards</a>
+          <p className="text-[14px]">© {new Date().getFullYear()} Bubbl</p>
+          <a href="mailto:help@bubbl.cards" className="text-[14px]">
+            sales@bubbl.cards
+          </a>
         </div>
       </div>
       {/* Right side profile page */}
@@ -469,10 +519,10 @@ function Signup() {
                 Save Contact
               </button>
               <button className="flex-grow flex-shrink-0 basis-1/5 h-10 bg-[#1F1F1F] rounded-lg text-white flex justify-center items-center">
-                <Share_icon/>
+                <Share_icon />
               </button>
               <button className="flex-grow flex-shrink-0 basis-1/5 h-10 bg-[#1F1F1F] rounded-lg text-white flex justify-center items-center">
-                <ScannerQr_icon/>
+                <ScannerQr_icon />
               </button>
             </div>
           </div>
@@ -487,8 +537,12 @@ function Signup() {
                         aria-label="Email"
                         className="text-blue-500 text-lg"
                       >
-                       <Image src="/images/emailIcon.png" height={30} width={30} alt="google" />
-
+                        <Image
+                          src="/images/emailIcon.png"
+                          height={30}
+                          width={30}
+                          alt="google"
+                        />
                       </span>
                     </div>
                     <p className="text-white text-sm truncate max-w-[150px] ml-[20px] ">
@@ -517,8 +571,12 @@ function Signup() {
                         aria-label="Phone"
                         className="text-green-500 text-lg"
                       >
-                   <Image src="/images/phoneIcon.png" height={30} width={30} alt="google" />
-
+                        <Image
+                          src="/images/phoneIcon.png"
+                          height={30}
+                          width={30}
+                          alt="google"
+                        />
                       </span>
                     </div>
                     <p className="text-white text-sm ml-[15px] ">
@@ -528,7 +586,7 @@ function Signup() {
                   <div className="flex items-center space-x-2 mt-2">
                     {/* <span className="text-gray-400 text-sm">1</span> */}
                     <span className="text-gray-500 text-sm">
-                    <Arrow_icon />
+                      <Arrow_icon />
                     </span>
                   </div>
                 </div>

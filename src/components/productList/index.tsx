@@ -1,5 +1,5 @@
-"use client";
-import React, { useState, useEffect } from "react";
+// "use client";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Footer from "../footerPage/index";
 import BuleCard from "../../assets/product/productCardImg/basiccard.png";
@@ -18,8 +18,8 @@ const CircleContainer = (props: any) => {
   return (
     <div
       className="relative max-w-[300px] z-10  "
-      // onMouseEnter={() => setHovered(true)}
-      // onMouseLeave={() => setHovered(false)}
+    // onMouseEnter={() => setHovered(true)}
+    // onMouseLeave={() => setHovered(false)}
     >
       {colors &&
         colors.length > 0 &&
@@ -33,7 +33,7 @@ const CircleContainer = (props: any) => {
               // transform: hovered ? `translateX(-${15 * index}px)` : "none",
               transform: `translateX(-${15 * index}px)`,
             }}
-            // onClick={() => setHovered(false)}
+          // onClick={() => setHovered(false)}
           />
         ))}
     </div>
@@ -62,10 +62,112 @@ const steps = [
     title: "Network like a pro",
   },
 ];
+const materials = [
+  {
+    id: "pvc",
+    name: "PVC Card",
+    image: "/pvcCards/pvcPatten1.png",
+    price: 1200,
+    patterns: [
+      "/pvcCards/pvc",
+      "pvc2",
+      "pvc3",
+      "pvc4",
+      "pvc5",
+      "pvc6",
+      "pvc7",
+      "pvc8",
+    ],
+  },
+  {
+    id: "metal",
+    name: "Metal Card",
+    image: "/metalCards/patten1.png",
+    price: 1999,
+    patterns: [
+      "metal1",
+      "metal2",
+      "metal3",
+      "metal4",
+      "metal5",
+      "metal6",
+      "metal7",
+    ],
+  },
+  {
+    id: "bamboo",
+    name: "Bamboo Card",
+    image: "/metalCards/patten2.png",
+    price: 999,
+    patterns: ["pattern1", "pattern2", "pattern3"],
+  },
+];
 const ProductList = () => {
   const router = useRouter();
+  const [data, setData] = useState(
+    {
+      "productId": "unique key",
+      "productName": "Card",
+      "price": 799,
+      "discount": 18.77,
+      "sellingPrice": 555,
+      "shortDesc": "Made with Recyclable PVC in a Matte finish with Spot UV coating",
+      "description": "string",
+      "image":{
+          "front":BuleCard,
+          "back":BackCard
+      },
+      "productDetails": "string", // Separate points with ‘/n’
+      "colors": [
+        {
+          "color": "red",
+          "primaryImage": "image url",
+          "productId": 1
+        }
+      ],
+      "patterns": [
+        {
+          "Pattern": "patern nme",
+          "primaryImage": "image url",
+          "productId": 2
+
+        }
+      ],
+      "material": [
+        {
+          "material": "PVC",
+          "primaryImage": "image url",
+          "productId": 3
+
+        }
+      ]
+    },
+  )
   const [selectedCard, setSelectedCard] = useState<string>("Bubbl Basic Card");
   const [currentImgae, setCurrentImage] = useState("front");
+  const [selectedColor, setSelectedColor] = useState("Blue");
+  const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
+  const [selectedPattern, setSelectedPattern] = useState(
+    selectedMaterial.patterns[0]
+  );
+
+  const payLoad = useMemo(() => {
+    return {
+      "id":data?.productId,
+      "productId": data?.productId,
+      "productType": selectedCard,
+      "productName": data?.productName,
+      "price": data?.price,
+      "discount": data?.discount,
+      "image":data?.image?.front,
+      "sellingPrice": data?.sellingPrice,
+      "quantity":1,
+      "color": selectedColor,
+      "material": selectedMaterial,
+      "pattern": selectedPattern
+    }
+
+  }, [data, selectedCard, selectedColor, selectedMaterial, selectedPattern])
 
   useEffect(() => {
     if (router?.query?.id) {
@@ -123,6 +225,18 @@ const ProductList = () => {
   const flipImage = (view: string) => {
     setCurrentImage(view);
   };
+
+  const addToCard = () => {
+    const getCartItems = JSON.parse(localStorage.getItem('cartItems') ?? '[]');
+
+    const updatedCart = getCartItems && getCartItems.length > 0
+      ? [...getCartItems, payLoad]
+      : [payLoad];
+
+    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+  };
+
+
   return (
     <>
       <div className="py-3 h-screen">
@@ -143,16 +257,14 @@ const ProductList = () => {
                   <div
                     role="button"
                     onClick={() => flipImage("front")}
-                    className={`h-1 w-12 mb-2 ${
-                      currentImgae == "front" ? "bg-purple-500" : "bg-gray-300"
-                    } rounded-full mr-2 p-1`}
+                    className={`h-1 w-12 mb-2 ${currentImgae == "front" ? "bg-purple-500" : "bg-gray-300"
+                      } rounded-full mr-2 p-1`}
                   ></div>
                   <div
                     role="button"
                     onClick={() => flipImage("back")}
-                    className={`h-1 w-12 ${
-                      currentImgae == "back" ? "bg-purple-500" : "bg-gray-300"
-                    } rounded-full mr-2 p-1`}
+                    className={`h-1 w-12 ${currentImgae == "back" ? "bg-purple-500" : "bg-gray-300"
+                      } rounded-full mr-2 p-1`}
                   ></div>
                 </div>
               </div>
@@ -160,7 +272,7 @@ const ProductList = () => {
                 ( {currentImgae} View )
               </p>
               <div className="mt-6 flex flex-col md:flex-row sm:flex-row xs:flex-row gap-4 justify-center md:px-4 sm:px-4 xs:px-4">
-                <button className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden">
+                <button onClick={addToCard} className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden">
                   Add to cart
                 </button>
                 <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:opacity-80">
@@ -170,7 +282,7 @@ const ProductList = () => {
             </div>
             {/* Right Section */}
             <div className="w-full md:w-1/2 md:mt-8 sm:mt-8 xs:mt-8 overflow-y-auto mt-[24px]">
-              <BubblCard selectedCard={selectedCard} />
+              <BubblCard selectedColor={selectedColor} setSelectedColor={setSelectedColor} selectedCard={selectedCard} selectedMaterial={selectedMaterial} setSelectedMaterial={setSelectedMaterial} selectedPattern={selectedPattern} setSelectedPattern={setSelectedPattern} materials={materials} />
               {/* Additional components can be added here */}
             </div>
           </div>

@@ -30,7 +30,7 @@ const BubblCommunity = () => {
         </div>
         <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full">
           We care about your data in our
-          <a href="/privacyPolicy" className="underline hover:text-[#a66bf4] ">
+          <a href="/privacyPolicy" className="underline hover:text-[#a66bf4] px-1 ">
             privacy policy
           </a>
         </p>

@@ -8,9 +8,7 @@ import { BubblLogo, CartIcon } from "../common/icons";
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = useRouter();
-  console.log(pathname, "pathname");
   const theme = themeObject[pathname.pathname] || "white";
-  console.log(theme, "theme");
   const isDarkTheme =
     theme === "black" ||
     theme === "linear-gradient(to right, #4A4A4A, #000000)";

@@ -74,7 +74,6 @@ function Plans() {
       custom: "✓",
     },
   ];
-
   const selectedIndex = (index) => {
     setPlanIndex(index);
   };
@@ -115,12 +114,12 @@ function Plans() {
                       </a>
                     </div>
                   </th>
-                  <th className="p-4 text-left bg-[#0F0F10] rounded-t-lg border-t-white w-[250px]">
+                  <th className="p-4 text-left bg-[#242424] rounded-t-lg border-t-[#313131] w-[250px] ">
                     <div className="space-y-2">
                       <h2 className="text-xl font-semibold text-white">Pro</h2>
                       <a
                         href="#"
-                        className="text-sm text-gray-400 hover:text-white inline-flex items-center underline "
+                        className="text-sm text-gray-400 hover:text-white inline-flex items-center underline  "
                       >
                         Sign up
                         <span className="px-2">
@@ -148,70 +147,70 @@ function Plans() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131] border-t ">
                   <td className="p-4">Base price</td>
                   <td className="p-4">Free</td>
-                  <td className="p-4 bg-red-300">₹720/month</td>
+                  <td className="p-4 bg-[#242424]">₹720/month</td>
                   <td className="p-4">Custom</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131]">
                   <td className="p-4">Monthly active users included</td>
                   <td className="p-4 ">50</td>
-                  <td className="p-4 bg-[#0F0F10] ">6,000</td>
+                  <td className="p-4 bg-[#242424] ">6,000</td>
                   <td className="p-4">Custom</td>
                 </tr>
-                <tr className="border-b  border-zinc-800 ">
+                <tr className="border-b  border-[#313131] ">
                   <td className="p-4 ">Monthly active users overage rate</td>
                   <td className="p-4">-</td>
-                  <td className="p-4  bg-[#0F0F10]">₹0.12 per user</td>
+                  <td className="p-4  bg-[#242424]">₹0.12 per user</td>
                   <td className="p-4 ">Custom</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131]">
                   <td className="p-4">Monthly active users cap</td>
                   <td className="p-4">50</td>
-                  <td className="p-4  bg-[#0F0F10]">25,000</td>
+                  <td className="p-4  bg-[#242424]">25,000</td>
                   <td className="p-4 ">Unlimited</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131] ">
                   <td className="p-4 ">Simultaneous connections per room</td>
                   <td className="p-4 ">10</td>
-                  <td className="p-4  bg-[#0F0F10]">50</td>
+                  <td className="p-4  bg-[#242424]">50</td>
                   <td className="p-4 ">Custom</td>
                 </tr>
-                <tr className="border-b  border-zinc-800 ">
+                <tr className="border-b  border-[#313131]">
                   <td className="p-4 ">Simultaneous connections per project</td>
                   <td className="p-4 ">1,000</td>
-                  <td className="p-4  bg-[#0F0F10]">100,000</td>
+                  <td className="p-4  bg-[#242424]">100,000</td>
                   <td className="p-4 ">Unlimited</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131] ">
                   <td className="p-4 ">Projects</td>
                   <td className="p-4 ">2</td>
-                  <td className="p-4  bg-[#0F0F10]">100</td>
+                  <td className="p-4  bg-[#242424]">100</td>
                   <td className="p-4">100</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131]">
                   <td className="p-4 i">Mentions</td>
                   <td className="p-4">&#10003;</td>
-                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4 bg-[#242424]">&#10003;</td>
                   <td className="p-4">&#10003;</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131]">
                   <td className="p-4 ">Resolve threads</td>
                   <td className="p-4">&#10003;</td>
-                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4 bg-[#242424]">&#10003;</td>
                   <td className="p-4">&#10003;</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131]">
                   <td className="p-4 ">Emoji reactions</td>
                   <td className="p-4">&#10003;</td>
-                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4 bg-[#242424]">&#10003;</td>
                   <td className="p-4">&#10003;</td>
                 </tr>
-                <tr className="border-b border-zinc-800 ">
+                <tr className="border-b border-[#313131] ">
                   <td className="p-4 ">Custom metadata</td>
                   <td className="p-4">&#10003;</td>
-                  <td className="p-4 bg-[#0F0F10]">&#10003;</td>
+                  <td className="p-4 bg-[#242424]">&#10003;</td>
                   <td className="p-4">&#10003;</td>
                 </tr>
               </tbody>
