@@ -246,54 +246,6 @@ const Leads = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#323232]">
-<<<<<<< HEAD
-            {leads.map((lead: Lead, index: number) => (
-              <tr
-                key={index}
-                className="group hover:bg-[#282828] transition-colors"
-              >
-                <td className="p-2">
-                  <input
-                    type="checkbox"
-                    className={`
-               accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente
-                ${
-                  selectedLeads.has(index)
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-                transition-opacity duration-200
-              `}
-                    checked={selectedLeads.has(index)}
-                    onChange={() => toggleCheckbox(index)}
-                  />
-                </td>
-                <td className="p-3 flex items-center gap-3">
-                  <Image
-                    src={lead?.avatar}
-                    alt=""
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  {lead?.name}
-                </td>
-                <td className="p-2">{lead?.role}</td>
-                <td className="p-2">{lead?.orderId}</td>
-                <td className="p-2">{lead?.connection}</td>
-                <td className="p-2 flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-gray-400" />{" "}
-                  {lead?.date}
-                </td>
-                <td
-                  className={`
-                accent-black
-                ${
-                  selectedLeads.has(index)
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-                transition-opacity duration-200
-              `}
-=======
             {paginatedLeads.map((lead: any, index: number) => {
               const realIndex = (currentPage - 1) * leadsPerPage + index;
               return (
@@ -301,7 +253,6 @@ const Leads = () => {
                 <tr
                   key={index}
                   className="group hover:bg-[#282828] transition-colors"
->>>>>>> 51e9b250b2b05fc2691edaad755479a6db353401
                 >
                   <td className="p-2">
                     <input
