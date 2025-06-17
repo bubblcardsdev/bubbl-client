@@ -21,13 +21,13 @@ import {
 } from "../../common/icons";
 
 const FreeTemplateOpal=()=>{
-  const socialMedia = [
-    { name: "Instagram", username: "@user name", icon: "/instagram.png" },
-    { name: "Twitter", username: "@user name", icon: "/twitter.png" },
-    { name: "LinkedIn", username: "User name", icon: "/linkedin.png" },
-    { name: "Youtube", username: "@user name", icon: "/youtube.png" },
-    { name: "Facebook", username: "@user name", icon: "/facebook.png" },
-  ];
+  // const socialMedia = [
+  //   { name: "Instagram", username: "@user name", icon: "/instagram.png" },
+  //   { name: "Twitter", username: "@user name", icon: "/twitter.png" },
+  //   { name: "LinkedIn", username: "User name", icon: "/linkedin.png" },
+  //   { name: "Youtube", username: "@user name", icon: "/youtube.png" },
+  //   { name: "Facebook", username: "@user name", icon: "/facebook.png" },
+  // ];
   return (
     <div className="w-full flex justify-center items-center align-middle bg-[#ccc]">
       <div className="w-full flex items-center justify-center">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Footer from "../footerPage/index";
 import BuleCard from "../../assets/product/productCardImg/basiccard.png";
@@ -7,11 +7,13 @@ import BackCard from "../../assets/product/productCardImg/metalCard.png";
 import BubblCard from "./components/bubblCards";
 // import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 // import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
-import { Arrow_icon } from "../common/icons";
-import { BracesIcon } from "lucide-react";
+
 import BreadCrumbs from "../common/BreadCrumbs";
 import { useRouter } from "next/router";
-const CircleContainer = (props: any) => {
+type CircleContainerProp ={
+  colors:string[];
+}
+const CircleContainer = (props: CircleContainerProp) => {
   const { colors } = props;
   const [hovered, setHovered] = useState(false);
 
@@ -23,7 +25,7 @@ const CircleContainer = (props: any) => {
     >
       {colors &&
         colors.length > 0 &&
-        colors.map((color: any, index: number) => (
+        colors.map((color: string, index: number) => (
           <div
             key={index}
             className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
@@ -65,28 +67,7 @@ const ProductList = () => {
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<string>("Bubbl Basic Card");
   const [currentImgae, setCurrentImage] = useState("front");
-
-  useEffect(() => {
-    if (router?.query?.id) {
-      const cardType =
-        Products.find((e) => e.id.toString() === router?.query?.id)?.title ||
-        "";
-      console.log("card/", cardType);
-
-      setSelectedCard(cardType);
-    }
-  }, []);
-  const colors = [
-    { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
-    { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
-    { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
-    { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
-    { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
-    { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
-    { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
-    { name: "Black", color: "bg-black", image: "/product-black.jpg" },
-  ];
-  const Products = [
+   const Products = useMemo(() => [
     {
       id: 1,
       name: "Full Custom",
@@ -94,7 +75,6 @@ const ProductList = () => {
       price: "Rs.999",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: FullCustomCardFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
@@ -104,7 +84,6 @@ const ProductList = () => {
       price: "Rs.799",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: BubblBasicCardBlackFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
@@ -114,10 +93,18 @@ const ProductList = () => {
       price: "Rs.1999",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: MetalCardFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
-  ];
+  ], []);
+
+ useEffect(() => {
+  if (router?.query?.id) {
+    const cardType =
+      Products.find((e) => e.id.toString() === router?.query?.id)?.title || "";
+    setSelectedCard(cardType);
+  }
+}, [router?.query?.id,Products]);
+ 
   const flippedImage = currentImgae == "front" ? BuleCard : BackCard;
   const flipImage = (view: string) => {
     setCurrentImage(view);

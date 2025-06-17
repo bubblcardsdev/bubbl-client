@@ -109,7 +109,7 @@ export default function CoverflowCarousel({ images }: CoverflowCarouselProps) {
         : Math.min(60, containerWidth * 0.8)
     
     // For circular effect - calculate shortest path distance
-    const circularDiff = ((diff % totalImages) + totalImages) % totalImages
+    // const circularDiff = ((diff % totalImages) + totalImages) % totalImages
     
     // Center image
     if (diff === 0) {

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 import { CardWrapper } from "../../common/testiMonialCard";
@@ -7,7 +6,6 @@ import { testimonial } from "@/src/lib/constant";
 import { useState } from "react";
 
 export default function TestiMonial() {
-  const pathname = useRouter();
   const [viewMore,setViewMore] = useState(false)
   
   return (

@@ -4,7 +4,6 @@ import { FaTruck } from "react-icons/fa";
 import Image from "next/image";
 import CardImg from "../../assets/product/productCardImg/basiccard.png";
 import Footer from "../footerPage/index";
-import { IoFilter, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 interface FormData {
   email: string;
@@ -48,13 +47,13 @@ const CheckoutPage = () => {
     newsletter: false,
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [isOpen, setIsOpen] = useState<any>(false);
-  const [stateSelected, setStateSelected] = useState<any>("select your state");
-  const statOoptions = ["TamilNadu", "kerla"];
-  const [selected, setSelected] = useState<any>("select your state");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [stateSelected, setStateSelected] = useState<string>("select your state");
+  // const statOoptions = ["TamilNadu", "kerla"];
+  const [selected, setSelected] = useState<string>("select your state");
   const options = ["India", "Armenia", "Canada"];
   const validate = () => {
-    let newErrors: Partial<FormData> = {};
+    const newErrors: Partial<FormData> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10,15}$/;
     if (!formData.email) {

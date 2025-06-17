@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type TestimonialObj = {
   profile: string;
   name: string;
@@ -9,7 +11,9 @@ export  const CardWrapper = ({ profile, name, username, description }: Testimoni
   return (
     <div className="rounded-[12px] border border-[#E1E8ED] bg-white p-5 aspect-[5/3] w-full">
       <div className="flex items-start space-x-4">
-        <img
+        <Image
+        width={10}
+        height={10}
           src={profile}
           alt={name}
           className="w-10 h-10 rounded-full object-cover"

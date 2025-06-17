@@ -1,5 +1,4 @@
 import Image from "next/image";
-import CircleContainer from "./circleContainer";
 export type Product = {
   id: number;
   name: string;

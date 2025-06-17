@@ -14,7 +14,7 @@ const Blog1 = () => {
         <p>
           Enter <span className="font-bold">Bubbl</span>—your next-generation
           networking solution. It does more than just highlighting your contact
-          information. Bubbl's NFC-powered digital business cards leave a
+          information. Bubbl&apos;s NFC-powered digital business cards leave a
           lasting impression and serve as a tangible reminder of your brand. As
           we continue to make advancements in technology, these networking
           staples are evolving to dynamic digital formats. It is important to
@@ -99,7 +99,7 @@ const Blog1 = () => {
                 • Analytics and Tracking
               </h2>
               <p className="text-gray-300 mt-1">
-                Through a single tap, users can share or gain access to others'
+                Through a single tap, users can share or gain access to other&apos;s
                 handles, URLs, Portfolios, Resumés, etc.
               </p>
             </div>

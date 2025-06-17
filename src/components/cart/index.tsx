@@ -1,40 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Bluecard from "../../assets/product/productCardImg/basiccard.png";
 import Footer from "../footerPage/index";
-import { Link } from "lucide-react";
-
-const CircleContainer = (props: any) => {
-  const { colors } = props;
-  const [hovered, setHovered] = useState(false);
-  // const colors = ["red", "blue", "green", "yellow", "purple"];
-  console.log(colors, "colors");
-  return (
-    <div
-      className="relative max-w-[300px] z-10  "
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {colors &&
-        colors.length > 0 &&
-        colors.map((color: any, index: number) => (
-          <div
-            key={index}
-            className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
-            style={{
-              backgroundColor: color,
-              right: `${10 + index * 3}px`,
-              transform: hovered ? `translateX(-${15 * index}px)` : "none",
-            }}
-            onClick={() => setHovered(false)}
-          />
-        ))}
-    </div>
-  );
-};
-const cardsData: any = [
+interface CardItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number; // Only number type
+  quantity: number;
+  image: StaticImageData;
+}
+const cardsData:CardItem[] = [
   {
     id: 1,
     title: "Card",
@@ -47,29 +25,24 @@ const cardsData: any = [
     id: 2,
     title: "Card",
     description: "Bubbl basic card",
-    price: "699",
+    price: 699,
     quantity: 1,
     image: Bluecard,
   },
 ];
-const Cart = (props: any) => {
-  const [hoverImage, setHoverImage] = useState<any>("");
-  const [cards, setCards] = useState(cardsData);
+const Cart = () => {
+  // const [hoverImage, setHoverImage] = useState<any>("");
+  const [cards, setCards] = useState<CardItem[]>(cardsData);
   const router = useRouter();
 
   const handleBuyNow = () => {
     router.push("/checkout");
   };
-  const handleHover = (id: any) => {
-    setHoverImage(id);
-  };
-  const removeHandleHover = () => {
-    setHoverImage("");
-  };
+
   const handleIncrease = (id: number) => {
-    setCards((prev: any) => {
+    setCards((prev:CardItem[]) => {
       console.log(prev, "aa");
-      return prev.map((card: any) => {
+      return prev.map((card: CardItem) => {
         if (id == card.id) {
           return {
             ...card,
@@ -82,8 +55,8 @@ const Cart = (props: any) => {
   };
   const handleDecrease = (id: number) => {
     console.log(id, "cards");
-    setCards((prev: any) =>
-      prev.map((card: any) =>
+    setCards((prev: CardItem[]) =>
+      prev.map((card: CardItem) =>
         card.id === id && card.quantity > 1
           ? { ...card, quantity: card.quantity - 1 }
           : card
@@ -91,7 +64,7 @@ const Cart = (props: any) => {
     );
   };
   const handleRemove = (id: number) => {
-    setCards((prev: any) => prev.filter((card: any) => card.id !== id));
+    setCards((prev: CardItem[]) => prev.filter((card: CardItem) => card.id !== id));
   };
 
   const Products = [
@@ -134,7 +107,7 @@ const Cart = (props: any) => {
               Cart it, Love it, Own it.
             </p>
             <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl mt-[20px]">
-              {cards.map((value: any) => (
+              {cards.map((value:CardItem) => (
                 <div
                   key={value.id}
                   className="flex items-center  w-full xs:pl-1.5"

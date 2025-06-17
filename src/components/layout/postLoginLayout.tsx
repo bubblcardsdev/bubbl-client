@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import PostLoginSidebar from "./postLoginSidebar";
+import PostLoginSidebar, { FunctionProps } from "./postLoginSidebar";
 import PostLoginHeader from "./postLoginHeader";
 import useWindowSize from "@/src/hooks/useWindowSize";
-const PostLoginLayoutPage = (props: any) => {
+const PostLoginLayoutPage = (props: FunctionProps) => {
   const { currentPage} = props;
   const [isOpen,setIsOpen]=useState(false)
   const size = useWindowSize();

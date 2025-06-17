@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
  export interface BreadCrumbsProps {
     value: string;
   }
@@ -33,3 +35,22 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+
+
+ export type TitleInfo = {
+  title: string;
+  description: string;
+};
+export type TitleMap = Record<string, TitleInfo>;
+
+export type Card = {
+  id: number;
+  name: string;
+  title: string;
+  price: string;
+  image: string;
+  discount: string;
+  secondaryImage: StaticImageData;
+  colors: string[];
+};

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import {
   Share_icon,
@@ -12,7 +12,6 @@ import {
   LinledinFill_icon,
   MailProfileIcon,
   WebProfileIcon,
-  Arrow_icon,
   InstagramFill_icon,
   WhatsappFill_icon,
   LocationFill_icon,
@@ -20,10 +19,9 @@ import {
 } from "../../common/icons";
 import Logo from "../../../assets/product/productCardImg/Bubbl_band.png";
 const ProTemplateSpahire = () => {
-  const [openSection, setOpenSection] = useState("");
-  const toggleSection = (section: any) => {
-    setOpenSection(openSection === section ? "" : section);
-  };
+  // const toggleSection = (section: any) => {
+  //   setOpenSection(openSection === section ? "" : section);
+  // };
   return (
     <div className="w-full max-w-[400px] mx-auto overflow-hidden">
       <div className=" bg-gray-200 h-[350px]">

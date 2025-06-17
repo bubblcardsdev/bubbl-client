@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { BubblLogo, GitIcon } from "../common/icons";
+import React, { ReactNode } from "react";
 import {
   BubblLogoWhiteIcon,
   DasboardIcon,
@@ -13,8 +12,7 @@ import {
   SettingsIcon,
 } from "../common/icons";
 import { useRouter } from "next/router";
-import path from "path";
-const menuItems: any = [
+const menuItems = [
   {
     label: "Overview",
     icon: <DasboardIcon />,
@@ -59,7 +57,23 @@ const menuItems: any = [
     path: "/settings",
   },
 ];
-const PostLoginSidebar = (props: any) => {
+type MenuItem = {
+  label: string;
+  icon: ReactNode;
+  name: string;
+  path: string;
+};
+interface PageData {
+  title: string;
+  name: string;
+}
+export type FunctionProps ={
+  currentPage:PageData;
+    children?: ReactNode;
+  onSideBarOpen?: () => void;
+
+}
+const PostLoginSidebar = (props: FunctionProps) => {
   const { currentPage } = props;
   const router = useRouter();
   const handleNavigate = (path: string) => {
@@ -72,7 +86,7 @@ const PostLoginSidebar = (props: any) => {
       </div>
       <p className="text-[#7E7E7E] px-5 pb-4">Bubbl board</p>
       <div className="flex flex-col gap-[10px] px-2">
-        {menuItems.map((item: any, index: number) => (
+        {menuItems.map((item: MenuItem, index: number) => (
           <div
             role={"button"}
             key={index}

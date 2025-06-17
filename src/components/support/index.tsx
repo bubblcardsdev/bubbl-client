@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
 import { Location_icon, Phone_icon, MailProfileIcon } from "../common/icons";
+import { useRouter } from "next/router";
 const Support = () => {
+
+  const router = useRouter();
   return (
     <div className="text-white mt-[5px] ">
       <p className="text-lg">Get in touch</p>
@@ -107,7 +109,7 @@ const Support = () => {
             />
             <p className="text-[#B3B3B3]">
               You agree to our friendly
-              <a href="/privacyPolicy" className="underline text-[#B3B3B3]">
+              <a className="underline text-[#B3B3B3]" onClick={()=>router.push("/privacyPolicy")}>
                 privacy policy
               </a>
               .

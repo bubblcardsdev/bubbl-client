@@ -17,8 +17,16 @@ import {
 } from "../common/icons";
 
 import Footer from "../footerPage/index";
+import { ReactNode } from "react";
 
-const devices = [
+export type DeviceModel = string;
+
+export type DeviceBrand = {
+  brand: ReactNode;
+  models: DeviceModel[];
+};
+
+const devices: DeviceBrand[] = [
   {
     brand: <AppleIcon />,
     models: [
@@ -231,10 +239,12 @@ const devices = [
     ],
   },
 ];
-const CompatibilityPage = () => {
-  const [openIndex, setOpenIndex] = useState(null);
 
-  const toggleDropdown = (index: any) => {
+
+const CompatibilityPage = () => {
+  const [openIndex, setOpenIndex] = useState<null|number>(null);
+
+  const toggleDropdown = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
@@ -252,13 +262,13 @@ const CompatibilityPage = () => {
             Compatibility is only important when it comes to the reader or
             activating the bubblcard. Bubbl is compatible with iPhone XR or
             newer (iPhone 7, iPhone 8, iPhone X must use the NFC scanner in the
-            control center) and most Androids. It’s also possible to share your
+            control center) and most Androids. It&apos;s also possible to share your
             profile with almost any device using the URL or QR-Code.
           </p>
           <div className=" border-t  border-gray-400 mt-8">
-            {devices?.map((device: any, index) => (
+            {devices?.map((device: DeviceBrand, index) => (
               <div
-                key={device?.id || `${device?.brand}-${index}`}
+                key={index}
                 className="border-b border-gray-400 py-2 mt-4"
               >
                 <button
@@ -271,7 +281,7 @@ const CompatibilityPage = () => {
                 {openIndex === index && (
                   <ul className="mt-2 text-gray-400 pl-4 space-y-1">
                     {device.models.length ? (
-                      device.models.map((model: any, i: number) => (
+                      device.models.map((model: string, i: number) => (
                         <li key={i}>• {model}</li>
                       ))
                     ) : (

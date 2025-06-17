@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 const Blog = () => {
   const router = useRouter();
   const { id = 1 } = router.query;
-  const blogs: any = [Blog1, Blog2, Blog3];
+  const blogs = [Blog1, Blog2, Blog3];
   const CurrentBlog = blogs?.[Number(id)-1];
   return (
     <section className="w-full bg-[#000000] flex flex-col gap-[50px]  ">

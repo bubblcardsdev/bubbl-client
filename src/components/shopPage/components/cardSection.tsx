@@ -7,10 +7,9 @@ import NameCustomCard from "../../../assets/product/productCardImg/metalCard.png
 import BasicCard from "../../../assets/product/productCardImg/basiccard.png";
 import Scoket from "../../../assets/product/productCardImg/socket.png";
 import Tile from "../../../assets/product/productCardImg/tile.png";
-import Band from "../../../assets/product/productCardImg/band.png";
-import Standee from "../../../assets/product/productCardImg/standee.png";
 import { SearchIcon  } from "../../common/icons";
-import Products from "./products";
+import Products, { ProductSection } from "./products";
+import { useRouter } from "next/router";
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
     title: "Bubbl Custom Card",
@@ -134,6 +133,7 @@ const products = [
 ];
 
 function CardSection() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("All products");
   const [searchProduct, setSearchProduct] = useState("");
@@ -142,26 +142,25 @@ function CardSection() {
     setIsOpen(!isOpen);
   };
   const filteredProduct = useMemo(() => {
-    if (!Array.isArray(products) || products.length === 0) {
-      return [];
+  if (!Array.isArray(products) || products.length === 0) {
+    return [];
+  }
+
+  const search = searchProduct?.toString().trim().toLowerCase();
+  if (!search) {
+    return products; 
+  }
+
+  return products.reduce<ProductSection[]>((acc, section) => {
+    const filteredCards = section.cards.filter(card =>
+      card.name.toLowerCase().includes(search)
+    );
+    if (filteredCards.length > 0) {
+      acc.push({ ...section, cards: filteredCards });
     }
-  
-    const search = searchProduct?.toString().trim().toLowerCase();
-    if (!search) {
-      return products; 
-    }
-  
-    return products
-      .map(section => {
-        const filteredCards = section.cards.filter(card =>
-          card?.name?.toLowerCase().includes(search)
-        );
-        return filteredCards.length > 0
-          ? { ...section, cards: filteredCards }
-          : null;
-      })
-      .filter(Boolean); 
-  }, [products, searchProduct]);
+    return acc;
+  }, []);
+}, [searchProduct]);
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">
@@ -173,7 +172,7 @@ function CardSection() {
               </span>
               <input
                 type="text"
-                onChange={(e:any)=>setSearchProduct(e?.target?.value)}
+                onChange={(e)=>setSearchProduct(e?.target?.value)}
                 className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden"
                 placeholder="Search bubbl product..."
               />
@@ -243,7 +242,7 @@ function CardSection() {
             )}
           </div>
         </div>
-        <Products title={title} data={filteredProduct} />
+        <Products title={title} data={filteredProduct || []} />
         <div className="p-12 bg-[#F3F3F3]  rounded-lg mt-16  w-full ">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-gray-900 ">
@@ -273,7 +272,8 @@ function CardSection() {
             <p className="text-sm text-gray-500 ">
               We care about your data in our{" "}
               <a
-                href="/privacyPolicy"
+                
+                onClick={()=>router.push("/privacyPolicy")}
                 className="text-gray-600 underline hover:text-purple-500 "
               >
                 privacy policy

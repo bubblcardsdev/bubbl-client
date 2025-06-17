@@ -9,6 +9,7 @@ import {
   AboutSustainabilityIcon,AboutWhyChooseIcon
 } from "../common/icons";
 import Footer from "../footerPage/index";
+import { useRouter } from "next/router";
 const values = [
   {
     title: "Simplicity",
@@ -62,6 +63,7 @@ const sections = [
   },
 ];
 const About = () => {
+  const router = useRouter()
   const [active, setActive] = useState(1);
   return (
     <div className="bg-black">
@@ -218,7 +220,7 @@ const About = () => {
             </div>
             <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full">
               We care about your data in our
-              <a href="/privacyPolicy" className="underline hover:text-gray-300 px-1 ">
+              <a onClick={()=>router.push("/privacyPolicy")} className="underline hover:text-gray-300 px-1 ">
                 privacy policy
               </a>
             </p>

@@ -1,24 +1,61 @@
-import React from 'react'
-import './css/DropDown.css'
-interface DropdownProps {
-    options: any[];
-    onChange: (selected: any) => void;
-    value?: any;
-    placeholder?: string;
-    className?: string;
-    disabled?: boolean;
-    label?: string;
-  }
-const DropDown: React.FC<DropdownProps> = (props?:any) => {
-    const{className}=props
-  return (
-    <div>
-        <select className={`border border-red-500 h-10 w-full outline-none bg-gray-100 ${className}`} {...props}>
-            <option> dropdown </option>
-            <option> option 1</option>
-        </select>
-    </div>
-  )
+import React from "react";
+import "./css/DropDown.css";
+
+interface DropdownOption {
+  value: string | number;
+  label: string;
+  disabled?: boolean;
 }
 
-export default DropDown
+interface DropdownProps {
+  options: DropdownOption[];
+  onChange: (value: string | number) => void;
+  value?: string | number;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
+  label?: string;
+}
+
+const DropDown: React.FC<DropdownProps> = ({
+  options,
+  onChange,
+  value,
+  placeholder,
+  className = "",
+  disabled = false,
+  label,
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange(e.target.value);
+  };
+
+  return (
+    <div className="dropdown-container">
+      {label && <label className="dropdown-label">{label}</label>}
+      <select
+        value={value ?? ""}
+        onChange={handleChange}
+        disabled={disabled}
+        className={`dropdown-select ${className}`}
+      >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
+        {options.map((option) => (
+          <option
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+export default DropDown;

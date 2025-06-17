@@ -1,6 +1,13 @@
 import SiteHeader from "./siteHeader";
+import { ReactNode } from 'react';
 
-export default function SiteLayout(props: any) {
+interface SiteLayoutProps {
+  children?: ReactNode;
+
+}
+
+
+export default function SiteLayout(props: SiteLayoutProps) {
   return (
     <div>
       <div style={{ position: "fixed", width: "100%", zIndex: "9999", top: 0 }}>

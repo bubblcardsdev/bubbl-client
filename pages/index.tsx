@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 // import localFont from "next/font/local";
-import ProductPage from "@/pages/shop/index";
 import SiteLayout from "@/src/components/layout/siteLayout";
 import Home from "@/src/components/home";
 

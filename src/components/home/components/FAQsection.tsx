@@ -36,7 +36,7 @@ export default function FaqSection() {
 
         <div className="space-y-3 sm:space-y-4">
           {FAQ.map((item, index) => (
-            <FadeInSection>
+            <FadeInSection key={index}>
   <div key={index} className="border-b border-gray-200">
               <button
                 className="flex justify-between items-center w-full py-3 sm:py-5 text-left focus:outline-none"

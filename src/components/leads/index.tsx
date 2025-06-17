@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
 import {
-  ArrowLeft,
-  ArrowRight,
   CalendarDays,
-  MoreHorizontal,
 } from "lucide-react";
 import Image from "next/image";
-import { FaPlus, FaFilter, FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 
 import Drawer from "../common/Drawer";
 import {
@@ -21,6 +19,14 @@ import {
 } from "../common/icons";
 import useWindowSize from "@/src/hooks/useWindowSize";
 
+interface Lead {
+  name: string;
+  role: string;
+  orderId: string;
+  connection: string;
+  date: string;
+  avatar: string;
+}
 const leads = [
   {
     name: "Natali Craig",
@@ -168,7 +174,7 @@ const Leads = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#323232]">
-            {leads.map((lead: any, index: number) => (
+            {leads.map((lead: Lead, index: number) => (
               <tr
                 key={index}
                 className="group hover:bg-[#282828] transition-colors"
@@ -190,7 +196,7 @@ const Leads = () => {
                   />
                 </td>
                 <td className="p-3 flex items-center gap-3">
-                  <img
+                  <Image
                     src={lead?.avatar}
                     alt=""
                     className="w-8 h-8 rounded-full object-cover"

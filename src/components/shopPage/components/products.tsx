@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
-
 const CircleContainer = ({ colors }: { colors: string[] }) => {
   // const [hovered, setHovered] = useState(false);
 
@@ -30,7 +29,38 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
   );
 };
 
-function Products(props: any) {
+export type TitleInfo = {
+  title: string;
+  description: string;
+};
+
+export type TitleMap = {
+  [key: string]: TitleInfo;
+};
+
+export type Card = {
+  id: number;
+  name: string;
+  title: string;
+  price: string;
+  image: string | StaticImageData;
+  discount: string;
+  secondaryImage?: string | StaticImageData; // Made optional and allowed string
+  colors: string[];
+};
+
+export type ProductSection = {
+  sectionType: string;
+  cards: Card[];
+};
+
+type ProductProps = {
+  title: TitleMap;
+  data: ProductSection[];
+}
+
+
+function Products(props:ProductProps) {
   const { data = [], title } = props;
   const [hoverImage, setHoverImage] = useState<number | null>(null);
   const router = useRouter();
@@ -39,7 +69,7 @@ function Products(props: any) {
   };
   return (
     <div className="w-full top-6">
-      {data.map((product: any, index: number) => (
+      {data.map((product: ProductSection, index: number) => (
         <div className="flex flex-col gap-6 w-full md:px-0" key={index}>
           <div className="w-full mt-[60px] ml-0 ">
             <h1 className="w-full text-3xl text-black font-bold mb-2">
@@ -50,7 +80,7 @@ function Products(props: any) {
             </p>
           </div>
           <div className="grid lg:grid-cols-[repeat(3,minmax(320px,1fr))] md:grid-cols-[repeat(2,minmax(320px,1fr))] sm:grid-cols-none xs:grid-cols-none gap-5 w-full box-border ">
-            {product.cards.map((card: any) => (
+            {product.cards.map((card: Card) => (
               <div
                 key={card.id}
                 className="cursor-pointer w-full bg-white transition duration-300 ease-in-out"

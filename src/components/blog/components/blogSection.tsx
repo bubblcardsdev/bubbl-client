@@ -20,6 +20,15 @@ const blogPosts = [
   },
   ];
 
+  type BlogPost = {
+  image: string;
+  author: string;
+  date: string;
+  role: string;
+  heading: string;
+  description: string;
+  link: string;
+};
 export default function BlogSection() {
   return (
     <section className="bg-black text-white  ">
@@ -28,7 +37,7 @@ export default function BlogSection() {
         The latest industry news, interviews, technologies, and resources.
       </p>
       <div className="grid md:grid-cols-2 gap-8">
-        {blogPosts.map((post: any, idx: number) => (
+        {blogPosts.map((post: BlogPost, idx: number) => (
           <BlogCard key={idx} {...post} />
         ))}
       </div>

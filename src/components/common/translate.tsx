@@ -8,6 +8,7 @@ function TranslateYwithFadeIn({children}:{children:React.ReactNode}){
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
+    const node = ref.current
     const observer = new IntersectionObserver(
       ([entry]) => {
        
@@ -20,10 +21,10 @@ function TranslateYwithFadeIn({children}:{children:React.ReactNode}){
       { threshold: 0.9 }
     );
 
-    if (ref.current) observer.observe(ref.current);
+    if (node) observer.observe(node);
 
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (node) observer.unobserve(node);
     };
   }, [hasAnimated]);
 

@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import {
   Color,
   ColorItem,
-  ColorSelectorProps,
   Mode,
   Size,
 } from "@/src/lib/interface";
@@ -14,7 +13,6 @@ import useWindowSize from "@/src/hooks/useWindowSize";
 import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 import { ColorSelector, ModeColorSelector } from "../../common/ColorSelector";
-import ProfileCardAnimate from "../../common/profileCardAnimate";
 
 export default function ProfileCard() {
   const router = useRouter();

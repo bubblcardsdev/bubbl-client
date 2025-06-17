@@ -21,8 +21,8 @@ function CardsReusable() {
       <ProductCarousel
         items={PRODUCTS}
         renderItem={(card) => (
-       
-            <ProductCard card={card} handleCardClick={handleCardClick} />
+      
+        <ProductCard card={card} handleCardClick={handleCardClick} />
          
         )}
       />

@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import {
-  Share_icon,
   Qr_icon,
   CallProfileIcon,
   TwitterIcon,
@@ -21,7 +19,7 @@ import {
 
 const ProTemplateQuartz = () => {
   const [openSection, setOpenSection] = useState("");
-  const toggleSection = (section: any) => {
+  const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? "" : section);
   };
   return (

@@ -1,5 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
-import Router, { useRouter } from 'next/router';
+import  { useRouter } from 'next/router';
 
 export default function NotFound() {
     const router = useRouter();
