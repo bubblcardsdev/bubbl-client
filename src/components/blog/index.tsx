@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import BlogCard from "./components/blogSection";
 import Footer from "../footerPage/index";
 import Blog1 from "./components/blog1";

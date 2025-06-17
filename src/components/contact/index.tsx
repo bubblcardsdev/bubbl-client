@@ -4,9 +4,8 @@ import ContactForm from "./componets/contactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Footer from "../footerPage/index";
 import BubblCommunity from "../common/BubblCommunity";
-import { useRouter } from "next/router";
 function ContactPage() {
-  const router = useRouter()
+  // const router = useRouter()
   // const [email, _] = useState("");
   // const handleSubmit = (e: any) => {
   //   e.preventDefault();

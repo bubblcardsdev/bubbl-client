@@ -14,8 +14,8 @@ const Support = () => {
       <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-4 mt-4  ">
         <div className="text-sm grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1  gap-y-[30px]  w-[450px] bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6">
           <div className="mt-0 flex flex-col gap-y-[20px]">
-            <p className="text-3xl">Let's Connect </p>
-            <p className="">Got questions, feedback, or just want to say hi? We’d <br/>love to hear from you!<br/>Reach out to our team and we’ll get back to you as <br/>soon as possible.</p>
+            <p className="text-3xl">Let&apos;s Connect </p>
+            <p className="">Got questions, feedback, or just want to say hi? We&apos;d <br/>love to hear from you!<br/>Reach out to our team and we’ll get back to you as <br/>soon as possible.</p>
           </div>
           <div className="flex items-center gap-4 ">
             <span className="text-lg bg-[#282828] rounded-full p-[10px]">

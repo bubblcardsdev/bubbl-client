@@ -11,7 +11,6 @@ import {
 } from "../common/icons";
 import Footer from "../footerPage/index";
 import BubblCommunity from "../common/BubblCommunity";
-import { useRouter } from "next/router";
 const AboutcardSection = [
   {
     title: "Simplicity",
@@ -65,7 +64,6 @@ const sections = [
   },
 ];
 const About = () => {
-  const router = useRouter()
   const [active, setActive] = useState(1);
   return (
     <div className="bg-black">

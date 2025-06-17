@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import Bluecard from "../../assets/product/productCardImg/basiccard.png";
 import Footer from "../footerPage/index";
+import CircleContainer from "../common/circleContainer";
 interface CardItem {
   id: number;
   title: string;

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 type iconProps ={
   color?:string;
   className?:string;
@@ -1954,7 +1957,7 @@ export const MenuIcon = (props: iconProps) => {
     </svg>
   );
 };
-export const LeadsTableMenuIcon = (props: iconProps) => {
+export const LeadsTableMenuIcon = (props: any) => {
   return (
     <svg
       width="18"
