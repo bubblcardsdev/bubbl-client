@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-
-import ProTemplateQuartz from "./components/ProTemplateQuartz";
+import ProTemplateNeno from "./components/ProTemplateNeno";
 const ProfileTemplate = () => {
   return (
     <div className="bg-[#ccc]">
