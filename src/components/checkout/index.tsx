@@ -336,7 +336,7 @@ const CheckoutPage = () => {
             </button>
           </form>
         </div>
-        <div className="lg:w-[40%] sm:w-full bg-white p-6 xs:p-0 rounded-lg h-fit sticky top-[125px]">
+        <div className="lg:w-[40%] sm:w-full bg-white p-6 xs:p-0 rounded-lg h-fit lg:sticky md:sticky sm:static xs:static top-[125px] ">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-[26px] font-semibold ">Review your cart</h2>
             <a href="#" className="underline font-semibold  text-black ">

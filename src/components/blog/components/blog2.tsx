@@ -1,10 +1,34 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 const Blog2 = () => {
   return (
     <section className="text-white py-0 px-0">
       <div className="space-y-4">
-        <div className="border-t border-gray-400 pt-10 text-gray-300 text-lg">
+        <div className="flex flex-col gap-[0px]">
+          <p className="text-[#9747FF] text-[18px] text-center">
+            Published 20 Jan 2022
+          </p>
+          <h1 className="text-[38px] font-bold text-center  text-white mb-3">
+            5 Ways NFC Cards Help You Win More Clients
+          </h1>
+          <p className="text-gray-300 text-center ">
+            Why Digital Business Cards Are the Smart Choice for Busy
+            Professionals
+          </p>
+        </div>
+        <div className="w-full  bg-[#1f2a40] rounded-lg overflow-hidden mt-[ 0px]">
+          <div className="relative w-full h-full sm:h-96">
+            <Image
+              src="/card2.png"
+              alt="NFC Card"
+              layout="fill"
+              objectFit="cover"
+              className="object-center"
+            />
+          </div>
+        </div>
+        <div className="border-t border-gray-400 pt-10 text-gray-300 text-lg mt-[]">
           <p>
             In today’s fast-paced, digital world, businesses are constantly
             looking for innovative ways to stand out and build lasting
@@ -87,11 +111,11 @@ const Blog2 = () => {
           </div>
           <div className="md:w-1/2">
             <Image
-              src="/pricings_bg.png"
+              src="/blog2card.png"
               alt="Bubbl Cards"
-              width={600}
-              height={400}
-              className="rounded-lg"
+              width={200}
+              height={200}
+              className="rounded-lg w-full h-[350px]"
             />
           </div>
         </div>

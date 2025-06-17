@@ -75,7 +75,7 @@ const Cart = () => {
       price: "Rs.999",
       image: Bluecard,
       discount: "18.77%",
-      // colors:["blue"]
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
       id: 2,
@@ -84,6 +84,7 @@ const Cart = () => {
       price: "Rs.799",
       image: Bluecard,
       discount: "18.77%",
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
       id: 3,
@@ -92,6 +93,7 @@ const Cart = () => {
       price: "Rs.1999",
       image: Bluecard,
       discount: "18.77%",
+      colors: ["red", "blue", "green", "yellow", "purple"],
     },
   ];
   return (
@@ -131,7 +133,7 @@ const Cart = () => {
                       </div>
                       <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2">
                         <p
-                          className=" m-0 p-0 cursor-pointer"
+                          className=" m-0 p-0 cursor-pointer bg-[]"
                           onClick={() => handleDecrease(value.id)}
                         >
                           -
@@ -230,9 +232,9 @@ const Cart = () => {
                     <div className="border rounded-lg bg-white px-2 py-[4px]">
                       <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                     </div>
-                    {/* {product.colors && product.colors.length > 0 && (
+                    {product.colors && product.colors.length > 0 && (
                       <CircleContainer colors={product.colors} />
-                    )} */}
+                    )}
                   </div>
                 </div>
 

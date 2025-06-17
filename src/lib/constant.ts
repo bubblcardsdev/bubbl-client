@@ -1,18 +1,16 @@
 import { FAQItem } from "./interface";
 
-
-
 export const themeObject: { [key: string]: string } = {
-    "/home": "linear-gradient(to right, #4A4A4A, #000000)",
-    "/":"linear-gradient(to right, #4A4A4A, #000000)",
-    "/plans": "black",
-    "/contact": "black",
-    "/compatibility":"black"
-    
-  };
-   //"linear-gradient(to right, #4A4A4A, #000000)"
+  "/home": "linear-gradient(to right, #4A4A4A, #000000)",
+  "/plans": "black",
+  "/contact": "black",
+  "/compatibility": "black",
+  "/about": "black",
+  "/blog/[id]": "black",
+};
+//"linear-gradient(to right, #4A4A4A, #000000)"
 
-  export const imageObj = {
+export const imageObj = {
   Black: {
     Blue: "/HomePageIcons/dmBlue.png",
     Pink: "/HomePageIcons/dmPink.png",
@@ -20,7 +18,7 @@ export const themeObject: { [key: string]: string } = {
     LightBlue: "/HomePageIcons/dmLightBlue.png",
     Green: "/HomePageIcons/dmGreen.png",
     Purple: "/HomePageIcons/dmPurple.png",
-    Gray: "/HomePageIcons/dmGray.png"
+    Gray: "/HomePageIcons/dmGray.png",
   },
   White: {
     Blue: "/HomePageIcons/lmBlue.png",
@@ -29,46 +27,45 @@ export const themeObject: { [key: string]: string } = {
     LightBlue: "/HomePageIcons/lmLightBlue.png",
     Green: "/HomePageIcons/lmGreen.png",
     Purple: "/HomePageIcons/lmPurple.png",
-    Gray: "/HomePageIcons/lmGray.png"
-  }
+    Gray: "/HomePageIcons/lmGray.png",
+  },
 };
 
-export const STEPS = [ 
-      {
-        number: 1,
-        icon: "/HomePageIcons/icon1.png",
-        title: 'Choose bubbl card',
-        description: 'Choose from our Bubbl Basics or design a custom card. It\'s your choice.',
-        img:"/HomePageIcons/step1.png",
-        height: 421,
-        width: 302,
-        css:'10%',
-
-      },
-      {
-        number: 2,
-        icon: "/HomePageIcons/icon2.png",
-        title: 'Set up your profile',
-        description: 'Tap your device to your phone to activate the link, follow the instructions to create your profile',
-        img:"/HomePageIcons/step2.png",
-        height: 1866,
-        width:1500,
-         css:'-5%',
-     
-         
-      },
-      {
-        number: 3,
-        icon: "/HomePageIcons/icon3.png",
-        title: 'Network like a pro',
-        description: 'You can now tap and share your contact info, social media handles and so much more with your own Bubbl.',
-        img:"/HomePageIcons/step3.png",
-        height:386,
-        width:385,
-         css:'-5%',
-    
-      }
-    ];
+export const STEPS = [
+  {
+    number: 1,
+    icon: "/HomePageIcons/icon1.png",
+    title: "Choose bubbl card",
+    description:
+      "Choose from our Bubbl Basics or design a custom card. It's your choice.",
+    img: "/HomePageIcons/step1.png",
+    height: 421,
+    width: 302,
+    css: "10%",
+  },
+  {
+    number: 2,
+    icon: "/HomePageIcons/icon2.png",
+    title: "Set up your profile",
+    description:
+      "Tap your device to your phone to activate the link, follow the instructions to create your profile",
+    img: "/HomePageIcons/step2.png",
+    height: 1866,
+    width: 1500,
+    css: "-5%",
+  },
+  {
+    number: 3,
+    icon: "/HomePageIcons/icon3.png",
+    title: "Network like a pro",
+    description:
+      "You can now tap and share your contact info, social media handles and so much more with your own Bubbl.",
+    img: "/HomePageIcons/step3.png",
+    height: 386,
+    width: 385,
+    css: "-5%",
+  },
+];
 
 export const LOGOS = [
       { logo: "/assets/Homeimg/safvolt.png", place: "Savfolt", width: 220, height: 110 },

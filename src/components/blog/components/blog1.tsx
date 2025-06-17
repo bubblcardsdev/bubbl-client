@@ -1,17 +1,42 @@
+
+"use client";
 import React from "react";
 import Image from "next/image";
 const Blog1 = () => {
   return (
-    <main className="text-white">
+    <div className="text-white">
       <section className="space-y-8">
-        <p>
+        <div className="flex flex-col gap-[0px]">
+          <p className="text-[#9747FF] text-[18px] text-center">
+            Published 20 Jan 2022
+          </p>
+          <h1 className="text-[38px] font-bold text-center  text-white mb-3">
+            NFC new network revolution
+          </h1>
+          <p className="text-gray-300 text-center ">
+            Why Digital Business Cards Are the Smart Choice for Busy
+            Professionals
+          </p>
+        </div>
+        <div className="w-full  bg-[#1f2a40] rounded-lg overflow-hidden ">
+          <div className="relative w-full h-full sm:h-96">
+            <Image
+              src="/Blog2.png"
+              alt="NFC Card"
+              layout="fill"
+              objectFit="cover"
+              className="object-center"
+            />
+          </div>
+        </div>
+        <p className="text-gray-300">
           In a world where digital connections dominate, it is fair to ask why
           business cards are still relevant. Business cards have long served as
           essential tools for professional networking and personal marketing
           helping people expand their reach, credibility and drive sales.
         </p>
 
-        <p>
+        <p className="text-gray-300">
           Enter <span className="font-bold">Bubbl</span>—your next-generation
           networking solution. It does more than just highlighting your contact
           information. Bubbl&apos;s NFC-powered digital business cards leave a
@@ -25,7 +50,7 @@ const Blog1 = () => {
           History Of Traditional Business Cards
         </h2>
 
-        <p>
+        <p className="text-gray-300">
           With a history rooted in China from the early 15th century, “Meishi”
           cards were used for self-promotion and building relationships, which
           became popularly known as “Visiting Cards” in Europe. As societies
@@ -34,7 +59,7 @@ const Blog1 = () => {
           the development of the business card.
         </p>
 
-        <p>
+        <p className="text-gray-300">
           From simple paper or wooden cards with handwritten calligraphy to the
           current colorful designs and new age e-cards with graphics, these
           advancements reflect the intersectional changes between technology and
@@ -45,7 +70,7 @@ const Blog1 = () => {
           The Challenges Of Traditional Business Cards
         </h2>
 
-        <p>
+        <p className="text-gray-300">
           Traditional business cards now face modern challenges. The global
           shift to digital communication has a greater demand, creating a
           requirement for sustainable, resourceful and advanced networking
@@ -139,7 +164,7 @@ const Blog1 = () => {
         <div className="w-full  bg-[#1f2a40] rounded-lg overflow-hidden mb-10 mt-">
           <div className="relative w-full h-72 sm:h-96">
             <Image
-              src="/pricings_bg.png"
+              src="/Blog2.png"
               alt="NFC Card"
               layout="fill"
               objectFit="cover"
@@ -148,7 +173,7 @@ const Blog1 = () => {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 };
 export default Blog1;

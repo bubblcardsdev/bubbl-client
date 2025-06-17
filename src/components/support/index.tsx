@@ -11,9 +11,12 @@ const Support = () => {
       <p className="text-sm mt-1">
         We’d love to hear from you. Please fill out this form.
       </p>
-      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 gap-4 mt-4  ">
-        <div className="text-sm grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1  h-[350px] gap-y-[60px]">
-          <div className="mt-0"></div>
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-4 mt-4  ">
+        <div className="text-sm grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1  gap-y-[30px]  w-[450px] bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6">
+          <div className="mt-0 flex flex-col gap-y-[20px]">
+            <p className="text-3xl">Let's Connect </p>
+            <p className="">Got questions, feedback, or just want to say hi? We’d <br/>love to hear from you!<br/>Reach out to our team and we’ll get back to you as <br/>soon as possible.</p>
+          </div>
           <div className="flex items-center gap-4 ">
             <span className="text-lg bg-[#282828] rounded-full p-[10px]">
               <MailProfileIcon />
@@ -50,7 +53,7 @@ const Support = () => {
         <form className="w-full bg-[#333333] p-6 rounded-md space-y-5 ">
           <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1 gap-4">
             <div>
-              <label className="text-sm mb-1 block text-white">
+              <label className="text-sm mb-2 block text-white">
                 First name
               </label>
               <input
@@ -60,7 +63,7 @@ const Support = () => {
               />
             </div>
             <div>
-              <label className="text-sm mb-1 block text-white">Last name</label>
+              <label className="text-sm mb-2 block text-white">Last name</label>
               <input
                 type="text"
                 placeholder="Last name"
@@ -70,7 +73,7 @@ const Support = () => {
           </div>
           <div className="grid xl:grid-cols-2 xs:grid-cols-1  gap-4">
             <div>
-              <label className="text-sm mb-1 block text-white">Email</label>
+              <label className="text-sm mb-2 block text-white">Email</label>
               <input
                 type="email"
                 placeholder="you@company.com"
@@ -78,7 +81,7 @@ const Support = () => {
               />
             </div>
             <div>
-              <label className="text-sm mb-1 block text-white">
+              <label className="text-sm mb-2 block text-white">
                 Phone number
               </label>
               <div className="flex items-center bg-[#282828]  rounded-md overflow-hidden">
@@ -95,9 +98,9 @@ const Support = () => {
             </div>
           </div>
           <div>
-            <label className="text-sm mb-1 block text-white">Message</label>
+            <label className="text-sm mb-2 block text-white">Message</label>
             <textarea
-              rows={4}
+              rows={6}
               className="w-full bg-[#282828]  text-sm text-white placeholder-[#4F4F4F] rounded-md"
             />
           </div>

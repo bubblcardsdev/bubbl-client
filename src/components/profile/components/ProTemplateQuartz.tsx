@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Qr_icon,
@@ -23,11 +22,11 @@ const ProTemplateQuartz = () => {
     setOpenSection(openSection === section ? "" : section);
   };
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden ">
+    <div className="w-full max-w-[400px] mx-auto overflow-hidden  border border-red-500">
       <div className=" bg-[#D9D9D9] h-[350px]">
         {/* <Image src='/metalCards/patten1.png' alt='' width={100} height={100} className='object-cover' /> */}
       </div>
-      <div className="px-8 py-8 w-full space-y-3 bg-[#E9BCFF] relative">
+      <div className="px-4 py-8 w-full space-y-3 bg-[#E9BCFF] relative">
         <div className="flex items-center gap-3 ">
           {/* Save Contact Button with Share Icon */}
           <div className="flex items-center justify-between gap-8 ml-2">
@@ -38,7 +37,7 @@ const ProTemplateQuartz = () => {
             <Qr_icon/>
             </button>
           </div>
-          <div className="absolute w-24 h-24 bg-white rounded-2xl -top-10 right-8">
+          <div className="absolute lg:w-24 lg:h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-8 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
             {/* <Image
               width={200}
               height={200}

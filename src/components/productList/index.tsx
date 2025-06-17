@@ -15,13 +15,13 @@ type CircleContainerProp ={
 }
 const CircleContainer = (props: CircleContainerProp) => {
   const { colors } = props;
-  const [hovered, setHovered] = useState(false);
+  // const [hovered, setHovered] = useState(false);
 
   return (
     <div
       className="relative max-w-[300px] z-10  "
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      // onMouseEnter={() => setHovered(true)}
+      // onMouseLeave={() => setHovered(false)}
     >
       {colors &&
         colors.length > 0 &&
@@ -32,9 +32,10 @@ const CircleContainer = (props: CircleContainerProp) => {
             style={{
               backgroundColor: color,
               right: `${10 + index * 3}px`,
-              transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              // transform: hovered ? `translateX(-${15 * index}px)` : "none",
+              transform: `translateX(-${15 * index}px)`,
             }}
-            onClick={() => setHovered(false)}
+            // onClick={() => setHovered(false)}
           />
         ))}
     </div>

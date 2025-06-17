@@ -3,6 +3,7 @@ import React from "react";
 import ContactForm from "./componets/contactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Footer from "../footerPage/index";
+import BubblCommunity from "../common/BubblCommunity";
 import { useRouter } from "next/router";
 function ContactPage() {
   const router = useRouter()
@@ -30,7 +31,7 @@ function ContactPage() {
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mb-4">
                 <div className="w-10 h-10 rounded-full bg-purple-900/30 flex items-center justify-center ">
-                  <Mail className="w-6 h-6 text-purple-500 text-center"  />
+                  <Mail className="w-6 h-6 text-purple-500 text-center" />
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2 ">Email</h3>
@@ -45,7 +46,7 @@ function ContactPage() {
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mb-4">
                 <div className="w-10 h-10 rounded-full bg-purple-900/30 flex items-center justify-center ">
-                  <MapPin className="w-6 h-6 text-purple-500" color='#9747FF'/>
+                  <MapPin className="w-6 h-6 text-purple-500" color="#9747FF" />
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2 ">Office</h3>
@@ -60,7 +61,7 @@ function ContactPage() {
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mb-4">
                 <div className="w-10 h-10 rounded-full bg-purple-900/30 flex items-center justify-center ">
-                  <Phone className="w-6 h-6 text-[#9747FF]" color='#9747FF' />
+                  <Phone className="w-6 h-6 text-[#9747FF]" color="#9747FF" />
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2 ">Phone</h3>
@@ -74,7 +75,10 @@ function ContactPage() {
           </div>
         </div>
         <ContactForm />
-          <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14 ">
+        <div className="mt-[60px]">
+          <BubblCommunity />
+        </div>
+        {/* <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14 ">
           <div className="w-full">
             <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
               Join 2,000+ Bubbl Community
@@ -107,9 +111,9 @@ function ContactPage() {
               </a>
             </p>
           </div>
-        </div>
+        </div> */}
         <div className="bg-black">
-        <Footer />
+          <Footer />
         </div>
       </div>
     </section>

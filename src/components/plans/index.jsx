@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import PricingPlan from "./components/pricingPlans";
 import Footer from "../footerPage/index";
+import BubblCommunity from "../common/BubblCommunity";
 import { FullArrowIcon, RightTickIcon, MessageIcon } from "../common/icons";
 function Plans() {
   const [planIndex, setPlanIndex] = useState(0);
@@ -92,7 +93,7 @@ function Plans() {
           </div>
         </section>
         <PricingPlan />
-        <section className=" bg-black text-gray-300 lg:block md:block sm:hidden xs:hidden">
+        <section className=" bg-[#121212] rounded-lg text-gray-300 lg:block md:block sm:hidden xs:hidden">
           <div className="max-w-6xl mx-auto">
             <table className="w-full border-collapse">
               <thead>
@@ -150,7 +151,7 @@ function Plans() {
                 <tr className="border-b border-zinc-800 ">
                   <td className="p-4">Base price</td>
                   <td className="p-4">Free</td>
-                  <td className="p-4 bg-[#0F0F10]">₹720/month</td>
+                  <td className="p-4 bg-red-300">₹720/month</td>
                   <td className="p-4">Custom</td>
                 </tr>
                 <tr className="border-b border-zinc-800 ">
@@ -217,7 +218,7 @@ function Plans() {
             </table>
           </div>
         </section>
-        <section className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide">
+        <section className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide ">
           <div className="lg:hidden md:hidden sm:flex xs:flex justify-between items-center sm:px-4 xs:px-[5px] xs:gap-x-2 sticky top-0 z-10 bg-black py-2">
             <button
               onClick={() => selectedIndex(0)}
@@ -233,7 +234,7 @@ function Plans() {
               style={{
                 background: planIndex == 1 ? "rgba(130,130,130,0.3)" : "",
               }}
-              className="border border-[rgba(130,130,130,0.3)] py-1 xs:w-full sm:px-14 rounded-md text-white"
+              className="border border-[rgba(130,130,130,0.3)] py-1 xs:w-full sm:px-14 rounded-md text-white "
             >
               Pro
             </button>
@@ -248,7 +249,7 @@ function Plans() {
             </button>
           </div>
 
-          <div className="overflow-x-auto sm:overflow-x-hidden  overflow-y-auto">
+          <div className="overflow-x-auto sm:overflow-x-hidden  overflow-y-auto ">
             <table className="w-full border-collapse">
               <thead>
                 <tr>
@@ -359,7 +360,7 @@ function Plans() {
             </table>
           </div>
         </section>
-        <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
+        {/* <div className=" bg-[#1D1D1D] rounded-xl flex flex-row w-full box-border lg:gap-24 md:gap-10 sm:gap-10 xs:gap-10 items-center  lg:flex-row md:flex-col sm:flex-col xs:flex-col px-10 py-14">
           <div className="w-full">
             <h2 className="text-2xl text-white lg:text-left md:text-center sm:text-center xs:text-center lg:whitespace-nowrap">
               Join 2,000+ Bubbl Community
@@ -395,7 +396,8 @@ function Plans() {
               </a>
             </p>
           </div>
-        </div>
+        </div> */}
+        <BubblCommunity/>
       </div>
       <div className="bg-black lg:px-[12px] sm:px-2 xs:px-2 w-full max-w-[1200px] mx-auto">
         <Footer />

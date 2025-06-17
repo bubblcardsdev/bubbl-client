@@ -1,7 +1,8 @@
+"use client";
 import BlogCard from "./blogCard";
 const blogPosts = [
   {
-    image: "/2.png",
+    image: "/Blog1.png",
     author: "Olivia Rhye",
     date: "20 Jan 2022",
     role: "Design",
@@ -10,7 +11,7 @@ const blogPosts = [
     link:"/blog/2",
   },
   {
-    image: "/3.png",
+    image: "/Blog3.png",
     author: "Phoenix Baker",
     date: "19 Jan 2022",
     role: "Design",
@@ -43,7 +44,7 @@ export default function BlogSection() {
       </div>
       <div className="border-b mt-[36px]"></div>
       <div className="flex justify-center mt-[30px] ">
-        <button className="bg-[#6F17EC] text-white px-6 py-2 rounded-lg hover:bg-[#6F17EC] transition">
+        <button className="bg-[#9747FF] text-white px-6 py-2 rounded-lg hover:bg-[#6F17EC] transition">
           View all posts
         </button>
       </div>

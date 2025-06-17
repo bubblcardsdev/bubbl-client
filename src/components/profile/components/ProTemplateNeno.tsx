@@ -19,7 +19,7 @@ import {
 } from "../../common/icons";
 const ProTemplateNeno = () => {
   return (
-    <div className="flex  flex-col items-center align-middle justify-between bg-gray-400">
+    <div className="flex  flex-col items-center align-middle justify-between bg-gray-400 ">
       <div className="">
       <div className="bg-gray-500  w-[400px] h-[350px] object-cover rounded-[0_0_0px_0px]">
           <Image

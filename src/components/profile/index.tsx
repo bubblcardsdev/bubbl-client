@@ -8,8 +8,8 @@ const ProfileTemplate = () => {
       {/* <FreeTemplateOpal/> */}
       {/* <FreeTemplateRuby/> */}
       {/* <ProTemplateSaphire /> */}
-      <ProTemplateQuartz/>
-      {/* <ProTemplateNeno/>   */}
+      {/* <ProTemplateQuartz/> */}
+      <ProTemplateNeno/>  
     </div>
   );
 };
