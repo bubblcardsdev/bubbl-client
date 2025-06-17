@@ -1,22 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ContactForm from "./componets/contactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Footer from "../footerPage/index";
 import BubblCommunity from "../common/BubblCommunity";
 function ContactPage() {
-  const [email, setEmail] = useState("");
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log("Email submitted:", email);
-  };
+  // const router = useRouter()
+  // const [email, _] = useState("");
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  //   console.log("Email submitted:", email);
+  // };
   return (
     <section className="w-full bg-[#000000] flex flex-col gap-[50px]  ">
       <div className="flex flex-col gap-[70px] pt-[20vh]  px-[3.5vw] max-w-[1300px] mx-auto w-full">
         <div className="text-center ">
           <h3 className="text-[#9747FF] text-3xl text-bold ">Contact us</h3>
           <p className="text-white lg:text-5xl font-bold mt-8 md:text-4xl sm:text-2xl xs:text-[26px]">
-            We'd love to hear from you
+            We&apos;d love to hear from you
           </p>
           <p className="text-[#A4A4A4] mt-8  text-[18px] tracking-[2px]">
             Our friendly team is always here to chat.
@@ -104,7 +105,7 @@ function ContactPage() {
             </div>
             <p className="mt-2 pl-1 text-sm  text-gray-400 lg:text-left md:text-center sm:text-center xs:text-center w-full ">
               We care about your data in our
-              <a href="/privacyPolicy" className="underline hover:text-[#AC6CFF] px-1 ">
+              <a onClick={()=>router.push("/privacyPolicy")} className="underline hover:text-[#AC6CFF] px-1 ">
                 privacy policy
               </a>
             </p>

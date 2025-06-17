@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import CardsReusable from "../../common/cards";
-import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 
 const OurProducts = () => {

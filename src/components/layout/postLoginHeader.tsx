@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   NottifycationIcon,
   ProfileIcon,
-  PostLoginMenuIcon,
 } from "../common/icons";
 import { LuMenu } from "react-icons/lu";
-const PostLoginHeader = (props: any) => {
+import { FunctionProps } from "./postLoginSidebar";
+const PostLoginHeader = (props:FunctionProps) => {
   const { onSideBarOpen } = props;
   return (
     <div className="flex justify-between py-4 w-full ">

@@ -40,7 +40,7 @@ function Blog3() {
           NFC, or Near Field Communication, is a short-range wireless technology
           that allows two devices to exchange data when brought within a few
           centimeters of each other. While the term might sound technical, most
-          people interact with NFC daily. Whether it's through contactless
+          people interact with NFC daily. Whether it&apos;s through contactless
           payments, mobile ticketing, or transit passes, NFC is fast, secure,
           and effortless.
         </p>
@@ -57,7 +57,7 @@ function Blog3() {
 
         <p className="text-gray-300 mb-4">
           Initially introduced for financial transactions, NFC has rapidly
-          evolved into a multi-purpose solution. Today, it's used in:
+          evolved into a multi-purpose solution. Today, it&apos;s used in:
         </p>
 
         <ul className="list-disc list-inside text-gray-300 mb-6 space-y-2">
@@ -79,7 +79,7 @@ function Blog3() {
         </h1>
         <p className="mb-6 text-gray-300">
           In professional scenarios, first impressions and speed matter. Whether
-          you're at a networking event, a conference, or a casual meeting, being
+          you&apos;re at a networking event, a conference, or a casual meeting, being
           able to share your contact details or portfolio instantly gives you a
           distinct advantage.
         </p>

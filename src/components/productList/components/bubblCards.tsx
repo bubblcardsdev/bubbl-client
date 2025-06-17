@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import BuleCard from "../../../assets/product/productCardImg/basiccard.png";
 import Image from "next/image";
-import { IoFilter, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 const materials = [
   {
@@ -43,43 +41,46 @@ const materials = [
     patterns: ["pattern1", "pattern2", "pattern3"],
   },
 ];
-const CircleContainer = (props: any) => {
-  const { colors } = props;
-  const [hovered, setHovered] = useState(false);
+// const CircleContainer = (props: any) => {
+//   const { colors } = props;
+//   const [hovered, setHovered] = useState(false);
 
-  // const colors = ["red", "blue", "green", "yellow", "purple"];
+//   // const colors = ["red", "blue", "green", "yellow", "purple"];
 
-  return (
-    <div
-      className="relative max-w-[300px] z-10  "
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {colors &&
-        colors.length > 0 &&
-        colors.map((color: any, index: number) => (
-          <div
-            key={index}
-            className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
-            style={{
-              backgroundColor: color,
-              right: `${10 + index * 3}px`,
-              transform: hovered ? `translateX(-${15 * index}px)` : "none",
-            }}
-            onClick={() => setHovered(false)}
-          />
-        ))}
-    </div>
-  );
-};
-const BubblBasicCrd = (props: any) => {
-  const [isOpen, setIsOpen] = useState<any>(false);
-  const [selected, setSelected] = useState<any>("select your font");
+//   return (
+//     <div
+//       className="relative max-w-[300px] z-10  "
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//     >
+//       {colors &&
+//         colors.length > 0 &&
+//         colors.map((color: any, index: number) => (
+//           <div
+//             key={index}
+//             className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
+//             style={{
+//               backgroundColor: color,
+//               right: `${10 + index * 3}px`,
+//               transform: hovered ? `translateX(-${15 * index}px)` : "none",
+//             }}
+//             onClick={() => setHovered(false)}
+//           />
+//         ))}
+//     </div>
+//   );
+// };
+type BubblBasicCrdFunctionProps ={
+selectedCard:string;
+}
+const BubblBasicCrd = (props:BubblBasicCrdFunctionProps ) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string>("select your font");
   const options = ["Amenti", "Roboto", "Montserrat"];
   const { selectedCard } = props;
   const [activeTab, setActiveTab] = useState("description");
   const [selectedColor, setSelectedColor] = useState("Blue");
-  const [activeButton, setActiveButton] = useState("");
+  // const [activeButton, setActiveButton] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
   const [selectedPattern, setSelectedPattern] = useState(
     selectedMaterial.patterns[0]
@@ -115,8 +116,8 @@ const BubblBasicCrd = (props: any) => {
           <span className="font-semibold text-[16px]">{selectedColor}</span>
         </p>
         <div className="flex gap-2 mt-4">
-          {colors.map((item) => (
-            <div
+          {colors.map((item,index) => (
+            <div key={index}
               className={`flex items-center p-[2px] box-content rounded-full ${
                 item.name === selectedColor
                   ? "border-2 border-black"

@@ -5,22 +5,25 @@ export default function FadeInSection({ children }: { children: React.ReactNode 
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          observer.unobserve(entry.target); // Unobserve to stop watching
-        }
-      },
-      { threshold: 0.3 }
-    );
+  const node = ref.current; // ✅ Save ref.current to a variable
 
-    if (ref.current) observer.observe(ref.current);
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        setHasAnimated(true);
+        observer.unobserve(entry.target);
+      }
+    },
+    { threshold: 0.3 }
+  );
 
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
-  }, [hasAnimated]);
+  if (node) observer.observe(node);
+
+  return () => {
+    if (node) observer.unobserve(node); // ✅ Use saved ref
+  };
+}, [hasAnimated]);
+
 
   return (
     <div

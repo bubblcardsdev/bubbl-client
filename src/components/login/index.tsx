@@ -3,9 +3,7 @@ import React, { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   FacebookColorIcon,
-  GoogleColorIcon,
   LinkedinColorIcon,
-  LinkedinIcon,
 } from "../common/icons";
 import { BubblLogo } from "../common/icons";
 import Image from "next/image";
@@ -18,15 +16,15 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  const handleEmailChange = (e: any) => {
-    const email = e.target.value;
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e?.target?.value;
     setLoginForm((prevState) => ({ ...prevState, email }));
     setErrors((prevState) => ({
       ...prevState,
       emailError: emailRegex.test(email) ? "" : "Please enter a valid email",
     }));
   };
-  const handlePasswordChange = (e: any) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
     setLoginForm((prevState) => ({ ...prevState, password }));
     setErrors((prevState) => ({
@@ -36,7 +34,7 @@ const LoginPage = () => {
         : "Password must be at least 8 characters long and include both letters and numbers",
     }));
   };
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!errors.emailError && !errors.passwordError) {
       router.push("/signup");

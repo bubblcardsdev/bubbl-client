@@ -8,6 +8,8 @@ export default function ProfileCardAnimate({ children }: { children: React.React
   const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(null);
 
   useEffect(() => {
+
+    const node = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         const currentY = entry.boundingClientRect.y;
@@ -31,10 +33,10 @@ export default function ProfileCardAnimate({ children }: { children: React.React
       { threshold: 0.8}
     );
 
-    if (ref.current) observer.observe(ref.current);
+    if (node) observer.observe(node);
 
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (node) observer.unobserve(node);
     };
   }, []);
 

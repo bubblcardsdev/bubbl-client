@@ -1,6 +1,4 @@
-import Image from "next/image";
 import { useRouter } from "next/router";
-import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 import { useEffect, useRef, useState } from "react";
 

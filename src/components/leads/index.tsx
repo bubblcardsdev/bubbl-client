@@ -2,13 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
   CalendarDays,
-  MoreHorizontal,
 } from "lucide-react";
 import Image from "next/image";
-import { FaPlus, FaFilter, FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 
 import Drawer from "../common/Drawer";
 import {
@@ -21,6 +18,14 @@ import {
 } from "../common/icons";
 import useWindowSize from "@/src/hooks/useWindowSize";
 
+interface Lead {
+  name: string;
+  role: string;
+  orderId: string;
+  connection: string;
+  date: string;
+  avatar: string;
+}
 const leads = [
   {
     name: "Natali Craig",

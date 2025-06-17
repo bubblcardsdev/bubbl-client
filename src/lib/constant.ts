@@ -1,7 +1,8 @@
 import { FAQItem } from "./interface";
 
 export const themeObject: { [key: string]: string } = {
-  "/": "linear-gradient(to right, #4A4A4A, #000000)",
+  "/home": "linear-gradient(to right, #4A4A4A, #000000)",
+  "/":"linear-gradient(to right, #4A4A4A, #000000)",
   "/plans": "black",
   "/contact": "black",
   "/compatibility": "black",

@@ -1,8 +1,11 @@
 "use client";
 import React from "react";
 import {BubblLogo,CallIcon,MailIcon,GitIcon,LinkedinIcon,TwitterIcon,FacebookIcon,WebIcon}from '../common/icons'
+import { useRouter } from "next/router";
 
-function productFooterSection() {
+
+function ProductFooterSection() {
+  const router = useRouter()
   return (
     <section className="  py-[5vh]   max-w-[1300px] mx-auto bg-black">
       <footer className=" text-white">
@@ -15,22 +18,22 @@ function productFooterSection() {
               world.
             </p>
             <div className="sm:grid xs:grid xs:grid-cols-2 sm:grid-cols-3 xl:flex  xl:gap-[2rem] sm:gap-[15px] xs:gap-[15px] w-full text-['#E4E7EC'] ">
-              <a href="/shop" className="hover:text-white">
+              <a onClick={()=>router.push("/shop")} className="hover:text-white">
                 Shop
               </a>
-              <a href="/plans" className="hover:text-white">
+              <a onClick={()=>router.push("/plans")} className="hover:text-white">
                 Plans
               </a>
-              <a href="#" className="hover:text-white">
+              <a onClick={()=>router.push("/howItWorks")} className="hover:text-white">
                 How it Works
               </a>
-              <a href="/compatibility" className="hover:text-white">
+              <a onClick={()=>router.push("/compatibility")} className="hover:text-white">
                 Compatability
               </a>
-              <a href="/about" className="hover:text-white">
+              <a onClick={()=>router.push("/ourstory")} className="hover:text-white">
                 Our Story
               </a>
-              <a href="/contact" className="hover:text-white">
+              <a onClick={()=>router.push("/contact")} className="hover:text-white">
                 Contact Us
               </a>
             </div>
@@ -73,9 +76,9 @@ function productFooterSection() {
           <p className="text-['#98A2B3']">Bubbl 2024. All rights reserved</p>
           <p className="text-['#98A2B3']">Powered By: XPULSAR TECHNOLOGIES PVT. LTD</p>
           <div className="flex flex-row gap-[15px]">
-            <a  href="/Termsandcondition" className="text-['#98A2B3']">Terms and conditions</a>
-            <a href="/privacyPolicy" className="text-['#98A2B3']">Privacy Policy</a>
-            <a href="/refundPolicy" className="text-['#98A2B3']">Refund Policy</a>
+            <a   onClick={()=>router.push("/Termsandcondition")} className="text-['#98A2B3']">Terms and conditions</a>
+            <a  onClick={()=>router.push("/privacyPolicy")} className="text-['#98A2B3']">Privacy Policy</a>
+            <a onClick={()=>router.push("/refundPolicy")} className="text-['#98A2B3']">Refund Policy</a>
           </div>
         </div>
       </footer>
@@ -83,4 +86,4 @@ function productFooterSection() {
   );
 }
 
-export default productFooterSection;
+export default ProductFooterSection;

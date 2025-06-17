@@ -22,7 +22,7 @@ const ContactForm = () => {
 
   const validateForm = () => {
     let valid = true;
-    let newErrors = {
+    const newErrors = {
       firstName: '',
       lastName: '',
       email: '',
@@ -71,7 +71,7 @@ const ContactForm = () => {
     return valid;
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
       console.log('Form submitted:', formData);
@@ -79,7 +79,7 @@ const ContactForm = () => {
     }
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -93,7 +93,7 @@ const ContactForm = () => {
         <div className="text-center mb-8">
           <h3 className='text-[#9747FF] text-2xl'>Contact us</h3>
           <h2 className="text-white text-3xl font-semibold mb-2  py-4">Get in touch</h2>
-          <p className="text-gray-400 ">We'd love to hear from you. Please fill out this form.</p>
+          <p className="text-gray-400 ">We&apos;d love to hear from you. Please fill out this form.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -165,7 +165,7 @@ const ContactForm = () => {
               id="message"
               name="message"
               value={formData.message}
-              onChange={handleChange}
+              // onChange={handleChange}
               rows={4}
               className="w-full bg-[#111111]  rounded-lg border border-none px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-[#9747FF]"
             />

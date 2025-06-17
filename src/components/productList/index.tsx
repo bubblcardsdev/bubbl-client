@@ -7,11 +7,13 @@ import BackCard from "../../assets/product/productCardImg/metalCard.png";
 import BubblCard from "./components/bubblCards";
 // import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 // import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
-import { Arrow_icon } from "../common/icons";
-import { BracesIcon } from "lucide-react";
+
 import BreadCrumbs from "../common/BreadCrumbs";
 import { useRouter } from "next/router";
-const CircleContainer = (props: any) => {
+type CircleContainerProp ={
+  colors:string[];
+}
+const CircleContainer = (props: CircleContainerProp) => {
   const { colors } = props;
   // const [hovered, setHovered] = useState(false);
 
@@ -23,7 +25,7 @@ const CircleContainer = (props: any) => {
     >
       {colors &&
         colors.length > 0 &&
-        colors.map((color: any, index: number) => (
+        colors.map((color: string, index: number) => (
           <div
             key={index}
             className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
@@ -197,7 +199,6 @@ const ProductList = () => {
       price: "Rs.999",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: FullCustomCardFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
@@ -207,7 +208,6 @@ const ProductList = () => {
       price: "Rs.799",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: BubblBasicCardBlackFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
     {
@@ -217,10 +217,18 @@ const ProductList = () => {
       price: "Rs.1999",
       image: BuleCard,
       discount: "18.77%",
-      //   secondaryImage: MetalCardFrontBack,
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
-  ];
+  ]
+
+ useEffect(() => {
+  if (router?.query?.id) {
+    const cardType =
+      Products.find((e) => e.id.toString() === router?.query?.id)?.title || "";
+    setSelectedCard(cardType);
+  }
+}, [router?.query?.id,Products]);
+ 
   const flippedImage = currentImgae == "front" ? BuleCard : BackCard;
   const flipImage = (view: string) => {
     setCurrentImage(view);

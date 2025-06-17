@@ -1,4 +1,13 @@
-export const BubblLogo = (props: any) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
+type iconProps ={
+  color?:string;
+  className?:string;
+}
+
+
+export const BubblLogo = (props: iconProps) => {
   const { color } = props;
   return (
     <svg
@@ -43,7 +52,7 @@ export const BubblLogo = (props: any) => {
     </svg>
   );
 };
-export const CartIcon = (props: any) => {
+export const CartIcon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -68,7 +77,7 @@ export const CartIcon = (props: any) => {
     </svg>
   );
 };
-export const CallIcon = (props: any) => {
+export const CallIcon = (props: iconProps) => {
   return (
     <svg
       width="16"
@@ -86,7 +95,7 @@ export const CallIcon = (props: any) => {
     </svg>
   );
 };
-export const MailIcon = (props: any) => {
+export const MailIcon = (props: iconProps) => {
   return (
     <svg
       width="18"
@@ -106,7 +115,7 @@ export const MailIcon = (props: any) => {
     </svg>
   );
 };
-export const GitIcon = (props: any) => {
+export const GitIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -137,7 +146,7 @@ export const GitIcon = (props: any) => {
     </svg>
   );
 };
-export const LinkedinIcon = (props: any) => {
+export const LinkedinIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -154,7 +163,7 @@ export const LinkedinIcon = (props: any) => {
     </svg>
   );
 };
-export const FacebookIcon = (props: any) => {
+export const FacebookIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -183,7 +192,7 @@ export const FacebookIcon = (props: any) => {
     </svg>
   );
 };
-export const TwitterIcon = (props: any) => {
+export const TwitterIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -200,7 +209,7 @@ export const TwitterIcon = (props: any) => {
     </svg>
   );
 };
-export const WebIcon = (props: any) => {
+export const WebIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -219,7 +228,7 @@ export const WebIcon = (props: any) => {
     </svg>
   );
 };
-export const UpArrow_icon = (props: any) => {
+export const UpArrow_icon = (props: iconProps) => {
   return (
     <svg
       width="14"
@@ -248,7 +257,7 @@ export const UpArrow_icon = (props: any) => {
     </svg>
   );
 };
-export const Arrow_icon = (props: any) => {
+export const Arrow_icon = (props: iconProps) => {
   return (
     <svg
       width="9"
@@ -265,7 +274,7 @@ export const Arrow_icon = (props: any) => {
     </svg>
   );
 };
-export const Play_icon = (props: any) => {
+export const Play_icon = (props: iconProps) => {
   return (
     <svg
       width="13"
@@ -282,7 +291,7 @@ export const Play_icon = (props: any) => {
     </svg>
   );
 };
-export const Qr_icon = (props: any) => {
+export const Qr_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -407,7 +416,7 @@ export const Qr_icon = (props: any) => {
     </svg>
   );
 };
-export const Share_icon = (props: any) => {
+export const Share_icon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -426,7 +435,7 @@ export const Share_icon = (props: any) => {
     </svg>
   );
 };
-export const ScannerQr_icon = (props: any) => {
+export const ScannerQr_icon = (props: iconProps) => {
   return (
     <svg
       width="17"
@@ -455,7 +464,7 @@ export const ScannerQr_icon = (props: any) => {
     </svg>
   );
 };
-export const Googlepay_icon = (props: any) => {
+export const Googlepay_icon = () => {
   return (
     <svg
       width="26"
@@ -484,7 +493,7 @@ export const Googlepay_icon = (props: any) => {
   );
 };
 
-export const Phonepay_icon = (props: any) => {
+export const Phonepay_icon = (props: iconProps) => {
   return (
     <svg
       width="30"
@@ -522,7 +531,7 @@ export const Paytm_icon = () => {
     </svg>
   );
 };
-export const Instagram_icon = (props: any) => {
+export const Instagram_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -551,7 +560,7 @@ export const Instagram_icon = (props: any) => {
     </svg>
   );
 };
-export const Youtube_icon = (props: any) => {
+export const Youtube_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -572,7 +581,7 @@ export const Youtube_icon = (props: any) => {
     </svg>
   );
 };
-export const Location_icon = (props: any) => {
+export const Location_icon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -593,7 +602,7 @@ export const Location_icon = (props: any) => {
     </svg>
   );
 };
-export const Phone_icon = (props: any) => {
+export const Phone_icon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -618,7 +627,7 @@ export const Phone_icon = (props: any) => {
     </svg>
   );
 };
-export const Mail_icon = (props: any) => {
+export const Mail_icon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -636,7 +645,7 @@ export const Mail_icon = (props: any) => {
     </svg>
   );
 };
-export const Twitter_icon_thin = (props: any) => {
+export const Twitter_icon_thin = (props: iconProps) => {
   return (
     <svg
       width="29"
@@ -653,7 +662,7 @@ export const Twitter_icon_thin = (props: any) => {
     </svg>
   );
 };
-export const Linkedin_icon_thin = (props: any) => {
+export const Linkedin_icon_thin = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -678,7 +687,7 @@ export const Linkedin_icon_thin = (props: any) => {
     </svg>
   );
 };
-export const Facebook_icon_thin = (props: any) => {
+export const Facebook_icon_thin = (props: iconProps) => {
   return (
     <svg
       width="12"
@@ -695,7 +704,7 @@ export const Facebook_icon_thin = (props: any) => {
     </svg>
   );
 };
-export const WebIcon_thin = (props: any) => {
+export const WebIcon_thin = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -712,7 +721,7 @@ export const WebIcon_thin = (props: any) => {
     </svg>
   );
 };
-export const WhatsappFill_icon = (props: any) => {
+export const WhatsappFill_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -729,7 +738,7 @@ export const WhatsappFill_icon = (props: any) => {
     </svg>
   );
 };
-export const FacebookFill_icon = (props: any) => {
+export const FacebookFill_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -746,7 +755,7 @@ export const FacebookFill_icon = (props: any) => {
     </svg>
   );
 };
-export const LinledinFill_icon = (props: any) => {
+export const LinledinFill_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -771,7 +780,7 @@ export const LinledinFill_icon = (props: any) => {
     </svg>
   );
 };
-export const InstagramFill_icon = (props: any) => {
+export const InstagramFill_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -796,7 +805,7 @@ export const InstagramFill_icon = (props: any) => {
     </svg>
   );
 };
-export const MailProfileIcon = (props: any) => {
+export const MailProfileIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -813,7 +822,7 @@ export const MailProfileIcon = (props: any) => {
     </svg>
   );
 };
-export const CallProfileIcon = (props: any) => {
+export const CallProfileIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -830,7 +839,7 @@ export const CallProfileIcon = (props: any) => {
     </svg>
   );
 };
-export const WebProfileIcon = (props: any) => {
+export const WebProfileIcon = (props: iconProps) => {
   return (
     <svg
       width="18"
@@ -848,7 +857,7 @@ export const WebProfileIcon = (props: any) => {
     </svg>
   );
 };
-export const LocationProfileIcon = (props: any) => {
+export const LocationProfileIcon = (props: iconProps) => {
   return (
     <svg
       width="21"
@@ -860,12 +869,12 @@ export const LocationProfileIcon = (props: any) => {
     >
       <path
         d="M10.9314 0.935547C5.39512 0.935547 0.91748 5.41319 0.91748 10.9494C0.91748 18.4599 10.9314 29.5467 10.9314 29.5467C10.9314 29.5467 20.9453 18.4599 20.9453 10.9494C20.9453 5.41319 16.4676 0.935547 10.9314 0.935547ZM10.9314 14.5258C8.9572 14.5258 7.35498 12.9236 7.35498 10.9494C7.35498 8.97527 8.9572 7.37305 10.9314 7.37305C12.9055 7.37305 14.5078 8.97527 14.5078 10.9494C14.5078 12.9236 12.9055 14.5258 10.9314 14.5258Z"
-        fill={props?.color || LocationProfileIcon}
+        fill={props?.color}
       />
     </svg>
   );
 };
-export const LocationFill_icon = (props: any) => {
+export const LocationFill_icon = (props: iconProps) => {
   return (
     <svg
       width="21"
@@ -882,7 +891,7 @@ export const LocationFill_icon = (props: any) => {
     </svg>
   );
 };
-export const AppleIcon = (props: any) => {
+export const AppleIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -899,7 +908,7 @@ export const AppleIcon = (props: any) => {
     </svg>
   );
 };
-export const Google = (props: any) => {
+export const Google = (props: iconProps) => {
   return (
     <svg
       width="16"
@@ -917,7 +926,7 @@ export const Google = (props: any) => {
   );
 };
 
-export const HtcIcon = (props: any) => {
+export const HtcIcon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -935,7 +944,7 @@ export const HtcIcon = (props: any) => {
   );
 };
 
-export const HuaweiIcon = (props: any) => {
+export const HuaweiIcon = (props: iconProps) => {
   return (
     <svg
       width="18"
@@ -953,7 +962,7 @@ export const HuaweiIcon = (props: any) => {
   );
 };
 
-export const LgIcon = (props: any) => {
+export const LgIcon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -971,7 +980,7 @@ export const LgIcon = (props: any) => {
   );
 };
 
-export const XiaomiIcon = (props: any) => {
+export const XiaomiIcon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -989,7 +998,7 @@ export const XiaomiIcon = (props: any) => {
   );
 };
 
-export const NokiaIcon = (props: any) => {
+export const NokiaIcon = (props: iconProps) => {
   return (
     <svg
       width="36"
@@ -1007,7 +1016,7 @@ export const NokiaIcon = (props: any) => {
   );
 };
 
-export const SonyIcon = (props: any) => {
+export const SonyIcon = (props: iconProps) => {
   return (
     <svg
       width="31"
@@ -1025,7 +1034,7 @@ export const SonyIcon = (props: any) => {
   );
 };
 
-export const SamsungIcon = (props: any) => {
+export const SamsungIcon = (props: iconProps) => {
   return (
     <svg
       width="74"
@@ -1043,7 +1052,7 @@ export const SamsungIcon = (props: any) => {
   );
 };
 
-export const NothingIcon = (props: any) => {
+export const NothingIcon = (props: iconProps) => {
   return (
     <svg
       width="64"
@@ -1060,7 +1069,7 @@ export const NothingIcon = (props: any) => {
     </svg>
   );
 };
-export const OneplusIcon = (props: any) => {
+export const OneplusIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1077,7 +1086,7 @@ export const OneplusIcon = (props: any) => {
     </svg>
   );
 };
-export const FullArrowIcon = (props: any) => {
+export const FullArrowIcon = (props: iconProps) => {
   return (
     <svg
       width="12"
@@ -1094,7 +1103,7 @@ export const FullArrowIcon = (props: any) => {
     </svg>
   );
 };
-export const RightTickIcon = (props: any) => {
+export const RightTickIcon = (props: iconProps) => {
   return (
     <svg
       width="13"
@@ -1262,7 +1271,7 @@ export const LinkedinColorIcon = () => {
     </svg>
   );
 };
-export const PhoneColorIcon = (props: any) => {
+export const PhoneColorIcon = () => {
   return (
     <svg
       width="32"
@@ -1298,7 +1307,7 @@ export const PhoneColorIcon = (props: any) => {
   );
 };
 
-export const MapIconBackgroundFill = (props: any) => {
+export const MapIconBackgroundFill = (props: iconProps) => {
   return (
     <svg
       width="28"
@@ -1330,7 +1339,7 @@ export const MapIconBackgroundFill = (props: any) => {
   );
 };
 
-export const MailIconbackgroundFill = (props: any) => {
+export const MailIconbackgroundFill = () => {
   return (
     <svg
       width="32"
@@ -1595,7 +1604,7 @@ export const WhatsappIconbackgroundFill = () => {
     </svg>
   );
 };
-export const BubblLogoWhiteIcon = (props: any) => {
+export const BubblLogoWhiteIcon = (props: iconProps) => {
   return (
     <svg
       width="200"
@@ -1637,7 +1646,7 @@ export const BubblLogoWhiteIcon = (props: any) => {
   );
 };
 
-export const DasboardIcon = (props: any) => {
+export const DasboardIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1654,7 +1663,7 @@ export const DasboardIcon = (props: any) => {
     </svg>
   );
 };
-export const MyProfileIcon = (props: any) => {
+export const MyProfileIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1671,7 +1680,7 @@ export const MyProfileIcon = (props: any) => {
     </svg>
   );
 };
-export const MyDeviceIcon = (props: any) => {
+export const MyDeviceIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1688,7 +1697,7 @@ export const MyDeviceIcon = (props: any) => {
     </svg>
   );
 };
-export const LeadsIcon = (props: any) => {
+export const LeadsIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1706,7 +1715,7 @@ export const LeadsIcon = (props: any) => {
     </svg>
   );
 };
-export const AnalyticsIcon = (props: any) => {
+export const AnalyticsIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1723,7 +1732,7 @@ export const AnalyticsIcon = (props: any) => {
     </svg>
   );
 };
-export const PricingsIcon = (props: any) => {
+export const PricingsIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1747,7 +1756,7 @@ export const PricingsIcon = (props: any) => {
     </svg>
   );
 };
-export const SupportIcon = (props: any) => {
+export const SupportIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1764,7 +1773,7 @@ export const SupportIcon = (props: any) => {
     </svg>
   );
 };
-export const SettingsIcon = (props: any) => {
+export const SettingsIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1783,7 +1792,7 @@ export const SettingsIcon = (props: any) => {
     </svg>
   );
 };
-export const NottifycationIcon = (props: any) => {
+export const NottifycationIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1804,7 +1813,7 @@ export const NottifycationIcon = (props: any) => {
     </svg>
   );
 };
-export const ProfileIcon = (props: any) => {
+export const ProfileIcon = () => {
   return (
     <svg
       width="25"
@@ -1832,7 +1841,7 @@ export const ProfileIcon = (props: any) => {
     </svg>
   );
 };
-export const PostLoginMenuIcon = (props: any) => {
+export const PostLoginMenuIcon = (props: iconProps) => {
   return (
     <svg
       width="20"
@@ -1852,7 +1861,7 @@ export const PostLoginMenuIcon = (props: any) => {
     </svg>
   );
 };
-export const LeadsArrowIcon = (props: any) => {
+export const LeadsArrowIcon = () => {
   return (
     <svg
       width="20"
@@ -1881,7 +1890,7 @@ export const LeadsArrowIcon = (props: any) => {
   );
 };
 
-export const FilterIcon = (props: any) => {
+export const FilterIcon = (props: iconProps) => {
   return (
     <svg
       width="28"
@@ -1898,7 +1907,7 @@ export const FilterIcon = (props: any) => {
     </svg>
   );
 };
-export const SearchIcon = (props: any) => {
+export const SearchIcon = (props: iconProps) => {
   return (
     <svg
       width="24"
@@ -1927,7 +1936,7 @@ export const SearchIcon = (props: any) => {
     </svg>
   );
 };
-export const MenuIcon = (props: any) => {
+export const MenuIcon = (props: iconProps) => {
   return (
     <svg
       width="23"
@@ -1973,7 +1982,7 @@ export const LeadsTableMenuIcon = (props: any) => {
     </svg>
   );
 };
-export const LeadsLeftIcon = (props: any) => {
+export const LeadsLeftIcon = (props: iconProps) => {
   return (
     <svg
       width="18"

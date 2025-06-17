@@ -29,7 +29,7 @@ const HowItWorks = () => {
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mx-auto">
         {STEPS.map((step, index) => (
-          <FadeInSection>
+          <FadeInSection key={index}>
           <div
             key={index}
             className="bg-[#282828] rounded-[16px] flex flex-col shadow-lg overflow-hidden h-[350px]"

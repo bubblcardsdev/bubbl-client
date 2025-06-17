@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect, useMemo } from "react";
 import {
   BubblLogo,
   Google,
@@ -12,9 +11,21 @@ import {
   FacebookColorIcon,
   LinkedinColorIcon,
 } from "../common/icons";
+import React, { useState,useMemo } from "react";
+import { useRouter } from "next/router";
+type FormDataType = {
+  name: string;
+  role: string;
+  companyName: string;
+  mobile: string;
+  email: string;
+  password: string;
+  conformPassword:string
+};
 function Signup() {
-  const [isShaking, setIsShaking] = useState(false);
+  const router = useRouter();
   const [step, setStep] = useState(1);
+  type FormFieldKey = keyof FormDataType;
   const [errors, setErrors] = useState({
     name: "",
     role: "",
@@ -25,7 +36,7 @@ function Signup() {
     password: "",
   });
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<FormDataType>({
     name: "",
     role: "",
     companyName: "",
@@ -126,9 +137,9 @@ function Signup() {
     }
   };
   const stepperProgress = useMemo(() => {
-    const getWidth = (fields: any) => {
+    const getWidth = (fields: FormFieldKey[]) => {
       const filledFields = fields.filter(
-        (field: any) => formData?.[field]?.length > 0
+        (field) => formData?.[field]?.length > 0
       ).length;
       return filledFields === fields.length ? 100 : filledFields > 0 ? 50 : 10;
     };
@@ -178,7 +189,7 @@ function Signup() {
               <>
                 <h1 className="text-2xl font-bold  ">Welcome Aboard!</h1>
                 <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
-                  Let's set up your account for a seamless experience
+                  Let&apos;s set up your account for a seamless experience
                 </p>
               </>
             )}
@@ -193,7 +204,7 @@ function Signup() {
             {step === 3 && (
               <>
                 <h1 className="text-2xl font-bold ">
-                  Let's Make Connection Simple
+                  Let&apos;s Make Connection Simple
                 </h1>
                 <p className="text-[#606060] text-sm font-[500] mt-[10px] leading-[1.3]">
                   Share your contact info to ensure smooth effortless
@@ -203,7 +214,7 @@ function Signup() {
             )}
             {step === 4 && (
               <>
-                <h1 className="text-2xl font-bold ">You're All Set</h1>
+                <h1 className="text-2xl font-bold ">You&apos;re All Set</h1>
                 <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
                   Now, save your card by signing up below. Welcome to the future
                   of networking.
@@ -457,7 +468,7 @@ function Signup() {
             {(step === 4 || step === 1) && (
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
                 Already have an account?{" "}
-                <a href="/login" className="text-[#7939CC]">
+                <a onClick={()=>router.push("/login")} className="text-[#7939CC]">
                   Login
                 </a>
               </p>

@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-const overviewCardsData = [
-  {
-    title: "No of Profile",
-    count: 5,
-    bgColor: "#C9B6FC",
-    backImage: "/chartBack.png",
-    frontImage: "/chartFront.png",
-  },
-];
+// const overviewCardsData = [
+//   {
+//     title: "No of Profile",
+//     count: 5,
+//     bgColor: "#C9B6FC",
+//     backImage: "/chartBack.png",
+//     frontImage: "/chartFront.png",
+//   },
+// ];
 const OverviewCards = () => {
   return (
     <div className="relative flex items-center justify-between p-4 bg-[#C9B6FC] text-black rounded-[20px] w-full h-32 overflow-hidden">
