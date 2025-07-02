@@ -16,7 +16,7 @@ const PostLoginHeader = (props:FunctionProps) => {
             <LuMenu />
           </span>
         </div>
-        <p className="text-white text-[18px]">{props?.currentPage?.title}</p>
+        {/* <p className="text-white text-[18px]">{props?.currentPage?.title}</p> */}
       </div>
       <div className="flex justify-between gap-3">
         <p className="text-center py-1">

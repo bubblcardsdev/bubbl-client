@@ -1,33 +1,50 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import Input from "../common/Input";
-import Button from "../common/Button";
-
-type FieldType = "text" | "number" | "email" | "date" | "gender" | "country";
-
-interface FormField {
-  label: string;
-  field: keyof typeof fields;
-  type: FieldType;
-}
-
-const fields = {
-  input: Input,
-};
-
-const form: { fields: FormField[] } = {
-  fields: [
-    { label: "User Name", field: "input", type: "text" },
-    { label: "Phone Number", field: "input", type: "number" },
-    { label: "Email", field: "input", type: "email" },
-    { label: "DOB", field: "input", type: "date" },
-    { label: "Gender", field: "input", type: "gender" },
-    { label: "Country", field: "input", type: "country" },
-  ],
-};
-
+import Password from '../settings/components/password'
 const Settings: React.FC = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    phone: "",
+    email: "",
+    dob: "",
+    gender: "",
+    country: "",
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  // const [profilePic, setProfilePic] = useState("/avatar.png");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+    if (!formData.phone.match(/^\+?[0-9\s]+$/))
+      newErrors.phone = "Invalid phone number";
+    if (!formData.email.match(/^\S+@\S+\.\S+$/))
+      newErrors.email = "Invalid email address";
+    if (!formData.dob) newErrors.dob = "DOB is required";
+    if (!formData.gender) newErrors.gender = "Gender is required";
+    if (!formData.country) newErrors.country = "Country is required";
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      setErrors({});
+      console.log("Submitting:", formData);
+    }
+  };
   return (
     <React.Fragment>
       <div className="mt-[5px]">
@@ -36,62 +53,128 @@ const Settings: React.FC = () => {
           Update your photo and personal details here.
         </p>
       </div>
-      <hr className="py-[5px] border-[#494949]" />
-
-      <div className="flex justify-between py-3 lg:flex-row md:flex-row sm:flex-col xs:flex-col gap-3">
-        <div className="w-[400px]">
-          <p className="text-[#828282] pb-3">Profile picture</p>
-          <p className="text-[#4F4F4F]">
-            This will be displayed on your profile.
-          </p>
-        </div>
-        <div className="flex justify-around gap-10 lg:w-[550px] md:w-[450px] sm:w-full xs:w-full py-2 flex-col">
-          <div className="flex justify-between items-center">
+      <hr className="py-[0px] border-[#494949]" />
+      <div className="bg-[#1f1f1f] text-white p-6 rounded-xl shadow mt-8">
+        <h2 className="text-lg font-semibold mb-1">Profile Picture</h2>
+        <p className="text-sm text-gray-400 mb-4">
+          This will be displayed on your profile.
+        </p>
+        <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col items-start sm:items-center lg:gap-[150px] sm:gap-[50px] xs:gap-[50px] justify-around mt-[40px] ">
+          <div className="relative w-20 h-20">
             <Image
-              src="/profile.png"
+              src='/profile.png'
               alt="Profile"
-              width={60}
-              height={60}
-              className="rounded-full"
+              fill
+              className="rounded-full object-cover"
             />
-            <p className="text-[#4F4F4F] text-center py-0">(upload max 2MB)</p>
-            <button className="text-black text-sm bg-[#EFEFEF] p-[8px_16px] rounded-lg">
-              Update
+            <button
+              type="button"
+              // onClick={() => setProfilePic("/avatar.png")}
+              className="absolute -top-1 -right-1 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+            >
+              x
             </button>
           </div>
+          <p className="text-xs text-gray-400">(upload max 2mb)</p>
+          <button className="bg-white text-black px-4 py-[8px] rounded text-sm hover:bg-gray-200">
+            Update
+          </button>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mt-[60px] grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <div>
+            <label className="text-sm">User Name</label>
+            <input
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Enter Your Name"
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500  placeholder:text-[14px]"
+            />
+            {errors.username && (
+              <p className="text-xs text-red-400">{errors.username}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm">Phone number</label>
+            <input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500  placeholder:text-[14px] "
+            />
+            {errors.phone && (
+              <p className="text-xs text-red-400">{errors.phone}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm">Email</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500  placeholder:text-[14px] border-none"
+            />
+            {errors.email && (
+              <p className="text-xs text-red-400">{errors.email}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm">DOB</label>
+            <input
+              name="dob"
+              value={formData.dob}
+              onChange={handleChange}
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500  placeholder:text-[14px] border-none"
+            />
+            {errors.dob && <p className="text-xs text-red-400">{errors.dob}</p>}
+          </div>
+          <div>
+            <label className="text-sm">Gender</label>
+            <input
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px] border-none"
+            />
+            {errors.gender && (
+              <p className="text-xs text-red-400">{errors.gender}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm">Country</label>
+            <input
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500  placeholder:text-[14px] border-none"
+            />
+            {errors.country && (
+              <p className="text-xs text-red-400">{errors.country}</p>
+            )}
+          </div>
+        </form>
+
+        <div className="mt-6 flex justify-end gap-3 flex-wrap">
+          <button
+            type="button"
+            className="px-4 py-2 bg-[#2e2e2e] text-white rounded-lg hover:bg-[#3a3a3a]"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-[#a855f7] text-white rounded-lg hover:bg-[#9333ea]"
+          >
+            Save changes
+          </button>
         </div>
       </div>
-
-      <div className="flex w-full justify-between mt-3 flex-col gap-8 text-white">
-        {form.fields.map((fieldItem, index) => {
-          const { field, label, ...rest } = fieldItem;
-          const FieldComponent = fields[field];
-
-          if (!FieldComponent) return null;
-
-          return (
-            <div
-              key={index}
-              className="flex justify-between w-full flex-col sm:flex-col md:flex-row lg:flex-row gap-3 lg:gap-11 items-start md:items-center lg:items-center"
-            >
-              <p className="text-[#828282] whitespace-nowrap w-36">{label}</p>
-              <FieldComponent
-                className="text-white lg:w-[550px] md:w-[450px] sm:w-full xs:w-full px-5"
-                {...rest}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="flex justify-end py-7 gap-6 text-white">
-        <Button variant="secondary" size="md">
-          Cancel
-        </Button>
-        <Button variant="primary" size="md">
-          Save Changes
-        </Button>
-      </div>
+      <Password/>
     </React.Fragment>
   );
 };

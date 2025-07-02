@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  CalendarDays,
-} from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { FaEllipsisV } from "react-icons/fa";
-
 import Drawer from "../common/Drawer";
 import {
   LeadsArrowIcon,
@@ -15,17 +12,10 @@ import {
   LeadsTableMenuIcon,
   FullArrowIcon,
   LeadsLeftIcon,
+  LeadsDeleteIcon,
+  LeadsDownloadIcon,
 } from "../common/icons";
 import useWindowSize from "@/src/hooks/useWindowSize";
-
-interface Lead {
-  name: string;
-  role: string;
-  orderId: string;
-  connection: string;
-  date: string;
-  avatar: string;
-}
 const leads = [
   {
     name: "Natali Craig",
@@ -114,11 +104,11 @@ const parseDate = (dateStr: any) => {
     "Just now": new Date(),
     "A minute ago": new Date(Date.now() - 60 * 1000),
     "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
-    "Yesterday": new Date(Date.now() - 24 * 60 * 60 * 1000),
+    Yesterday: new Date(Date.now() - 24 * 60 * 60 * 1000),
   };
   if (map[dateStr]) return map[dateStr].getTime();
-  const parsed: any = new Date(dateStr);
-  return isNaN(parsed) ? 0 : parsed.getTime();
+const parsed: Date = new Date(dateStr);
+return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 };
 
 const sortData = (data: any, field: any, ascending: any) => {
@@ -144,14 +134,14 @@ const Leads = () => {
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenAction, setIsOpenAction] = useState<any>(null)
+  const [isOpenAction, setIsOpenAction] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState("name");
   const [ascending, setAscending] = useState(true);
   const [sortedLeads, setSortedLeads] = useState(sortData(leads, "name", true));
   const { width } = useWindowSize();
 
-  const handleSort = (field: any) => {
+  const handleSort = (field: string) => {
     const isAscending = field === sortField ? !ascending : true;
     setSortField(field);
     setAscending(isAscending);
@@ -192,7 +182,6 @@ const Leads = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpenAction]);
-
 
   console.log(width);
   return (
@@ -242,14 +231,16 @@ const Leads = () => {
               <th className="p-2">Order ID</th>
               <th className="p-2">Connected with</th>
               <th className="p-2">Date</th>
-              <th></th>
+              <th className=" flex gap-6 items-end">
+                <LeadsDeleteIcon />
+                <LeadsDownloadIcon />
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#323232]">
             {paginatedLeads.map((lead: any, index: number) => {
               const realIndex = (currentPage - 1) * leadsPerPage + index;
               return (
-
                 <tr
                   key={index}
                   className="group hover:bg-[#282828] transition-colors"
@@ -259,10 +250,11 @@ const Leads = () => {
                       type="checkbox"
                       className={`
                accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente
-                ${selectedLeads.has(index)
-                          ? "opacity-100"
-                          : "opacity-0 group-hover:opacity-100"
-                        }
+                ${
+                  selectedLeads.has(index)
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100"
+                }
                 transition-opacity duration-200
               `}
                       checked={selectedLeads.has(index)}
@@ -270,10 +262,12 @@ const Leads = () => {
                     />
                   </td>
                   <td className="p-3 flex items-center gap-3">
-                    <img
+                    <Image
                       src={lead?.avatar}
                       alt=""
                       className="w-8 h-8 rounded-full object-cover"
+                      height={100}
+                      width={100}
                     />
                     {lead?.name}
                   </td>
@@ -281,31 +275,45 @@ const Leads = () => {
                   <td className="p-2">{lead?.orderId}</td>
                   <td className="p-2">{lead?.connection}</td>
                   <td className="p-2 flex items-center gap-2">
-                    <CalendarDays className="w-3 h-4 text-gray-400" />{" "}
+                    <CalendarDays className="w-3 h-4 text-gray-400" />
                     {lead?.date}
                   </td>
+
                   <td
                     className={`
                     w-[100px]
                 accent-black
-               ${selectedLeads.has(index) || isOpenAction === index + 1
-                        ? "opacity-100"
-                        : "opacity-0 group-hover:opacity-100"}
+               ${
+                 selectedLeads.has(index) || isOpenAction === index + 1
+                   ? "opacity-100"
+                   : "opacity-0 group-hover:opacity-100"
+               }
 
                 transition-opacity duration-200
               `}
                   >
-                    <div ref={popoverRef} className="w-full relative flex items-center justify-center">
-                      <LeadsTableMenuIcon className="cursor-pointer " onClick={() => setIsOpenAction(isOpenAction === index+1 ? null : index+1)} />
-                      {isOpenAction && isOpenAction == index+1 && <div className="min-w-20 rounded-md py-2 px-5 bg-black absolute top-4 z-10">
-                        <p>Edit</p>
-                        <p>View</p>
-                      </div>}
-
+                    <div
+                      ref={popoverRef}
+                      className="w-full relative flex items-center justify-center"
+                    >
+                      <LeadsTableMenuIcon
+                        className="cursor-pointer "
+                        onClick={() =>
+                          setIsOpenAction(
+                            isOpenAction === index + 1 ? null : index + 1
+                          )
+                        }
+                      />
+                      {isOpenAction && isOpenAction == index + 1 && (
+                        <div className="min-w-20 rounded-md py-2 px-5 bg-black absolute top-4 z-10">
+                          <p>Edit</p>
+                          <p>View</p>
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </table>
@@ -313,7 +321,11 @@ const Leads = () => {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md text-center ${currentPage === 1 ? "bg-[#444] text-gray-500 cursor-not-allowed" : "bg-[#282828] text-white"}`}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md text-center ${
+              currentPage === 1
+                ? "bg-[#444] text-gray-500 cursor-not-allowed"
+                : "bg-[#282828] text-white"
+            }`}
           >
             <LeadsLeftIcon />
             Previous
@@ -323,20 +335,31 @@ const Leads = () => {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded-md ${page === currentPage ? "bg-white text-black" : "hover:text-white"
-                  }`}
+                className={`px-3 py-1 rounded-md ${
+                  page === currentPage
+                    ? "bg-white text-black"
+                    : "hover:text-white"
+                }`}
               >
                 {page}
               </button>
             ))}
           </div>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-white text-black"}`}
+            className={`flex items-center gap-3 px-3 py-2 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-white text-black"
+            }`}
           >
             Next
-            <FullArrowIcon color={currentPage === totalPages ? "#999" : "#000"} />
+            <FullArrowIcon
+              color={currentPage === totalPages ? "#999" : "#000"}
+            />
           </button>
         </div>
       </div>
@@ -347,7 +370,7 @@ const Leads = () => {
         // title="Edit  Profile"
         // title="view profile"
         className="lg:w-96 md:w-96 sm:w-full xs:w-full"
-      // width={width && width <= 576 ? "100%" : "550px"}
+        // width={width && width <= 576 ? "100%" : "550px"}
       >
         {/* <div className="">
           <div className=" h-[180px] w-full flex justify-center items-center px-4 ">
@@ -618,8 +641,9 @@ const Leads = () => {
         />
       )}
       <div
-        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-y-0" : "translate-y-full"
-          }`}
+        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-y-0" : "translate-y-full"
+        }`}
       >
         <div className="bg-[#1f1f1f] text-white rounded-t-2xl p-4">
           <div className="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-4 sticky top-0" />

@@ -1,17 +1,8 @@
-
-import SiteLayout from '@/src/components/layout/siteLayout'
-import ForgetPassword from '../../src/components/forgetPassword/index'
-export default function HomePage() {
-
+import ForgetPassword from "../../src/components/forgetPassword/index";
+export default function ForgetPasswordPage() {
   return (
-    <div>  
-      {/* <SiteLayout > */}
+    <div>
       <ForgetPassword />
-      {/* </SiteLayout> */}
-        
     </div>
-
-  )
-
-} 
-
+  );
+}

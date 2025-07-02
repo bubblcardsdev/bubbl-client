@@ -1,72 +1,96 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
-import Bluecard from "../../assets/product/productCardImg/basiccard.png";
 import Footer from "../footerPage/index";
 import CircleContainer from "../common/circleContainer";
+import {
+  getCart,
+  setCart,
+} from "../../helpers/localStorage";
 interface CardItem {
   id: number;
   title: string;
   description: string;
-  price: number; // Only number type
+  price: number;
   quantity: number;
   image: StaticImageData;
+  sellingPrice: number;
 }
-const cardsData:CardItem[] = [
-  {
-    id: 1,
-    title: "Card",
-    description: "Bubbl basic card",
-    price: 699,
-    quantity: 1,
-    image: Bluecard,
-  },
-  {
-    id: 2,
-    title: "Card",
-    description: "Bubbl basic card",
-    price: 699,
-    quantity: 1,
-    image: Bluecard,
-  },
-];
+// const cardsData: CardItem[] = [
+//   {
+//     id: 1,
+//     title: "Card",
+//     description: "Bubbl basic card",
+//     price: 699,
+//     quantity: 1,
+//     image: Bluecard,
+//   },
+//   {
+//     id: 2,
+//     title: "Card",
+//     description: "Bubbl basic card",
+//     price: 699,
+//     quantity: 1,
+//     image: Bluecard,
+//   },
+// ];
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
-  const [cards, setCards] = useState<CardItem[]>(cardsData);
+  const [cards, setCards] = useState<CardItem[]>([]);
   const router = useRouter();
 
   const handleBuyNow = () => {
     router.push("/checkout");
   };
+  useEffect(() => {
+    const storedCart = getCart();
+    if (storedCart) {
+      setCards(JSON.parse(storedCart));
+    }
+  }, []);
 
   const handleIncrease = (id: number) => {
-    setCards((prev:CardItem[]) => {
-      console.log(prev, "aa");
-      return prev.map((card: CardItem) => {
-        if (id == card.id) {
-          return {
-            ...card,
-            quantity: card.quantity + 1,
-          };
-        }
-        return card;
-      });
+    const updatedCards = cards.map((card) => {
+      if (card.id === id) {
+        return { ...card, quantity: card.quantity + 1 };
+      }
+      return card;
     });
+    setCards(updatedCards);
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
+    }
   };
+
   const handleDecrease = (id: number) => {
-    console.log(id, "cards");
-    setCards((prev: CardItem[]) =>
-      prev.map((card: CardItem) =>
-        card.id === id && card.quantity > 1
-          ? { ...card, quantity: card.quantity - 1 }
-          : card
-      )
-    );
+    const updatedCards = cards.map((card) => {
+      if (card.id === id && card.quantity > 1) {
+        return { ...card, quantity: card.quantity - 1 };
+      }
+      return card;
+    });
+    setCards(updatedCards);
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
+    }
   };
+
   const handleRemove = (id: number) => {
-    setCards((prev: CardItem[]) => prev.filter((card: CardItem) => card.id !== id));
+    const updatedCards = cards.filter((card) => card.id !== id);
+    setCards(updatedCards);
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
+    }
   };
+
+  const subtotal = cards.reduce(
+    (acc, item) => acc + item.sellingPrice * item.quantity,
+    0
+  );
+  const shipping = subtotal > 0 ? 50 : 0; // Example fixed shipping cost
+  const discount = (subtotal * 0) / 100; // Example: 0% discount
+  const total = subtotal + shipping - discount;
 
   const Products = [
     {
@@ -74,7 +98,7 @@ const Cart = () => {
       name: "Full Custom",
       title: "Bubbl Full Custom",
       price: "Rs.999",
-      image: Bluecard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -83,7 +107,7 @@ const Cart = () => {
       name: "Name Custom",
       title: "Bubbl Name Custom",
       price: "Rs.799",
-      image: Bluecard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -92,7 +116,7 @@ const Cart = () => {
       name: "Metal Card",
       title: "Bubbl Metal Card",
       price: "Rs.1999",
-      image: Bluecard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -110,7 +134,7 @@ const Cart = () => {
               Cart it, Love it, Own it.
             </p>
             <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl mt-[20px]">
-              {cards.map((value:CardItem) => (
+              {cards.map((value: CardItem) => (
                 <div
                   key={value.id}
                   className="flex items-center  w-full xs:pl-1.5"
@@ -120,6 +144,8 @@ const Cart = () => {
                       src={value?.image}
                       alt="card"
                       className="box-border w-full h-full"
+                      height={100}
+                      width={100}
                     />
                   </div>
                   <div className="flex items-center flex-col sm:flex-row px-2 gap-x-8 gap-y-2 w-full md:justify-between">
@@ -179,16 +205,18 @@ const Cart = () => {
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between text-sm sm:text-base">
-                  <p className=" text-[#7F7F7F]">Subtotal (1 item)</p>
-                  <p>₹45.00</p>
+                  <p className=" text-[#7F7F7F]">
+                    Subtotal ({cards.length} items)
+                  </p>
+                  <p>₹{subtotal.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base">
                   <p className=" text-[#7F7F7F]">Shipping</p>
-                  <p>₹5.00</p>
+                  <p>₹{shipping.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between text-sm sm:text-base">
                   <p className=" text-[#7F7F7F]">Discount</p>
-                  <p>- ₹10.00</p>
+                  <p> ₹{discount.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between font-semibold text-sm sm:text-base">
                   <p>
@@ -197,7 +225,7 @@ const Cart = () => {
                       ( Incl of all Taxes )
                     </span>
                   </p>
-                  <p>₹40.00</p>
+                  <p>₹{total.toFixed(2)}</p>
                 </div>
               </div>
               <button

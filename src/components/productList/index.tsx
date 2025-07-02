@@ -1,17 +1,27 @@
 // "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
 import Footer from "../footerPage/index";
-import BuleCard from "../../assets/product/productCardImg/basiccard.png";
-import BackCard from "../../assets/product/productCardImg/metalCard.png";
+import Image, { StaticImageData } from "next/image";
 import BubblCard from "./components/bubblCards";
+import { setCart, getCart } from "../../helpers/localStorage";
+import { useRouter } from "next/router";
 // import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
 // import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
 
 import BreadCrumbs from "../common/BreadCrumbs";
-import { useRouter } from "next/router";
-type CircleContainerProp ={
-  colors:string[];
+import axios from "axios";
+type CircleContainerProp = {
+  colors: string[];
+};
+
+interface CardItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  quantity: number;
+  image: StaticImageData;
+  sellingPrice: number;
 }
 const CircleContainer = (props: CircleContainerProp) => {
   const { colors } = props;
@@ -20,8 +30,8 @@ const CircleContainer = (props: CircleContainerProp) => {
   return (
     <div
       className="relative max-w-[300px] z-10  "
-    // onMouseEnter={() => setHovered(true)}
-    // onMouseLeave={() => setHovered(false)}
+      // onMouseEnter={() => setHovered(true)}
+      // onMouseLeave={() => setHovered(false)}
     >
       {colors &&
         colors.length > 0 &&
@@ -35,7 +45,7 @@ const CircleContainer = (props: CircleContainerProp) => {
               // transform: hovered ? `translateX(-${15 * index}px)` : "none",
               transform: `translateX(-${15 * index}px)`,
             }}
-          // onClick={() => setHovered(false)}
+            // onClick={() => setHovered(false)}
           />
         ))}
     </div>
@@ -106,81 +116,103 @@ const materials = [
 ];
 const ProductList = () => {
   const router = useRouter();
-  const [data, setData] = useState(
-    {
-      "productId": "unique key",
-      "productName": "Card",
-      "price": 799,
-      "discount": 18.77,
-      "sellingPrice": 555,
-      "shortDesc": "Made with Recyclable PVC in a Matte finish with Spot UV coating",
-      "description": "string",
-      "image":{
-          "front":BuleCard,
-          "back":BackCard
-      },
-      "productDetails": "string", // Separate points with ‘/n’
-      "colors": [
-        {
-          "color": "red",
-          "primaryImage": "image url",
-          "productId": 1
-        }
-      ],
-      "patterns": [
-        {
-          "Pattern": "patern nme",
-          "primaryImage": "image url",
-          "productId": 2
-
-        }
-      ],
-      "material": [
-        {
-          "material": "PVC",
-          "primaryImage": "image url",
-          "productId": 3
-
-        }
-      ]
-    },
-  )
-  const [selectedCard, setSelectedCard] = useState<string>("Bubbl Basic Card");
+  const { id } = router.query;
+  const [data, setData] = useState<any>({});
+  const [itemId, setItemId] = useState<number>(1);
   const [currentImgae, setCurrentImage] = useState("front");
-  const [selectedColor, setSelectedColor] = useState("Blue");
-  const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
-  const [selectedPattern, setSelectedPattern] = useState(
-    selectedMaterial.patterns[0]
-  );
+  const [selectedColor, setSelectedColor] = useState(data?.color?.[0]);
+  const [selectedMaterial, setSelectedMaterial] = useState(data?.material?.[0]);
+  const [selectedPattern, setSelectedPattern] = useState(data?.patterns?.[0]);
+  const [cards, setCards] = useState<CardItem[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setSelectedColor(data?.color?.[0]);
+      setSelectedMaterial(data?.material?.[0]);
+      setSelectedPattern(data?.patterns?.[0]);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .post("http://devapii.bubbl.cards/api/cart/productDetails", {
+          productId: id,
+        })
+        .then((res) => {
+          setData(res?.data?.data);
+          console.log("qqq-2", res?.data?.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      return;
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const cartItem: any = JSON.parse(getCart() ?? "[]");
+    if (cartItem && cartItem.length > 0) {
+      setItemId(cartItem?.[cartItem?.length - 1]?.id + 1);
+    }
+  }, []);
 
   const payLoad = useMemo(() => {
     return {
-      "id":data?.productId,
-      "productId": data?.productId,
-      "productType": selectedCard,
-      "productName": data?.productName,
-      "price": data?.price,
-      "discount": data?.discount,
-      "image":data?.image?.front,
-      "sellingPrice": data?.sellingPrice,
-      "quantity":1,
-      "color": selectedColor,
-      "material": selectedMaterial,
-      "pattern": selectedPattern
+      id: itemId,
+      productId: data?.productDetail?.productId,
+      productType: data?.productDetail?.name,
+      productName: data?.productDetail?.name,
+      price: Number(data?.productDetail?.price),
+      discount: data?.discount,
+      image:
+        (data?.color?.length > 0 && selectedColor?.imageUrl) ||
+        (data?.patterns?.length > 0 && selectedPattern?.imageUrl) ||
+        selectedMaterial?.imageUrl,
+      sellingPrice: Number(data?.productDetail?.price),
+      quantity: 1,
+      color: selectedColor,
+      material: selectedMaterial,
+      pattern: selectedPattern,
+    };
+  }, [data, selectedColor, selectedMaterial, selectedPattern]);
+
+  // useEffect(() => {
+  //   if (router?.query?.id) {
+  //     const cardType =
+  //       Products.find((e) => e.id.toString() === router?.query?.id)?.title ||
+  //       "";
+  //     console.log("card/", cardType);
+
+  //     setSelectedCard(cardType);
+  //   }
+  // }, []);
+  const handleIncrease = (id: number) => {
+    const updatedCards = cards.map((card: any) => {
+      if (card.id === id) {
+        return { ...card, quantity: card.quantity + 1 };
+      }
+      return card;
+    });
+    setCards(updatedCards);
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
     }
+  };
 
-  }, [data, selectedCard, selectedColor, selectedMaterial, selectedPattern])
-
-  useEffect(() => {
-    if (router?.query?.id) {
-      const cardType =
-        Products.find((e) => e.id.toString() === router?.query?.id)?.title ||
-        "";
-      console.log("card/", cardType);
-
-      setSelectedCard(cardType);
+  const handleDecrease = (productId:string) => {
+    const updatedCards = cards.map((card: any) => {
+      if (card.productId === id && card.quantity > 1) {
+        return { ...card, quantity: card.quantity - 1 };
+      }
+      return card;
+    });
+    setCards(updatedCards);
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
     }
-  }, []);
+  };
   const colors = [
     { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
     { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
@@ -197,7 +229,7 @@ const ProductList = () => {
       name: "Full Custom",
       title: "Bubbl Full Custom",
       price: "Rs.999",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -206,7 +238,7 @@ const ProductList = () => {
       name: "Name Custom",
       title: "Bubbl Name Custom",
       price: "Rs.799",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -215,33 +247,48 @@ const ProductList = () => {
       name: "Tile v2",
       title: "Bubbl Tile",
       price: "Rs.1999",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
-  ]
+  ];
 
- useEffect(() => {
-  if (router?.query?.id) {
-    const cardType =
-      Products.find((e) => e.id.toString() === router?.query?.id)?.title || "";
-    setSelectedCard(cardType);
-  }
-}, [router?.query?.id,Products]);
- 
-  const flippedImage = currentImgae == "front" ? BuleCard : BackCard;
+  //  useEffect(() => {
+  //   if (router?.query?.id) {
+  //     const cardType =
+  //       Products.find((e) => e.id.toString() === router?.query?.id)?.title || "";
+  //     setSelectedCard(cardType);
+  //   }
+  // }, [router?.query?.id,Products]);
+
+  const primaryImage =
+    (data?.color?.length > 0 && selectedColor?.imageUrl) ||
+    (data?.patterns?.length > 0 && selectedPattern?.imageUrl) ||
+    selectedMaterial?.imageUrl;
+
+  const flippedImage = currentImgae == "front" ? primaryImage : primaryImage;
   const flipImage = (view: string) => {
     setCurrentImage(view);
   };
 
   const addToCard = () => {
-    const getCartItems = JSON.parse(localStorage.getItem('cartItems') ?? '[]');
+    const getCartItems = JSON.parse(getCart() ?? "[]");
+    let updatedCart = []
+     // Check if item already exists based on productId + selected variations
+    const isAlreadyInCart = getCartItems.some(
+      (item: any) =>
+        item.productId === payLoad.productId
+    );
+ 
+    if (isAlreadyInCart) {
+    updatedCart =  getCartItems.map((item:any)=>{
+         return
+      })
+    }
 
-    const updatedCart = getCartItems && getCartItems.length > 0
-      ? [...getCartItems, payLoad]
-      : [payLoad];
-
-    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+     updatedCart = [...getCartItems, payLoad];
+    setItemId(itemId + 1);
+    setCart(JSON.stringify(updatedCart));
   };
 
 
@@ -252,7 +299,7 @@ const ProductList = () => {
           <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px] p-4  ">
             {/* Left Section - Image */}
             <div className="w-full md:w-1/2 md:sticky top-[85px] flex flex-col gap-3">
-              <BreadCrumbs value={selectedCard}></BreadCrumbs>
+              <BreadCrumbs value={data?.productDetail?.name}></BreadCrumbs>
               <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 sm:px-0 xs:px-0 w-full ">
                 <Image
                   src={flippedImage}
@@ -265,14 +312,16 @@ const ProductList = () => {
                   <div
                     role="button"
                     onClick={() => flipImage("front")}
-                    className={`h-1 w-12 mb-2 ${currentImgae == "front" ? "bg-purple-500" : "bg-gray-300"
-                      } rounded-full mr-2 p-1`}
+                    className={`h-1 w-12 mb-2 ${
+                      currentImgae == "front" ? "bg-purple-500" : "bg-gray-300"
+                    } rounded-full mr-2 p-1`}
                   ></div>
                   <div
                     role="button"
                     onClick={() => flipImage("back")}
-                    className={`h-1 w-12 ${currentImgae == "back" ? "bg-purple-500" : "bg-gray-300"
-                      } rounded-full mr-2 p-1`}
+                    className={`h-1 w-12 ${
+                      currentImgae == "back" ? "bg-purple-500" : "bg-gray-300"
+                    } rounded-full mr-2 p-1`}
                   ></div>
                 </div>
               </div>
@@ -280,9 +329,31 @@ const ProductList = () => {
                 ( {currentImgae} View )
               </p>
               <div className="mt-6 flex flex-col md:flex-row sm:flex-row xs:flex-row gap-4 justify-center md:px-4 sm:px-4 xs:px-4">
-                <button onClick={addToCard} className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden">
+                <button
+                  onClick={addToCard}
+                  className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden"
+                >
                   Add to cart
                 </button>
+                {/* {cards.map((value: CardItem) => ( 
+                  {/* <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2">
+                    <p
+                      className=" m-0 p-0 cursor-pointer"
+                      // onClick={() => handleDecrease(value.id)}
+                    >
+                      -
+                    </p>
+                    <p className=" m-0 p-0 text-[10px] text-center">
+                    {value.quantity} 
+                     </p>
+                    <p 
+                      className=" m-0 p-0 cursor-pointer"
+                       onClick={() => handleIncrease(value.id)}
+                    >
+                      +
+                    </p>
+                  </div> 
+                 ))} */}
                 <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:opacity-80">
                   Buy now
                 </button>
@@ -290,8 +361,18 @@ const ProductList = () => {
             </div>
             {/* Right Section */}
             <div className="w-full md:w-1/2 md:mt-8 sm:mt-8 xs:mt-8 overflow-y-auto mt-[24px]">
-              <BubblCard selectedColor={selectedColor} setSelectedColor={setSelectedColor} selectedCard={selectedCard} selectedMaterial={selectedMaterial} setSelectedMaterial={setSelectedMaterial} selectedPattern={selectedPattern} setSelectedPattern={setSelectedPattern} materials={materials} />
-              {/* Additional components can be added here */}
+              <BubblCard
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+                selectedCard={data?.productDetail?.name}
+                selectedMaterial={selectedMaterial}
+                setSelectedMaterial={setSelectedMaterial}
+                selectedPattern={selectedPattern}
+                setSelectedPattern={setSelectedPattern}
+                materials={data?.material}
+                details={data}
+                patterns={data?.patterns}
+              />
             </div>
           </div>
           <section className=" py-14 bg-[#F5F5F5] rounded-2xl mt-[70px] lg:mx:10 md:mx-4 sm:mx-4 xs:mx-3 ">

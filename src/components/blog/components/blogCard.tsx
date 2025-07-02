@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from 'next/link';
 import { useRouter } from "next/router";
 interface BlogCardProps {
   image: string;
@@ -43,12 +44,12 @@ export default function BlogCard({
       <div className=" pb-3 text-white text-[20px] mt-6">{heading}</div>
       <div className=" pb-3 text-gray-300 text-sm">{description}</div>
       <div className=" pb-4">
-        <a
+        <Link
           href="#"
           className="text-[#9747FF] text-sm font-medium hover:underline"
         >
           Read post →
-        </a>
+        </Link>
       </div>
     </div>
   );
