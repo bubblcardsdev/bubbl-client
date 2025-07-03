@@ -18,27 +18,6 @@ interface DeviceItem {
   material?: string;
 }
 
-interface DevicesData {
-  basic?: DeviceItem[];
-  custom?: DeviceItem[];
-  others?: DeviceItem[];
-}
-
-interface FilteredSection {
-  sectionType: string;
-  cards: {
-    id: string;
-    name: string;
-    title: string;
-    price: string;
-    image: string;
-    discount: string;
-    secondaryImage?: string;
-    colors?: string[];
-    material?: string;
-    cardType: string;
-  }[];
-}
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
     title: "Bubbl Custom Card",
@@ -76,7 +55,7 @@ const sectionTypes = [
   },
 ];
 function CardSection() {
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<Record<string, DeviceItem[]>>({});
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("All products");
   const [searchProduct, setSearchProduct] = useState("");
@@ -88,7 +67,7 @@ function CardSection() {
     const getDevices = async () => {
       try {
         const devices = await fetchAllDevices();
-        if(devices){
+        if (devices) {
           setData(devices);
         }
       } catch (err) {
@@ -97,17 +76,17 @@ function CardSection() {
     };
 
     getDevices();
-  }, []);
+  }, [searchProduct]);
   const filteredProduct = useMemo(() => {
     const lowerCaseTerm = searchProduct.toLowerCase();
 
     return sectionTypes
       .map(({ title, type }) => {
         const cards = (data[type] || [])
-          .filter((item: any) =>
+          .filter((item: DeviceItem) =>
             item.productName.toLowerCase().includes(lowerCaseTerm)
           )
-          .map((item: any, index: number) => ({
+          .map((item: DeviceItem) => ({
             id: item.productId,
             name: item.productName,
             title: `${item.productName}`,
@@ -120,6 +99,7 @@ function CardSection() {
             cardType: type,
           }));
 
+
         return {
           sectionType: title,
           cards,
@@ -127,7 +107,7 @@ function CardSection() {
       })
 
       .filter((section) => section.cards.length > 0);
-  }, [data, sectionTypes, searchProduct]);
+  }, [data, searchProduct]);
 
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
@@ -140,7 +120,7 @@ function CardSection() {
               </span>
               <input
                 type="text"
-                onChange={(e: any) => setSearchProduct(e?.target?.value)}
+                onChange={(e:  React.ChangeEvent<HTMLInputElement>) => setSearchProduct(e?.target?.value)}
                 className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden"
                 placeholder="Search bubbl product..."
               />

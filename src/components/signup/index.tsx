@@ -13,7 +13,7 @@ import React, { useState, useMemo } from "react";
 import axiosInstance from "../../helpers/axios";
 import{ RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
-import axios from "axios";
+
 type FormDataType = {
   firstName: string;
   role: string;
@@ -149,8 +149,8 @@ const Signup = () => {
         } else {
           router.push("/");
         }
-      } catch (error: any) {
-        console.error("error");
+      } catch (error: unknown) {
+        console.error("error",error);
       }
     }
   };

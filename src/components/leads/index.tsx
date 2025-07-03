@@ -16,6 +16,17 @@ import {
   LeadsDownloadIcon,
 } from "../common/icons";
 import useWindowSize from "@/src/hooks/useWindowSize";
+
+interface Lead {
+  name: string;
+  role: string;
+  orderId: string;
+  connection: string;
+  date: string;
+  avatar: string;
+}
+
+
 const leads = [
   {
     name: "Natali Craig",
@@ -99,8 +110,8 @@ const leads = [
   },
 ];
 
-const parseDate = (dateStr: any) => {
-  const map: any = {
+const parseDate = (dateStr: string):number => {
+  const map:  { [key: string]: Date } = {
     "Just now": new Date(),
     "A minute ago": new Date(Date.now() - 60 * 1000),
     "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
@@ -111,37 +122,46 @@ const parsed: Date = new Date(dateStr);
 return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 };
 
-const sortData = (data: any, field: any, ascending: any) => {
+const sortData = (data: Lead[], field: keyof Lead, ascending: boolean): Lead[] => {
   return [...data].sort((a, b) => {
-    let aValue = a[field];
-    let bValue = b[field];
+    const aValue = a[field];
+    const bValue = b[field];
 
     if (field === "date") {
-      aValue = parseDate(aValue);
-      bValue = parseDate(bValue);
-    } else {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
-    }
+      // Safely parse dates as numbers
+      const aDate = parseDate(aValue as string);
+      const bDate = parseDate(bValue as string);
 
-    if (aValue < bValue) return ascending ? -1 : 1;
-    if (aValue > bValue) return ascending ? 1 : -1;
-    return 0;
+      if (aDate < bDate) return ascending ? -1 : 1;
+      if (aDate > bDate) return ascending ? 1 : -1;
+      return 0;
+    } else {
+      // Ensure comparison is done as lowercase strings
+      const aStr = String(aValue).toLowerCase();
+      const bStr = String(bValue).toLowerCase();
+
+      if (aStr < bStr) return ascending ? -1 : 1;
+      if (aStr > bStr) return ascending ? 1 : -1;
+      return 0;
+    }
   });
 };
 
+
+
 const Leads = () => {
-  const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpenAction, setIsOpenAction] = useState<any>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useState("name");
-  const [ascending, setAscending] = useState(true);
-  const [sortedLeads, setSortedLeads] = useState(sortData(leads, "name", true));
+ const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
+const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+const [isOpen, setIsOpen] = useState<boolean>(false);
+const [isOpenAction, setIsOpenAction] = useState<number | null>(null);
+const [currentPage, setCurrentPage] = useState<number>(1);
+const [sortField, setSortField] = useState<keyof Lead>("name");
+const [ascending, setAscending] = useState<boolean>(true);
+const [sortedLeads, setSortedLeads] = useState<Lead[]>(sortData(leads, "name", true));
+
   const { width } = useWindowSize();
 
-  const handleSort = (field: string) => {
+  const handleSort = (field:keyof Lead) => {
     const isAscending = field === sortField ? !ascending : true;
     setSortField(field);
     setAscending(isAscending);
@@ -167,21 +187,22 @@ const Leads = () => {
     setSelectedLeads(updated);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setIsOpenAction(null);
-      }
-    };
-
-    if (isOpenAction !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+      setIsOpenAction(null);
     }
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpenAction]);
+  if (isOpenAction !== null) {
+    document.addEventListener("mousedown", handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [isOpenAction]);
+
 
   console.log(width);
   return (
@@ -238,8 +259,7 @@ const Leads = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#323232]">
-            {paginatedLeads.map((lead: any, index: number) => {
-              const realIndex = (currentPage - 1) * leadsPerPage + index;
+            {paginatedLeads.map((lead: Lead, index: number) => {
               return (
                 <tr
                   key={index}

@@ -1,14 +1,14 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useMemo} from "react";
 import { BubblLogo } from "../common/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 
 const EmailVerifyPage = () => {
-  const [errors, setErrors] = useState({
-    OTPError: "",
-  });
+  // const [errors, setErrors] = useState({
+  //   OTPError: "",
+  // });
   const RightImageRender = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * LOGIN_IMAGES.length);
     return (
@@ -42,11 +42,12 @@ const EmailVerifyPage = () => {
               <input
                 type="text"
                 placeholder="Enter OTP"
-                className={`w-full p-2 pr-10 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
-                  errors.OTPError
-                    ? "border border-red-500 focus:outline-none"
-                    : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-                }`}
+                className={`w-full p-2 pr-10 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] 
+                  // {errors.OTPError
+                  //   ? "border border-red-500 focus:outline-none"
+                  //   : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                  // }
+               `}
               />
               <button
                 type="submit"

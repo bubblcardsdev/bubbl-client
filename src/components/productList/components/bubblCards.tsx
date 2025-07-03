@@ -42,31 +42,63 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 //     patterns: ["pattern1", "pattern2", "pattern3"],
 //   },
 // ];
-type BubblBasicCrdFunctionProps = {
+type BubblCardProps = {
+  selectedColor: ColorType | null;
+  setSelectedColor: (color: ColorType) => void;
   selectedCard: string;
-  selectedColor: any;
-  setSelectedColor: any;
-  selectedMaterial: any;
-  setSelectedMaterial: any;
-  selectedPattern: any;
-  setSelectedPattern: any;
-  materials: any;
-  details: any;
-  patterns: any;
+  selectedMaterial: MaterialType | null;
+  setSelectedMaterial: (material: MaterialType) => void;
+  selectedPattern: PatternType | null;
+  setSelectedPattern: (pattern: PatternType) => void;
+  materials: MaterialType[];
+  details: DetailsType;
+  patterns: PatternType[];
 };
-interface Materials {
+
+
+// interface SelectedOptionType {
+//   label: string;
+//   value: string;
+// }
+
+
+interface ColorType {
+  name: null | undefined;
+  colorName: string;
+  colorCode: string;
+}
+
+interface PatternType {
+  productId: string;
+  patternName: string;
+  imageUrl: string;
+}
+
+interface MaterialType {
   productId: string;
   materialName: string;
   imageUrl: string;
 }
-interface Props {
-  materials: Materials[];
+
+interface ProductDetailType {
+  name: string;
+  shortDescription: string;
+  price: number;
+  deviceDescription?: string;
+  productDetails?: string;
 }
 
-const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
+interface DetailsType {
+  productDetail: ProductDetailType;
+  color?: ColorType[];
+  patterns?: PatternType[];
+}
+
+
+const BubblBasicCrd = (props: BubblCardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("select your font");
-  const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
+  // const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
   const options = ["Amenti", "Roboto", "Montserrat"];
   const {
     selectedCard,
@@ -81,27 +113,27 @@ const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
     patterns,
   } = props;
   const [activeTab, setActiveTab] = useState("description");
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  // const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const handleMaterialClick = (index: number) => {
-    setSelectedIndex(index);
-  };
+  // const handleMaterialClick = (index: number) => {
+  //   setSelectedIndex(index);
+  // };
   // const [selectedColor, setSelectedColor] = useState("Blue");
   // const [activeButton, setActiveButton] = useState("");
   // const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
   // const [selectedPattern, setSelectedPattern] = useState(
   //   selectedMaterial.patterns[0]
   // );
-  const colors = [
-    { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
-    { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
-    { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
-    { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
-    { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
-    { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
-    { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
-    { name: "Black", color: "bg-black", image: "/product-black.jpg" },
-  ];
+  // const colors = [
+  //   { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
+  //   { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
+  //   { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
+  //   { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
+  //   { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
+  //   { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
+  //   { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
+  //   { name: "Black", color: "bg-black", image: "/product-black.jpg" },
+  // ];
   function tabChanger(tab: string): void {
     setActiveTab(tab);
   }
@@ -126,14 +158,13 @@ const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
             </span>
           </p>
           <div className="flex gap-2 mt-4">
-            {details?.color?.map((item: any, index: number) => (
+            {details?.color?.map((item: ColorType, index: number) => (
               <div
                 key={index}
-                className={`flex items-center p-[2px] box-content rounded-full ${
-                  item.colorName === selectedColor?.colorName
+                className={`flex items-center p-[2px] box-content rounded-full ${item.colorName === selectedColor?.colorName
                     ? "border-2 border-black"
                     : "border-2 border-white"
-                }`}
+                  }`}
               >
                 <button
                   key={item.name}
@@ -151,26 +182,28 @@ const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
         <div className="mt-4">
           <h3 className="font-semibold ">
             Card Material:
-            {materials?.map((material: any, index: number) => (
+            {/* {materials?.map((material: MaterialType, index: number) => (
               <span key={index} className="ml-2">
                 {(index === selectedMaterialIndex && material?.materialName) ||
                   ""}
               </span>
-            ))}
+            ))} */}
           </h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 mt-3  gap-y-4 ">
-            {materials?.map((material: any) => (
+            {materials?.map((material: MaterialType) => (
               <button
                 key={material?.productId}
                 onClick={() => {
                   setSelectedMaterial(material);
-                  setSelectedPattern(details?.patterns?.[0]);
+                  if (details?.patterns && details.patterns.length > 0) {
+                    setSelectedPattern(details.patterns[0]);
+                  }
                 }}
-                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${
-                  selectedMaterial?.productId === material?.productId
+
+                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${selectedMaterial?.productId === material?.productId
                     ? "border-[#9C4BFF]"
                     : "border-gray-300 "
-                }`}
+                  }`}
               >
                 <Image
                   src={material?.imageUrl}
@@ -189,15 +222,14 @@ const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
         <div className="mt-4">
           <h3 className="font-semibold ">Select your Pattern</h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 w-full gap-y-4 mt-4">
-            {details?.patterns.map((pattern: any) => (
+            {details?.patterns && details?.patterns.map((pattern: PatternType, index: number) => (
               <div
-                key={pattern}
+                key={index}
                 onClick={() => setSelectedPattern(pattern)}
-                className={` border w-4/5 ${
-                  selectedPattern?.productId === pattern?.productId
+                className={` border w-4/5 ${selectedPattern?.productId === pattern?.productId
                     ? "border-[#9C4BFF]"
                     : "border-gray-300"
-                } rounded-md bg-[#EFEFEF] flex items-center justify-center`}
+                  } rounded-md bg-[#EFEFEF] flex items-center justify-center`}
               >
                 <Image
                   src={pattern?.imageUrl}
@@ -266,18 +298,16 @@ const BubblBasicCrd = (props: BubblBasicCrdFunctionProps) => {
           <h2
             role="button"
             onClick={() => tabChanger("description")}
-            className={`font-semibold ${
-              activeTab == "description" ? "text-black" : "text-gray-400"
-            }`}
+            className={`font-semibold ${activeTab == "description" ? "text-black" : "text-gray-400"
+              }`}
           >
             Description
           </h2>
           <h2
             role="button"
             onClick={() => tabChanger("product_details")}
-            className={`font-semibold ${
-              activeTab == "product_details" ? "text-black" : "text-gray-400"
-            }`}
+            className={`font-semibold ${activeTab == "product_details" ? "text-black" : "text-gray-400"
+              }`}
           >
             Product Details
           </h2>

@@ -1,5 +1,13 @@
 import axiosInstance from "../helpers/axios";
-export const RegisterApi = async (formData: any) => {
+
+interface RegisterFormData {
+  firstName: string;
+  email: string;
+  password: string;
+}
+
+
+export const RegisterApi = async (formData: RegisterFormData) => {
 
   try {
     const response = await axiosInstance.post(`/register`, {

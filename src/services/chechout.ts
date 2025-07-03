@@ -1,6 +1,19 @@
 import axiosInstance from "../helpers/axios";
 
-export const CheckoutApi = async (checkoutFormData: any) => {
+interface CheckoutFormData {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  emailId: string;
+  address: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+}
+
+
+export const CheckoutApi = async (checkoutFormData: CheckoutFormData) => {
   const data = {
     productData: [
       {
