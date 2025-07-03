@@ -1,203 +1,175 @@
-// "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
 import Footer from "../footerPage/index";
-import BuleCard from "../../assets/product/productCardImg/basiccard.png";
-import BackCard from "../../assets/product/productCardImg/metalCard.png";
+import Image from "next/image";
 import BubblCard from "./components/bubblCards";
-// import Bubbl_Full_custom from '../productList/bubblFullCustom/bubblFullCustom'
-// import Bubbl_Name_custom from '../productList/bubblNameCustom/bubblNameCustom'
-
-import BreadCrumbs from "../common/BreadCrumbs";
+import { setCart, getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
-type CircleContainerProp ={
-  colors:string[];
+import BreadCrumbs from "../common/BreadCrumbs";
+import axios from "axios";
+
+// =======================
+// Types Section
+// =======================
+interface SelectedOptionType {
+  id: string;
+  name: string;
+  imageUrl: string;
 }
-const CircleContainer = (props: CircleContainerProp) => {
-  const { colors } = props;
-  // const [hovered, setHovered] = useState(false);
 
-  return (
-    <div
-      className="relative max-w-[300px] z-10  "
-    // onMouseEnter={() => setHovered(true)}
-    // onMouseLeave={() => setHovered(false)}
-    >
-      {colors &&
-        colors.length > 0 &&
-        colors.map((color: string, index: number) => (
-          <div
-            key={index}
-            className={`absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]`}
-            style={{
-              backgroundColor: color,
-              right: `${10 + index * 3}px`,
-              // transform: hovered ? `translateX(-${15 * index}px)` : "none",
-              transform: `translateX(-${15 * index}px)`,
-            }}
-          // onClick={() => setHovered(false)}
-          />
-        ))}
-    </div>
-  );
-};
+interface ProductDetailType {
+  productId: string;
+  name: string;
+  price: number;
+}
+
+interface ProductListResponse {
+  productDetail: ProductDetailType;
+  discount: string;
+  color: SelectedOptionType[];
+  material: SelectedOptionType[];
+  patterns: SelectedOptionType[];
+}
+
+interface CartItemType {
+  id: number;
+  productId: string;
+  productType: string;
+  productName: string;
+  price: number;
+  discount: string;
+  image: string;
+  sellingPrice: number;
+  quantity: number;
+  color: SelectedOptionType | null;
+  material: SelectedOptionType | null;
+  pattern: SelectedOptionType | null;
+}
+
+interface CircleContainerProp {
+  colors: string[];
+}
+
+// =======================
+// Component Starts
+// =======================
+const CircleContainer = ({ colors }: CircleContainerProp) => (
+  <div className="relative max-w-[300px] z-10">
+    {colors.map((color, index) => (
+      <div
+        key={index}
+        className="absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]"
+        style={{
+          backgroundColor: color,
+          right: `${10 + index * 3}px`,
+          transform: `translateX(-${15 * index}px)`,
+        }}
+      />
+    ))}
+  </div>
+);
+
 const steps = [
-  {
-    id: 1,
-    image: "/bubbl_product.png",
-    title: "Order your bubbl right now",
-  },
-  {
-    id: 2,
-    image: "/mobileProfile.png",
-    title:
-      "Setup your digital business card through our website, no additional app needed",
-  },
-  {
-    id: 3,
-    image: "/QR_scan.png",
-    title: "Once delivered, scan QR and set up your profile details",
-  },
-  {
-    id: 4,
-    image: "/networking.png",
-    title: "Network like a pro",
-  },
+  { id: 1, image: "/bubbl_product.png", title: "Order your bubbl right now" },
+  { id: 2, image: "/mobileProfile.png", title: "Setup your digital business card through our website, no additional app needed" },
+  { id: 3, image: "/QR_scan.png", title: "Once delivered, scan QR and set up your profile details" },
+  { id: 4, image: "/networking.png", title: "Network like a pro" },
 ];
-const materials = [
-  {
-    id: "pvc",
-    name: "PVC Card",
-    image: "/pvcCards/pvcPatten1.png",
-    price: 1200,
-    patterns: [
-      "/pvcCards/pvc",
-      "pvc2",
-      "pvc3",
-      "pvc4",
-      "pvc5",
-      "pvc6",
-      "pvc7",
-      "pvc8",
-    ],
-  },
-  {
-    id: "metal",
-    name: "Metal Card",
-    image: "/metalCards/patten1.png",
-    price: 1999,
-    patterns: [
-      "metal1",
-      "metal2",
-      "metal3",
-      "metal4",
-      "metal5",
-      "metal6",
-      "metal7",
-    ],
-  },
-  {
-    id: "bamboo",
-    name: "Bamboo Card",
-    image: "/metalCards/patten2.png",
-    price: 999,
-    patterns: ["pattern1", "pattern2", "pattern3"],
-  },
-];
-const ProductList = () => {
+
+const ProductList: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState(
-    {
-      "productId": "unique key",
-      "productName": "Card",
-      "price": 799,
-      "discount": 18.77,
-      "sellingPrice": 555,
-      "shortDesc": "Made with Recyclable PVC in a Matte finish with Spot UV coating",
-      "description": "string",
-      "image":{
-          "front":BuleCard,
-          "back":BackCard
-      },
-      "productDetails": "string", // Separate points with ‘/n’
-      "colors": [
-        {
-          "color": "red",
-          "primaryImage": "image url",
-          "productId": 1
-        }
-      ],
-      "patterns": [
-        {
-          "Pattern": "patern nme",
-          "primaryImage": "image url",
-          "productId": 2
+  const { id } = router.query;
 
-        }
-      ],
-      "material": [
-        {
-          "material": "PVC",
-          "primaryImage": "image url",
-          "productId": 3
-
-        }
-      ]
-    },
-  )
-  const [selectedCard, setSelectedCard] = useState<string>("Bubbl Basic Card");
-  const [currentImgae, setCurrentImage] = useState("front");
-  const [selectedColor, setSelectedColor] = useState("Blue");
-  const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
-  const [selectedPattern, setSelectedPattern] = useState(
-    selectedMaterial.patterns[0]
-  );
-
-  const payLoad = useMemo(() => {
-    return {
-      "id":data?.productId,
-      "productId": data?.productId,
-      "productType": selectedCard,
-      "productName": data?.productName,
-      "price": data?.price,
-      "discount": data?.discount,
-      "image":data?.image?.front,
-      "sellingPrice": data?.sellingPrice,
-      "quantity":1,
-      "color": selectedColor,
-      "material": selectedMaterial,
-      "pattern": selectedPattern
-    }
-
-  }, [data, selectedCard, selectedColor, selectedMaterial, selectedPattern])
+  const [data, setData] = useState<ProductListResponse | null>(null);
+  const [itemId, setItemId] = useState<number>(1);
+  const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
+  const [selectedColor, setSelectedColor] = useState<SelectedOptionType | null>(null);
+  const [selectedMaterial, setSelectedMaterial] = useState<SelectedOptionType | null>(null);
+  const [selectedPattern, setSelectedPattern] = useState<SelectedOptionType | null>(null);
 
   useEffect(() => {
-    if (router?.query?.id) {
-      const cardType =
-        Products.find((e) => e.id.toString() === router?.query?.id)?.title ||
-        "";
-      console.log("card/", cardType);
+    if (data) {
+      setSelectedColor(data.color?.[0] || null);
+      setSelectedMaterial(data.material?.[0] || null);
+      setSelectedPattern(data.patterns?.[0] || null);
+    }
+  }, [data]);
 
-      setSelectedCard(cardType);
+  useEffect(() => {
+    if (id) {
+      axios
+        .post("http://devapii.bubbl.cards/api/cart/productDetails", { productId: id })
+        .then((res) => {
+          setData(res?.data?.data);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const cartItems: CartItemType[] = JSON.parse(getCart() ?? "[]");
+    if (cartItems.length > 0) {
+      setItemId(cartItems[cartItems.length - 1].id + 1);
     }
   }, []);
-  const colors = [
-    { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
-    { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
-    { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
-    { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
-    { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
-    { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
-    { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
-    { name: "Black", color: "bg-black", image: "/product-black.jpg" },
-  ];
+
+  const payLoad: CartItemType = useMemo(() => {
+    return {
+      id: itemId,
+      productId: data?.productDetail?.productId ?? "",
+      productType: data?.productDetail?.name ?? "",
+      productName: data?.productDetail?.name ?? "",
+      price: Number(data?.productDetail?.price ?? 0),
+      discount: data?.discount ?? "",
+      image:
+        (data?.color?.length && selectedColor?.imageUrl) ||
+        (data?.patterns?.length && selectedPattern?.imageUrl) ||
+        selectedMaterial?.imageUrl ||
+        "",
+      sellingPrice: Number(data?.productDetail?.price ?? 0),
+      quantity: 1,
+      color: selectedColor,
+      material: selectedMaterial,
+      pattern: selectedPattern,
+    };
+  }, [data, selectedColor, selectedMaterial, selectedPattern, itemId]);
+
+  const flipImage = (view: "front" | "back") => {
+    setCurrentImage(view);
+  };
+
+  const addToCart = () => {
+    const cartItems: CartItemType[] = JSON.parse(getCart() ?? "[]");
+    const isAlreadyInCart = cartItems.some(
+      (item) => item.productId === payLoad.productId
+    );
+
+    const updatedCart = isAlreadyInCart
+      ? cartItems.map((item) =>
+          item.productId === payLoad.productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      : [...cartItems, payLoad];
+
+    setItemId(itemId + 1);
+    setCart(JSON.stringify(updatedCart));
+  };
+
+  const primaryImage =
+    (data?.color?.length && selectedColor?.imageUrl) ||
+    (data?.patterns?.length && selectedPattern?.imageUrl) ||
+    selectedMaterial?.imageUrl ||
+    "";
+
+  const flippedImage = primaryImage;
+
   const Products = [
     {
       id: 1,
       name: "Full Custom",
       title: "Bubbl Full Custom",
       price: "Rs.999",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -206,7 +178,7 @@ const ProductList = () => {
       name: "Name Custom",
       title: "Bubbl Name Custom",
       price: "Rs.799",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
@@ -215,101 +187,85 @@ const ProductList = () => {
       name: "Tile v2",
       title: "Bubbl Tile",
       price: "Rs.1999",
-      image: BuleCard,
+      image: "/purple.png",
       discount: "18.77%",
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
-  ]
-
- useEffect(() => {
-  if (router?.query?.id) {
-    const cardType =
-      Products.find((e) => e.id.toString() === router?.query?.id)?.title || "";
-    setSelectedCard(cardType);
-  }
-}, [router?.query?.id,Products]);
- 
-  const flippedImage = currentImgae == "front" ? BuleCard : BackCard;
-  const flipImage = (view: string) => {
-    setCurrentImage(view);
-  };
-
-  const addToCard = () => {
-    const getCartItems = JSON.parse(localStorage.getItem('cartItems') ?? '[]');
-
-    const updatedCart = getCartItems && getCartItems.length > 0
-      ? [...getCartItems, payLoad]
-      : [payLoad];
-
-    localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-  };
-
+  ];
 
   return (
     <>
       <div className="py-3 h-screen">
         <div className="max-w-[1300px] mx-auto pt-12 mb-4">
-          <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px] p-4  ">
+          <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px] p-4">
             {/* Left Section - Image */}
             <div className="w-full md:w-1/2 md:sticky top-[85px] flex flex-col gap-3">
-              <BreadCrumbs value={selectedCard}></BreadCrumbs>
-              <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 sm:px-0 xs:px-0 w-full ">
+              <BreadCrumbs value={data?.productDetail?.name || ""} />
+              <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 w-full">
                 <Image
                   src={flippedImage}
                   alt="Bubbl Card"
                   width={400}
                   height={400}
-                  className="rounded-md h-[300px] md:h-[350px] object-fill w-full xs:object-cover"
+                  className="rounded-md h-[300px] md:h-[350px] object-fill w-full"
                 />
-                <div className="flex justify-center mt-2  ">
+                <div className="flex justify-center mt-2">
                   <div
                     role="button"
                     onClick={() => flipImage("front")}
-                    className={`h-1 w-12 mb-2 ${currentImgae == "front" ? "bg-purple-500" : "bg-gray-300"
-                      } rounded-full mr-2 p-1`}
-                  ></div>
+                    className={`h-1 w-12 mb-2 ${
+                      currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
+                    } rounded-full mr-2 p-1`}
+                  />
                   <div
                     role="button"
                     onClick={() => flipImage("back")}
-                    className={`h-1 w-12 ${currentImgae == "back" ? "bg-purple-500" : "bg-gray-300"
-                      } rounded-full mr-2 p-1`}
-                  ></div>
+                    className={`h-1 w-12 ${
+                      currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
+                    } rounded-full mr-2 p-1`}
+                  />
                 </div>
               </div>
-              <p className="text-center text-sm mt-2 capitalize">
-                ( {currentImgae} View )
-              </p>
-              <div className="mt-6 flex flex-col md:flex-row sm:flex-row xs:flex-row gap-4 justify-center md:px-4 sm:px-4 xs:px-4">
-                <button onClick={addToCard} className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2  md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:bg-[#9747FF] hover:text-white hover:border-hidden">
+              <p className="text-center text-sm mt-2 capitalize">( {currentImage} View )</p>
+              <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center">
+                <button
+                  onClick={addToCart}
+                  className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md hover:bg-[#9747FF] hover:text-white"
+                >
                   Add to cart
                 </button>
-                <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md text-nowrap hover:opacity-80">
+                <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md hover:opacity-80">
                   Buy now
                 </button>
               </div>
             </div>
+
             {/* Right Section */}
-            <div className="w-full md:w-1/2 md:mt-8 sm:mt-8 xs:mt-8 overflow-y-auto mt-[24px]">
-              <BubblCard selectedColor={selectedColor} setSelectedColor={setSelectedColor} selectedCard={selectedCard} selectedMaterial={selectedMaterial} setSelectedMaterial={setSelectedMaterial} selectedPattern={selectedPattern} setSelectedPattern={setSelectedPattern} materials={materials} />
-              {/* Additional components can be added here */}
+            <div className="w-full md:w-1/2 mt-[24px] overflow-y-auto">
+              <BubblCard
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+                selectedCard={data?.productDetail?.name || ""}
+                selectedMaterial={selectedMaterial}
+                setSelectedMaterial={setSelectedMaterial}
+                selectedPattern={selectedPattern}
+                setSelectedPattern={setSelectedPattern}
+                materials={data?.material}
+                details={data}
+                patterns={data?.patterns}
+              />
             </div>
           </div>
-          <section className=" py-14 bg-[#F5F5F5] rounded-2xl mt-[70px] lg:mx:10 md:mx-4 sm:mx-4 xs:mx-3 ">
+
+          {/* How it works section */}
+          <section className="py-14 bg-[#F5F5F5] rounded-2xl mt-[70px]">
             <div className="max-w-6xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-8">How It Works:</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
                 {steps.map((step) => (
-                  <div
-                    key={step.id}
-                    className="flex flex-col items-center text-center h-full w-full"
-                  >
+                  <div key={step.id} className="flex flex-col items-center text-center">
                     <div className="w-40 h-40 flex items-center justify-center">
-                      <Image
-                        src={step.image}
-                        alt={step.title}
-                        width={400}
-                        height={400}
-                      />
+                      <Image src={step.image} alt={step.title} width={400} height={400} />
                     </div>
                     <h3 className="text-lg font-bold mt-4">{step.id}</h3>
                     <p className="text-gray-600 w-4/5">{step.title}</p>
@@ -318,55 +274,40 @@ const ProductList = () => {
               </div>
             </div>
           </section>
-          <div className="w-full mt-10 pl-2 pr-0">
+
+          {/* Similar items section */}
+          <div className="w-full mt-10 pl-2">
             <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
               Similar Items You Might Also Like
             </h2>
-            <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4 ">
+            <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4">
               {Products.map((product) => (
-                <div
-                  key={product.id}
-                  className="snap-start rounded-lg  transition duration-300 ease-in-out"
-                >
+                <div key={product.id} className="snap-start rounded-lg transition duration-300 ease-in-out">
                   <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
                     <div className="flex justify-center items-center px-2 py-2">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        width={400}
-                        height={400}
-                        className=" object-contain transition-transform duration-500"
-                      />
+                      <Image src={product.image} alt={product.name} width={400} height={400} />
                     </div>
                     <div className="px-2 flex justify-between items-center">
                       <div className="border rounded-lg bg-white px-2 py-[4px]">
                         <p className="text-[#8C8C8C] text-sm">{product.name}</p>
                       </div>
-                      {product.colors && product.colors.length > 0 && (
-                        <CircleContainer colors={product.colors} />
-                      )}
+                      {product.colors.length > 0 && <CircleContainer colors={product.colors} />}
                     </div>
                   </div>
-
                   <div className="flex justify-between items-center pt-4 px-2">
                     <div>
-                      <h3 className="text-sm text-[#9F9F9F]">
-                        {product.title}
-                      </h3>
-                      <p className="text-black font-semibold text-lg">
-                        {product.price}
-                      </p>
+                      <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
+                      <p className="text-black font-semibold text-lg">{product.price}</p>
                     </div>
-                    <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
-                      {product.discount}
-                    </p>
+                    <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">{product.discount}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <div className="bg-black sm:px-3 xs:px-3 mt-[65px]">
+
+        <div className="bg-black mt-[65px]">
           <Footer />
         </div>
       </div>

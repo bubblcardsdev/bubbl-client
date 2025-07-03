@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Footer from "../footerPage/index";
 import { CheckCircle } from "lucide-react";
-import Card from "../../assets/product/productCardImg/basiccard.png";
 const PaymentResponse = () => {
   return (
     <>
@@ -28,7 +27,7 @@ const PaymentResponse = () => {
                 <div className="flex items-center bg-[#F9F9F9] rounded-lg p-4 my-4">
                   <div className="bg-[#F5F5F5] w-20 h-12 flex justify-center items-center rounded-md">
                     <Image
-                      src={Card}
+                      src='/purple.png'
                       alt="Card"
                       width={100}
                       height={100}

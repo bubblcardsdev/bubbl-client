@@ -1,33 +1,34 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import {
   BubblLogo,
-  Google,
-  FacebookIconbackgroundFill,
-  LinkedinIconbackgroundFill,
   Share_icon,
   ScannerQr_icon,
   Arrow_icon,
   FacebookColorIcon,
   LinkedinColorIcon,
 } from "../common/icons";
-import React, { useState,useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import axiosInstance from "../../helpers/axios";
+import{ RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
+
 type FormDataType = {
-  name: string;
+  firstName: string;
   role: string;
   companyName: string;
   mobile: string;
   email: string;
   password: string;
-  conformPassword:string
+  conformPassword: string;
 };
-function Signup() {
+const Signup = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
   type FormFieldKey = keyof FormDataType;
   const [errors, setErrors] = useState({
-    name: "",
+    firstName: "",
     role: "",
     companyName: "",
     mobile: "",
@@ -35,9 +36,8 @@ function Signup() {
     conformPassword: "",
     password: "",
   });
-
   const [formData, setFormData] = useState<FormDataType>({
-    name: "",
+    firstName: "",
     role: "",
     companyName: "",
     mobile: "",
@@ -49,7 +49,7 @@ function Signup() {
   const validateFields = () => {
     let isValid = true;
     const newErrors = {
-      name: "",
+      firstName: "",
       role: "",
       companyName: "",
       mobile: "",
@@ -59,8 +59,8 @@ function Signup() {
     };
 
     if (step === 1) {
-      if (!formData.name.trim()) {
-        newErrors.name = "Name is required.";
+      if (!formData.firstName.trim()) {
+        newErrors.firstName = "Name is required.";
         isValid = false;
       }
     }
@@ -124,16 +124,34 @@ function Signup() {
     return isValid;
   };
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // Clear error on input
+    setErrors({ ...errors, [e.target.name]: "" });
   };
- 
-  const handleNext = (e: React.FormEvent) => {
+
+  // const handlesubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (validateFields()) {
+  //     if (step <= 4) setStep(step + 1);
+  //   }
+  // };
+
+  const handlesubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateFields()) {
-      if (step <= 4) setStep(step + 1); 
+      try {
+        console.log(formData,"formData");
+        const response = await RegisterApi(formData);
+
+        if (response?.data?.success == true) {
+          alert("account created successfully");
+          router.push("/emailVerify");
+        } else {
+          router.push("/");
+        }
+      } catch (error: unknown) {
+        console.error("error",error);
+      }
     }
   };
   const stepperProgress = useMemo(() => {
@@ -143,10 +161,9 @@ function Signup() {
       ).length;
       return filledFields === fields.length ? 100 : filledFields > 0 ? 50 : 10;
     };
-
     switch (step) {
       case 1:
-        return getWidth(["name"]);
+        return getWidth(["firstName"]);
       case 2:
         return getWidth(["role", "companyName"]);
       case 3:
@@ -157,6 +174,9 @@ function Signup() {
         return 10;
     }
   }, [step, formData]);
+  const handleStep = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
   return (
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
@@ -222,7 +242,7 @@ function Signup() {
               </>
             )}
           </div>
-          <form className="w-full max-w-xs" onSubmit={handleNext}>
+          <form className="w-full max-w-xs" onSubmit={handlesubmit}>
             {step === 1 && (
               <div className="mb-6 mt-[30px]">
                 <label
@@ -233,18 +253,20 @@ function Signup() {
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
+                  name="firstName"
+                  value={formData.firstName}
                   onChange={handleChange}
                   className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
-                    errors.name
+                    errors.firstName
                       ? "border border-red-500 focus:outline-none"
                       : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                   }`}
                   placeholder="Enter your name"
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-sm  mt-1">{errors.name}</p>
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm  mt-1">
+                    {errors.firstName}
+                  </p>
                 )}
               </div>
             )}
@@ -330,7 +352,7 @@ function Signup() {
                     htmlFor="mobile"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    Mobile Number (optional)
+                    PhoneNumber
                   </label>
                   <input
                     type="text"
@@ -382,12 +404,12 @@ function Signup() {
                     htmlFor="mobile"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    ConformPassword <span className="text-red-500">*</span>
+                    Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
                     name="password"
-                    value={formData.conformPassword}
+                    value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
@@ -407,23 +429,23 @@ function Signup() {
                     htmlFor="mobile"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    Password <span className="text-red-500">*</span>
+                    ConformPassword <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
-                    name="password"
-                    value={formData.password}
+                    name="conformPassword"
+                    value={formData.conformPassword}
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.password
+                      errors.conformPassword
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.password && (
+                  {errors.conformPassword && (
                     <p className="text-red-500 text-sm  mt-1">
-                      {errors.password}
+                      {errors.conformPassword}
                     </p>
                   )}
                 </div>
@@ -439,7 +461,8 @@ function Signup() {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
+                onClick={handleStep}
                 className="w-full p-[10px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 Continue
@@ -468,18 +491,18 @@ function Signup() {
             {(step === 4 || step === 1) && (
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
                 Already have an account?{" "}
-                <a onClick={()=>router.push("/login")} className="text-[#7939CC]">
+                <Link href="/login" className="text-[#7939CC]">
                   Login
-                </a>
+                </Link>
               </p>
             )}
           </form>
         </div>
         <div className="flex justify-between w-full text-gray-500 text-xs mt-auto py-4 ">
           <p className="text-[14px]">© {new Date().getFullYear()} Bubbl</p>
-          <a href="mailto:help@bubbl.cards" className="text-[14px]">
+          <Link href="mailto:help@bubbl.cards" className="text-[14px]">
             sales@bubbl.cards
-          </a>
+          </Link>
         </div>
       </div>
       {/* Right side profile page */}
@@ -496,7 +519,7 @@ function Signup() {
               height={20}
             />
             <p className="text-[10px] text-center text-white mt-1">
-              Welcome {formData.name}
+              Welcome {formData.firstName}
             </p>
           </div>
           <div className=" mt-[14px] relative w-50 p-2 rounded-lg shadow-lg  overflow-hidden bg-[#141414]">
@@ -514,7 +537,7 @@ function Signup() {
                   height={100}
                 />
                 <h2 className="text-[18px] font-[700] text-center text-black mb-2">
-                  {formData.name}
+                  {formData.firstName}
                 </h2>
                 <p className="text-[14px] text-center text-black/60 font-semibold">
                   {formData.role}
@@ -608,6 +631,6 @@ function Signup() {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;

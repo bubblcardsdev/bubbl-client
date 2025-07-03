@@ -1,78 +1,79 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTruck } from "react-icons/fa";
-import Image from "next/image";
-import CardImg from "../../assets/product/productCardImg/basiccard.png";
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
+import { getCart } from "../../helpers/localStorage";
 import Footer from "../footerPage/index";
-import { IoIosArrowDown } from "react-icons/io";
+import { useRouter } from "next/router";
+import { CheckoutApi } from "../../services/chechout";
 interface FormData {
-  email: string;
-  phone: string;
-  newsletter: boolean;
   firstName: string;
   lastName: string;
+  phoneNumber: string;
+  emailId: string;
   address: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipcode: string;
   country: string;
+  newsletter: boolean;
+}
+
+interface CardItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  quantity: number;
+  image: StaticImageData;
+  sellingPrice: number;
+  productName: string;
+  productType: string;
+  productId: number | string;
 }
 
 const CheckoutPage = () => {
-  // const [formData, setFormData] = useState<FormData>({
-  //     email: '',
-  //     phone: '',
-  //     newsletter:'',
-  //     firstName: '',
-  //     lastName: '',
-  //     address: '',
-  //     city: '',
-  //     state: '',
-  //     postalCode: '',
-  //     country:'',
-  //     newsletter: false.
+  const router = useRouter();
 
-  // });
-
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    phone: "", // Fixed missing value
+  const [checkoutFormData, setcheckoutFormData] = useState<FormData>({
+    emailId: "",
+    phoneNumber: "",
     firstName: "",
     lastName: "",
     address: "",
     city: "",
     state: "",
-    postalCode: "",
+    zipcode: "",
     country: "",
     newsletter: false,
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [stateSelected, setStateSelected] = useState<string>("select your state");
-  // const statOoptions = ["TamilNadu", "kerla"];
-  const [selected, setSelected] = useState<string>("select your state");
-  const options = ["India", "Armenia", "Canada"];
+  const [cart, setCart] = useState<CardItem[]>([]);
   const validate = () => {
     const newErrors: Partial<FormData> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10,15}$/;
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+    if (!checkoutFormData.emailId) {
+      newErrors.emailId = "Email is required";
+    } else if (!emailRegex.test(checkoutFormData.emailId)) {
+      newErrors.emailId = "Invalid email format";
     }
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
-    } else if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = "Invalid phone number format";
+    if (!checkoutFormData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required";
+    } else if (!phoneRegex.test(checkoutFormData.phoneNumber)) {
+      newErrors.phoneNumber = "Invalid phone number format";
     }
-    if (!formData.firstName) newErrors.firstName = "First name is required";
-    if (!formData.lastName) newErrors.lastName = "Last name is required";
-    if (!formData.address) newErrors.address = "Address is required";
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.state) newErrors.state = "State is required";
-    if (!formData.postalCode) newErrors.postalCode = "Postal code is required";
-    if (!formData.country) newErrors.country = "Country is required";
+    if (!checkoutFormData.firstName)
+      newErrors.firstName = "First name is required";
+    if (!checkoutFormData.lastName)
+      newErrors.lastName = "Last name is required";
+    if (!checkoutFormData.address) newErrors.address = "Address is required";
+    if (!checkoutFormData.city) newErrors.city = "City is required";
+    if (!checkoutFormData.state) newErrors.state = "State is required";
+    if (!checkoutFormData.zipcode)
+      newErrors.zipcode = "Postal code is required";
+    if (!checkoutFormData.country) newErrors.country = "Country is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -88,25 +89,94 @@ const CheckoutPage = () => {
     const target = e.target as HTMLInputElement;
     const { name, value, type } = e.target;
 
-    setFormData((prevState) => ({
+    setcheckoutFormData((prevState) => ({
       ...prevState,
       [name]: type === "checkbox" ? target.checked : value,
     }));
   };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (validate()) {
+  //     alert("Form submitted successfully");
+  //   }
+  // };
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!validate()) return;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  //   const payload = {
+  //     productData: cart.map((item) => ({
+  //       productId: item?.productId,
+  //       quantity: item.quantity,
+  //     })),
+  //     shippingFormData: {
+  //       firstName: checkoutFormData.firstName,
+  //       lastName: checkoutFormData.lastName,
+  //       phoneNumber: checkoutFormData.phoneNumber,
+  //       emailId: checkoutFormData.emailId,
+  //       address: checkoutFormData.address,
+  //       city: checkoutFormData.city,
+  //       state: checkoutFormData.state,
+  //       zipcode: checkoutFormData.zipcode,
+  //       country: checkoutFormData.country,
+  //     },
+  //   };
+  // };
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Form submitted successfully");
+
+    if (!validate()) return;
+
+    // const payload = {
+    //   productData: cart.map((item) => ({
+    //     productId: item?.productId,
+    //     quantity: item.quantity,
+    //   })),
+    //   shippingFormData: {
+    //     firstName: checkoutFormData.firstName,
+    //     lastName: checkoutFormData.lastName,
+    //     phoneNumber: checkoutFormData.phoneNumber,
+    //     emailId: checkoutFormData.emailId,
+    //     address: checkoutFormData.address,
+    //     city: checkoutFormData.city,
+    //     state: checkoutFormData.state,
+    //     zipcode: checkoutFormData.zipcode,
+    //     country: checkoutFormData.country,
+    //   },
+    // };
+
+    try {
+      const response = await CheckoutApi(checkoutFormData);
+      if (response?.data?.success == true) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      alert("Checkout failed. Please try again.");
     }
   };
+
+  useEffect(() => {
+    const storedCart = getCart();
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+  const subtotal = cart.reduce(
+    (acc: number, item) => acc + item.sellingPrice * item.quantity,
+    0
+  );
+  const shipping = subtotal > 0 ? 50 : 0;
+  const discount = (subtotal * 0) / 100;
+  const gst = (subtotal * 18) / 100;
+  const total = subtotal + shipping + gst - discount;
   return (
     <div className="py-0 h-screen">
       <div className="max-w-[1300px] mx-auto  flex lg:px-10 md:px-10 sm:px-10 xs:px-4 pt-6 pb-14 lg:gap-40 md:gap-14 lg:flex-row md:flex-row sm:flex-col-reverse xs:flex-col-reverse mt-[100px] ">
         <div className="lg:w-[64%] sm:w-full ">
           <form onSubmit={handleSubmit}>
-            <h1 className="text-[26px] font-bold mb-1   ">
-              Checkout (2 items)
+            <h1 className="text-[26px] font-bold mb-1">
+              Checkout <span>{cart.length} items</span>
             </h1>
             <p className="text-[#7F7F7F] mb-6 font-semibold  text-[15px]">
               Your Order, Just a Click Away
@@ -126,20 +196,22 @@ const CheckoutPage = () => {
                   <input
                     type="email"
                     placeholder="you@company.com"
-                    value={formData.email}
+                    value={checkoutFormData.emailId}
+                    name="emailId"
                     onChange={handleChange}
                     className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] "
                   />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">{errors.email}</p>
+                  {errors.emailId && (
+                    <p className="text-red-500 text-sm">{errors.emailId}</p>
                   )}
                 </div>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
                     id="newsletter"
+                    name="newsletter"
                     className="mr-4"
-                    checked={formData.newsletter}
+                    checked={checkoutFormData.newsletter}
                     onChange={handleChange}
                   />
                   <label
@@ -155,13 +227,14 @@ const CheckoutPage = () => {
                   </label>
                   <input
                     type="tel"
-                    placeholder="IN: 1-19 5000-90000"
-                    value={formData.phone}
+                    placeholder="9000000000"
+                    value={checkoutFormData.phoneNumber}
+                    name="phoneNumber"
                     onChange={handleChange}
                     className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] "
                   />
-                  {errors.phone && (
-                    <p className="text-red-500 text-sm">{errors.phone}</p>
+                  {errors.phoneNumber && (
+                    <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
                   )}
                 </div>
               </div>
@@ -185,7 +258,8 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       placeholder="First name"
-                      value={formData.firstName}
+                      name="firstName"
+                      value={checkoutFormData.firstName}
                       onChange={handleChange}
                       className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
                     />
@@ -200,7 +274,8 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       placeholder="Last name"
-                      value={formData.lastName}
+                      name="lastName"
+                      value={checkoutFormData.lastName}
                       onChange={handleChange}
                       className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px] "
                     />
@@ -216,13 +291,48 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     placeholder="Dear no, street, Locality"
-                    value={formData.address}
+                    value={checkoutFormData.address}
                     onChange={handleChange}
+                    name="address"
                     className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
                   />
                   {errors.address && (
                     <p className="text-red-500 text-sm">{errors.address}</p>
                   )}
+                </div>
+                <div className="grid lg:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#7F7F7F]">
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter your country"
+                      value={checkoutFormData.country}
+                      name="country"
+                      onChange={handleChange}
+                      className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    />
+                    {errors.city && (
+                      <p className="text-red-500 text-sm">{errors.country}</p>
+                    )}
+                  </div>
+                  <div className="relative w-full space-y-1 ">
+                    <label className="block text-sm font-medium text-[#7F7F7F]">
+                      State
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter your state"
+                      value={checkoutFormData.state}
+                      name="state"
+                      onChange={handleChange}
+                      className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    />
+                    {errors.city && (
+                      <p className="text-red-500 text-sm">{errors.state}</p>
+                    )}
+                  </div>
                 </div>
                 <div className="grid lg:grid-cols-2 gap-4">
                   <div>
@@ -232,7 +342,8 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       placeholder="Enter your city"
-                      value={formData.city}
+                      value={checkoutFormData.city}
+                      name="city"
                       onChange={handleChange}
                       className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
                     />
@@ -241,84 +352,19 @@ const CheckoutPage = () => {
                     )}
                   </div>
                   <div className="relative w-full space-y-1 ">
-                    <label className="block text-sm font-medium text-[#7F7F7F]">
-                      State
-                    </label>
-                    <button
-                      className="w-full px-4 py-[14px] bg-[#F5F5F5] rounded-lg flex justify-between items-center"
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                      <span className="text-[#7F7F7F] text-sm">
-                        {stateSelected}
-                      </span>
-                      <IoIosArrowDown className="text-[#7F7F7F]" />
-                    </button>
-                    {errors.postalCode && (
-                      <p className="text-red-500 text-sm">{errors.country}</p>
-                    )}
-                    {isOpen && (
-                      <ul className="absolute w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                        {options.map((option, index) => (
-                          <li
-                            key={index}
-                            className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
-                            onClick={() => {
-                              setStateSelected(option);
-                              setIsOpen(false);
-                            }}
-                          >
-                            {option}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                <div className="grid lg:grid-cols-2 gap-4">
-                  <div>
                     <label className="block text-[14px] font-medium text-[#7F7F7F] ">
-                      Postal code
+                      postalCode
                     </label>
                     <input
                       type="text"
-                      placeholder="080000"
-                      className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 placeholder:text-[14px]"
+                      placeholder="pincode"
+                      value={checkoutFormData.zipcode}
+                      name="zipcode"
+                      onChange={handleChange}
+                      className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
                     />
-                    {errors.postalCode && (
-                      <p className="text-red-500 text-sm">
-                        {errors.postalCode}
-                      </p>
-                    )}
-                  </div>
-                  <div className="relative w-full space-y-1 ">
-                    <label className="block text-sm font-medium text-[#7F7F7F]">
-                      Country
-                    </label>
-                    <button
-                      className="w-full px-4 py-[14px] bg-[#F5F5F5] rounded-lg flex justify-between items-center"
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                      <span className="text-[#7F7F7F] text-sm">{selected}</span>
-                      <IoIosArrowDown className="text-[#7F7F7F]" />
-                    </button>
-                    {errors.postalCode && (
-                      <p className="text-red-500 text-sm">{errors.country}</p>
-                    )}
-                    {isOpen && (
-                      <ul className="absolute w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                        {options.map((option, index) => (
-                          <li
-                            key={index}
-                            className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
-                            onClick={() => {
-                              setSelected(option);
-                              setIsOpen(false);
-                            }}
-                          >
-                            {option}
-                          </li>
-                        ))}
-                      </ul>
+                    {errors.city && (
+                      <p className="text-red-500 text-sm">{errors.zipcode}</p>
                     )}
                   </div>
                 </div>
@@ -331,7 +377,10 @@ const CheckoutPage = () => {
                 Policy.
               </p>
             </div>
-            <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center">
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center"
+            >
               Proceed to payment
             </button>
           </form>
@@ -339,51 +388,72 @@ const CheckoutPage = () => {
         <div className="lg:w-[40%] sm:w-full bg-white p-6 xs:p-0 rounded-lg h-fit lg:sticky md:sticky sm:static xs:static top-[125px] ">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-[26px] font-semibold ">Review your cart</h2>
-            <a href="#" className="underline font-semibold  text-black ">
+            <Link href="/cart" className="underline font-semibold  text-black ">
               Edit
-            </a>
+            </Link>
           </div>
-          <div className="flex lg:items-center md:items-center sm:items-center xs:items-start lg:gap-4 md:gap-6 sm:gap-16 xs:gap-1 pb-4 mb-4 lg:flex-row md:flex-row sm:flex-row xs:flex-row ">
-            <div className=" w-[90px] h-[65px] rounded-[8px] flex justify-center items-center bg-[#F3F3F3]">
-              <Image src={CardImg} alt="card" width={500} height={300} />
-            </div>
-            <div className="flex items-center justify-between w-full">
-              <div>
-                <p className="text-gray-500 text-sm p-0 m-0 ">Card</p>
-                <p className="font-semibold">Bubbl basic card</p>
+          {cart.map((item, index: number) => (
+            <div
+              key={index}
+              className="flex lg:items-center md:items-center sm:items-center xs:items-start lg:gap-4 md:gap-6 sm:gap-16 xs:gap-1 pb-4 mb-4 lg:flex-row md:flex-row sm:flex-row xs:flex-row "
+            >
+              <div className=" w-[90px] h-[65px] rounded-[8px] flex justify-center items-center bg-[#F3F3F3]">
+                <Image
+                  src={item.image}
+                  alt={item.productName}
+                  width={500}
+                  height={300}
+                />
               </div>
-              <p className="ml-auto font-bold text-[18px]">₹699/-</p>
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <p className="text-gray-500 text-sm p-0 m-0 ">
+                    {item.productType}
+                  </p>
+                  <p className="font-semibold">{item.productName}</p>
+                </div>
+                <p className="ml-auto font-bold text-[18px]">
+                  ₹{item.sellingPrice * item.quantity}/-
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
+
           <div className="text-gray-600 space-y-2">
             <div className="flex justify-between">
-              <span className=" text-[#7F7F7F]">Subtotal (1 item)</span>
-              <span className=" text-[14px]">₹45.00</span>
+              <span className=" text-[#7F7F7F]">
+                Subtotal ({cart.length} items)
+              </span>
+              <span className=" text-[14px]">₹{subtotal.toFixed(2)}</span>
             </div>
+
             <div className="flex justify-between">
               <span className=" text-[#7F7F7F]">Shipping</span>
-              <span className=" text-[14px]">₹5.00</span>
+              <span className=" text-[14px]">₹{shipping.toFixed(2)}</span>
             </div>
+
             <div className="flex justify-between">
               <span className=" text-[#7F7F7F]">Discount</span>
-              <span className=" text-[14px]">-₹10.00</span>
+              <span className=" text-[14px]">-₹{discount.toFixed(2)}</span>
             </div>
+
             <div className="flex justify-between">
               <span className=" text-[#7F7F7F]">GST 18%</span>
-              <span className=" text-[14px]">₹190.00</span>
+              <span className=" text-[14px]">₹{gst.toFixed(2)}</span>
             </div>
           </div>
           <div className=" mt-4 pt-4">
             <div className="flex justify-between text-lg font-semibold">
               <span className=" text-[#7F7F7F]">Total</span>
-              <span className="">₹699.00</span>
+              <span className="">₹{total.toFixed(2)}</span>
             </div>
+
             <p className="text-sm text-[#7F7F7F] ">(Incl of all taxes)</p>
           </div>
           <div className="mt-6 mb-6 bg-[#F5F5F5] p-3 rounded-lg flex items-center gap-2 ">
             <FaTruck className="text-lg" />
             <span className=" text-[#7F7F7F]">
-              Deliver by :{" "}
+              Deliver by :
               <span className="font-semibold lg:text-[16px] md:text-[16px] sm:text-lg xs:text-sm inter text-black">
                 12 June 2024
               </span>

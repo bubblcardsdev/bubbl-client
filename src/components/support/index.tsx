@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import { Location_icon, Phone_icon, MailProfileIcon } from "../common/icons";
-import { useRouter } from "next/router";
+import Link from "next/link";
 const Support = () => {
-
-  const router = useRouter();
   return (
     <div className="text-white mt-[5px] ">
       <p className="text-lg">Get in touch</p>
@@ -15,7 +13,13 @@ const Support = () => {
         <div className="text-sm grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1  gap-y-[30px]  w-[450px] bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6">
           <div className="mt-0 flex flex-col gap-y-[20px]">
             <p className="text-3xl">Let&apos;s Connect </p>
-            <p className="">Got questions, feedback, or just want to say hi? We&apos;d <br/>love to hear from you!<br/>Reach out to our team and we’ll get back to you as <br/>soon as possible.</p>
+            <p className="">
+              Got questions, feedback, or just want to say hi? We&apos;d <br />
+              love to hear from you!
+              <br />
+              Reach out to our team and we’ll get back to you as <br />
+              soon as possible.
+            </p>
           </div>
           <div className="flex items-center gap-4 ">
             <span className="text-lg bg-[#282828] rounded-full p-[10px]">
@@ -87,7 +91,6 @@ const Support = () => {
               <div className="flex items-center bg-[#282828]  rounded-md overflow-hidden">
                 <ol className="bg-[#282828] text-white text-sm px-3 outline-none ">
                   <li>IND</li>
-            
                 </ol>
                 <input
                   type="tel"
@@ -112,9 +115,13 @@ const Support = () => {
             />
             <p className="text-[#B3B3B3]">
               You agree to our friendly
-              <a className="underline text-[#B3B3B3]" onClick={()=>router.push("/privacyPolicy")}>
+              <Link
+                href="/privacyPolicy"
+                shallow
+                className="underline hover:text-[#a66bf4] px-1 "
+              >
                 privacy policy
-              </a>
+              </Link>
               .
             </p>
           </div>

@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 const CircleContainer = ({ colors }: { colors: string[] }) => {
   // const [hovered, setHovered] = useState(false);
 
   return (
     <div
       className="relative max-w-[300px] z-10"
-      // onMouseEnter={() => setHovered(true)}
-      // onMouseLeave={() => setHovered(false)}
+    // onMouseEnter={() => setHovered(true)}
+    // onMouseLeave={() => setHovered(false)}
     >
       {colors.length > 0 &&
         colors.map((color, index) => (
@@ -22,7 +22,7 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
               // transform: hovered ? `translateX(-${15 * index}px)` : "none",
               transform: `translateX(-${15 * index}px)`,
             }}
-            // onClick={() => setHovered(false)}
+          // onClick={() => setHovered(false)}
           />
         ))}
     </div>
@@ -39,14 +39,15 @@ export type TitleMap = {
 };
 
 export type Card = {
-  id: number;
+  id: string | number;
   name: string;
   title: string;
   price: string;
   image: string | StaticImageData;
   discount: string;
-  secondaryImage?: string | StaticImageData; // Made optional and allowed string
+  secondaryImage?: string | StaticImageData;
   colors: string[];
+  material: string
 };
 
 export type ProductSection = {
@@ -56,20 +57,19 @@ export type ProductSection = {
 
 type ProductProps = {
   title: TitleMap;
-  data: ProductSection[];
-}
+  data: ProductSection[] | {};
+};
 
-
-function Products(props:ProductProps) {
+function Products(props: ProductProps) {
   const { data = [], title } = props;
-  const [hoverImage, setHoverImage] = useState<number | null>(null);
+  const [hoverImage, setHoverImage] = useState<number | string | null>(null);
   const router = useRouter();
-  const handleCardClick = (id: number) => {
+  const handleCardClick = (id: string | number) => {
     router.push(`/productList/${id}`);
   };
   return (
     <div className="w-full top-6">
-      {data.map((product: ProductSection, index: number) => (
+      {data && Array.isArray(data) && data.map((product: ProductSection, index: number) => (
         <div className="flex flex-col gap-6 w-full md:px-0" key={index}>
           <div className="w-full mt-[60px] ml-0 ">
             <h1 className="w-full text-3xl text-black font-bold mb-2">
@@ -108,7 +108,9 @@ function Products(props:ProductProps) {
                   <div className=" flex justify-between items-center ">
                     <div className="w-max  border  rounded-lg  bg-white  lex items-center justify-center px-2 py-[4px] ml-2.5 ">
                       <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[14px]">
-                        {card.name}
+                        {/* {card?.cardType} */}
+                        {/* {card?.material} */}
+                        {card?.name}
                       </p>
                     </div>
                     <div className="flex justify-center items-center relative  ">
@@ -120,8 +122,9 @@ function Products(props:ProductProps) {
                 </div>
                 <div className="flex justify-between pt-4 ">
                   <div className="px-2">
+
                     <h3 className="text-md text-[#9F9F9F] inter">
-                      {card.title}
+                      {card?.name}
                     </h3>
                     <p className="text-black inter font-[600] text-[18px]  ">
                       {card.price}

@@ -1,15 +1,23 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { IoFilter, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import FullCustomCard from "../../../assets/product/productCardImg/fullCustom.png";
-import NameCustomCard from "../../../assets/product/productCardImg/metalCard.png";
-import BasicCard from "../../../assets/product/productCardImg/basiccard.png";
-import Scoket from "../../../assets/product/productCardImg/socket.png";
-import Tile from "../../../assets/product/productCardImg/tile.png";
-import { SearchIcon  } from "../../common/icons";
-import Products, { ProductSection } from "./products";
-import { useRouter } from "next/router";
+import { SearchIcon } from "../../common/icons";
+import Products from "./products";
+import { fetchAllDevices } from "../../../services/alldevicesApi";
+import Link from "next/link";
+// TYPES
+interface DeviceItem {
+  productId: string;
+  productName: string;
+  sellingPrice: number;
+  primaryImage: string;
+  secondaryImage?: string;
+  discount?: number;
+  colors?: string[];
+  material?: string;
+}
+
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
     title: "Bubbl Custom Card",
@@ -32,108 +40,22 @@ const title: Record<string, { title: string; description: string }> = {
       "If you want to get a more than just one bubbl, don't worry, we have fan favourite bundles at great deals. Making new connections has never bees easier!",
   },
 };
-
-const products = [
+const sectionTypes = [
   {
-    sectionType: "custom_card",
-    cards: [
-      {
-        id: 1,
-        name: "Full Custom",
-        title: "Bubbl Full Custom",
-        price: "Rs.999",
-        image: '/sandee_white.png',
-        discount: "18.77%",
-        secondaryImage: FullCustomCard,
-        colors: [],
-      },
-      {
-        id: 2,
-        name: "Name Custom",
-        title: "Bubbl Name Custom",
-        price: "Rs.799",
-        image: '/red.png',
-        discount: "18.77%",
-        secondaryImage: NameCustomCard,
-        colors: [],
-      },
-           {
-        id: 3,
-        name: "Metal Custom",
-        title: "Bubbl Metal Custom",
-        price: "Rs.1499",
-        image: '/red.png',
-        discount: "18.77%",
-        secondaryImage: NameCustomCard,
-        colors: [],
-      },
-    ],
+    title: "basic_card",
+    type: "basic",
   },
   {
-    sectionType: "basic_card",
-    cards: [
-      {
-        id: 4,
-        name: "Basic Card",
-        title: "Bubbl Basic Card",
-        price: "Rs.999",
-        image: '/purple.png',
-        discount: "18.77%",
-        secondaryImage: BasicCard,
-        colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
-      },
-      {
-        id: 5,
-        name: "Socket",
-        title: "Bubbl Socket",
-        price: "Rs.799",
-        image: '/red.png',
-        discount: "18.77%",
-        secondaryImage: Scoket,
-        colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
-      },
-      {
-        id: 6,
-        name: "Tile",
-        title: "Bubbl Tile",
-        price: "Rs.1999",
-        image: '/orange.png',
-        discount: "18.77%",
-        secondaryImage: Tile,
-        colors: ["black", "blue", "green", "yellow", "red", "white", "purple"],
-      },
-    ],
+    title: "custom_card",
+    type: "custom",
   },
   {
-    sectionType: "bubbl_other_product",
-    cards: [
-     {
-        id: 5,
-        name: "Standee",
-        title: "Bubbl Standee",
-        price: "Rs.1499",
-        image: '/sandee_black.png',
-        discount: "18.77%",
-        secondaryImage: '/sandee_white.png',
-        colors: ["black", "white"],
-      },
-      {
-        id: 6,
-        name: "Standee",
-        title: "Bubbl Standee",
-        price: "Rs.1499",
-        image: '/sandee_black.png',
-        discount: "18.77%",
-        secondaryImage: '/sandee_white.png',
-        colors: ["black", "white"],
-      },
-     
-    ],
+    title: "bubbl_other_product",
+    type: "others",
   },
 ];
-
 function CardSection() {
-  const router = useRouter();
+  const [data, setData] = useState<Record<string, DeviceItem[]>>({});
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("All products");
   const [searchProduct, setSearchProduct] = useState("");
@@ -141,26 +63,52 @@ function CardSection() {
   const isOpenSelect = () => {
     setIsOpen(!isOpen);
   };
+  useEffect(() => {
+    const getDevices = async () => {
+      try {
+        const devices = await fetchAllDevices();
+        if (devices) {
+          setData(devices);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getDevices();
+  }, [searchProduct]);
   const filteredProduct = useMemo(() => {
-  if (!Array.isArray(products) || products.length === 0) {
-    return [];
-  }
+    const lowerCaseTerm = searchProduct.toLowerCase();
 
-  const search = searchProduct?.toString().trim().toLowerCase();
-  if (!search) {
-    return products; 
-  }
+    return sectionTypes
+      .map(({ title, type }) => {
+        const cards = (data[type] || [])
+          .filter((item: DeviceItem) =>
+            item.productName.toLowerCase().includes(lowerCaseTerm)
+          )
+          .map((item: DeviceItem) => ({
+            id: item.productId,
+            name: item.productName,
+            title: `${item.productName}`,
+            price: `Rs.${item.sellingPrice}`,
+            image: item.primaryImage,
+            discount: item.discount ? `${item.discount}%` : "0%",
+            secondaryImage: item.secondaryImage,
+            colors: item.colors || [],
+            material: item.material,
+            cardType: type,
+          }));
 
-  return products.reduce<ProductSection[]>((acc, section) => {
-    const filteredCards = section.cards.filter(card =>
-      card.name.toLowerCase().includes(search)
-    );
-    if (filteredCards.length > 0) {
-      acc.push({ ...section, cards: filteredCards });
-    }
-    return acc;
-  }, []);
-}, [searchProduct]);
+
+        return {
+          sectionType: title,
+          cards,
+        };
+      })
+
+      .filter((section) => section.cards.length > 0);
+  }, [data, searchProduct]);
+
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">
@@ -168,11 +116,11 @@ function CardSection() {
           <div className="flex flex-col mb-4 md:mb-0  lg:w-2/5 w-full md:w-3/4 sm:w-3/4 xs:w-3/4">
             <div className="flex items-center w-full  h-12 bg-[#F5F5F5]  rounded-xl  ">
               <span className="px-4 ">
-                  <SearchIcon  />
+                <SearchIcon />
               </span>
               <input
                 type="text"
-                onChange={(e)=>setSearchProduct(e?.target?.value)}
+                onChange={(e:  React.ChangeEvent<HTMLInputElement>) => setSearchProduct(e?.target?.value)}
                 className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden"
                 placeholder="Search bubbl product..."
               />
@@ -242,7 +190,11 @@ function CardSection() {
             )}
           </div>
         </div>
-        <Products title={title} data={filteredProduct || []} />
+        <Products
+          // sectionTypes={sectionTypes}
+          title={title}
+          data={filteredProduct}
+        />
         <div className="p-12 bg-[#F3F3F3]  rounded-lg mt-16  w-full ">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-gray-900 ">
@@ -271,13 +223,12 @@ function CardSection() {
             </form>
             <p className="text-sm text-gray-500 ">
               We care about your data in our{" "}
-              <a
-                
-                onClick={()=>router.push("/privacyPolicy")}
+              <Link
+                href="/privacyPolicy"
                 className="text-gray-600 underline hover:text-purple-500 "
               >
                 privacy policy
-              </a>
+              </Link>
             </p>
           </div>
         </div>

@@ -5,7 +5,6 @@ function Blog3() {
   return (
     <div>
       <div>
-        {" "}
         <div className="flex flex-col gap-[10px]">
           <p className="text-[#9747FF] text-[18px] text-center">
             Published 20 Jan 2022

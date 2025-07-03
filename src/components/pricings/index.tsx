@@ -6,14 +6,16 @@ function Pricings() {
   );
 
   return (
-    <div>
-      <div className="text-white py-4 px-0 mt-[0px]">
+    <div className="">
+      <div className="text-white py-4 px-0 mt-[0px] ">
         <div className=" text-center  ">
           <div
             className="  h-[260px] rounded-xl flex flex-col justify-center items-center"
-            style={{ backgroundImage: "url('/pricings_Bg.png')" }}
+            // style={{ backgroundImage: "url('/pricings_Bg.png')" }}
           >
-            <h1 className="text-4xl font-bold mb-4 mt-[40px]">Choose your plan</h1>
+            <h1 className="text-4xl font-bold mb-4 mt-[40px]">
+              Choose your plan
+            </h1>
             <p className="text-[#8F8F8F] mb-8">
               Simple pricing . No hidden fees . Advanced feature for your
               <span className="underline underline-offset-4">Business</span>
@@ -61,7 +63,7 @@ function Pricings() {
                 <li>✓ Email support</li>
               </ul>
             </div>
-            <div className="bg-[#282828] p-6 rounded-2xl ">
+            <div className="bg-[#282828] p-6 rounded-2xl border  bg-gradient-to-br from-[#8654E1] to-[#1A1A1A]">
               <h2 className="text-xl font-semibold mb-1">Pro +</h2>
               <p className="text-[#8E8D91]  h-16">
                 For companies adding collaboration in production.
@@ -85,7 +87,7 @@ function Pricings() {
                 features.
               </p>
               <p className="text-3xl font-bold  ">Custom</p>
-            <button className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-zinc-200 mt-[12px]">
+              <button className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-zinc-200 mt-[12px]">
                 Choose plan
               </button>
               <ul className="mt-6 space-y-3 text-[#B4B4B7] text-sm">

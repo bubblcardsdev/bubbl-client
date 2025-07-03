@@ -86,7 +86,7 @@ const Termsandcondition = () => {
           Chennai, Tamil Nadu, 600004
         </p>
         <p className="text-white">
-          Email ID:{" "}
+          Email ID:
           <a href="mailto:Sahilreddy21@gmail.com">Sahilreddy21@gmail.com</a>
         </p>
 

@@ -29,7 +29,7 @@ const menuItems = [
     label: "My Devices",
     icon: <MyDeviceIcon />,
     name: "mydevices",
-    path: "/mydevices",
+    path: "/mydevice",
   },
   { label: "Leads", icon: <LeadsIcon />, name: "leads", path: "/leads" },
   {
