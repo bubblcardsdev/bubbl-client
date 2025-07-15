@@ -1,59 +1,11 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-// const materials = [
-//   {
-//     id: "pvc",
-//     name: "PVC Card",
-//     image: "/pvcCards/pvcPatten1.png",
-//     price: 1200,
-//     patterns: [
-//       "/pvcCards/pvc",
-//       "pvc2",
-//       "pvc3",
-//       "pvc4",
-//       "pvc5",
-//       "pvc6",
-//       "pvc7",
-//       "pvc8",
-//     ],
-//   },
-//   {
-//     id: "metal",
-//     name: "Metal Card",
-//     image: "/metalCards/patten1.png",
-//     price: 1999,
-//     patterns: [
-//       "metal1",
-//       "metal2",
-//       "metal3",
-//       "metal4",
-//       "metal5",
-//       "metal6",
-//       "metal7",
-//     ],
-//   },
-//   {
-//     id: "bamboo",
-//     name: "Bamboo Card",
-//     image: "/metalCards/patten2.png",
-//     price: 999,
-//     patterns: ["pattern1", "pattern2", "pattern3"],
-//   },
-// ];
-type BubblCardProps = {
-  selectedColor: ColorType | null;
-  setSelectedColor: (color: ColorType) => void;
-  selectedCard: string;
-  selectedMaterial: MaterialType | null;
-  setSelectedMaterial: (material: MaterialType) => void;
-  selectedPattern: PatternType | null;
-  setSelectedPattern: (pattern: PatternType) => void;
-  materials: MaterialType[];
-  details: DetailsType;
-  patterns: PatternType[];
-};
+
+
+
+
 
 
 // interface SelectedOptionType {
@@ -63,9 +15,10 @@ type BubblCardProps = {
 
 
 interface ColorType {
-  name: null | undefined;
+  name: string;
   colorName: string;
   colorCode: string;
+  imageUrl?: string;
 }
 
 interface PatternType {
@@ -81,6 +34,7 @@ interface MaterialType {
 }
 
 interface ProductDetailType {
+  productId:string
   name: string;
   shortDescription: string;
   price: number;
@@ -90,15 +44,28 @@ interface ProductDetailType {
 
 interface DetailsType {
   productDetail: ProductDetailType;
-  color?: ColorType[];
-  patterns?: PatternType[];
+  discount: string;
+  color: Array<ColorType>;
+  material: Array<MaterialType>;
+  patterns: Array<PatternType>;
 }
 
+interface BubblCardProps {
+  selectedColor: ColorType | null;
+  setSelectedColor: Dispatch<SetStateAction<ColorType | null>>;
+  selectedCard: string;
+  selectedMaterial: MaterialType | null;
+  setSelectedMaterial: Dispatch<SetStateAction<MaterialType | null>>;
+  selectedPattern: PatternType | null;
+  setSelectedPattern: Dispatch<SetStateAction<PatternType | null>>;
+  materials: Array<MaterialType> | [];
+  details: DetailsType | null;
+  patterns: Array<PatternType> | [];
+};
 
 const BubblBasicCrd = (props: BubblCardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("select your font");
-  // const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
   const options = ["Amenti", "Roboto", "Montserrat"];
   const {
     selectedCard,
@@ -182,12 +149,7 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         <div className="mt-4">
           <h3 className="font-semibold ">
             Card Material:
-            {/* {materials?.map((material: MaterialType, index: number) => (
-              <span key={index} className="ml-2">
-                {(index === selectedMaterialIndex && material?.materialName) ||
-                  ""}
-              </span>
-            ))} */}
+           {selectedMaterial?.materialName}
           </h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 mt-3  gap-y-4 ">
             {materials?.map((material: MaterialType) => (

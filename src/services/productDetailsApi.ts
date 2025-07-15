@@ -1,7 +1,7 @@
 import axiosInstance from "../helpers/axios";
 export const fetchProductDetails = async (productId: string) => {
   try {
-    const response = await axiosInstance.post(`/api/cart/productDetails`, {
+    const response = await axiosInstance.post(`/cart/productDetails`, {
       productId,
     });
     return response.data?.data;

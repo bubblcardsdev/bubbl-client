@@ -6,6 +6,7 @@ import { SearchIcon } from "../../common/icons";
 import Products from "./products";
 import { fetchAllDevices } from "../../../services/alldevicesApi";
 import Link from "next/link";
+
 // TYPES
 interface DeviceItem {
   productId: string;
@@ -17,6 +18,24 @@ interface DeviceItem {
   colors?: string[];
   material?: string;
 }
+
+export type Card = {
+  id: string;
+  name: string;
+  title: string;
+  price: string;
+  image: string;
+  discount: string;
+  secondaryImage: string | null;
+  colors: Array<string>;
+  material: string;
+  cardType: string;
+};
+
+export type ProductSection = {
+  sectionType: string;
+  cards: Array<Card>;
+};
 
 const title: Record<string, { title: string; description: string }> = {
   custom_card: {
@@ -77,7 +96,7 @@ function CardSection() {
 
     getDevices();
   }, [searchProduct]);
-  const filteredProduct = useMemo(() => {
+  const filteredProduct: Array<ProductSection> = useMemo(() => {
     const lowerCaseTerm = searchProduct.toLowerCase();
 
     return sectionTypes
@@ -87,28 +106,27 @@ function CardSection() {
             item.productName.toLowerCase().includes(lowerCaseTerm)
           )
           .map((item: DeviceItem) => ({
-            id: item.productId,
-            name: item.productName,
-            title: `${item.productName}`,
-            price: `Rs.${item.sellingPrice}`,
-            image: item.primaryImage,
-            discount: item.discount ? `${item.discount}%` : "0%",
-            secondaryImage: item.secondaryImage,
+            id: item.productId || "",
+            name: item.productName || "",
+            title: `${item.productName || ""}`,
+            price: `Rs.${item.sellingPrice || ""}`,
+            image: item.primaryImage || "",
+            discount: item.discount ? `${item.discount || 0}%` : "0%",
+            secondaryImage: item.secondaryImage || null,
             colors: item.colors || [],
-            material: item.material,
-            cardType: type,
+            material: item.material || "",
+            cardType: type || "",
           }));
-
 
         return {
           sectionType: title,
-          cards,
+          cards: cards,
         };
       })
 
       .filter((section) => section.cards.length > 0);
   }, [data, searchProduct]);
-
+  console.log(filteredProduct);
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">
@@ -120,7 +138,9 @@ function CardSection() {
               </span>
               <input
                 type="text"
-                onChange={(e:  React.ChangeEvent<HTMLInputElement>) => setSearchProduct(e?.target?.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchProduct(e?.target?.value)
+                }
                 className="flex-grow  focus:outline-none bg-[#F5F5F5] rounded-[10px] focus:ring-0 px-2  text-black truncate w-full overflow-hidden"
                 placeholder="Search bubbl product..."
               />

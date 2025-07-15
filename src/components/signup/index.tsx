@@ -10,9 +10,11 @@ import {
   LinkedinColorIcon,
 } from "../common/icons";
 import React, { useState, useMemo } from "react";
-import axiosInstance from "../../helpers/axios";
-import{ RegisterApi } from "../../services/registerApi";
+import { RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type FormDataType = {
   firstName: string;
@@ -25,6 +27,8 @@ type FormDataType = {
 };
 const Signup = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState(1);
   type FormFieldKey = keyof FormDataType;
   const [errors, setErrors] = useState({
@@ -58,68 +62,65 @@ const Signup = () => {
       password: "",
     };
 
-    if (step === 1) {
-      if (!formData.firstName.trim()) {
-        newErrors.firstName = "Name is required.";
-        isValid = false;
-      }
-    }
-    if (step === 2) {
-      if (!formData.role.trim()) {
-        newErrors.role = "Role is required.";
-        isValid = false;
-      }
-      if (!formData.companyName.trim()) {
-        newErrors.companyName = "Company name is required.";
-        isValid = false;
-      }
+    switch (step) {
+      case 1:
+        if (!formData.firstName.trim()) {
+          newErrors.firstName = "Name is required.";
+          isValid = false;
+        }
+        break;
+      case 2:
+        if (!formData.role.trim()) {
+          newErrors.role = "Role is required.";
+          isValid = false;
+        }
+        if (!formData.companyName.trim()) {
+          newErrors.companyName = "Company name is required.";
+          isValid = false;
+        }
+        break;
+      case 3:
+        if (!formData.email.trim()) {
+          newErrors.email = "Email is required.";
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+          newErrors.email = "Enter a valid email address.";
+          isValid = false;
+        }
+        // Optional: Validate mobile
+        break;
+      case 4:
+        if (!formData.email.trim()) {
+          newErrors.email = "Email is required.";
+          isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+          newErrors.email = "Enter a valid email address.";
+          isValid = false;
+        }
+
+        if (!formData.password.trim()) {
+          newErrors.password = "Password is required.";
+          isValid = false;
+        } else if (
+          !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+            formData.password
+          )
+        ) {
+          newErrors.password =
+            "Password must be at least 8 characters, include letters, numbers & special characters.";
+          isValid = false;
+        }
+
+        if (!formData.conformPassword.trim()) {
+          newErrors.conformPassword = "Confirm Password is required.";
+          isValid = false;
+        } else if (formData.password !== formData.conformPassword) {
+          newErrors.conformPassword = "Passwords do not match.";
+          isValid = false;
+        }
+        break;
     }
 
-    if (step === 3) {
-      if (!formData.mobile.trim()) {
-        newErrors.mobile = "Mobile number is required.";
-        isValid = false;
-      } else if (!/^\d{10}$/.test(formData.mobile)) {
-        newErrors.mobile = "Enter a valid 10-digit mobile number.";
-        isValid = false;
-      }
-      if (!formData.email.trim()) {
-        newErrors.email = "Email is required.";
-        isValid = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = "Enter a valid email address.";
-        isValid = false;
-      }
-    }
-    if (step === 4) {
-      if (!formData.email.trim()) {
-        newErrors.email = "Email is required.";
-        isValid = false;
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = "Enter a valid email address.";
-        isValid = false;
-      }
-
-      if (!formData.conformPassword.trim()) {
-        newErrors.conformPassword = "password is required.";
-        isValid = false;
-      } else if (
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.conformPassword)
-      ) {
-        newErrors.conformPassword = "Enter a valid password address.";
-        isValid = false;
-      }
-
-      if (!formData.password.trim()) {
-        newErrors.password = "password is required.";
-        isValid = false;
-      } else if (
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.password)
-      ) {
-        newErrors.password = "Enter a valid password address.";
-        isValid = false;
-      }
-    }
     setErrors(newErrors);
     return isValid;
   };
@@ -136,21 +137,35 @@ const Signup = () => {
   //   }
   // };
 
-  const handlesubmit = async (e: React.FormEvent) => {
+  // const handlesubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (validateFields()) {
+  //     try {
+  //       console.log(formData, "formData");
+  //       const response = await RegisterApi(formData);
+
+  //       if (response?.data?.success == true) {
+  //         toast.success("Account created successfully!");
+  //         setTimeout(() => router.push("/emailVerify"), 1500);
+  //       } else {
+  //         toast.error(response?.data?.message || "Email already exists.");
+  //       }
+  //     } catch (error: unknown) {
+  //       console.error("error", error);
+  //     }
+  //   }
+  // };
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateFields()) {
       try {
-        console.log(formData,"formData");
         const response = await RegisterApi(formData);
-
-        if (response?.data?.success == true) {
-          alert("account created successfully");
-          router.push("/emailVerify");
-        } else {
-          router.push("/");
+        if (response) {
+          toast.success("Account created successfully!");
+          setTimeout(() => router.push("/emailVerify"), 1500);
         }
-      } catch (error: unknown) {
-        console.error("error",error);
+      } catch (err) {
+        console.log(err);
       }
     }
   };
@@ -174,9 +189,13 @@ const Signup = () => {
         return 10;
     }
   }, [step, formData]);
-  const handleStep = () => {
-    setStep((prevStep) => prevStep + 1);
+  const handleStep = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateFields()) {
+      setStep((prevStep) => prevStep + 1);
+    }
   };
+
   return (
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
@@ -242,7 +261,7 @@ const Signup = () => {
               </>
             )}
           </div>
-          <form className="w-full max-w-xs" onSubmit={handlesubmit}>
+          <form className="w-full max-w-xs">
             {step === 1 && (
               <div className="mb-6 mt-[30px]">
                 <label
@@ -399,9 +418,9 @@ const Signup = () => {
                     <p className="text-red-500  text-sm mt-1">{errors.email}</p>
                   )}
                 </div>
-                <div className="mb-6">
+                {/* <div className="mb-6 relative">
                   <label
-                    htmlFor="mobile"
+                    htmlFor="password"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
                     Password <span className="text-red-500">*</span>
@@ -413,26 +432,71 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.conformPassword
+                      errors.password
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.conformPassword && (
+                  <span
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3 top-[42px] text-center text-gray-400 cursor-pointer"
+                  >
+                    {showConfirmPassword ? (
+                      <AiOutlineEyeInvisible />
+                    ) : (
+                      <AiOutlineEye />
+                    )}
+                  </span>
+                  {errors.password && (
                     <p className="text-red-500 text-sm  mt-1">
-                      {errors.conformPassword}
+                      {errors.password}
+                    </p>
+                  )}
+                </div> */}
+                <div className="mb-6 relative">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-[#909090] mb-2"
+                  >
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    className={`w-full p-2 pr-10 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
+                      errors.password
+                        ? "border border-red-500 focus:outline-none"
+                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                    }`}
+                  />
+                  <span
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-[50px] transform -translate-y-1/2 text-xl text-gray-400 cursor-pointer"
+                  >
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible />
+                    ) : (
+                      <AiOutlineEye />
+                    )}
+                  </span>
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password}
                     </p>
                   )}
                 </div>
-                <div className="mb-6">
+                <div className="mb-6 relative">
                   <label
-                    htmlFor="mobile"
+                    htmlFor="password"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
                     ConformPassword <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="conformPassword"
                     value={formData.conformPassword}
                     onChange={handleChange}
@@ -443,6 +507,16 @@ const Signup = () => {
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
+                  <span
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3 top-[50px] transform -translate-y-1/2 text-xl text-gray-400 cursor-pointer"
+                  >
+                    {showConfirmPassword ? (
+                      <AiOutlineEyeInvisible />
+                    ) : (
+                      <AiOutlineEye />
+                    )}
+                  </span>
                   {errors.conformPassword && (
                     <p className="text-red-500 text-sm  mt-1">
                       {errors.conformPassword}
@@ -452,22 +526,22 @@ const Signup = () => {
               </>
             )}
             {/* Continue Button */}
-            {step === 4 ? (
+            {/* {step === 4 ? (
               <button
                 type="submit"
                 className="w-full p-[10px]  bg-[#7939CC] rounded-[10px] text-white text-[14px]  hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 Verify account
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStep}
-                className="w-full p-[10px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                Continue
-              </button>
-            )}
+            ) : ( */}
+            <button
+              // type={step === 4 ? "submit" : "button"}
+              onClick={step === 4 ? handleSubmit : handleStep}
+              className="w-full p-[10px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              {step === 4 ? "Verify account" : "Continue"}
+            </button>
+            {/* )} */}
 
             {/* Social Icons */}
             {step === 4 && (
@@ -629,6 +703,7 @@ const Signup = () => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

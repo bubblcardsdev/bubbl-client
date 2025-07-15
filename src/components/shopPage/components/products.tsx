@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 const CircleContainer = ({ colors }: { colors: string[] }) => {
   // const [hovered, setHovered] = useState(false);
@@ -39,25 +39,27 @@ export type TitleMap = {
 };
 
 export type Card = {
-  id: string | number;
+  id: string;
   name: string;
   title: string;
   price: string;
-  image: string | StaticImageData;
+  image: string;
   discount: string;
-  secondaryImage?: string | StaticImageData;
-  colors: string[];
-  material: string
+  secondaryImage: string | null;
+  colors: Array<string>;
+  material: string;
+  cardType: string;
 };
 
 export type ProductSection = {
   sectionType: string;
-  cards: Card[];
+  cards: Array<Card>;
 };
+
 
 type ProductProps = {
   title: TitleMap;
-  data: ProductSection[] | {};
+  data: ProductSection[] | null;
 };
 
 function Products(props: ProductProps) {

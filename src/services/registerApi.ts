@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 
 interface RegisterFormData {
@@ -5,8 +6,6 @@ interface RegisterFormData {
   email: string;
   password: string;
 }
-
-
 export const RegisterApi = async (formData: RegisterFormData) => {
 
   try {
@@ -15,9 +14,10 @@ export const RegisterApi = async (formData: RegisterFormData) => {
       email: formData.email,
       password:formData.password,
     });
-    console.log(response, "res");
-    return response?.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
+
+    return response?.data?.success;
+  } catch (error:any) {
+    toast.error(error.response.data.data.message || "Something went wrong !!!")
+    console.log("Error fetching data:", error);
   }
 };

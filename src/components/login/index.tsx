@@ -10,13 +10,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { loginUser } from "../../services/authLoginApi";
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const LoginPage = () => {
   const router = useRouter();
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
@@ -51,10 +54,12 @@ const LoginPage = () => {
         const res = await loginUser(loginForm.email, loginForm.password);
         console.log(res, "res");
         if (res?.success) {
-          localStorage.setItem("token", res.token);
-          router.push("/overview");
+          localStorage.setItem("loginDetails", JSON.stringify(res.data));
+          toast.success("Login  successfully!");
+
+          setTimeout(() => router.push("/overview"), 1500);
         } else {
-          alert(res?.data?.message);
+          console.error(res?.data?.message);
         }
       } catch (err) {
         console.error("Login Error", err);
@@ -111,20 +116,28 @@ const LoginPage = () => {
                 </p>
               )}
 
-              <label className="block text-sm mt-[20px] font-medium text-[#909090] mb-[6px]">
+              <label className="block text-sm md:text-[14px] mt-[20px] font-medium text-[#909090] mb-[6px]">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={loginForm.password}
-                onChange={handlePasswordChange}
-                className={`w-full p-2 rounded-[8px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
-                  errors.passwordError
-                    ? "border border-red-500"
-                    : "focus:outline focus:outline-1 focus:outline-[#9747FF]"
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={loginForm.password}
+                  onChange={handlePasswordChange}
+                  className={`w-full p-2 pr-10 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
+                    errors.passwordError
+                      ? "border border-red-500 focus:outline-none"
+                      : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
+                  }`}
+                />
+                <span
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+                >
+                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </span>
+              </div>
               {errors.passwordError && (
                 <p className="text-red-500 text-[12px] mt-[5px]">
                   {errors.passwordError}
@@ -188,6 +201,7 @@ const LoginPage = () => {
           {RightImageRender}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

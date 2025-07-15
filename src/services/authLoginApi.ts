@@ -1,12 +1,12 @@
 import axiosInstance from '../helpers/axios';
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post(`/api/login`, {
-      email,
-      password,
+    const response = await axiosInstance.post(`/login`, {
+      email:email,
+      password:password,
     });
     return response.data;
   } catch (error) {
-    console.error (error);
+    console.log(error);
   }
 };

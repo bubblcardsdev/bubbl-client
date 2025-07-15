@@ -4,10 +4,7 @@ import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import Footer from "../footerPage/index";
 import CircleContainer from "../common/circleContainer";
-import {
-  getCart,
-  setCart,
-} from "../../helpers/localStorage";
+import { getCart, setCart } from "../../helpers/localStorage";
 interface CardItem {
   id: number;
   title: string;
@@ -64,12 +61,16 @@ const Cart = () => {
   };
 
   const handleDecrease = (id: number) => {
-    const updatedCards = cards.map((card) => {
-      if (card.id === id && card.quantity > 1) {
-        return { ...card, quantity: card.quantity - 1 };
-      }
-      return card;
-    });
+    const updatedCards = cards
+      .map((card) => {
+        if (card.id === id) {
+          const newQuantity = card.quantity - 1;
+          return newQuantity > 0 ? { ...card, quantity: newQuantity } : null;
+        }
+        return card;
+      })
+      .filter((card): card is CardItem => card !== null); // Remove null entries
+
     setCards(updatedCards);
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
@@ -190,6 +191,7 @@ const Cart = () => {
                   </div>
                 </div>
               ))}
+              {cards.length == 0 && <p>no Data here</p>}
             </div>
           </div>
           <div className="w-full md:w-[40%] md:sticky top-[100px] flex flex-col gap-3 sm:mt-[20px] xs:mt-[20px]">
