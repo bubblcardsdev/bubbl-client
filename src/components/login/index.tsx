@@ -11,8 +11,7 @@ import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { loginUser } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 const LoginPage = () => {
   const router = useRouter();
 
@@ -201,7 +200,6 @@ const LoginPage = () => {
           {RightImageRender}
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

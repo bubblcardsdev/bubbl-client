@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import SiteHeader from "./siteHeader";
 import { ReactNode } from 'react';
 
@@ -17,6 +18,7 @@ export default function SiteLayout(props: SiteLayoutProps) {
       <main>
         {props?.children}
         </main>
+        <ToastContainer/>
     </div>
   );
 }

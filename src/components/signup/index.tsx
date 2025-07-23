@@ -12,8 +12,7 @@ import {
 import React, { useState, useMemo } from "react";
 import { RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type FormDataType = {
@@ -703,7 +702,6 @@ const Signup = () => {
           )}
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

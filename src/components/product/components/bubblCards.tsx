@@ -1,17 +1,12 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { ProductDetailMapper } from "@/src/lib/mapper";
+import { useRouter } from "next/router";
+import { get, isEmpty } from "lodash";
 
 
-
-
-
-
-// interface SelectedOptionType {
-//   label: string;
-//   value: string;
-// }
 
 
 interface ColorType {
@@ -19,6 +14,7 @@ interface ColorType {
   colorName: string;
   colorCode: string;
   imageUrl?: string;
+  productId: string
 }
 
 interface PatternType {
@@ -33,102 +29,54 @@ interface MaterialType {
   imageUrl: string;
 }
 
-interface ProductDetailType {
-  productId:string
-  name: string;
-  shortDescription: string;
-  price: number;
-  deviceDescription?: string;
-  productDetails?: string;
-}
-
-interface DetailsType {
-  productDetail: ProductDetailType;
-  discount: string;
-  color: Array<ColorType>;
-  material: Array<MaterialType>;
-  patterns: Array<PatternType>;
-}
-
 interface BubblCardProps {
-  selectedColor: ColorType | null;
-  setSelectedColor: Dispatch<SetStateAction<ColorType | null>>;
-  selectedCard: string;
-  selectedMaterial: MaterialType | null;
-  setSelectedMaterial: Dispatch<SetStateAction<MaterialType | null>>;
-  selectedPattern: PatternType | null;
-  setSelectedPattern: Dispatch<SetStateAction<PatternType | null>>;
-  materials: Array<MaterialType> | [];
-  details: DetailsType | null;
-  patterns: Array<PatternType> | [];
-};
+  details: any;
+}
+
 
 const BubblBasicCrd = (props: BubblCardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("select your font");
   const options = ["Amenti", "Roboto", "Montserrat"];
   const {
-    selectedCard,
-    selectedColor,
-    setSelectedColor,
-    selectedMaterial,
-    setSelectedMaterial,
-    selectedPattern,
-    setSelectedPattern,
     details,
-    materials,
-    patterns,
   } = props;
+  const materials = get(details, "materials", []);
+  const colors = get(details, "colors", []);
+  const patterns = get(details, "patterns", []);
   const [activeTab, setActiveTab] = useState("description");
-  // const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const router = useRouter();
 
-  // const handleMaterialClick = (index: number) => {
-  //   setSelectedIndex(index);
-  // };
-  // const [selectedColor, setSelectedColor] = useState("Blue");
-  // const [activeButton, setActiveButton] = useState("");
-  // const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
-  // const [selectedPattern, setSelectedPattern] = useState(
-  //   selectedMaterial.patterns[0]
-  // );
-  // const colors = [
-  //   { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
-  //   { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
-  //   { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
-  //   { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
-  //   { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
-  //   { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
-  //   { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
-  //   { name: "Black", color: "bg-black", image: "/product-black.jpg" },
-  // ];
+  const {name,shortDescription,sellingPrice,color,material,productId} = ProductDetailMapper(details?.productDetail);
+  console.log(ProductDetailMapper(details?.productDetail))
+
   function tabChanger(tab: string): void {
     setActiveTab(tab);
   }
   return (
     <div className="">
-      <h1 className="text-[28px] font-semibold">{selectedCard}</h1>
+      <h1 className="text-[28px] font-semibold">{name}</h1>
       <p className="text-[#7F7F7F] text-[15px] font-[500] mt-2">
-        {details?.productDetail?.shortDescription ??
-          `Made with Recyclable PVC in a Matte finish with Spot UV coating.`}
+        {shortDescription}
       </p>
       <p className="text-[34px] font-[700] mt-4 leading- letter-spaceing tracking-wide">
-        ₹ {details?.productDetail?.price}
+        ₹ {sellingPrice}
       </p>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}
-      {details?.color && details?.color?.length > 0 && (
+      {!isEmpty(colors) && (
         <div className="mt-4">
           <p className="font-normal tracking-wide">
             Select Color <span className="font-semibold">:</span>
             <span className="font-semibold text-[16px]">
-              {selectedColor?.colorName}
+              {color}
             </span>
           </p>
           <div className="flex gap-2 mt-4">
-            {details?.color?.map((item: ColorType, index: number) => (
+            {colors?.map((item: ColorType, index: number) => (
               <div
                 key={index}
-                className={`flex items-center p-[2px] box-content rounded-full ${item.colorName === selectedColor?.colorName
+                className={`flex items-center p-[2px] box-content rounded-full ${item.colorName === color
                     ? "border-2 border-black"
                     : "border-2 border-white"
                   }`}
@@ -137,7 +85,7 @@ const BubblBasicCrd = (props: BubblCardProps) => {
                   key={item.name}
                   className={`w-6 h-6 rounded-full`}
                   style={{ backgroundColor: item.colorCode }}
-                  onClick={() => setSelectedColor(item)}
+                  onClick={() => router.push(`/product/${item.productId}`)}
                 ></button>
               </div>
             ))}
@@ -145,24 +93,21 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         </div>
       )}
       {/* Material Selection */}
-      {materials && materials?.length > 1 && (
+      {(!isEmpty(materials) && materials?.length > 1) && (
         <div className="mt-4">
           <h3 className="font-semibold ">
             Card Material:
-           {selectedMaterial?.materialName}
+           {material}
           </h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 mt-3  gap-y-4 ">
             {materials?.map((material: MaterialType) => (
               <button
                 key={material?.productId}
                 onClick={() => {
-                  setSelectedMaterial(material);
-                  if (details?.patterns && details.patterns.length > 0) {
-                    setSelectedPattern(details.patterns[0]);
-                  }
+                  router.push(`/product/${material?.productId}`);
                 }}
 
-                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${selectedMaterial?.productId === material?.productId
+                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${productId === material?.productId
                     ? "border-[#9C4BFF]"
                     : "border-gray-300 "
                   }`}
@@ -180,15 +125,15 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         </div>
       )}
       {/* Pattern Selection */}
-      {patterns && patterns?.length > 0 && (
+      {(!isEmpty(patterns) && patterns?.length > 1) && (
         <div className="mt-4">
           <h3 className="font-semibold ">Select your Pattern</h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 w-full gap-y-4 mt-4">
             {details?.patterns && details?.patterns.map((pattern: PatternType, index: number) => (
               <div
                 key={index}
-                onClick={() => setSelectedPattern(pattern)}
-                className={` border w-4/5 ${selectedPattern?.productId === pattern?.productId
+                onClick={() => router.push(`/product/${pattern?.productId}`)}
+                className={` border w-4/5 ${productId === pattern?.productId
                     ? "border-[#9C4BFF]"
                     : "border-gray-300"
                   } rounded-md bg-[#EFEFEF] flex items-center justify-center`}

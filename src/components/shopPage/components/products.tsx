@@ -67,7 +67,7 @@ function Products(props: ProductProps) {
   const [hoverImage, setHoverImage] = useState<number | string | null>(null);
   const router = useRouter();
   const handleCardClick = (id: string | number) => {
-    router.push(`/productList/${id}`);
+    router.push(`/product/${id}`);
   };
   return (
     <div className="w-full top-6">
