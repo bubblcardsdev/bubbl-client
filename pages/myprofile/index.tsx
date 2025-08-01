@@ -1,9 +1,9 @@
 import PostLoginLayout from "../../src/components/layout/postLoginLayout";
 import MyProfile from "../../src/components/myprofile/index"
-export default function Leadssection() {
+export default function Profilesection() {
   const pageData = {
-    title: "MyProfile",
-    name: "myprofile",
+    title: "EditProfile",
+    name: "Editprofile",
   };
   return (
     <PostLoginLayout currentPage={pageData}>

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { EmailverifyOtp, ResendMail } from "@/src/services/emailVerify";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 const EmailVerifyPage = () => {
   // const [errors, setErrors] = useState({
   //   OTPError: "",
@@ -13,6 +13,7 @@ const EmailVerifyPage = () => {
   const [otp, setOtp] = useState<string | null>(null);
   const email: string = sessionStorage.getItem("userEmail") || "";
   const router = useRouter();
+  router.refresh();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);
@@ -60,7 +61,7 @@ const EmailVerifyPage = () => {
               />
               <button
                 onClick={() => {
-                  EmailverifyOtp(email, otp,router);
+                  EmailverifyOtp(email, otp, router);
                 }}
                 type="submit"
                 className="w-full p-2 mt-[25px] bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -69,7 +70,7 @@ const EmailVerifyPage = () => {
               </button>
             </form>
             <p
-            className="mt-4 text-purple-500"
+              className="mt-4 text-purple-500"
               role="button"
               onClick={() => {
                 ResendMail(email);

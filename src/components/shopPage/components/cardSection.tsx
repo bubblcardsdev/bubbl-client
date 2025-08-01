@@ -167,7 +167,7 @@ function CardSection() {
                 {options.map((option, index) => (
                   <li
                     key={index}
-                    className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
+                    className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white  hover:rounded-[5px] hover:m-2"
                     onClick={() => {
                       setSelected(option);
                       setIsOpen(false);
@@ -179,8 +179,8 @@ function CardSection() {
               </ul>
             )}
             {isOpen && (
-              <div className="absolute right-0 mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg sm:hidden w-48 p-2">
-                <div className="flex justify-between items-center border-b pb-2 mb-2">
+              <div className="absolute right-0 mt-2 bg-[#F5F5F5] border border-gray-300 rounded-lg shadow-lg sm:hidden w-48 p-2 ">
+                <div className="flex justify-between items-center border-b pb-2 mb-2 ">
                   <span className="text-lg font-semibold">
                     Select an Option
                   </span>
@@ -196,7 +196,7 @@ function CardSection() {
                   {options.map((option, index) => (
                     <li
                       key={index}
-                      className="px-4 py-2 cursor-pointer hover:bg-purple-600 hover:text-white"
+                      className="px-4 py-2 cursor-pointer hover:border-purple-600 hover:text-white "
                       onClick={() => {
                         setSelected(option);
                         setIsOpen(false);

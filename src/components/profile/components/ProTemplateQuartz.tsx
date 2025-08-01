@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Qr_icon,
   CallProfileIcon,
   TwitterIcon,
   LinledinFill_icon,
   MailProfileIcon,
-  WebProfileIcon,
   InstagramFill_icon,
   WhatsappFill_icon,
   FacebookFill_icon,
@@ -14,37 +14,67 @@ import {
   Paytm_icon,
   Phonepay_icon,
   Googlepay_icon,
+  WebIcon
 } from "../../common/icons";
+import { theme } from "../../../utils/profileThemecolor";
 
-const ProTemplateQuartz = () => {
+type ProfileProps = {
+  selectedTheme: string;
+};
+export const ProTemplateQuartz = ({
+  formData,
+  selectedTheme,
+}: {
+  formData: any;
+  selectedTheme: any;
+}) => {
   const [openSection, setOpenSection] = useState("");
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? "" : section);
   };
+  const [color, setColor] = useState<string>("");
+  useEffect(() => {
+    const selected =
+      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
+    setColor(selected);
+    console.log(selected, "theme");
+  }, [selectedTheme]);
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden  border border-red-500">
-      <div className=" bg-[#D9D9D9] h-[350px]">
-        {/* <Image src='/metalCards/patten1.png' alt='' width={100} height={100} className='object-cover' /> */}
+    <div className="w-full max-w-[400px] mx-auto overflow-hidden">
+      <div className=" bg-[#D9D9D9] h-[300px]">
+        <Image
+          src={formData?.profileImageUrl || "/profile.png"}
+          alt=""
+          width={100}
+          height={100}
+          className="object-cover w-full"
+        />
       </div>
       <div className="px-4 py-8 w-full space-y-3 bg-[#E9BCFF] relative">
         <div className="flex items-center gap-3 ">
           {/* Save Contact Button with Share Icon */}
           <div className="flex items-center justify-between gap-8 ml-2">
-            <button className="flex-1 px-6 py-2 rounded-lg bg-[#8D00D2]">
+            <button
+              className="flex-1 px-6 py-2 rounded-lg"
+              style={{ backgroundColor: color }}
+            >
               <span className="text-sm text-white">Save Contact</span>
             </button>
-            <button className="p-2 bg-[#8D00D2] rounded-lg">
-            <Qr_icon/>
+            <button
+              className="p-2  rounded-lg"
+              style={{ backgroundColor: color }}
+            >
+              <Qr_icon />
             </button>
           </div>
           <div className="absolute lg:w-24 lg:h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-8 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
-            {/* <Image
-              width={200}
-              height={200}
-              src={LogoImage}
+            <Image
+              src={formData?.companyLogoUrl || "/profile.png"}
               alt=""
               className="object-contain"
-            /> */}
+              width={200}
+              height={200}
+            />
           </div>
         </div>
         <div className=" w-full">
@@ -66,11 +96,16 @@ const ProTemplateQuartz = () => {
             {/* Phone Number Button */}
             <button
               onClick={() => toggleSection("phone")}
-              className="group flex items-center w-full px-[14px] py-[10px] bg-[#8D00D2] text-white rounded-xl shadow-lg  transition-all relative"
+              className="group flex items-center w-full px-[14px] py-[10px]  text-white rounded-xl shadow-lg  transition-all relative"
+              style={{ backgroundColor: color }}
             >
               <div className="flex items-center gap-3">
                 <CallProfileIcon color={"#FFFFFF"} />
                 <span className="text-sm">Phone Number</span>
+                <span className="ml-1 flex-grow">
+                  {formData?.mobileNumbers?.[0]?.countryCode}{" "}
+                  {formData?.mobileNumbers?.[0]?.number}
+                </span>
               </div>
               <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
                 <Arrow_icon
@@ -83,7 +118,8 @@ const ProTemplateQuartz = () => {
             {/* Email Button */}
             <button
               onClick={() => toggleSection("email")}
-              className="group flex items-center w-full px-[14px] py-[10px] bg-[#8D00D2] text-white rounded-xl shadow-lg  transition-all relative"
+              className="group flex items-center w-full px-[14px] py-[10px]  text-white rounded-xl shadow-lg  transition-all relative"
+              style={{ backgroundColor: color }}
             >
               <div className="flex items-center gap-3">
                 <MailProfileIcon color={"#FFFFFF"} />
@@ -100,10 +136,11 @@ const ProTemplateQuartz = () => {
             {/* Website Button */}
             <button
               onClick={() => toggleSection("website")}
-              className="group flex items-center w-full px-[14px] py-[10px] bg-[#8D00D2] text-white rounded-xl shadow-lg  transition-all relative"
+              className="group flex items-center w-full px-[14px] py-[10px]  text-white rounded-xl shadow-lg  transition-all relative"
+              style={{ backgroundColor: color }}
             >
               <div className="flex items-center gap-3">
-                <WebProfileIcon color={"#FFFFFF"} />
+                <WebIcon color={"#FFFFFF"} />
                 <span className="text-sm">Website</span>
               </div>
               <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2  ">
@@ -118,21 +155,36 @@ const ProTemplateQuartz = () => {
           {/* Social Media */}
           <h2 className="text-lg font-bold mb-4 mt-4">Social Media</h2>
           <div className="grid grid-cols-4 gap-4">
-            <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
+            <div
+              className="flex items-center justify-center w-14 h-14  rounded-md shadow-md"
+              style={{ backgroundColor: color }}
+            >
               <InstagramFill_icon />
             </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
-              <TwitterIcon color='white' />
+            <div
+              className="flex items-center justify-center w-14 h-14 rounded-md shadow-md"
+              style={{ backgroundColor: color }}
+            >
+              <TwitterIcon color="white" />
             </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
-              <LinledinFill_icon/>
+            <div
+              className="flex items-center justify-center w-14 h-14  rounded-md shadow-md"
+              style={{ backgroundColor: color }}
+            >
+              <LinledinFill_icon />
             </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
+            <div
+              className="flex items-center justify-center w-14 h-14  rounded-md shadow-md"
+              style={{ backgroundColor: color }}
+            >
               <FacebookFill_icon />
             </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
+            <div
+              className="flex items-center justify-center w-14 h-14  rounded-md shadow-md"
+              style={{ backgroundColor: color }}
+            >
               <WhatsappFill_icon />
-            </div>  
+            </div>
           </div>
           <h2 className="text-lg font-bold mb-4 mt-4">Social Media</h2>
           <div className="grid grid-cols-4 gap-4 mb-4 mt-4">
@@ -163,5 +215,3 @@ const ProTemplateQuartz = () => {
     </div>
   );
 };
-
-export default ProTemplateQuartz;

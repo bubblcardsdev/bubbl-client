@@ -7,9 +7,7 @@ function BreadCrumbs(props:BreadCrumbsProps){
         <span className='text-center '><FullArrowIcon /></span>
         <a className='inter text-[16px] text-black text-semibold'>{props.value}</a>
       </div>
-
     )
-
 }
 
 export default BreadCrumbs

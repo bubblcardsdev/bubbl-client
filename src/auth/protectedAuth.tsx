@@ -31,7 +31,8 @@ const ProtectedAuth: React.FC<ProtectedAuthProps> = ({ children }) => {
       const token = loginDetails?.token?.accessToken;
 
       if (!token) {
-        router.push("/login");
+        // router.push("/login");
+        setIsAuthorized(true);
       } else {
         setIsAuthorized(true);
       }

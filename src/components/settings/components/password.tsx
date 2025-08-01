@@ -43,7 +43,7 @@ export default function ChangePassword() {
             <input
               type="text"
               placeholder="Enter current password"
-              className="w-full bg-[#2a2a2a] text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500  placeholder:text-sm"
+              className="w-full bg-[#282828] text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500  placeholder:text-sm"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
             />

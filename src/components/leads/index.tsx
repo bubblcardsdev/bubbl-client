@@ -1,7 +1,5 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
-import { CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { FaEllipsisV } from "react-icons/fa";
 import Drawer from "../common/Drawer";
@@ -15,6 +13,8 @@ import {
   LeadsDeleteIcon,
   LeadsDownloadIcon,
 } from "../common/icons";
+import { CalendarDays, ChevronDown } from "lucide-react";
+
 import useWindowSize from "@/src/hooks/useWindowSize";
 
 interface Lead {
@@ -25,7 +25,6 @@ interface Lead {
   date: string;
   avatar: string;
 }
-
 
 const leads = [
   {
@@ -110,19 +109,23 @@ const leads = [
   },
 ];
 
-const parseDate = (dateStr: string):number => {
-  const map:  { [key: string]: Date } = {
+const parseDate = (dateStr: string): number => {
+  const map: { [key: string]: Date } = {
     "Just now": new Date(),
     "A minute ago": new Date(Date.now() - 60 * 1000),
     "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
     Yesterday: new Date(Date.now() - 24 * 60 * 60 * 1000),
   };
   if (map[dateStr]) return map[dateStr].getTime();
-const parsed: Date = new Date(dateStr);
-return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+  const parsed: Date = new Date(dateStr);
+  return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 };
 
-const sortData = (data: Lead[], field: keyof Lead, ascending: boolean): Lead[] => {
+const sortData = (
+  data: Lead[],
+  field: keyof Lead,
+  ascending: boolean
+): Lead[] => {
   return [...data].sort((a, b) => {
     const aValue = a[field];
     const bValue = b[field];
@@ -147,21 +150,22 @@ const sortData = (data: Lead[], field: keyof Lead, ascending: boolean): Lead[] =
   });
 };
 
-
-
 const Leads = () => {
- const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
-const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-const [isOpen, setIsOpen] = useState<boolean>(false);
-const [isOpenAction, setIsOpenAction] = useState<number | null>(null);
-const [currentPage, setCurrentPage] = useState<number>(1);
-const [sortField, setSortField] = useState<keyof Lead>("name");
-const [ascending, setAscending] = useState<boolean>(true);
-const [sortedLeads, setSortedLeads] = useState<Lead[]>(sortData(leads, "name", true));
+  const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenAction, setIsOpenAction] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sortField, setSortField] = useState<keyof Lead>("name");
+  const [ascending, setAscending] = useState<boolean>(true);
+  const [filtersApplied, setFiltersApplied] = useState(2);
+  const [sortedLeads, setSortedLeads] = useState<Lead[]>(
+    sortData(leads, "name", true)
+  );
 
   const { width } = useWindowSize();
 
-  const handleSort = (field:keyof Lead) => {
+  const handleSort = (field: keyof Lead) => {
     const isAscending = field === sortField ? !ascending : true;
     setSortField(field);
     setAscending(isAscending);
@@ -187,22 +191,24 @@ const [sortedLeads, setSortedLeads] = useState<Lead[]>(sortData(leads, "name", t
     setSelectedLeads(updated);
   };
 
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-      setIsOpenAction(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setIsOpenAction(null);
+      }
+    };
+
+    if (isOpenAction !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
     }
-  };
 
-  if (isOpenAction !== null) {
-    document.addEventListener("mousedown", handleClickOutside);
-  }
-
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [isOpenAction]);
-
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpenAction]);
 
   console.log(width);
   return (
@@ -218,12 +224,96 @@ useEffect(() => {
           />
         </div>
         <div className="flex items-center space-x-2 ml-4 gap-3">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a]"
-          >
-            <FilterIcon className="w-6 h-6" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a]"
+            >
+              <FilterIcon className="w-6 h-6" />
+            </button>
+            {isOpen && (
+              <div className=" overflow-hidden absolute w-[600px]  right-0 z-10 text-white rounded-xl  max-w-sm space-y-6 shadow-lg">
+                <div className="bg-[#1F1F1F] text-white rounded-xl p-6 w-full max-w-sm space-y-6 shadow-lg">
+                  <h2 className="text-lg font-semibold">Filter by:</h2>
+
+                  {/* Date Range */}
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-300">Date Range</p>
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-full">
+                        <input
+                          type="text"
+                          value="09-10-2025"
+                          className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
+                          readOnly
+                        />
+                        <CalendarDays className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+                      </div>
+                      <div className="relative w-full">
+                        <input
+                          type="text"
+                          value="09-11-2025"
+                          className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
+                          readOnly
+                        />
+                        <CalendarDays className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+                      </div>
+                    </div>
+
+                    {/* Quick Date Buttons */}
+                    <div className="flex justify-between gap-3">
+                      {["Today", "This Week", "This Month"].map((label) => (
+                        <button
+                          key={label}
+                          className="w-full bg-[#2A2A2A] text-sm py-2 rounded-md hover:bg-[#3A3A3A]"
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Lead Type Dropdown */}
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Lead Type</label>
+                    <div className="relative">
+                      <select className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10">
+                        <option>Lead Capture Form</option>
+                        <option>Referral</option>
+                        <option>Manual</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Amount Dropdown */}
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Amount</label>
+                    <div className="relative">
+                      <select className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10">
+                        <option>Newest - oldest</option>
+                        <option>Oldest - newest</option>
+                        <option>High - low</option>
+                        <option>Low - high</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex justify-between items-center pt-2">
+                    <button className="text-sm text-[#9E7FFF] hover:underline">
+                      Reset All
+                    </button>
+                    <button className="bg-[#9E7FFF] text-sm font-semibold px-4 py-2 rounded-md">
+                      Apply Filters({filtersApplied})
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="p-2 rounded-md bg-[#2B2B2B] text-white hover:bg-[#3a3a3a] flex">
             <span role="button" onClick={() => handleSort("name")}>
               <LeadsArrowIcon />
@@ -238,23 +328,25 @@ useEffect(() => {
         </div>
       </div>
       <div className="w-full max-w-full mx-auto mt-4 rounded overflow-hidden lg:block md:block sm:hidden xs:hidden">
-        <table className="w-full text-sm text-left text-white">
+        <table className="w-full text-sm text-left text-white table-fixed">
           <thead className="bg-[#1C1C1C] text-[#777777] text-[16px] border-b-2 border-[#494949]">
-            <tr>
-              <th className="p-3">
+            <tr className="align-middle">
+              <th className="p-3 w-[40px]">
                 <input
                   type="checkbox"
-                  className="accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#494949] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente"
+                  className="accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#494949] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-center"
                 />
               </th>
-              <th className="p-2">User</th>
-              <th className="p-2">Role</th>
-              <th className="p-2">Order ID</th>
-              <th className="p-2">Connected with</th>
-              <th className="p-2">Date</th>
-              <th className=" flex gap-6 items-end">
-                <LeadsDeleteIcon />
-                <LeadsDownloadIcon />
+              <th className="p-3 w-[200px]">User</th>
+              <th className="p-3 w-[160px]">Role</th>
+              <th className="p-3 w-[180px]">Order ID</th>
+              <th className="p-3 w-[200px]">Connected with</th>
+              <th className="p-3 w-[160px]">Date</th>
+              <th className="p-3 w-[80px]">
+                <div className="flex gap-3 items-center justify-center">
+                  <LeadsDeleteIcon />
+                  <LeadsDownloadIcon />
+                </div>
               </th>
             </tr>
           </thead>
@@ -263,68 +355,63 @@ useEffect(() => {
               return (
                 <tr
                   key={index}
-                  className="group hover:bg-[#282828] transition-colors"
+                  className="group hover:bg-[#282828] transition-colors align-middle"
                 >
-                  <td className="p-2">
+                  <td className="p-3 w-[40px] align-middle">
                     <input
                       type="checkbox"
-                      className={`
-               accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente
-                ${
-                  selectedLeads.has(index)
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100"
-                }
-                transition-opacity duration-200
-              `}
+                      className={`accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-center ${
+                        selectedLeads.has(index)
+                          ? "opacity-100"
+                          : "opacity-0 group-hover:opacity-100"
+                      } transition-opacity duration-200`}
                       checked={selectedLeads.has(index)}
                       onChange={() => toggleCheckbox(index)}
                     />
                   </td>
-                  <td className="p-3 flex items-center gap-3">
+                  <td className="p-3 w-[200px] flex items-center gap-3 align-middle">
                     <Image
                       src={lead?.avatar}
-                      alt=""
+                      alt="avatar"
                       className="w-8 h-8 rounded-full object-cover"
                       height={100}
                       width={100}
                     />
                     {lead?.name}
                   </td>
-                  <td className="p-2">{lead?.role}</td>
-                  <td className="p-2">{lead?.orderId}</td>
-                  <td className="p-2">{lead?.connection}</td>
-                  <td className="p-2 flex items-center gap-2">
-                    <CalendarDays className="w-3 h-4 text-gray-400" />
-                    {lead?.date}
+                  <td className="p-3 w-[160px] align-middle">{lead?.role}</td>
+                  <td className="p-3 w-[180px] align-middle">
+                    {lead?.orderId}
                   </td>
-
+                  <td className="p-3 w-[200px] align-middle">
+                    {lead?.connection}
+                  </td>
+                  <td className="p-3 w-[160px] align-middle">
+                    <span className="flex gap-2">
+                    <CalendarDays className="w-3 h-4 text-gray-400 border  " />
+                    {lead?.date}
+                    </span>
+                  </td>
                   <td
-                    className={`
-                    w-[100px]
-                accent-black
-               ${
-                 selectedLeads.has(index) || isOpenAction === index + 1
-                   ? "opacity-100"
-                   : "opacity-0 group-hover:opacity-100"
-               }
-
-                transition-opacity duration-200
-              `}
+                    className={`p-3 w-[80px] align-middle ${
+                      selectedLeads.has(index) || isOpenAction === index + 1
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100"
+                    } transition-opacity duration-200`}
                   >
                     <div
                       ref={popoverRef}
-                      className="w-full relative flex items-center justify-center"
+                      className="relative flex items-center justify-center"
                     >
                       <LeadsTableMenuIcon
-                        className="cursor-pointer "
+                        className="cursor-pointer"
                         onClick={() =>
                           setIsOpenAction(
                             isOpenAction === index + 1 ? null : index + 1
                           )
                         }
                       />
-                      {isOpenAction && isOpenAction == index + 1 && (
+                      {isOpenAction === index + 1 && (
                         <div className="min-w-20 rounded-md py-2 px-5 bg-black absolute top-4 z-10">
                           <p>Edit</p>
                           <p>View</p>
@@ -337,11 +424,12 @@ useEffect(() => {
             })}
           </tbody>
         </table>
-        <div className="flex justify-between items-center mt-6 text-sm text-gray-400">
+
+        <div className="flex justify-between items-center  mt-6 text-sm text-gray-400">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md text-center ${
+            className={`flex items-center  justify-center gap-3 w-32 py-2 rounded-md text-center ${
               currentPage === 1
                 ? "bg-[#444] text-gray-500 cursor-not-allowed"
                 : "bg-[#282828] text-white"
@@ -370,7 +458,7 @@ useEffect(() => {
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className={`flex items-center gap-3 px-3 py-2 rounded-md ${
+            className={`flex items-center gap-3 w-32 py-2 text-center justify-center rounded-md ${
               currentPage === totalPages
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                 : "bg-white text-black"
@@ -654,12 +742,7 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-40  "
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+
       <div
         className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
