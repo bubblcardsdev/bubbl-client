@@ -4,6 +4,7 @@ import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../../lib/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
+import Link from "next/link";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,11 +26,11 @@ const SiteHeader = () => {
       }}
     >
       {/* Logo */}
-      <div className="text-xl font-bold">
+      <Link href="/" shallow className="text-xl font-bold">
         <span className={`tracking-wide ${isDarkTheme ? "invert" : ""}`}>
           <BubblLogo />
         </span>
-      </div>
+      </Link>
 
       {/* Desktop Menu */}
       <div className=" group hidden md:flex justify-between gap-5">

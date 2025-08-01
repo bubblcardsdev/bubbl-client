@@ -80,7 +80,6 @@ function Plans() {
     setPlanIndex(index);
   };
   return (
-    <div className="bg-black ">
       <div className="py-20 lg:px-16 md:px-14 sm:px-10 xs:px-3  flex flex-col gap-y-16 max-w-[1300px] mx-auto">
         <section id="plansBlackBg" className="flex flex-col justify-center">
           <div className=" text-center">
@@ -357,10 +356,6 @@ function Plans() {
         </section>
         <BubblCommunity />
       </div>
-      <div className="bg-black lg:px-[12px] sm:px-2 xs:px-2 w-full max-w-[1200px] mx-auto">
-        <Footer />
-      </div>
-    </div>
   );
 }
 export default Plans;

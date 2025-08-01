@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { get } from "lodash";
 
 export const ProductDetailMapper = (data: any) => {
@@ -15,10 +14,11 @@ export const ProductDetailMapper = (data: any) => {
   const materialTypeId = get(data, "materialTypeId", null);
   const colorId = get(data, "colorId", null);
   const deviceType = get(data, "deviceType", null);
-  const color = get(data, "color", null);
-  const material = get(data, "material", null);
-  const pattern = get(data, "pattern", null);
-  const discountPercentage = get(data, "discountPercentage", null);
+  const color = get(data, "color", "");
+  const material = get(data, "material", "");
+  const pattern = get(data, "pattern", "");
+  const discountPercentage = get(data, "discountPercentage", 0);
+  const deviceTypeId = get(data,"deviceTypeId", null);
   return {
     productId,
     name,
@@ -36,6 +36,7 @@ export const ProductDetailMapper = (data: any) => {
     color,
     material,
     pattern,
-    secondaryImage
+    secondaryImage,
+    deviceTypeId
   };
 };

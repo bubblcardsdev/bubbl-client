@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Footer from "../footerPage/index";
 import Image from "next/image";
-import BubblCard from "./components/bubblCards";
+import ProductInfo from "./components/productInfo";
 import { setCart, getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
 import BreadCrumbs from "../common/BreadCrumbs";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { ProductDetailMapper } from "@/src/lib/mapper";
 import { fetchProductDetails } from "@/src/services/productDetailsApi";
@@ -85,8 +83,6 @@ const ProductList: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
 
-  console.log(data, "data");
-
   const getProductDetail = async () => {
     try {
       const response = await fetchProductDetails(id as string);
@@ -97,21 +93,14 @@ const ProductList: React.FC = () => {
   };
 
   const {
-    name,
-    shortDescription,
-    price,
-    deviceDescription,
-    productDetails,
     primaryImage,
     secondaryImage,
-    patternId,
-    materialTypeId,
-    colorId,
-    deviceType,
+    sellingPrice,
+    originalPrice,
     discountPercentage,
-    color,
-    material,
-    pattern,
+    name,
+    deviceTypeId,
+    deviceType,
   } = ProductDetailMapper(data?.productDetail);
 
   useEffect(() => {
@@ -135,7 +124,22 @@ const ProductList: React.FC = () => {
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-      : [...cartItems, data?.productDetail];
+      : [
+          ...cartItems,
+          {
+            quantity: 1,
+            productId: id,
+            customName: null,
+            fontId: null,
+            imageUrl: primaryImage,
+            sellingPrice,
+            originalPrice,
+            discountPercentage,
+            name,
+            deviceTypeId,
+            deviceType,
+          },
+        ];
 
     setCart(JSON.stringify(updatedCart));
     toast.success("Item added to cart!");
@@ -172,137 +176,131 @@ const ProductList: React.FC = () => {
   ];
 
   return (
-    <div className="py-3 h-screen">
-      <div className="max-w-[1300px] mx-auto pt-12 mb-4">
-        <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px] p-4">
-          {/* Left Section - Image */}
-          <div className="w-full md:w-[40%] md:sticky top-[85px] flex flex-col gap-3">
-            <BreadCrumbs value={data?.productDetail?.name || ""} />
-            <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 w-full">
-              <Image
-                src={
-                  currentImage === "front"
-                    ? primaryImage
-                    : secondaryImage || primaryImage
-                }
-                alt="Bubbl Card"
-                width={400}
-                height={400}
-                className="rounded-md object-fill w-full"
+    <div className="max-w-[1300px] mx-auto pt-12 p-6 mb-4">
+      <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
+        {/* Left Section - Image */}
+        <div className="w-full md:w-[45%] md:sticky top-[85px] flex flex-col gap-3">
+          <BreadCrumbs value={data?.productDetail?.name || ""} />
+          <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 w-full">
+            <Image
+              src={
+                currentImage === "front"
+                  ? primaryImage
+                  : secondaryImage || primaryImage
+              }
+              alt="Bubbl Card"
+              width={400}
+              height={400}
+              className="rounded-md object-fill w-full"
+            />
+            <div className="flex justify-center mt-2">
+              <div
+                role="button"
+                onClick={() => flipImage("front")}
+                className={`h-1 w-12 mb-2 ${
+                  currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
+                } rounded-full mr-2 p-1`}
               />
-              <div className="flex justify-center mt-2">
-                <div
-                  role="button"
-                  onClick={() => flipImage("front")}
-                  className={`h-1 w-12 mb-2 ${
-                    currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
-                  } rounded-full mr-2 p-1`}
-                />
-                <div
-                  role="button"
-                  onClick={() => flipImage("back")}
-                  className={`h-1 w-12 ${
-                    currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
-                  } rounded-full mr-2 p-1`}
-                />
-              </div>
-            </div>
-            <p className="text-center text-sm mt-2 capitalize">
-              ( {currentImage} View )
-            </p>
-            <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center">
-              <button
-                onClick={addToCart}
-                className="border border-black lg:px-20 md:px-12 sm:px-8 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md hover:bg-[#9747FF] hover:text-white"
-              >
-                Add to cart
-              </button>
-              <button className="bg-black text-white lg:px-20 md:px-12 sm:px-10 xs:px-10 lg:py-2 md:py-2 sm:py-2 xs:py-2 rounded-md hover:opacity-80">
-                Buy now
-              </button>
+              <div
+                role="button"
+                onClick={() => flipImage("back")}
+                className={`h-1 w-12 ${
+                  currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
+                } rounded-full mr-2 p-1`}
+              />
             </div>
           </div>
-
-          {/* Right Section */}
-          <div className="w-full md:w-[60%] mt-[24px] overflow-y-auto">
-            <BubblCard details={data || null} />
+          <p className="text-center text-sm mt-2 capitalize">
+            ( {currentImage} View )
+          </p>
+          <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center">
+            <button
+              onClick={addToCart}
+              className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:bg-[#9747FF] hover:text-white"
+            >
+              Add to cart
+            </button>
+            <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
+              Buy now
+            </button>
           </div>
         </div>
 
-        {/* How it works section */}
-        <section className="py-14 bg-[#F5F5F5] rounded-2xl mt-[70px]">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">How It Works:</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
-              {steps.map((step) => (
-                <div
-                  key={step.id}
-                  className="flex flex-col items-center text-center"
-                >
-                  <div className="w-40 h-40 flex items-center justify-center">
-                    <Image
-                      src={step.image}
-                      alt={step.title}
-                      width={400}
-                      height={400}
-                    />
-                  </div>
-                  <h3 className="text-lg font-bold mt-4">{step.id}</h3>
-                  <p className="text-gray-600 w-4/5">{step.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Right Section */}
+        <div className="w-full md:w-[55%] mt-[24px]">
+          <ProductInfo details={data || null} />
+        </div>
+      </div>
 
-        {/* Similar items section */}
-        <div className="w-full mt-10 pl-2">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
-            Similar Items You Might Also Like
-          </h2>
-          <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4">
-            {Products.map((product) => (
+      {/* How it works section */}
+      <section className="py-14 bg-[#F5F5F5] rounded-2xl mt-[70px]">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">How It Works:</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
+            {steps.map((step) => (
               <div
-                key={product.id}
-                className="snap-start rounded-lg transition duration-300 ease-in-out"
+                key={step.id}
+                className="flex flex-col items-center text-center"
               >
-                <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
-                  <div className="flex justify-center items-center px-2 py-2">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                    />
-                  </div>
-                  <div className="px-2 flex justify-between items-center">
-                    <div className="border rounded-lg bg-white px-2 py-[4px]">
-                      <p className="text-[#8C8C8C] text-sm">{product.name}</p>
-                    </div>
-                    {product.colors.length > 0 && (
-                      <CircleContainer colors={product.colors} />
-                    )}
-                  </div>
+                <div className="w-40 h-40 flex items-center justify-center">
+                  <Image
+                    src={step.image}
+                    alt={step.title}
+                    width={400}
+                    height={400}
+                  />
                 </div>
-                <div className="flex justify-between items-center pt-4 px-2">
-                  <div>
-                    <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
-                    <p className="text-black font-semibold text-lg">
-                      {product.price}
-                    </p>
-                  </div>
-                  <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
-                    {product.discount}
-                  </p>
-                </div>
+                <h3 className="text-lg font-bold mt-4">{step.id}</h3>
+                <p className="text-gray-600 w-4/5">{step.title}</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="bg-black mt-[65px]">
-        <Footer />
+      {/* Similar items section */}
+      <div className="w-full mt-10 pl-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
+          Similar Items You Might Also Like
+        </h2>
+        <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4">
+          {Products.map((product) => (
+            <div
+              key={product.id}
+              className="snap-start rounded-lg transition duration-300 ease-in-out"
+            >
+              <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
+                <div className="flex justify-center items-center px-2 py-2">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+                <div className="px-2 flex justify-between items-center">
+                  <div className="border rounded-lg bg-white px-2 py-[4px]">
+                    <p className="text-[#8C8C8C] text-sm">{product.name}</p>
+                  </div>
+                  {product.colors.length > 0 && (
+                    <CircleContainer colors={product.colors} />
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-between items-center pt-4 px-2">
+                <div>
+                  <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
+                  <p className="text-black font-semibold text-lg">
+                    {product.price}
+                  </p>
+                </div>
+                <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
+                  {product.discount}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

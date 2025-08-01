@@ -1,4 +1,4 @@
-import { FAQItem } from "./interface";
+import { FAQItem, WhyChooseUsTypes } from "./interface";
 
 export const themeObject: { [key: string]: string } = {
   "/home": "linear-gradient(to right, #4A4A4A, #000000)",
@@ -349,3 +349,30 @@ export const LOGIN_IMAGES = [
 ];
 
 export const BACKEND_URI: string | undefined = process.env.NEXT_PUBLIC_BACKEND_URI;
+
+export const WHY_CHOOSE_US : WhyChooseUsTypes[] = [
+  {
+    id: 1,
+    title: "Cutting-Edge NFC Technology",
+    description:
+      "Share your contact details with just a tap—no apps or setup needed. Seamlessly connect with any smartphone, making networking faster and smarter than ever.",
+  },
+  {
+    id: 2,
+    title: "Fully Customizable Designs",
+    description:
+      "Share your contact details with just a tap—no apps or setup needed. Seamlessly connect with any smartphone, making networking faster and smarter than ever.",
+  },
+  {
+    id: 3,
+    title: "Seamless and Eco-Friendly",
+    description:
+      "Share your contact details with just a tap—no apps or setup needed. Seamlessly connect with any smartphone, making networking faster and smarter than ever.",
+  },
+  {
+    id: 4,
+    title: "Dedicated Customer Support",
+    description:
+      "Share your contact details with just a tap—no apps or setup needed. Seamlessly connect with any smartphone, making networking faster and smarter than ever.",
+  },
+];

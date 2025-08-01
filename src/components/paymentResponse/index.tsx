@@ -1,11 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import Footer from "../footerPage/index";
 import { CheckCircle } from "lucide-react";
 const PaymentResponse = () => {
   return (
-    <>
-      <div className="flex flex-col justify-center items-center  max-w-[1300px] mx-auto">
+      <div className="flex flex-col justify-center items-center  max-w-[1300px] mx-auto mb-12">
         <div className="bg-white p-0  pt-[80px] sm:px-6 xs:px-6 ">
           <div className="shadow-2xl lg:w-[380px] md:w-[380px] sm:w-[350px] xs:w-full max-w-md text-center relative  rounded-t-2xl mt-6 ">
             <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg- p-3 rounded-full border border-white shadow-lg bg-white">
@@ -107,10 +105,7 @@ const PaymentResponse = () => {
           </div>
         </div>
       </div>
-      <div className="bg-black lg:px-10 md:px-10 sm:px-10 xs:px-4 mt-10 ">
-        <Footer />
-      </div>
-    </>
+
   );
 };
 

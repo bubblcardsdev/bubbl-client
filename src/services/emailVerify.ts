@@ -1,6 +1,6 @@
 import axiosInstance from "../helpers/axios";
 import { AxiosResponse } from "axios";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import Router from "next/router";
 export interface VerifyOtpResponse {
   success: boolean;
   message?: string;
@@ -12,7 +12,6 @@ export interface VerifyOtpResponse {
 export const EmailverifyOtp = async (
   email: string | null,
   otp: string | null,
-  router: AppRouterInstance 
 ): Promise<VerifyOtpResponse | void> => {
   if (!email || !otp) {
     console.error("Email or OTP is missing");
@@ -29,7 +28,7 @@ export const EmailverifyOtp = async (
     );
 
     if (response?.data?.success === true) {
-      router.push("/login");
+      Router.push("/login");
     }
 
     return response.data;

@@ -2,7 +2,6 @@
 import React from "react";
 import ContactForm from "./componets/contactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
-import Footer from "../footerPage/index";
 import BubblCommunity from "../common/BubblCommunity";
 import Link from "next/link";
 
@@ -14,8 +13,7 @@ function ContactPage() {
   //   console.log("Email submitted:", email);
   // };
   return (
-    <section className="w-full bg-[#000000] flex flex-col gap-[50px]  ">
-      <div className="flex flex-col gap-[70px] pt-[20vh]  px-[3.5vw] max-w-[1300px] mx-auto w-full">
+    <section className="flex flex-col gap-[70px] pt-[20vh]  px-[3.5vw] max-w-[1300px] mx-auto w-full">
         <div className="text-center ">
           <h3 className="text-[#9747FF] text-3xl text-bold ">Contact us</h3>
           <p className="text-white lg:text-5xl font-bold mt-8 md:text-4xl sm:text-2xl xs:text-[26px]">
@@ -79,10 +77,6 @@ function ContactPage() {
         <div className="mt-[60px]">
           <BubblCommunity />
         </div>
-        <div className="bg-black">
-          <Footer />
-        </div>
-      </div>
     </section>
   );
 }
