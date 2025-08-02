@@ -10,12 +10,11 @@ import {
   LinkedinColorIcon,
 } from "../common/icons";
 import React, { useState, useMemo } from "react";
-import { RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { ResendMail } from "@/src/services/emailVerify";
 
-type FormDataType = {
+export type FormDataType = {
   firstName: string;
   role: string;
   companyName: string;
@@ -157,15 +156,20 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateFields()) {
-      try {
-        const response = await RegisterApi(formData);
-        if (response) {
-          toast.success("Account created successfully!");
-          setTimeout(() => router.push("/emailVerify"), 1500);
-        }
-      } catch (err) {
-        console.log(err);
+      sessionStorage.setItem("formData",JSON.stringify(formData))
+      try{
+  await ResendMail(formData.email)
+     router.push("/emailVerify")
       }
+      catch(err){
+console.error("err sending mail",err)
+      }
+        // const response = await RegisterApi(formData);
+        // if (response) {
+          // toast.success("Account created successfully!");
+        
+        // }
+      
     }
   };
   const stepperProgress = useMemo(() => {

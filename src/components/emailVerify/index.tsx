@@ -1,14 +1,32 @@
 "use client";
-import React, { useMemo, useState, ChangeEvent } from "react";
+import React, { useMemo, useState, ChangeEvent, useEffect } from "react";
 import { BubblLogo } from "../common/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
-import { EmailverifyOtp, ResendMail } from "@/src/services/emailVerify";
+import { verifyEmailOtp, ResendMail } from "@/src/services/emailVerify";
 const EmailVerifyPage = () => {
 
   const [otp, setOtp] = useState<string | null>(null);
-  const email: string =  "";
+const [email, setEmail] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const formDataString = sessionStorage.getItem("formData");
+      if (formDataString) {
+        try {
+          const formData = JSON.parse(formDataString);
+          if (formData?.email) {
+            setEmail(formData.email);
+
+          }
+        } catch (err) {
+          console.error("Error parsing session data", err);
+        }
+      }
+    }
+  }, []);
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);
@@ -56,7 +74,7 @@ const EmailVerifyPage = () => {
               />
               <button
                 onClick={() => {
-                  EmailverifyOtp(email, otp);
+                  verifyEmailOtp(email, otp);
                 }}
                 type="submit"
                 className="w-full p-2 mt-[25px] bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"

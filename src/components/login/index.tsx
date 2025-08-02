@@ -24,6 +24,35 @@ const LoginPage = () => {
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/;
 
+
+
+ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+  setLoading(true);
+  try {
+    if (!loginForm?.email || !loginForm?.password) {
+      return toast.error("Email or password is empty");
+    }
+
+    const response = await loginUser(loginForm.email, loginForm.password);
+    console.log(response,"/");
+    
+    if (response?.status !== true) {
+        return  toast.error(response?.error || "Invalid credentials");  
+    } 
+  
+   toast.success("Logged in successfully!");
+      router.push("/profile");
+    
+  } catch (err: any) {
+    console.error("Unexpected crash in handleLogin:", err);
+    toast.error("Something went wrong. Please try again.");
+  }
+  finally{
+    setLoading(false)
+  }
+}
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
     setLoginForm((prevState) => ({ ...prevState, email }));
@@ -44,29 +73,29 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (!errors.emailError && !errors.passwordError) {
-      setLoading(true);
-      try {
-        const res = await loginUser(loginForm.email, loginForm.password);
-        console.log(res, "res");
-        if (res?.success) {
-          localStorage.setItem("loginDetails", JSON.stringify(res.data));
-          toast.success("Login  successfully!");
+  //   if (!errors.emailError && !errors.passwordError) {
+  //     setLoading(true);
+  //     try {
+  //       const res = await loginUser(loginForm.email, loginForm.password);
+  //       console.log(res, "res");
+  //       if (res?.success) {
+  //         localStorage.setItem("loginDetails", JSON.stringify(res.data));
+  //         toast.success("Login  successfully!");
 
-          setTimeout(() => router.push("/overview"), 1500);
-        } else {
-          console.error(res?.data?.message);
-        }
-      } catch (err) {
-        console.error("Login Error", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  //         setTimeout(() => router.push("/overview"), 1500);
+  //       } else {
+  //         console.error(res?.data?.message);
+  //       }
+  //     } catch (err) {
+  //       console.error("Login Error", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   const RightImageRender = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * 8);
