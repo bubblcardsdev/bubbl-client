@@ -33,8 +33,8 @@ export const verifyEmailOtp = async (
     );
 
     if (response?.data?.success === true) {
-
-   sessionStorage.removeItem("formData")
+toast.success("otp has been verified successfully")
+  //  sessionStorage.removeItem("formData")
        router.push("/login")
         
         // Maybe: clear sessionStorage and redirect
@@ -59,8 +59,9 @@ export const ResendMail = async (email: string) => {
       email: email,
     });
     console.log(response, "fff-1");
-    return response.data;
+    return true;
   } catch (error) {
+    return false
     console.error(error);
   }
 };

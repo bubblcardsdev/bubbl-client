@@ -159,14 +159,18 @@ const Signup = () => {
   e.preventDefault();
   if (validateFields()) {
     try {
-       await RegisterApi(formData);
+     const response =  await RegisterApi(formData);
       //  await RegisterCreateProfile(formData);
-        await ResendMail(formData.email);
+
+      if(response){
+ const isOtpSent = await ResendMail(formData.email);
         // router.push("/emailVerify");
         router.push({
           pathname:"/emailVerify",
-          query:{email:formData.email}
+          query:{email:formData.email,otpStatus:isOtpSent}
         })
+      }
+       
       
 
     } catch (err) {

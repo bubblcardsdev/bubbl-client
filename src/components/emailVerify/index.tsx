@@ -6,14 +6,19 @@ import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { verifyEmailOtp, ResendMail } from "@/src/services/emailVerify";
 import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
 const EmailVerifyPage = () => {
 const router = useRouter()
-const { email: emailTo } = router.query; // rename destructured key
+const { email: emailTo, otpStatus } = router.query; // rename destructured key
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
-    if (typeof emailTo === "string") {
+    if (typeof emailTo === "string" && otpStatus) {
+      toast.success("the otp has been sent successfully")
       setEmail(emailTo);
+    }
+    else{
+ toast.error("error sending otp try again later")
     }
   }, [emailTo]); // clean dependency
 
@@ -55,6 +60,7 @@ const { email: emailTo } = router.query; // rename destructured key
   }, []);
   return (
     <div className="h-screen bg-black">
+      <ToastContainer />
       <div className="flex md:flex-row overflow-hidden">
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
           <div className="w-full flex justify-start sticky top-0">
@@ -86,12 +92,15 @@ const { email: emailTo } = router.query; // rename destructured key
                    }
                `}
               />
-              <button
-               type="submit"
-                className="w-full p-2 mt-[25px] bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                Verify
-              </button>
+         <button
+  type="submit"
+  disabled={!otpStatus}
+  className={`w-full p-2 mt-[25px] text-white text-[14px] rounded-[8px] 
+    ${otpStatus ? "bg-[#9747FF] hover:bg-purple-500" : "bg-gray-400 cursor-not-allowed"} 
+    focus:outline-none focus:ring-2 focus:ring-purple-500`}
+>
+  Verify
+</button>
             </form>
             <p
             className="mt-4 text-purple-500"
