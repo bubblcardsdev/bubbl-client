@@ -13,8 +13,7 @@ import {
 import Link from "next/link";
 function ProductFooterSection() {
   return (
-    <section className="  py-[5vh]   max-w-[1300px] mx-auto bg-black">
-      <footer className=" text-white">
+      <footer className="p-6 max-w-[1300px] mx-auto bg-black text-white">
         <div className="w-full flex flex-wrap gap-y-[6vh] justify-between">
           {/* Left Section */}
           <div className="flex flex-col gap-[5vh]">
@@ -92,11 +91,9 @@ function ProductFooterSection() {
             <Link href="/refundPolicy" className="text-['#98A2B3']">
               Refund Policy
             </Link>
-            
           </div>
         </div>
       </footer>
-    </section>
   );
 }
 

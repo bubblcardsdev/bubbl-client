@@ -12,7 +12,7 @@ function CardsReusable() {
   const router = useRouter();
 
   const handleCardClick = (id: number) => {
-    router.push(`/productList/${id}`);
+    router.push(`/product/${id}`);
   };
 
   return (

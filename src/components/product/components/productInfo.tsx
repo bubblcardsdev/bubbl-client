@@ -1,24 +1,17 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-
-
-
-
-
-
-// interface SelectedOptionType {
-//   label: string;
-//   value: string;
-// }
-
+import { ProductDetailMapper } from "@/src/lib/mapper";
+import { useRouter } from "next/router";
+import { get, isEmpty } from "lodash";
 
 interface ColorType {
   name: string;
   colorName: string;
   colorCode: string;
   imageUrl?: string;
+  productId: string;
 }
 
 interface PatternType {
@@ -33,111 +26,59 @@ interface MaterialType {
   imageUrl: string;
 }
 
-interface ProductDetailType {
-  productId:string
-  name: string;
-  shortDescription: string;
-  price: number;
-  deviceDescription?: string;
-  productDetails?: string;
-}
-
-interface DetailsType {
-  productDetail: ProductDetailType;
-  discount: string;
-  color: Array<ColorType>;
-  material: Array<MaterialType>;
-  patterns: Array<PatternType>;
-}
-
 interface BubblCardProps {
-  selectedColor: ColorType | null;
-  setSelectedColor: Dispatch<SetStateAction<ColorType | null>>;
-  selectedCard: string;
-  selectedMaterial: MaterialType | null;
-  setSelectedMaterial: Dispatch<SetStateAction<MaterialType | null>>;
-  selectedPattern: PatternType | null;
-  setSelectedPattern: Dispatch<SetStateAction<PatternType | null>>;
-  materials: Array<MaterialType> | [];
-  details: DetailsType | null;
-  patterns: Array<PatternType> | [];
-};
+  details: any;
+}
 
-const BubblBasicCrd = (props: BubblCardProps) => {
+const ProductInfo = (props: BubblCardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("select your font");
   const options = ["Amenti", "Roboto", "Montserrat"];
-  const {
-    selectedCard,
-    selectedColor,
-    setSelectedColor,
-    selectedMaterial,
-    setSelectedMaterial,
-    selectedPattern,
-    setSelectedPattern,
-    details,
-    materials,
-    patterns,
-  } = props;
+  const { details } = props;
+  const materials = get(details, "materials", []);
+  const colors = get(details, "colors", []);
+  const patterns = get(details, "patterns", []);
   const [activeTab, setActiveTab] = useState("description");
-  // const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const router = useRouter();
 
-  // const handleMaterialClick = (index: number) => {
-  //   setSelectedIndex(index);
-  // };
-  // const [selectedColor, setSelectedColor] = useState("Blue");
-  // const [activeButton, setActiveButton] = useState("");
-  // const [selectedMaterial, setSelectedMaterial] = useState(materials[0]);
-  // const [selectedPattern, setSelectedPattern] = useState(
-  //   selectedMaterial.patterns[0]
-  // );
-  // const colors = [
-  //   { name: "Blue", color: "bg-blue-500", image: "/product-blue.jpg" },
-  //   { name: "Yellow", color: "bg-yellow-500", image: "/product-yellow.jpg" },
-  //   { name: "Orange", color: "bg-orange-500", image: "/product-orange.jpg" },
-  //   { name: "Red", color: "bg-red-500", image: "/product-red.jpg" },
-  //   { name: "Green", color: "bg-green-500", image: "/product-green.jpg" },
-  //   { name: "Purple", color: "bg-purple-500", image: "/product-purple.jpg" },
-  //   { name: "Gray", color: "bg-gray-500", image: "/product-gray.jpg" },
-  //   { name: "Black", color: "bg-black", image: "/product-black.jpg" },
-  // ];
+  const { name, shortDescription, sellingPrice, color, material, pattern,deviceDescription,productDetails } =
+    ProductDetailMapper(details?.productDetail);
+
   function tabChanger(tab: string): void {
     setActiveTab(tab);
   }
   return (
-    <div className="">
-      <h1 className="text-[28px] font-semibold">{selectedCard}</h1>
+    <>
+      <h1 className="text-[28px] font-semibold">{name}</h1>
       <p className="text-[#7F7F7F] text-[15px] font-[500] mt-2">
-        {details?.productDetail?.shortDescription ??
-          `Made with Recyclable PVC in a Matte finish with Spot UV coating.`}
+        {shortDescription}
       </p>
       <p className="text-[34px] font-[700] mt-4 leading- letter-spaceing tracking-wide">
-        ₹ {details?.productDetail?.price}
+        ₹ {sellingPrice}
       </p>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}
-      {details?.color && details?.color?.length > 0 && (
+      {!isEmpty(colors) && colors?.length > 1 && (
         <div className="mt-4">
           <p className="font-normal tracking-wide">
             Select Color <span className="font-semibold">:</span>
-            <span className="font-semibold text-[16px]">
-              {selectedColor?.colorName}
-            </span>
+            <span className="font-semibold text-[16px]">{color}</span>
           </p>
           <div className="flex gap-2 mt-4">
-            {details?.color?.map((item: ColorType, index: number) => (
+            {colors?.map((item: ColorType, index: number) => (
               <div
                 key={index}
-                className={`flex items-center p-[2px] box-content rounded-full ${item.colorName === selectedColor?.colorName
+                className={`flex items-center p-[2px] box-content rounded-full ${
+                  item.colorName === color
                     ? "border-2 border-black"
                     : "border-2 border-white"
-                  }`}
+                }`}
               >
                 <button
                   key={item.name}
                   className={`w-6 h-6 rounded-full`}
                   style={{ backgroundColor: item.colorCode }}
-                  onClick={() => setSelectedColor(item)}
+                  onClick={() => router.push(`/product/${item.productId}`)}
                 ></button>
               </div>
             ))}
@@ -145,31 +86,28 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         </div>
       )}
       {/* Material Selection */}
-      {materials && materials?.length > 1 && (
+      {!isEmpty(materials) && materials?.length > 1 && (
         <div className="mt-4">
           <h3 className="font-semibold ">
             Card Material:
-           {selectedMaterial?.materialName}
+            {material}
           </h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 mt-3  gap-y-4 ">
-            {materials?.map((material: MaterialType) => (
+            {materials?.map((record: MaterialType) => (
               <button
-                key={material?.productId}
+                key={record?.productId}
                 onClick={() => {
-                  setSelectedMaterial(material);
-                  if (details?.patterns && details.patterns.length > 0) {
-                    setSelectedPattern(details.patterns[0]);
-                  }
+                  router.push(`/product/${record?.productId}`);
                 }}
-
-                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center w-4/5 ${selectedMaterial?.productId === material?.productId
+                className={` bg-[#EFEFEF] border rounded-md flex items-center justify-center cursor-pointer w-4/5 ${
+                  material === record?.materialName
                     ? "border-[#9C4BFF]"
                     : "border-gray-300 "
-                  }`}
+                }`}
               >
                 <Image
-                  src={material?.imageUrl}
-                  alt={material?.productId}
+                  src={record?.imageUrl}
+                  alt={record?.productId}
                   width={100}
                   height={100}
                   className="block items-center justify-center"
@@ -180,22 +118,23 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         </div>
       )}
       {/* Pattern Selection */}
-      {patterns && patterns?.length > 0 && (
+      {!isEmpty(patterns) && (
         <div className="mt-4">
           <h3 className="font-semibold ">Select your Pattern</h3>
           <div className="grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-4 xs:grid-cols-3 w-full gap-y-4 mt-4">
-            {details?.patterns && details?.patterns.map((pattern: PatternType, index: number) => (
+            {patterns.map((record: PatternType, index: number) => (
               <div
                 key={index}
-                onClick={() => setSelectedPattern(pattern)}
-                className={` border w-4/5 ${selectedPattern?.productId === pattern?.productId
+                onClick={() => router.push(`/product/${record?.productId}`)}
+                className={` border w-4/5 ${
+                  pattern === record?.patternName
                     ? "border-[#9C4BFF]"
                     : "border-gray-300"
-                  } rounded-md bg-[#EFEFEF] flex items-center justify-center`}
+                } rounded-md bg-[#EFEFEF] flex items-center justify-center cursor-pointer`}
               >
                 <Image
-                  src={pattern?.imageUrl}
-                  alt={pattern?.patternName}
+                  src={record?.imageUrl}
+                  alt={record?.patternName}
                   className=" rounded-md"
                   width={100}
                   height={100}
@@ -206,7 +145,7 @@ const BubblBasicCrd = (props: BubblCardProps) => {
         </div>
       )}
 
-      {details?.productDetail?.name == "Name Custom" && (
+      {name == "Name Custom" && (
         <div className="flex flex-col md:flex-row justify-between mt-6 gap-6 p-1 rounded-lg">
           {/* Name Input */}
           <div className="w-full md:w-[70%]">
@@ -260,51 +199,29 @@ const BubblBasicCrd = (props: BubblCardProps) => {
           <h2
             role="button"
             onClick={() => tabChanger("description")}
-            className={`font-semibold ${activeTab == "description" ? "text-black" : "text-gray-400"
-              }`}
+            className={`font-semibold ${
+              activeTab == "description" ? "text-black" : "text-gray-400"
+            }`}
           >
             Description
           </h2>
           <h2
             role="button"
             onClick={() => tabChanger("product_details")}
-            className={`font-semibold ${activeTab == "product_details" ? "text-black" : "text-gray-400"
-              }`}
+            className={`font-semibold ${
+              activeTab == "product_details" ? "text-black" : "text-gray-400"
+            }`}
           >
             Product Details
           </h2>
         </div>
-        {activeTab == "description" && (
-          <p className="text-[#7F7F7F] text-sm mt-2">
-            {details?.productDetail?.deviceDescription ??
-              `The Smart NFC Business Card is designed to make sharing your
-            professional details seamless and tech-forward. Simply tap your card
-            on any NFC-enabled smartphone, and your contact information,
-            website, or social media links instantly transfer to the recipient’s
-            device—no apps or QR codes required.`}
-          </p>
-        )}
-        {activeTab === "product_details" && (
-          <div>
-            {details?.productDetail?.productDetails ? (
-              <p className="text-[#7F7F7F] text-sm mt-2">
-                {details?.productDetail?.productDetails}
-              </p>
-            ) : (
-              <p className="text-[#7F7F7F] text-sm mt-2">
-                - NFC-based digital networking solution <br />
-                - E-business card <br />
-                - Share contact information <br />
-                - Share social media profiles effortlessly with a tap <br />
-                - Always editable and fully customizable templates <br />
-                - User-friendly website accessible on web and phones <br />-
-                Modern, eco-friendly alternative to paper business cards <br />-
-                Elevate your networking game with innovation and simplicity
-              </p>
-            )}
-          </div>
-        )}
-        {details?.productDetail?.name == "Full Custom" && (
+        <p className="text-[#7F7F7F] text-sm mt-2">
+          {activeTab == "description"
+            ? deviceDescription
+            : productDetails}
+        </p>
+
+        {name == "Full Custom" && (
           <div className="bg-gray-100 rounded-xl p-4 text-gray-700 text-[16px] max-w-lg h-[300px] mt-10">
             <div className="flex items-center gap-1 mb-2 font-semibold">
               <AiOutlineInfoCircle className="text-purple-600 text-lg" />
@@ -325,8 +242,8 @@ const BubblBasicCrd = (props: BubblCardProps) => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
-export default BubblBasicCrd;
+export default ProductInfo;

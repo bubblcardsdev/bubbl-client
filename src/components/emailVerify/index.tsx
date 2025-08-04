@@ -1,19 +1,47 @@
 "use client";
-import React, { useMemo, useState, ChangeEvent } from "react";
+import React, { useMemo, useState, ChangeEvent, useEffect } from "react";
 import { BubblLogo } from "../common/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
-import { EmailverifyOtp, ResendMail } from "@/src/services/emailVerify";
-import { useRouter } from "next/navigation";
+import { verifyEmailOtp, ResendMail } from "@/src/services/emailVerify";
+import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
 const EmailVerifyPage = () => {
-  // const [errors, setErrors] = useState({
-  //   OTPError: "",
-  // });
+  const router = useRouter()
+  const { email: emailTo, otpStatus } = router.query; // rename destructured key
+  const [email, setEmail] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof emailTo === "string" && otpStatus) {
+      toast.success("the otp has been sent successfully")
+      setEmail(emailTo);
+    }
+    else {
+      toast.error("error sending otp try again later")
+    }
+  }, [emailTo]); // clean dependency
+
   const [otp, setOtp] = useState<string | null>(null);
-  const email: string = sessionStorage.getItem("userEmail") || "";
-  const router = useRouter();
-  router.refresh();
+
+
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const formDataString = sessionStorage.getItem("formData");
+  //     if (formDataString) {
+  //       try {
+  //         const formData = JSON.parse(formDataString);
+  //         if (formData?.email) {
+  //           setEmail(formData.email);
+
+  //         }
+  //       } catch (err) {
+  //         console.error("Error parsing session data", err);
+  //       }
+  //     }
+  //   }
+  // }, []);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);
@@ -32,6 +60,7 @@ const EmailVerifyPage = () => {
   }, []);
   return (
     <div className="h-screen bg-black">
+      <ToastContainer />
       <div className="flex md:flex-row overflow-hidden">
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
           <div className="w-full flex justify-start sticky top-0">
@@ -44,7 +73,11 @@ const EmailVerifyPage = () => {
             <p className="mb-4 text-[#606060] md:text-[16px] font-semibold">
               Enter mail ID to Confirm your account.
             </p>
-            <form className="w-full">
+            <form className="w-full" onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              await verifyEmailOtp(email, otp, router);
+            }}
+            >
               <label className="block text-sm md:text-[14px] mt-[20px] font-medium text-[#909090] mb-[6px]">
                 OTP
               </label>
@@ -60,11 +93,11 @@ const EmailVerifyPage = () => {
                `}
               />
               <button
-                onClick={() => {
-                  EmailverifyOtp(email, otp, router);
-                }}
                 type="submit"
-                className="w-full p-2 mt-[25px] bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                disabled={!otpStatus}
+                className={`w-full p-2 mt-[25px] text-white text-[14px] rounded-[8px] 
+    ${otpStatus ? "bg-[#9747FF] hover:bg-purple-500" : "bg-gray-400 cursor-not-allowed"} 
+    focus:outline-none focus:ring-2 focus:ring-purple-500`}
               >
                 Verify
               </button>

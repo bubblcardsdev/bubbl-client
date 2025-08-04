@@ -126,7 +126,7 @@ function CardSection() {
 
       .filter((section) => section.cards.length > 0);
   }, [data, searchProduct]);
-  console.log(filteredProduct);
+
   return (
     <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">

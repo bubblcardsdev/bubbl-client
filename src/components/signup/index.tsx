@@ -10,13 +10,13 @@ import {
   LinkedinColorIcon,
 } from "../common/icons";
 import React, { useState, useMemo } from "react";
-import { RegisterApi } from "../../services/registerApi";
 import { useRouter } from "next/router";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { ResendMail } from "@/src/services/emailVerify";
+import { RegisterApi } from "@/src/services/registerApi";
+import { toast, ToastContainer } from "react-toastify";
 
-type FormDataType = {
+export type FormDataType = {
   firstName: string;
   role: string;
   companyName: string;
@@ -156,19 +156,31 @@ const Signup = () => {
   //   }
   // };
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateFields()) {
-      try {
-        const response = await RegisterApi(formData);
-        if (response) {
-          toast.success("Account created successfully!");
-          setTimeout(() => router.push("/emailVerify"), 1500);
-        }
-      } catch (err) {
-        console.log(err);
+  e.preventDefault();
+  if (validateFields()) {
+    try {
+     const response =  await RegisterApi(formData);
+      //  await RegisterCreateProfile(formData);
+
+      if(response){
+ const isOtpSent = await ResendMail(formData.email);
+        // router.push("/emailVerify");
+        router.push({
+          pathname:"/emailVerify",
+          query:{email:formData.email,otpStatus:isOtpSent}
+        })
       }
+       
+      
+
+    } catch (err) {
+      console.log(err);
+      
+      toast.error("something went wrong try again later");
     }
-  };
+  }
+};
+
   const stepperProgress = useMemo(() => {
     const getWidth = (fields: FormFieldKey[]) => {
       const filledFields = fields.filter(
@@ -198,6 +210,7 @@ const Signup = () => {
 
   return (
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
+      <ToastContainer/>
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
           <BubblLogo color="white" />
@@ -703,7 +716,6 @@ const Signup = () => {
           )}
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

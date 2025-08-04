@@ -12,31 +12,26 @@ interface CheckoutFormData {
   country: string;
 }
 
-
-export const CheckoutApi = async (checkoutFormData: CheckoutFormData) => {
-  const data = {
-    productData: [
-      {
-        productId: "58491944-912b-49fe-b6e6-dfee1b78a3d6",
-        quantity: 2,
-      },
-    ],
-    shippingFormData: {
-      firstName: checkoutFormData?.firstName,
-      lastName: checkoutFormData?.lastName,
-      phoneNumber: checkoutFormData?.phoneNumber,
-      emailId: checkoutFormData?.emailId,
-      address: checkoutFormData?.address,
-      city: checkoutFormData?.city,
-      state: checkoutFormData?.state,
-      zipcode: checkoutFormData?.zipcode,
-      country: checkoutFormData?.country,
-    },
-  };
+export const CheckoutApi = async (data: {
+  productData: { productId: string; quantity: number }[];
+  shippingFormData: CheckoutFormData;
+}) => {
   try {
     const response = await axiosInstance.post(`/order/checkout`, data);
-    console.log(response, "res");
-    return response?.data;
+    if(response?.data?.success) {
+      return response?.data?.orderId;
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+export const initiatePayment = async (data: { orderId: number, orderType: number, token: string }) => {
+  try {
+    const response = await axiosInstance.post(`/pay/initialePay`, data);
+    if(response?.data?.success) {
+      return response?.data?.data;
+    }
   } catch (error) {
     console.error("Error fetching data:", error);
   }

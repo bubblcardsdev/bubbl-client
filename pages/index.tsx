@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout() {
   return (
-    <SiteLayout>
+    <SiteLayout darkTheme>
       <Home />
     </SiteLayout>
   );
