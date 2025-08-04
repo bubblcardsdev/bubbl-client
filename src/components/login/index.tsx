@@ -42,7 +42,7 @@ const LoginPage = () => {
     } 
   
    toast.success("Logged in successfully!");
-      router.push("/profile");
+      router.push("/myprofile");
     
   } catch (err: any) {
     console.error("Unexpected crash in handleLogin:", err);
