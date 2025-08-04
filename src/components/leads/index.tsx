@@ -158,7 +158,6 @@ const Leads = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortField, setSortField] = useState<keyof Lead>("name");
   const [ascending, setAscending] = useState<boolean>(true);
-  const [filtersApplied, setFiltersApplied] = useState(2);
   const [sortedLeads, setSortedLeads] = useState<Lead[]>(
     sortData(leads, "name", true)
   );
@@ -306,7 +305,7 @@ const Leads = () => {
                       Reset All
                     </button>
                     <button className="bg-[#9E7FFF] text-sm font-semibold px-4 py-2 rounded-md">
-                      Apply Filters({filtersApplied})
+                      Apply Filters(2)
                     </button>
                   </div>
                 </div>

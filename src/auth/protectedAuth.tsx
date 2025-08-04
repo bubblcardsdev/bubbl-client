@@ -7,15 +7,7 @@ interface ProtectedAuthProps {
   children: React.ReactNode;
 }
 
-interface LoginDetails {
-  token?: {
-    accessToken?: string;
-  };
-  user?: {
-    name?: string;
-    email?: string;
-  };
-}
+
 
 const ProtectedAuth: React.FC<ProtectedAuthProps> = ({ children }) => {
   const router = useRouter();
@@ -25,8 +17,6 @@ const ProtectedAuth: React.FC<ProtectedAuthProps> = ({ children }) => {
     const token = getAccessToken();
 
     try {
-
-
 
       if (!token) {
         // router.push("/login");
