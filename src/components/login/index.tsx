@@ -11,7 +11,7 @@ import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { loginUser } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 const LoginPage = () => {
   const router = useRouter();
 
@@ -23,6 +23,35 @@ const LoginPage = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/;
+
+
+
+ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+  setLoading(true);
+  try {
+    if (!loginForm?.email || !loginForm?.password) {
+      return toast.error("Email or password is empty");
+    }
+
+    const response = await loginUser(loginForm.email, loginForm.password);
+    console.log(response,"/");
+    
+    if (response?.status !== true) {
+        return  toast.error(response?.error || "Invalid credentials");  
+    } 
+  
+   toast.success("Logged in successfully!");
+      router.push("/profile");
+    
+  } catch (err: any) {
+    console.error("Unexpected crash in handleLogin:", err);
+    toast.error("Something went wrong. Please try again.");
+  }
+  finally{
+    setLoading(false)
+  }
+}
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -44,29 +73,29 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (!errors.emailError && !errors.passwordError) {
-      setLoading(true);
-      try {
-        const res = await loginUser(loginForm.email, loginForm.password);
-        console.log(res, "res");
-        if (res?.success) {
-          localStorage.setItem("loginDetails", JSON.stringify(res.data));
-          toast.success("Login  successfully!");
+  //   if (!errors.emailError && !errors.passwordError) {
+  //     setLoading(true);
+  //     try {
+  //       const res = await loginUser(loginForm.email, loginForm.password);
+  //       console.log(res, "res");
+  //       if (res?.success) {
+  //         localStorage.setItem("loginDetails", JSON.stringify(res.data));
+  //         toast.success("Login  successfully!");
 
-          setTimeout(() => router.push("/overview"), 1500);
-        } else {
-          console.error(res?.data?.message);
-        }
-      } catch (err) {
-        console.error("Login Error", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  //         setTimeout(() => router.push("/overview"), 1500);
+  //       } else {
+  //         console.error(res?.data?.message);
+  //       }
+  //     } catch (err) {
+  //       console.error("Login Error", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   const RightImageRender = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * 8);
@@ -82,6 +111,7 @@ const LoginPage = () => {
 
   return (
     <div className="h-screen bg-black">
+      <ToastContainer />
       <div className="flex md:flex-row overflow-hidden">
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
           <div className="w-full flex justify-start sticky top-0">
