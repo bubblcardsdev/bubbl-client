@@ -2,18 +2,21 @@
 import React from "react";
 import { Location_icon, Phone_icon, MailProfileIcon } from "../common/icons";
 import Link from "next/link";
+
 const Support = () => {
   return (
-    <div className="text-white mt-[5px] ">
+    <div className="text-white mt-5 px-4 md:px-8 lg:px-16">
       <p className="text-lg">Get in touch</p>
       <p className="text-sm mt-1">
         We’d love to hear from you. Please fill out this form.
       </p>
-      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 gap-4 mt-4  ">
-        <div className="text-sm grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1  gap-y-[30px]  w-[450px] bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6">
-          <div className="mt-0 flex flex-col gap-y-[20px]">
-            <p className="text-3xl">Let&apos;s Connect </p>
-            <p className="">
+
+      <div className="grid lg:grid-cols-2 gap-6 mt-6">
+        {/* Left Contact Info Panel */}
+        <div className="w-full bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6 space-y-6">
+          <div className="space-y-4">
+            <p className="text-3xl">Let&apos;s Connect</p>
+            <p>
               Got questions, feedback, or just want to say hi? We&apos;d <br />
               love to hear from you!
               <br />
@@ -21,17 +24,19 @@ const Support = () => {
               soon as possible.
             </p>
           </div>
-          <div className="flex items-center gap-4 ">
-            <span className="text-lg bg-[#282828] rounded-full p-[10px]">
+
+          <div className="flex items-center gap-4">
+            <span className="text-lg bg-[#282828] rounded-full p-3">
               <MailProfileIcon />
             </span>
             <div>
               <p className="font-medium text-[#BDBDBD]">Email</p>
-              <p className="text-gray-300">support@bubbl.cards</p>
+              <p className="text-gray-300 break-words">support@bubbl.cards</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 ">
-            <span className="text-lg bg-[#282828] rounded-full p-[10px]">
+
+          <div className="flex items-center gap-4">
+            <span className="text-lg bg-[#282828] rounded-full p-3">
               <Phone_icon />
             </span>
             <div>
@@ -39,8 +44,9 @@ const Support = () => {
               <p className="text-gray-300">+91 99999 99999</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 ">
-            <span className="text-lg bg-[#282828] rounded-full p-[10px]">
+
+          <div className="flex items-center gap-4">
+            <span className="text-lg bg-[#282828] rounded-full p-3">
               <Location_icon />
             </span>
             <div>
@@ -54,44 +60,41 @@ const Support = () => {
             </div>
           </div>
         </div>
-        <form className="w-full bg-[#333333] p-6 rounded-md space-y-5 ">
-          <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1 gap-4">
+
+        {/* Right Form Panel */}
+        <form className="w-full bg-[#1f1f1f] p-6 rounded-md space-y-5">
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm mb-2 block text-white">
-                First name
-              </label>
+              <label className="text-sm mb-2 block">First name</label>
               <input
                 type="text"
                 placeholder="First name"
-                className="w-full bg-[#282828]  p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
+                className="w-full bg-[#282828] p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
               />
             </div>
             <div>
-              <label className="text-sm mb-2 block text-white">Last name</label>
+              <label className="text-sm mb-2 block">Last name</label>
               <input
                 type="text"
                 placeholder="Last name"
-                className="w-full bg-[#282828]  p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
+                className="w-full bg-[#282828] p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
               />
             </div>
           </div>
-          <div className="grid xl:grid-cols-2 xs:grid-cols-1  gap-4">
+
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm mb-2 block text-white">Email</label>
+              <label className="text-sm mb-2 block">Email</label>
               <input
                 type="email"
                 placeholder="you@company.com"
-                className="w-full bg-[#282828]  p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
+                className="w-full bg-[#282828] p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
               />
             </div>
             <div>
-              <label className="text-sm mb-2 block text-white">
-                Phone number
-              </label>
-              <div className="flex items-center bg-[#282828]  rounded-md overflow-hidden">
-                <ol className="bg-[#282828] text-white text-sm px-3 outline-none ">
-                  <li>IND</li>
-                </ol>
+              <label className="text-sm mb-2 block">Phone number</label>
+              <div className="flex items-center bg-[#282828] rounded-md overflow-hidden">
+                <span className="text-sm text-white px-3">IND</span>
                 <input
                   type="tel"
                   placeholder="+91 0000-00000"
@@ -100,25 +103,26 @@ const Support = () => {
               </div>
             </div>
           </div>
+
           <div>
-            <label className="text-sm mb-2 block text-white">Message</label>
+            <label className="text-sm mb-2 block">Message</label>
             <textarea
-              rows={6}
-              className="w-full bg-[#282828]  text-sm text-white placeholder-[#4F4F4F] rounded-md"
+              rows={5}
+              placeholder="Your message..."
+              className="w-full bg-[#282828] p-3 text-sm text-white placeholder-[#4F4F4F] rounded-md"
             />
           </div>
 
-          <div className="flex items-start space-x-2 text-sm text-white">
+          <div className="flex items-start gap-2 text-sm text-white">
             <input
               type="checkbox"
-              className="accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#494949] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-cente"
+              className="accent-[#9747FF] h-4 w-4 rounded border border-[#494949] checked:bg-[#D6D3FB]"
             />
             <p className="text-[#B3B3B3]">
-              You agree to our friendly
+              You agree to our friendly{" "}
               <Link
                 href="/privacyPolicy"
-                shallow
-                className="underline hover:text-[#a66bf4] px-1 "
+                className="underline hover:text-[#a66bf4]"
               >
                 privacy policy
               </Link>
@@ -129,7 +133,7 @@ const Support = () => {
           <div className="text-right">
             <button
               type="submit"
-              className="bg-[#9747FF] hover:bg-[#9747FF] text-white text-[14px] text-nowrap text-center px-5 py-2 rounded-md sm:w-[150px] xs:w-[150px] left-0"
+              className="bg-[#9747FF] hover:bg-[#7a36e4] text-white text-sm px-5 py-2 rounded-md"
             >
               Send message
             </button>

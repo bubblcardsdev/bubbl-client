@@ -17,13 +17,13 @@ import {
   Phonepay_icon,
   Paytm_icon,
 } from "../../common/icons";
-const ProTemplateNeno = () => {
+export const ProTemplateNeno = ({ formData }: { formData: any }) => {
   return (
     <div className="flex  flex-col items-center align-middle justify-between bg-gray-400 ">
       <div className="">
       <div className="bg-gray-500  w-[400px] h-[350px] object-cover rounded-[0_0_0px_0px]">
           <Image
-            src="/profile.png"
+          src={formData?.profileImageUrl || "/profile.png"}
             alt=""
             height={500}
             width={500}
@@ -34,7 +34,7 @@ const ProTemplateNeno = () => {
           <div className=" rounded-xl p-4 md:p-5 w-full text-white relative z-10  backdrop-blur bg-opacity border border-gray-400  ">
             <div className="absolute top-0 right-0 bg-gray-500 text-black p-7 rounded-[0_10px_0px_0]">
               <Image
-                src="/profile.png"
+                src={formData?.companyLogoUrl || "/profile.png"}
                 alt=""
                 width={100}
                 height={100}
@@ -119,4 +119,3 @@ const ProTemplateNeno = () => {
   );
 };
 
-export default ProTemplateNeno;

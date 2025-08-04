@@ -1297,8 +1297,8 @@ export const PhoneColorIcon = () => {
           y2="32"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#5CF777" />
-          <stop offset="1" stop-color="#0EBC29" />
+          <stop stopColor="#5CF777" />
+          <stop offset="1" stopColor="#0EBC29" />
         </linearGradient>
       </defs>
     </svg>
@@ -1443,9 +1443,9 @@ export const InstagramBackgroundFill = () => {
           y2="28"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#9B3C99" />
-          <stop offset="0.51" stop-color="#CE506C" />
-          <stop offset="1" stop-color="#E79346" />
+          <stop stopColor="#9B3C99" />
+          <stop offset="0.51" stopColor="#CE506C" />
+          <stop offset="1" stopColor="#E79346" />
         </linearGradient>
         <radialGradient
           id="paint1_radial_1769_1306"
@@ -1455,11 +1455,11 @@ export const InstagramBackgroundFill = () => {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(32.803 32.606) rotate(180) scale(59.1641)"
         >
-          <stop stop-color="#F5EC53" />
-          <stop offset="0.24" stop-color="#E48244" />
-          <stop offset="0.4" stop-color="#D15767" />
-          <stop offset="0.49" stop-color="#C84278" />
-          <stop offset="1" stop-color="#192CFA" />
+          <stop stopColor="#F5EC53" />
+          <stop offset="0.24" stopColor="#E48244" />
+          <stop offset="0.4" stopColor="#D15767" />
+          <stop offset="0.49" stopColor="#C84278" />
+          <stop offset="1" stopColor="#192CFA" />
         </radialGradient>
         <clipPath id="clip0_1769_1306">
           <rect

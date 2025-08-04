@@ -1,10 +1,253 @@
-import React from "react";
-import { Trash2, Plus } from "lucide-react";
+import React, { useState,useEffect } from "react";
+import { Trash2, Plus,Check } from "lucide-react";
+import clsx from "clsx";
 import Image from "next/image";
-import { FaPhone, FaEnvelope, FaShareAlt, FaQrcode } from "react-icons/fa";
+import {
+  InstagramBackgroundFill,
+  FacebookIconbackgroundFill,
+  LinkedinIconbackgroundFill,
+  YoutubeIconbackgroundFill,
+  TwitterIconbackgroundFill,
+  WhatsappIconbackgroundFill,
+  Googlepay_icon,
+  Phonepay_icon,
+  Paytm_icon,
+} from "../../common/icons";
+import ProfileTemplateModal from "./profileTemplatemodal";
+import LivePreview from "./livePreview";
+import CropModal from "../../common/CropModal";
+import {theme} from '../../../utils/profileThemecolor'
+const socialLinks = [
+  {
+    name: "Instagram",
+    icon: <InstagramBackgroundFill />,
+    placeholder: "Enter Instagram URL",
+  },
+  {
+    name: "Facebook",
+    icon: <FacebookIconbackgroundFill />,
+    placeholder: "Enter Facebook URL",
+  },
+  {
+    name: "YouTube",
+    icon: <YoutubeIconbackgroundFill />,
+    placeholder: "Enter YouTube URL",
+  },
+  {
+    name: "Twitter",
+    icon: <TwitterIconbackgroundFill />,
+    placeholder: "Enter Twitter URL",
+  },
+  {
+    name: "WhatsApp",
+    icon: <WhatsappIconbackgroundFill />,
+    placeholder: "Enter WhatsApp number",
+  },
+  {
+    name: "LinkedIn",
+    icon: <LinkedinIconbackgroundFill />,
+    placeholder: "Enter LinkedIn URL",
+  },
+];
+
+const Digitalpay = [
+  {
+    name: "Gpay Link",
+    icon: <Googlepay_icon />,
+    link: "https://gpay.example.com/username",
+  },
+  {
+    name: "phone pay",
+    icon: <Phonepay_icon />,
+    link: "https://phonepe.example.com/username",
+  },
+  {
+    name: "pay tm",
+    icon: <Paytm_icon />,
+    link: "https://paytm.example.com/username",
+  },
+];
+
+const templates = [
+  {
+    label: "Ruby",
+    value: "ruby",
+    image: "/purple.png",
+  },
+  {
+    label: "Opal",
+    value: "opal",
+    image: "/purple.png",
+  },
+  {
+    label: "Saphire",
+    value: "saphire",
+    image: "/purple.png",
+  },
+  {
+    label: "Neno",
+    value: "neno",
+    image: "/purple.png",
+  },
+  {
+    label: "Quartz",
+    value: "quartz",
+    image: "/purple.png",
+  },
+];
+
 const EditProfile = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selected, setSelected] = useState<string>("green");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("selectedTheme");
+    if (saved) setSelected(saved);
+  }, []);
+
+  const handleColorSelect = (theme: string) => {
+    setSelected(theme);
+    localStorage.setItem("selectedTheme", theme);
+  };
+  const [openCropModal, setOpenCropModal] = useState(false);
+  const [selectedImageType, setSelectedImageType] = useState<
+    "profile" | "company" | null
+  >(null);
+  // const [previewProfile, setPreviewProfile] = useState<string>("");
+  // const [previewCompany, setPreviewCompany] = useState<string>("");
+  const [cropSrc, setCropSrc] = useState<string>("");
+
+  const [formData, setFormData] = useState<any>({
+    profileTitle: "",
+    layout: "ruby",
+    name: "",
+    position: "",
+    mobileNumbers: [{ type: "home", countryCode: "+91", number: "" }],
+    emails: [""],
+    websiteLinks: [""],
+    address: "",
+    country: "",
+    state: "",
+    city: "",
+    zipcode: "",
+    bio: "",
+    socialLinks: Array(socialLinks.length).fill(""),
+    digitalLinks: Digitalpay.map((item) => item.link),
+    profileImageUrl: "", // will store preview URL as string
+    companyLogoUrl: "", // will store preview URL as string
+  });
+
+  const handleInputChange = (key: any, value: any) => {
+    setFormData((prev: any) => ({ ...prev, [key]: value }));
+  };
+
+  // const handleArrayChange = (key: any, index: number, value: any) => {
+  //   const updatedArray = [...formData[key]];
+  //   updatedArray[index] = value;
+  //   setFormData((prev: any) => ({ ...prev, [key]: updatedArray }));
+  // };
+
+  const handleArrayChange = (
+    key: any,
+    index: number,
+    field: string | boolean | any,
+    value: any
+  ) => {
+    const updatedArray = [...formData[key]];
+    if (field) {
+      updatedArray[index][field] = value;
+    } else {
+      updatedArray[index] = value;
+    }
+    setFormData((prev: any) => ({ ...prev, [key]: updatedArray }));
+  };
+
+  // const addToArray = (key: any) => {
+  //   setFormData((prev: any) => ({ ...prev, [key]: [...prev[key], ""] }));
+  // };
+
+  const addToArray = (key: any) => {
+    if (key === "mobileNumbers") {
+      setFormData((prev: any) => ({
+        ...prev,
+        [key]: [...prev[key], { type: "home", countryCode: "+91", number: "" }],
+      }));
+    } else {
+      setFormData((prev: any) => ({ ...prev, [key]: [...prev[key], ""] }));
+    }
+  };
+
+  const removeFromArray = (key: any, index: number) => {
+    const updatedArray = [...formData[key]];
+    updatedArray.splice(index, 1);
+    setFormData((prev: any) => ({ ...prev, [key]: updatedArray }));
+  };
+
+  const handleImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: "profile" | "company"
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setCropSrc(previewUrl);
+    setSelectedImageType(type);
+    setOpenCropModal(true);
+  };
+
+  const handleCroppedImage = (croppedBlob: Blob, previewUrl: string) => {
+    const imageKey =
+      selectedImageType === "profile" ? "profileImageUrl" : "companyLogoUrl";
+    setFormData((prev: any) => ({
+      ...prev,
+      [imageKey]: previewUrl,
+    }));
+
+    // if (selectedImageType === "profile") {
+    //   setPreviewProfile(previewUrl);
+    // } else {
+    //   setPreviewCompany(previewUrl);
+    // }
+
+    setOpenCropModal(false);
+    setSelectedImageType(null);
+  };
+
+  const handleSave = () => {
+    console.log("Form Data: ", formData);
+
+    // If uploading, you can convert to FormData here:
+    const formDataToSend: any = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((v, i) => {
+          formDataToSend.append(`${key}[${i}]`, v);
+        });
+      } else {
+        formDataToSend.append(key, value);
+      }
+    });
+  };
+  const handleRemoveImage = (type: "profile" | "company") => {
+    if (type === "profile") {
+      setFormData((prev: any) => ({ ...prev, profileImageUrl: "" }));
+    } else {
+      setFormData((prev: any) => ({ ...prev, companyLogoUrl: "" }));
+    }
+  };
+
   return (
     <div className="p-4">
+      {openCropModal && cropSrc && selectedImageType && (
+        <CropModal
+          imageSrc={cropSrc}
+          onClose={() => setOpenCropModal(false)}
+          onCropComplete={handleCroppedImage}
+        />
+      )}
+
       <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Form Section */}
@@ -17,7 +260,10 @@ const EditProfile = () => {
               </label>
               <input
                 type="text"
-                defaultValue="Personal"
+                value={formData.profileTitle}
+                onChange={(e) =>
+                  handleInputChange("profileTitle", e.target.value)
+                }
                 className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm"
               />
             </div>
@@ -25,43 +271,123 @@ const EditProfile = () => {
               <label className="text-sm mb-2 block text-gray-300">
                 Profile Layout
               </label>
-              <button className="w-full flex justify-between items-center bg-[#2a2a2a] p-[10px] text-sm rounded-lg text-white">
-                Ruby <span className="text-gray-400">›</span>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="w-full flex justify-between items-center bg-[#2a2a2a] p-[10px] text-sm rounded-lg text-white"
+              >
+                {templates[currentIndex].label}{" "}
+                <span className="text-gray-400">›</span>
               </button>
             </div>
+            <ProfileTemplateModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              templates={templates}
+              currentIndex={currentIndex}
+              setCurrentIndex={(index) => {
+                setCurrentIndex(index);
+                handleInputChange("layout", templates[index].value);
+              }}
+            />
           </div>
+          <div className="flex flex-col md:flex-row justify-between gap-6 px-6 text-white">
+            {["Profile Picture", "Company Logo"].map((label, index) => {
+              const type = index === 0 ? "profile" : "company";
+              const imageUrl =
+                type === "profile"
+                  ? formData.profileImageUrl
+                  : formData.companyLogoUrl;
 
-          {/* Profile and Company Logo */}
-          <div className="flex flex-col md:flex-row justify-between gap-6 px-6">
-            {["Profile Picture", "Company Logo"].map((label, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <span className="text-sm mb-2 text-gray-300">{label}</span>
-                <div className="relative w-[120px] h-[120px] rounded-full border">
-                  <Image
-                    src="/logo.png"
-                    alt="Profile"
-                    width={120}
-                    height={120}
-                    className="rounded-full"
-                  />
-                  <button className="absolute top-0 right-0 bg-black/60 rounded-full p-2 text-sm text-white">
-                    ×
-                  </button>
+              return (
+                <div key={type} className="flex flex-col items-center relative">
+                  <span className="text-sm mb-2 text-gray-300">{label}</span>
+
+                  <div className="w-[120px] h-[120px] rounded-full bg-black overflow-hidden">
+                    {/* Image if present */}
+                    {imageUrl ? (
+                      <>
+                        <Image
+                          src={imageUrl}
+                          alt={type}
+                          width={120}
+                          height={120}
+                          className="object-cover w-full h-full rounded-full"
+                        />
+
+                        {/* Close button OUTSIDE label */}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(type)}
+                          className="absolute top-10 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-10 shadow-md"
+                        >
+                          ✕
+                        </button>
+                      </>
+                    ) : (
+                      // Upload trigger (when no image)
+                      <label className="absolute inset-0 cursor-pointer group">
+                        <div className="absolute inset-0 w-[120px] h-[120px] top-7  opacity-100 group-hover:bg-black/50 flex items-center justify-center text-white text-xs transition rounded-full">
+                          <Plus size={16} />
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) =>
+                            handleImageChange(e, type as "profile" | "company")
+                          }
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+
+                  <span className="text-xs text-gray-500 mt-1">
+                    (120px * 120px)
+                  </span>
                 </div>
-                <span className="text-xs text-gray-500 mt-1">
-                  (120px * 120px)
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Name and Position */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm mb-1 block text-gray-300">Name</label>
+              <label className="text-sm mb-1 block text-gray-300">
+                FirstName
+              </label>
               <input
                 type="text"
-                placeholder="Sai kishore"
+                value={formData.firstname}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+                placeholder=""
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">
+                LastName
+              </label>
+              <input
+                type="text"
+                value={formData.LastName}
+                onChange={(e) => handleInputChange("lastname", e.target.value)}
+                placeholder=""
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">
+                CompanyName
+              </label>
+              <input
+                type="text"
+                value={formData.companyname}
+                onChange={(e) =>
+                  handleInputChange("companyName", e.target.value)
+                }
+                placeholder=""
                 className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
               />
             </div>
@@ -71,63 +397,150 @@ const EditProfile = () => {
               </label>
               <input
                 type="text"
-                placeholder="Product Designer"
+                value={formData.position}
+                onChange={(e) => handleInputChange("position", e.target.value)}
+                placeholder=""
                 className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
               />
             </div>
           </div>
+          <div className="flex gap-4">
+            <div className="w-full">
+              <label className="text-sm mb-1 block text-gray-300">
+                Mobile number
+              </label>
+              {formData.mobileNumbers.map((mobile: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-2 rounded-lg mt-1"
+                >
+                  <select
+                    value={mobile.type}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        "mobileNumbers",
+                        idx,
+                        "type",
+                        e.target.value
+                      )
+                    }
+                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-3 py-2 outline-none hover:cursor-pointer"
+                  >
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                    <option value="other">Other</option>
+                  </select>
 
-          {/* Mobile Number */}
-          <div>
-            <label className="text-sm mb-1 block text-gray-300">
-              Mobile number
-            </label>
-            <div className="flex items-center gap-2 bg-[#2a2a2a] px-0 rounded-lg">
-              <input
-                type="text"
-                placeholder="+91 98406 56566"
-                className="w-full rounded-lg bg-[#2a2a2a] p-[10px] outline-none text-white"
-              />
-              <button className="px-3">
-                <Trash2 className="w-4 h-4 text-white" />
+                  <select
+                    value={mobile.countryCode}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        "mobileNumbers",
+                        idx,
+                        "countryCode",
+                        e.target.value
+                      )
+                    }
+                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-2 py-2 outline-none"
+                  >
+                    <option value="+91">+91</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                  </select>
+                  <input
+                    type="text"
+                    value={mobile.number}
+                    onChange={(e: any) =>
+                      handleArrayChange(
+                        "mobileNumbers",
+                        idx,
+                        "number",
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-[#2a2a2a] p-[10px] text-white rounded-lg outline-none"
+                    placeholder=""
+                  />
+
+                  <button
+                    onClick={() => removeFromArray("mobileNumbers", idx)}
+                    className="text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+
+              <button
+                onClick={() => addToArray("mobileNumbers")}
+                className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+              >
+                <Plus className="w-4 h-4" /> Add Mobile Number
               </button>
             </div>
-            <button className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white">
-              <Plus className="w-4 h-4" /> Add Mobile Number
-            </button>
-          </div>
 
-          {/* Contact Mail */}
-          <div>
-            <label className="text-sm mb-1 block text-gray-300">
-              Contact mail
-            </label>
-            <input
-              type="email"
-              placeholder="salesbubbl@gmail.com"
-              className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none mb-2 text-white"
-            />
-            <input
-              type="email"
-              placeholder="bubbl@gmail.com"
-              className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
-            />
+            {/* Emails */}
+            <div className="w-full">
+              <label className="text-sm mb-1 block text-gray-300">
+                Contact mail
+              </label>
+              {formData.emails.map((email: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 w-full rounded-lg mt-1"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) =>
+                      handleArrayChange("emails", idx, false, e.target.value)
+                    }
+                    className="truncate w-0 flex-1 bg-[#2a2a2a] p-[10px] outline-none text-white"
+                  />
+                  <button onClick={() => removeFromArray("emails", idx)}>
+                    <Trash2 className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() => addToArray("emails")}
+                className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+              >
+                <Plus className="w-4 h-4" /> Add Email
+              </button>
+            </div>
           </div>
-
-          {/* Website */}
+          {/* Website Links */}
           <div>
             <label className="text-sm mb-1 block text-gray-300">Website</label>
-            <div className="flex items-center gap-2 bg-[#2a2a2a] px-3 w-full rounded-lg">
-              <input
-                type="text"
-                placeholder="www.bubbl.cards"
-                className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white"
-              />
-              <button>
-                <Trash2 className="w-4 h-4 text-white" />
-              </button>
-            </div>
-            <button className="mt-2 text-sm flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white">
+            {formData.websiteLinks.map((link: any, idx: number) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 bg-[#2a2a2a] px-3 w-full rounded-lg mt-1"
+              >
+                <input
+                  type="text"
+                  value={link}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "websiteLinks",
+                      idx,
+                      false,
+                      e.target.value
+                    )
+                  }
+                  className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white"
+                />
+                <button onClick={() => removeFromArray("websiteLinks", idx)}>
+                  <Trash2 className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={() => addToArray("websiteLinks")}
+              className="mt-2 text-sm flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+            >
               <Plus className="w-4 h-4" /> Add website Link
             </button>
           </div>
@@ -137,30 +550,62 @@ const EditProfile = () => {
             <label className="text-sm mb-1 block text-gray-300">Address</label>
             <input
               type="text"
-              placeholder="floor, street, city..."
+              value={formData.address}
+              onChange={(e) => handleInputChange("address", e.target.value)}
+              placeholder=""
               className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
             />
           </div>
 
           {/* Country, State, City, Zipcode */}
           <div className="grid md:grid-cols-2 gap-4">
-            {[
-              { label: "Country", placeholder: "India" },
-              { label: "State", placeholder: "Tamil Nadu" },
-              { label: "City", placeholder: "Chennai" },
-              { label: "Zipcode", placeholder: "" },
-            ].map(({ label, placeholder }, i) => (
-              <div key={i}>
-                <label className="text-sm mb-1 block text-gray-300">
-                  {label}
-                </label>
-                <input
-                  type="text"
-                  placeholder={placeholder}
-                  className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
-                />
-              </div>
-            ))}
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">
+                Country
+              </label>
+              <input
+                type="text"
+                placeholder=""
+                value={formData["country"]}
+                onChange={(e) => handleInputChange("country", e.target.value)}
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">State</label>
+              <input
+                type="text"
+                placeholder=""
+                value={formData["state"]}
+                onChange={(e) => handleInputChange("state", e.target.value)}
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">City</label>
+              <input
+                type="text"
+                placeholder=""
+                value={formData["city"]}
+                onChange={(e) => handleInputChange("city", e.target.value)}
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm mb-1 block text-gray-300">
+                Zipcode
+              </label>
+              <input
+                type="text"
+                placeholder=""
+                value={formData["zipcode"]}
+                onChange={(e) => handleInputChange("zipcode", e.target.value)}
+                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+              />
+            </div>
           </div>
 
           {/* Bio */}
@@ -168,32 +613,52 @@ const EditProfile = () => {
             <label className="text-sm mb-1 block text-gray-300">Bio</label>
             <textarea
               rows={4}
+              value={formData.bio}
+              onChange={(e) => handleInputChange("bio", e.target.value)}
               placeholder="Write your bio here..."
               className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg"
-              defaultValue="A biography, or simply bio, is a detailed description of a person's life. It involves more than just basic facts like education, work, relationships, and death; it portrays a person's experience of these life events."
             />
           </div>
-
+         
+          <div className="bg-[#1f1f1f]  rounded-xl w-full mt-10 ">
+            <h3 className="text-sm text-gray-300 mb-2"> Profile Theme</h3>
+            <div className="flex gap-4 items-center bg-[#2c2c2c] p-3 rounded-xl">
+              {theme.map((theme:any) => (
+                <button
+                  key={theme.name}
+                  className={clsx(
+                    "w-6 h-6 rounded-full flex items-center justify-center transition duration-200",
+                    {
+                      "ring-2 ring-white": selected === theme.name,
+                    }
+                  )}
+                  style={{ backgroundColor: theme.color }}
+                  onClick={() => handleColorSelect(theme.name)}
+                >
+                  {selected === theme.name && (
+                    <Check className="w-4 h-4 text-white" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
           {/* Social Links */}
           <div className="flex flex-col gap-4">
             <h1 className="text-white text-sm font-medium">Social Links</h1>
-            {[
-              "Instagram",
-              "Facebook",
-              "YouTube",
-              "Twitter",
-              "WhatsApp",
-              "LinkedIn",
-            ].map((platform, idx) => (
+            {socialLinks.map((item, idx) => (
               <div
                 key={idx}
                 className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3"
               >
-                <p className="text-gray-400">Icon</p>
+                <p className="text-gray-400">{item.icon}</p>
                 <input
                   type="text"
-                  placeholder={platform}
-                  className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+                  value={formData.socialLinks[idx]}
+                  placeholder={item.placeholder}
+                  onChange={(e) =>
+                    handleArrayChange("socialLinks", idx, false, e.target.value)
+                  }
+                  className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm"
                 />
               </div>
             ))}
@@ -202,91 +667,54 @@ const EditProfile = () => {
           {/* Digital Links */}
           <div className="flex flex-col gap-4">
             <h1 className="text-white text-sm font-medium">Digital Link</h1>
-            {["Google Pay", "Facebook", "LinkedIn"].map((link, idx) => (
-              <input
+            {Digitalpay.map((item, idx) => (
+              <div
                 key={idx}
-                type="text"
-                placeholder={link}
-                className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
-              />
+                className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3"
+              >
+                <p className="text-gray-400">{item.icon}</p>
+                <input
+                  type="text"
+                  value={formData.digitalLinks[idx]}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "digitalLinks",
+                      idx,
+                      false,
+                      e.target.value
+                    )
+                  }
+                  className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm"
+                />
+              </div>
             ))}
           </div>
 
           {/* Buttons */}
-          <div className="sticky bottom-0 bg-[#1e1e1e] p-4  flex justify-end gap-3 z-10">
+          <div className="sticky bottom-0 bg-[#1e1e1e] p-4 flex justify-end gap-3 z-10">
             <button className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition">
               Cancel
             </button>
-            <button className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+            <button
+              onClick={handleSave}
+              className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+            >
               Save changes
             </button>
           </div>
         </div>
 
         {/* Right Preview Section */}
-        <div className="w-full lg:w-[400px] flex flex-col  bg-gradient-to-b from-[#1f0128] to-black rounded-2xl  px-6 py-6 mt-6 lg:mt-0 overflow-hidden ">
-          <p className="text-gray-400 mb-4 text-center">Live preview</p>
-          <div className="w-full max-w-sm rounded-[20px_20px_0_0] bg-[#1f1f1f] text-white overflow-hidden shadow-xl">
-            <div className="bg-gradient-to-tr from-[#fde68a] to-[#fca5a5] p-6 flex justify-center">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden">
-                <Image
-                  src="/logo.png"
-                  alt="avatar"
-                  className="w-full h-full object-cover"
-                  width={500}
-                  height={500}
-                />
-              </div>
+        <div className="w-full lg:w-[400px]">
+          <div className="sticky top-6 max-h-[calc(100vh-48px)] overflow-y-auto bg-gradient-to-b from-[#1f0128] to-black rounded-2xl px-6 py-6 text-gray-200 text-center">
+            Live preview
+            <div className="mt-4">
+              <LivePreview
+                currentTemplate={templates?.[currentIndex]}
+                formData={formData}
+                selectedTheme={selected}
+              />
             </div>
-            <div className="px-6 py-4 space-y-3">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold">Bubbl</h2>
-                  <p className="text-sm text-gray-400">NFC Business Card</p>
-                </div>
-                <Image src="/logo.svg" alt="logo" className="h-8 w-auto" width={100} height={100} />
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="flex-1 bg-[#a855f7] text-white rounded-xl py-2 text-sm font-semibold hover:bg-purple-700 transition">
-                  Save Contact
-                </button>
-                <div className="flex gap-2">
-                  <button className="bg-[#333] p-2 rounded-xl">
-                    <FaShareAlt />
-                  </button>
-                  <button className="bg-[#333] p-2 rounded-xl">
-                    <FaQrcode />
-                  </button>
-                </div>
-              </div>
-              <p className="text-sm text-gray-300 leading-snug">
-                I am a creative problem-solver with a passion for designing
-                intuitive, user-centered experiences that make everyday tasks
-                easier.
-              </p>
-              <div className="mt-4">
-                <h3 className="text-sm text-gray-400 mb-2">
-                  Contact Information
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-[#2c2c2c] p-3 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <FaPhone className="text-green-500" />
-                      <span className="text-sm">+91 7358139544</span>
-                    </div>
-                    <FaShareAlt className="text-gray-500 text-sm" />
-                  </div>
-                  <div className="flex items-center justify-between bg-[#2c2c2c] p-3 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <FaEnvelope />
-                      <span className="text-sm">Support@Bubbl.Cards</span>
-                    </div>
-                    <FaShareAlt className="text-gray-500 text-sm" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="px-6 pb-4 text-sm text-gray-500">Social Links</div>
           </div>
         </div>
       </div>

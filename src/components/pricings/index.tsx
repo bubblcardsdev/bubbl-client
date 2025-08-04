@@ -10,10 +10,10 @@ function Pricings() {
       <div className="text-white py-4 px-0 mt-[0px] ">
         <div className=" text-center  ">
           <div
-            className="  h-[260px] rounded-xl flex flex-col justify-center items-center"
+            className="  h-[200px] rounded-xl flex flex-col justify-center items-center"
             // style={{ backgroundImage: "url('/pricings_Bg.png')" }}
           >
-            <h1 className="text-4xl font-bold mb-4 mt-[40px]">
+            <h1 className="text-4xl font-bold mb-4 mt-[0px]">
               Choose your plan
             </h1>
             <p className="text-[#8F8F8F] mb-8">
@@ -43,8 +43,8 @@ function Pricings() {
               </button>
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-x-6 gap-y-8 text-left mt-10">
-            <div className="bg-[#282828] p-6 rounded-2xl  relative">
+          <div className="grid md:grid-cols-3 gap-x-6 gap-y-8 text-left mt-4 ">
+            <div className="bg-[#282828] p-6 rounded-2xl  relative ">
               <span className="absolute top-6 right-4 bg-violet-600 text-xs font-semibold px-2 py-1 rounded text-white">
                 Most popular
               </span>

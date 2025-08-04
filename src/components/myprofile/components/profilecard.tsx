@@ -1,37 +1,29 @@
-"use client";
-import { MyProfilePreviewIcon, MyProfileEditIcon } from "../../common/icons";
-export default function ProfileCard({
-  title,
-  name,
-}: {
+// components/MobileModel.tsx
+import React from "react";
+
+interface MobileModelProps {
+  show: boolean;
+  onClose: () => void;
   title: string;
-  name: string;
-}) {
+  children: React.ReactNode;
+}
+
+const MobileModel = ({ show, onClose, title, children }: MobileModelProps) => {
+  if (!show) return null;
+
   return (
-    <div className="bg-[#1e1e1e] text-white rounded-xl w-full max-w-[320px] p-4 space-y-4 relative hover:shadow-md hover:brightness-110 transition duration-200">
-      {/* Top Avatar and Title */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center text-white font-bold text-lg">
-          🧑
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg w-full max-w-md p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            ×
+          </button>
         </div>
-        <div>
-          <h3 className="text-base font-semibold">{title}</h3>
-          <p className="text-sm text-gray-400">{name}</p>
-        </div>
-      </div>
-
-      {/* Separator */}
-      <div className="border-t border-gray-700" />
-
-      {/* Buttons */}
-      <div className="flex justify-between items-center pt-1">
-        <button className="flex items-center gap-1 text-sm text-gray-300 hover:text-white  transition hover:rounded-lg hover:bg-[#333333] p-2">
-          <MyProfilePreviewIcon /> Preview
-        </button>
-        <button className="flex items-center gap-1 text-sm text-gray-300 hover:text-white transition p-2 hover:bg-[#333333] hover:rounded-lg">
-          <MyProfileEditIcon /> Edit profile
-        </button>
+        {children}
       </div>
     </div>
   );
-}
+};
+
+export default MobileModel;

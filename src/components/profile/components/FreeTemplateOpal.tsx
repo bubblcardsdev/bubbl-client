@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import ProfileImg from "../../../../public/profile.png";
 import {
   Share_icon,
   Qr_icon,
@@ -19,23 +18,35 @@ import {
   Arrow_icon,
   Instagram_icon,
 } from "../../common/icons";
-
-const FreeTemplateOpal=()=>{
-  // const socialMedia = [
-  //   { name: "Instagram", username: "@user name", icon: "/instagram.png" },
-  //   { name: "Twitter", username: "@user name", icon: "/twitter.png" },
-  //   { name: "LinkedIn", username: "User name", icon: "/linkedin.png" },
-  //   { name: "Youtube", username: "@user name", icon: "/youtube.png" },
-  //   { name: "Facebook", username: "@user name", icon: "/facebook.png" },
-  // ];
+import { theme } from "../../../utils/profileThemecolor";
+type ProfileProps = {
+  selectedTheme: string;
+};
+export const FreeTemplateOpal = ({
+  formData,
+  selectedTheme,
+}: {
+  formData: any;
+  selectedTheme: any;
+}) => {
+  const [color, setColor] = useState<string>("");
+  useEffect(() => {
+    const selected =
+      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
+    setColor(selected);
+    console.log(selected, "theme");
+  }, [selectedTheme]);
   return (
     <div className="w-full flex justify-center items-center align-middle bg-[#ccc]">
       <div className="w-full flex items-center justify-center">
         <div className="w-full max-w-sm bg-[#EDEDED]  relative overflow-hidden ">
-          <div className="absolute top-0 left-0 w-[100%] bg-[#9000FF] h-[165px] rounded-br-[550px] mb-[100px] "></div>
+          <div
+            className="absolute top-0 left-0 w-[100%]  h-[165px] rounded-br-[550px] mb-[100px] "
+            style={{ backgroundColor: color }}
+          ></div>
           <div className="relative  flex flex-col items-center  mt-[80px] bg-black rounded-[100px] h-[170px] w-[170px] ml-[100px] outline-none">
             <Image
-              src={ProfileImg.src}
+              src={formData?.profileImageUrl || "/profile.png"}
               alt="profile_Img"
               width={170}
               height={170}
@@ -45,35 +56,43 @@ const FreeTemplateOpal=()=>{
           <div className="p-5 space-y-4">
             <div className="flex  justify-between  ">
               <div className="flex flex-col space-y-4">
-                <button className="bg-[#9000FF] px-8 py-[10px] text-white rounded-[6px]">
+                <button
+                  className=" px-8 py-[10px] text-white rounded-[6px]"
+                  style={{ backgroundColor: color }}
+                >
                   save Contact
                 </button>
                 <div className="space-x-4">
-                  <button className="bg-[#9000FF] p-3 rounded-md">
+                  <button
+                    className="p-3 rounded-md"
+                    style={{ backgroundColor: color }}
+                  >
                     <Share_icon />
                   </button>
-                  <button className="bg-[#9000FF] p-3 rounded-md">
-                    <Qr_icon/>
+                  <button
+                    className=" p-3 rounded-md"
+                    style={{ backgroundColor: color }}
+                  >
+                    <Qr_icon />
                   </button>
                 </div>
               </div>
               <Image
-                src={ProfileImg.src}
+                src={formData?.companyLogoUrl || "/profile.png"}
                 width={110}
                 height={110}
                 alt="profile_img"
               />
             </div>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold mb-1">Mary Jane</h1>
+              <h1 className="text-2xl font-bold mb-1">
+                {formData?.name || "Name"}{" "}
+              </h1>
               <p className="text-[16px] text-gray-700 mb-2">
-                Senior Business Consultant
+                {formData?.position || "Designation"}{" "}
               </p>
               <p className="text-gray-600 text-sm">
-                As a Senior Business Consultant, I specialize in driving results
-                through strategic planning, process optimization, and strong
-                leadership. My focus is on fostering growth, efficiency, and
-                lasting business success.
+                {formData?.companyName || "company name"}
               </p>
             </div>
             <div className="">
@@ -83,123 +102,149 @@ const FreeTemplateOpal=()=>{
                 {/* Phone */}
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 p-4">
-                    <  Phone_icon
-                    color='#9000FF'/>
-                    <span className="ml-1 flex-grow">7358105486</span>
+                    <Phone_icon color={color} />
+                    <span className="ml-1 flex-grow">
+                      {formData?.mobileNumbers?.[0]?.countryCode}{" "}
+                      {formData?.mobileNumbers?.[0]?.number}
+                    </span>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* mail*/}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 p-4">
-                    <Mail_icon color='#9000FF' />
+                    <Mail_icon color={color} />
                     <span className="ml-1 flex-grow">
-                      kalaivani@bubbl.cards
+                      {formData?.emails?.[0]}{" "}
                     </span>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className="flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* website */}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 p-4">
-                    <WebIcon_thin color='#9000FF'/>
-                    <span className="ml-1 flex-grow">bubbl.cards</span>
+                    <WebIcon_thin color={color} />
+                    <span className="ml-1 flex-grow">
+                      {formData?.websiteLinks?.[0]}
+                    </span>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className="flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* location */}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 p-4">
-                    <Location_icon color='#9000FF' />
-                    <span className="ml-1 flex-grow">india</span>
+                    <Location_icon color={color} />
+                    <span className="ml-1 flex-grow">
+                      {formData?.state && formData?.country
+                        ? formData?.state + ", " + formData?.country
+                        : ""}
+                    </span>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
               </div>
             </div>
             <div className="">
-              <h2 className="text-xl font-bold mb-3">social media</h2>
+              <h2 className="text-xl font-bold mb-3">social media </h2>
               <div className="space-y-4 ">
                 {/* instagram */}
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Instagram_icon color='#9000FF' />
+                    <Instagram_icon color={color} />
                     <div className="px-0">
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Instagram
                       </h1>
-                      <p className="text-[12px]">https://chatgpt.com/c/67a</p>
+                      <p className="text-[12px]">
+                        {formData?.socialLinks?.[0]}
+                      </p>
                     </div>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* twitter*/}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Twitter_icon_thin color='#9000FF' />
+                    <Twitter_icon_thin color={color} />
                     <div className="px-0">
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Twitter
                       </h1>
-                      <p className="text-[12px]">https://chatgpt.com/c/67a</p>
+                      <p className="text-[12px]">
+                        {formData?.socialLinks?.[3]}
+                      </p>
                     </div>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* linkedin */}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Linkedin_icon_thin color='#9000FF'/>
+                    <Linkedin_icon_thin color={color} />
                     <div className="px-0">
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Linkedin
                       </h1>
-                      <p className="text-[12px]">https://chatgpt.com/c/67a</p>
+                      <p className="text-[12px]">
+                        {formData?.socialLinks?.[5]}
+                      </p>
                     </div>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* youtube */}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Youtube_icon color='#9000FF'/>
+                    <Youtube_icon color={color} />
                     <div className="px-0">
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Youtube
                       </h1>
-                      <p className="text-[12px]">https://chatgpt.com/c/67a</p>
-                    </div>{" "}
+                      <p className="text-[12px]">
+                        {formData?.socialLinks?.[2]}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 text-white  ">
+                  <div className=" flex items-center px-3 text-white  "
+                   style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
                 {/* facebook */}
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Facebook_icon_thin color='#9000FF'/>
+                    <Facebook_icon_thin color={color} />
                     <div className="px-0">
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Facebook
                       </h1>
-                      <p className="text-[12px]">https://chatgpt.com/c/67a</p>
-                    </div>{" "}
+                      <p className="text-[12px]">
+                        {formData?.socialLinks?.[1]}
+                      </p>
+                    </div>
                   </div>
-                  <div className="bg-[#9000FF] flex items-center px-3 ">
+                  <div className=" flex items-center px-3 "  style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
                 </div>
@@ -212,8 +257,7 @@ const FreeTemplateOpal=()=>{
                   <Googlepay_icon />
                 </div>
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
-                  <Phonepay_icon color='#8D00D2'/>
-                              
+                  <Phonepay_icon color="#8D00D2" />
                 </div>
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
                   <Paytm_icon />
@@ -237,6 +281,4 @@ const FreeTemplateOpal=()=>{
       </div>
     </div>
   );
-}
-
-export default FreeTemplateOpal;
+};

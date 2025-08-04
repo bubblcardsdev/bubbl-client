@@ -8,8 +8,8 @@ import { verifyEmailOtp, ResendMail } from "@/src/services/emailVerify";
 import { useRouter } from "next/router";
 import { toast, ToastContainer } from "react-toastify";
 const EmailVerifyPage = () => {
-const router = useRouter()
-const { email: emailTo, otpStatus } = router.query; // rename destructured key
+  const router = useRouter()
+  const { email: emailTo, otpStatus } = router.query; // rename destructured key
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
@@ -17,8 +17,8 @@ const { email: emailTo, otpStatus } = router.query; // rename destructured key
       toast.success("the otp has been sent successfully")
       setEmail(emailTo);
     }
-    else{
- toast.error("error sending otp try again later")
+    else {
+      toast.error("error sending otp try again later")
     }
   }, [emailTo]); // clean dependency
 
@@ -41,7 +41,7 @@ const { email: emailTo, otpStatus } = router.query; // rename destructured key
   //     }
   //   }
   // }, []);
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);
@@ -73,11 +73,11 @@ const { email: emailTo, otpStatus } = router.query; // rename destructured key
             <p className="mb-4 text-[#606060] md:text-[16px] font-semibold">
               Enter mail ID to Confirm your account.
             </p>
-            <form className="w-full"  onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await verifyEmailOtp(email, otp,router);
-  }}
->
+            <form className="w-full" onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              await verifyEmailOtp(email, otp, router);
+            }}
+            >
               <label className="block text-sm md:text-[14px] mt-[20px] font-medium text-[#909090] mb-[6px]">
                 OTP
               </label>
@@ -92,18 +92,18 @@ const { email: emailTo, otpStatus } = router.query; // rename destructured key
                    }
                `}
               />
-         <button
-  type="submit"
-  disabled={!otpStatus}
-  className={`w-full p-2 mt-[25px] text-white text-[14px] rounded-[8px] 
+              <button
+                type="submit"
+                disabled={!otpStatus}
+                className={`w-full p-2 mt-[25px] text-white text-[14px] rounded-[8px] 
     ${otpStatus ? "bg-[#9747FF] hover:bg-purple-500" : "bg-gray-400 cursor-not-allowed"} 
     focus:outline-none focus:ring-2 focus:ring-purple-500`}
->
-  Verify
-</button>
+              >
+                Verify
+              </button>
             </form>
             <p
-            className="mt-4 text-purple-500"
+              className="mt-4 text-purple-500"
               role="button"
               onClick={() => {
                 ResendMail(email);
