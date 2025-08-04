@@ -11,7 +11,7 @@ import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { loginUser } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 const LoginPage = () => {
   const router = useRouter();
 
@@ -111,6 +111,7 @@ const LoginPage = () => {
 
   return (
     <div className="h-screen bg-black">
+      <ToastContainer />
       <div className="flex md:flex-row overflow-hidden">
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
           <div className="w-full flex justify-start sticky top-0">

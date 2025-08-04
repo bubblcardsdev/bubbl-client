@@ -1,9 +1,10 @@
 import axiosInstance from "../helpers/axios";
 import { AxiosResponse } from "axios";
-// import  { NextRouter } from "next/router";
-import { RegisterApi } from "./registerApi";
+import  { NextRouter } from "next/router";
+// import { RegisterApi } from "./registerApi";
 import { toast } from "react-toastify";
-import { FormDataType } from "../components/signup";
+// import { FormDataType } from "../components/signup";
+// import { RegisterCreateProfile } from "./profile";
 export interface VerifyOtpResponse {
   success: boolean;
   message?: string;
@@ -15,8 +16,11 @@ export interface VerifyOtpResponse {
 
 export const verifyEmailOtp = async (
   email: string | null,
-  otp: string | null
+  otp: string | null,
+  router:NextRouter
 ): Promise<VerifyOtpResponse | void> => {
+  console.log("comes here",email,otp);
+  
   if (!email || !otp) {
     toast.error("Email or OTP is missing");
     return;
@@ -29,21 +33,12 @@ export const verifyEmailOtp = async (
     );
 
     if (response?.data?.success === true) {
-      const formDataString = sessionStorage.getItem("formData");
-      if (!formDataString) {
-        toast.error("Registration data missing. Please try again.");
-        return;
-      }
 
-      const parsedFormData: FormDataType = JSON.parse(formDataString);
-      const registerResponse = await RegisterApi(parsedFormData);
-
-      if (registerResponse) {
-        toast.success("Account created successfully!");
-        // router.push("/login")
-        sessionStorage.removeItem("formData")
+   sessionStorage.removeItem("formData")
+       router.push("/login")
+        
         // Maybe: clear sessionStorage and redirect
-      }
+      
     } else {
       toast.error(response.data?.message || "OTP Verification failed");
     }

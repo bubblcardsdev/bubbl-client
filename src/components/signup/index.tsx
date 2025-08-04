@@ -13,6 +13,8 @@ import React, { useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { ResendMail } from "@/src/services/emailVerify";
+import { RegisterApi } from "@/src/services/registerApi";
+import { toast, ToastContainer } from "react-toastify";
 
 export type FormDataType = {
   firstName: string;
@@ -154,24 +156,27 @@ const Signup = () => {
   //   }
   // };
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateFields()) {
-      sessionStorage.setItem("formData",JSON.stringify(formData))
-      try{
-  await ResendMail(formData.email)
-     router.push("/emailVerify")
-      }
-      catch(err){
-console.error("err sending mail",err)
-      }
-        // const response = await RegisterApi(formData);
-        // if (response) {
-          // toast.success("Account created successfully!");
-        
-        // }
+  e.preventDefault();
+  if (validateFields()) {
+    try {
+       await RegisterApi(formData);
+      //  await RegisterCreateProfile(formData);
+        await ResendMail(formData.email);
+        // router.push("/emailVerify");
+        router.push({
+          pathname:"/emailVerify",
+          query:{email:formData.email}
+        })
       
+
+    } catch (err) {
+      console.log(err);
+      
+      toast.error("something went wrong try again later");
     }
-  };
+  }
+};
+
   const stepperProgress = useMemo(() => {
     const getWidth = (fields: FormFieldKey[]) => {
       const filledFields = fields.filter(
@@ -201,6 +206,7 @@ console.error("err sending mail",err)
 
   return (
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
+      <ToastContainer/>
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
           <BubblLogo color="white" />
