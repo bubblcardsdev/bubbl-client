@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import BlogCard from "./components/blogSection";
-import Footer from "../footerPage/index";
 import Blog1 from "./components/blog1";
 import Blog2 from "./components/blog2";
 import Blog3 from "./components/blog3";
@@ -19,9 +18,6 @@ const Blog = () => {
         </div>
         <div>
           <BlogCard />
-        </div>
-        <div>
-          <Footer />
         </div>
       </div>
     </section>

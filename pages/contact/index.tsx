@@ -6,7 +6,7 @@ export default function ContactPage() {
 
   return (
     <div> 
-      <SiteLayout>
+      <SiteLayout darkTheme>
       <Contact />
         </SiteLayout> 
        

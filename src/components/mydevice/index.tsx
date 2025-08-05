@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Plus, MoreVertical, ChevronDown } from "lucide-react";
-import { FaCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 
 const profileOptions = [

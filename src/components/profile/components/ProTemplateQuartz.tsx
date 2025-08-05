@@ -18,9 +18,7 @@ import {
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 
-type ProfileProps = {
-  selectedTheme: string;
-};
+
 export const ProTemplateQuartz = ({
   formData,
   selectedTheme,

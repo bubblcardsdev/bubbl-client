@@ -6,6 +6,7 @@ interface MobileModelProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  name?: string;
 }
 
 const MobileModel = ({ show, onClose, title, children }: MobileModelProps) => {

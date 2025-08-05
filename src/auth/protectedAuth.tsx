@@ -1,34 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { getAccessToken } from "../helpers/localStorage";
 
 interface ProtectedAuthProps {
   children: React.ReactNode;
 }
 
-interface LoginDetails {
-  token?: {
-    accessToken?: string;
-  };
-  user?: {
-    name?: string;
-    email?: string;
-  };
-}
+
 
 const ProtectedAuth: React.FC<ProtectedAuthProps> = ({ children }) => {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("loginDetails");
+    const token = getAccessToken();
 
     try {
-      const loginDetails: LoginDetails = storedData
-        ? JSON.parse(storedData)
-        : {};
-
-      const token = loginDetails?.token?.accessToken;
 
       if (!token) {
         // router.push("/login");

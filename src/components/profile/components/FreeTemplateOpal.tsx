@@ -19,9 +19,7 @@ import {
   Instagram_icon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
-type ProfileProps = {
-  selectedTheme: string;
-};
+
 export const FreeTemplateOpal = ({
   formData,
   selectedTheme,

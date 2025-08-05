@@ -16,14 +16,11 @@ import {
   NokiaIcon,
 } from "../common/icons";
 
-import Footer from "../footerPage/index";
 import { ReactNode } from "react";
 
-export type DeviceModel = string;
-
-export type DeviceBrand = {
+type DeviceBrand = {
   brand: ReactNode;
-  models: DeviceModel[];
+  models: string[];
 };
 
 const devices: DeviceBrand[] = [
@@ -240,63 +237,54 @@ const devices: DeviceBrand[] = [
   },
 ];
 
-
 const CompatibilityPage = () => {
-  const [openIndex, setOpenIndex] = useState<null|number>(null);
+  const [openIndex, setOpenIndex] = useState<null | number>(null);
 
   const toggleDropdown = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
-    <section className=" bg-black text-whitew">
-      <div className=" bg-black text-white p-0  md:p-12 sm:px-8 xs:px-4  ">
-        <div className="max-w-[1300px] mx-auto lg:mt-[80px] md:mt-0 sm:mt-0 xs:mt-0">
-          {/* <nav className="text-gray-400 text-sm mb-4 ">
+    <section className=" text-white p-0  md:p-12 sm:px-8 xs:px-4  ">
+      <div className="max-w-[1300px] mx-auto lg:mt-[80px] md:mt-0 sm:mt-0 xs:mt-0">
+        {/* <nav className="text-gray-400 text-sm mb-4 ">
             Home &gt; Device List
           </nav> */}
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 mt-3">
-            All Compatible Devices
-          </h1>
-          <p className="text-gray-400 mb-6">
-            You can use bubbl with all devices to share your profile.
-            Compatibility is only important when it comes to the reader or
-            activating the bubblcard. Bubbl is compatible with iPhone XR or
-            newer (iPhone 7, iPhone 8, iPhone X must use the NFC scanner in the
-            control center) and most Androids. It&apos;s also possible to share your
-            profile with almost any device using the URL or QR-Code.
-          </p>
-          <div className=" border-t  border-gray-400 mt-8">
-            {devices?.map((device: DeviceBrand, index) => (
-              <div
-                key={index}
-                className="border-b border-gray-400 py-2 mt-4"
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 mt-3">
+          All Compatible Devices
+        </h1>
+        <p className="text-gray-400 mb-6">
+          You can use bubbl with all devices to share your profile.
+          Compatibility is only important when it comes to the reader or
+          activating the bubblcard. Bubbl is compatible with iPhone XR or newer
+          (iPhone 7, iPhone 8, iPhone X must use the NFC scanner in the control
+          center) and most Androids. It&apos;s also possible to share your
+          profile with almost any device using the URL or QR-Code.
+        </p>
+        <div className=" border-t  border-gray-400">
+          {devices?.map((device: DeviceBrand, index) => (
+            <div key={index} className="border-b border-gray-400 p-6">
+              <button
+                onClick={() => toggleDropdown(index)}
+                className="w-full flex justify-between items-center text-left text-lg font-medium focus:outline-none"
               >
-                <button
-                  onClick={() => toggleDropdown(index)}
-                  className="w-full flex justify-between items-center text-left text-lg font-medium focus:outline-none"
-                >
-                  {device.brand}
-                  {openIndex === index ? <ChevronUp /> : <ChevronDown />}
-                </button>
-                {openIndex === index && (
-                  <ul className="mt-2 text-gray-400 pl-4 space-y-1">
-                    {device.models.length ? (
-                      device.models.map((model: string, i: number) => (
-                        <li key={i}>• {model}</li>
-                      ))
-                    ) : (
-                      <li className="text-gray-500">
-                        No specific models listed
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
+                {device.brand}
+                {openIndex === index ? <ChevronUp /> : <ChevronDown />}
+              </button>
+              {openIndex === index && (
+                <ul className="mt-2 text-gray-400 pl-4 space-y-1">
+                  {device.models.length ? (
+                    device.models.map((model: string, i: number) => (
+                      <li key={i}>• {model}</li>
+                    ))
+                  ) : (
+                    <li className="text-gray-500">No specific models listed</li>
+                  )}
+                </ul>
+              )}
+            </div>
+          ))}
         </div>
       </div>
-      <Footer />
     </section>
   );
 };

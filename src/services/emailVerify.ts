@@ -1,6 +1,10 @@
 import axiosInstance from "../helpers/axios";
 import { AxiosResponse } from "axios";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import  { NextRouter } from "next/router";
+// import { RegisterApi } from "./registerApi";
+import { toast } from "react-toastify";
+// import { FormDataType } from "../components/signup";
+// import { RegisterCreateProfile } from "./profile";
 export interface VerifyOtpResponse {
   success: boolean;
   message?: string;
@@ -9,43 +13,55 @@ export interface VerifyOtpResponse {
     otp?:string,
   } 
 }
-export const EmailverifyOtp = async (
+
+export const verifyEmailOtp = async (
   email: string | null,
   otp: string | null,
-  router: AppRouterInstance 
+  router:NextRouter
 ): Promise<VerifyOtpResponse | void> => {
+  console.log("comes here",email,otp);
+  
   if (!email || !otp) {
-    console.error("Email or OTP is missing");
+    toast.error("Email or OTP is missing");
     return;
   }
 
   try {
     const response: AxiosResponse<VerifyOtpResponse> = await axiosInstance.post(
       `/verifyemailOtp`,
-      {
-        email,
-        otp,
-      }
+      { email, otp}
     );
 
     if (response?.data?.success === true) {
-      router.push("/login");
+toast.success("otp has been verified successfully")
+  //  sessionStorage.removeItem("formData")
+       router.push("/login")
+        
+        // Maybe: clear sessionStorage and redirect
+      
+    } else {
+      toast.error(response.data?.message || "OTP Verification failed");
     }
 
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
+    const errMsg = error.response?.data?.message || "OTP verification failed!";
+    toast.error(errMsg);
     console.error("OTP verification error:", error);
   }
 };
 
-export const ResendMail = async (email: string | null) => {
+
+export const ResendMail = async (email: string) => {
+  
   try {
-    const response = await axiosInstance.post(`/resendMail`, {
+    const response = await axiosInstance.post(`/resendMailOtp`, {
       email: email,
     });
     console.log(response, "fff-1");
-    return response.data;
+    return true;
   } catch (error) {
+    return false
     console.error(error);
   }
 };

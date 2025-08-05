@@ -4,7 +4,7 @@ import About from '../../src/components/about/index'
 export default function CompatibilityPage() {
 
   return (
-    <SiteLayout> <About /></SiteLayout>
+    <SiteLayout darkTheme> <About /></SiteLayout>
        
 
 
