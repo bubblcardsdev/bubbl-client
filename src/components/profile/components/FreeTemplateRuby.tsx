@@ -82,7 +82,8 @@ export const FreeTemplateRuby = ({
             </div>
           </div>
           <div className="mt-6 flex gap-3 ">
-            <button className="bg-gray-100 text-lg  font-semibold p-[10px]  rounded-[10px] w-[70%]"
+            <button
+              className="bg-gray-100 text-lg  font-semibold p-[10px]  rounded-[10px] w-[70%]"
               style={{ color: color }}
             >
               Save Contact
@@ -272,20 +273,26 @@ export const FreeTemplateRuby = ({
                   <Arrow_icon color={color} />
                 </div>
               </div>
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <Phonepay_icon color="#673594" />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
+              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-center justify-between  ">
+                {/* Left side: Icon + text */}
+                <div className="flex items-center gap-4 ml-3">
+                  <Phonepay_icon color="#673594" className="w-6 h-6" />
+                  <div>
+                    <h1 className="text-black font-semibold text-[16px] leading-none">
                       Phone pay
                     </h1>
-                    <p className="text-[12px] truncate">{formData?.digitalLinks?.[1]}</p>
+                    <p className="text-[12px] text-gray-600 leading-tight w-[180px] truncate">
+                      {formData?.digitalLinks?.[1]}
+                    </p>
                   </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
+
+                {/* Right side: Arrow icon */}
+                <div className="bg-[#E5E5E5] px-2 py-4 rounded-md">
+                  <Arrow_icon color={color} className="w-4 h-4" />
                 </div>
               </div>
+
               <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                 <div className="flex-1 flex items-center gap-3 px-4 py-2">
                   <Paytm_icon />

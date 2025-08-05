@@ -37,21 +37,21 @@ export const ProTemplateSpahire = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden">
-      <div className=" bg-gray-200 h-[400px] ">
+    <div className="w-full max-w-[400px] mx-auto overflow-hidden ">
+      <div className=" bg-gray-200">
         <Image
           src={formData?.profileImageUrl || "/profile.png"}
           alt=""
           width={100}
           height={100}
-          className="object-fill w-full"
+          className="object-fit w-full"
         />
       </div>
 
-      <div className="px-6 py-8 w-full space-y-3 bg-white">
-        <div className="relative rounded-lg w-fit h-34 bg-[#ccc] flex items-center flex-row border">
+      <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full space-y-3 bg-white">
+        <div className="relative rounded-lg w-full h-34 bg-[#ccc] flex items-center flex-row border">
           {/* Text Content */}
-          <div className="relative w-[320px] h-34 p-2">
+          <div className="relative w-[320px] h-34 p-2 text-left">
             <p className="text-lg font-bold" style={{ color: color }}>
               Your Name
             </p>
@@ -66,13 +66,13 @@ export const ProTemplateSpahire = ({
             </p>
           </div>
           {/* Logo Div (Overlapping) */}
-          <div className=" bg-black h-[100px] w-[100px] absolute  -right-8 flex items-center">
-            <p className="text-white font-semibold rounded-sm">
+          <div className=" bg-black h-[60px] w-[60px] absolute  -right-5 flex items-center">
+            <p className="text-white font-semibold rounded-md">
               <Image
-                src={formData?.companyLogoUrl || "/profile.png"}
+                src={formData?.companyLogoUrl ||"/profile.png"}
                 alt=""
-                height={500}
-                width={500}
+                height={100}
+                width={100}
               />
             </p>
           </div>
@@ -105,32 +105,31 @@ export const ProTemplateSpahire = ({
             <Qr_icon />
           </button>
         </div>
-        <div className="p-2">
+        <div className="p-0">
           {/* Contact Information */}
           <h2 className="text-lg font-bold mb-4">Contact Information</h2>
           <div className="grid grid-cols-4 gap-4 mb-6">
             <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <CallProfileIcon color={color} />
-              <span className="ml-1 flex-grow">
-                {/* {formData?.mobileNumbers?.[0]?.countryCode}{" "} */}
+              {/* <span className="ml-1 flex-grow">
                 {formData?.mobileNumbers?.[0]?.number}
-              </span>
+              </span> */}
             </div>
             <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <MailProfileIcon color={color} />
-              <span className="ml-1 flex-grow">{formData?.emails?.[0]}</span>
+              {/* <span className="ml-1 flex-grow">{formData?.emails?.[0]}</span> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <LocationFill_icon color={color}/>
-              <span className="ml-1 flex-grow">
+              {/* <span className="ml-1 flex-grow">
                 {formData?.websiteLinks?.[0]}
-              </span>
+              </span> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <WebProfileIcon color={color} />
-              <span className="ml-1 flex-grow">
+              {/* <span className="ml-1 flex-grow">
                 {formData?.websiteLinks?.[0]}
-              </span>
+              </span> */}
             </div>
           </div>
           {/* Social Media */}
@@ -138,19 +137,19 @@ export const ProTemplateSpahire = ({
           <div className="grid grid-cols-4 gap-4">
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <InstagramFill_icon color={color} />
-              <p className="text-[12px]">{formData?.socialLinks?.[0]}</p>
+              {/* <p className="text-[12px]">{formData?.socialLinks?.[0]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <WhatsappFill_icon color={color} />
-              <p className="text-[12px]">{formData?.socialLinks?.[4]}</p>
+              {/* <p className="text-[12px]">{formData?.socialLinks?.[4]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <FacebookFill_icon color={color} />
-              <p className="text-[12px]">{formData?.socialLinks?.[5]}</p>
+              {/* <p className="text-[12px]">{formData?.socialLinks?.[5]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <LinledinFill_icon color={color} />
-              <p className="text-[12px]">{formData?.socialLinks?.[5]}</p>
+              {/* <p className="text-[12px]">{formData?.socialLinks?.[5]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <TwitterIcon color={color} />
@@ -160,15 +159,15 @@ export const ProTemplateSpahire = ({
           <div className="grid grid-cols-4 gap-4">
             <div className="flex items-center justify-center w-14 h-14  rounded-md shadow-md ">
               <Googlepay_icon />
-              <p className="text-[12px]">{formData?.digitalLinks?.[0]}</p>
+              {/* <p className="text-[12px]">{formData?.digitalLinks?.[0]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <Phonepay_icon color="#5F259F" />
-              <p className="text-[12px]">{formData?.digitalLinks?.[1]}</p>
+              {/* <p className="text-[12px]">{formData?.digitalLinks?.[1]}</p> */}
             </div>
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <Paytm_icon />
-              <p className="text-[12px]">{formData?.digitalLinks?.[2]}</p>
+              {/* <p className="text-[12px]">{formData?.digitalLinks?.[2]}</p> */}
             </div>
           </div>
           <hr className="border-gray-300 mb-1 mt-4 border-1 " />

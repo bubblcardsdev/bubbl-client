@@ -1,15 +1,12 @@
 "use client";
-
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-
 type Template = {
   label: string;
   value: string;
   image: string;
 };
-
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -32,8 +29,6 @@ export default function ProfileTemplateModal({
     const prev = (currentIndex - 1 + templates.length) % templates.length;
     setCurrentIndex(prev);
   };
-
-  // Get 3 template indices based on currentIndex
   const getVisibleTemplates = () => {
     return [0, 1, 2].map((offset) => (currentIndex + offset) % templates.length);
   };

@@ -1,5 +1,0 @@
-export * from './components/FreeTemplateOpal'
-export * from './components/FreeTemplateRuby'
-export * from './components/ProTemplateNeno'
-export * from './components/ProTemplateQuartz'
-export * from './components/ProTemplateSaphire'

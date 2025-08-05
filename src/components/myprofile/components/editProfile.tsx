@@ -72,27 +72,27 @@ const templates = [
   {
     label: "Ruby",
     value: "ruby",
-    image: "/purple.png",
+    image: "/ruby.png",
   },
   {
     label: "Opal",
     value: "opal",
-    image: "/purple.png",
+    image: "/opal.png",
   },
   {
     label: "Saphire",
     value: "saphire",
-    image: "/purple.png",
+    image: "/saphire.png",
   },
   {
     label: "Neno",
     value: "neno",
-    image: "/purple.png",
+    image: "/neno.png",
   },
   {
     label: "Quartz",
     value: "quartz",
-    image: "/purple.png",
+    image: "/quartz.png",
   },
 ];
 
@@ -239,7 +239,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="lg:p-4 md:p-4 sm:p-0 xs:p-0">
       {openCropModal && cropSrc && selectedImageType && (
         <CropModal
           imageSrc={cropSrc}
@@ -326,7 +326,7 @@ const EditProfile = () => {
                     ) : (
                       // Upload trigger (when no image)
                       <label className="absolute inset-0 cursor-pointer group">
-                        <div className="absolute inset-0 w-[120px] h-[120px] top-7  opacity-100 group-hover:bg-black/50 flex items-center justify-center text-white text-xs transition rounded-full">
+                        <div className="absolute inset-0 w-[120px] h-[120px] top-7  opacity-100 group-hover:bg-black/50 flex  items-center lg:justify-center md:justify-center sm:justify-end xs:justify-end text-white text-xs transition rounded-full">
                           <Plus size={16} />
                         </div>
                         <input
@@ -404,7 +404,7 @@ const EditProfile = () => {
               />
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex lg:flex-row md:flex-row sm:flex-col xs:flex-col gap-4">
             <div className="w-full">
               <label className="text-sm mb-1 block text-gray-300">
                 Mobile number
@@ -412,7 +412,7 @@ const EditProfile = () => {
               {formData.mobileNumbers.map((mobile: any, idx: number) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-2 rounded-lg mt-1"
+                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-0 rounded-lg mt-1"
                 >
                   <select
                     value={mobile.type}
@@ -488,7 +488,7 @@ const EditProfile = () => {
               {formData.emails.map((email: any, idx: number) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 w-full rounded-lg mt-1"
+                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-0  w-full rounded-lg mt-1"
                 >
                   <input
                     type="email"
@@ -619,10 +619,10 @@ const EditProfile = () => {
               className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg"
             />
           </div>
-         
+         {/* theme color */}
           <div className="bg-[#1f1f1f]  rounded-xl w-full mt-10 ">
             <h3 className="text-sm text-gray-300 mb-2"> Profile Theme</h3>
-            <div className="flex gap-4 items-center bg-[#2c2c2c] p-3 rounded-xl">
+            <div className="grid grid-cols-8 gap-4 items-center bg-[#2c2c2c] p-3 rounded-xl">
               {theme.map((theme:any) => (
                 <button
                   key={theme.name}
@@ -691,7 +691,7 @@ const EditProfile = () => {
           </div>
 
           {/* Buttons */}
-          <div className="sticky bottom-0 bg-[#1e1e1e] p-4 flex justify-end gap-3 z-10">
+          <div className="sticky bottom-0 bg-[#1e1e1e] py-4 flex lg:justify-end md:justify-end sm:justify-between  xs:justify-between gap-3 z-10">
             <button className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition">
               Cancel
             </button>
@@ -705,10 +705,10 @@ const EditProfile = () => {
         </div>
 
         {/* Right Preview Section */}
-        <div className="w-full lg:w-[400px]">
-          <div className="sticky top-6 max-h-[calc(100vh-48px)] overflow-y-auto bg-gradient-to-b from-[#1f0128] to-black rounded-2xl px-6 py-6 text-gray-200 text-center">
+        <div className="w-full lg:w-[400px] sm:w-full xs:w-full">
+          <div className="sticky top-6 max-h-[calc(100vh-48px)] overflow-y-auto bg-gradient-to-b from-[#1f0128] to-black rounded-2xl lg:px-6 md:px-6 sm:px-0 xs:px-0 py-6 text-gray-200 text-center">
             Live preview
-            <div className="mt-4">
+            <div className="mt-4 px-2">
               <LivePreview
                 currentTemplate={templates?.[currentIndex]}
                 formData={formData}
