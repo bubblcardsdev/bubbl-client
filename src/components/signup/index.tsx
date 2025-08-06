@@ -9,120 +9,64 @@ import {
   FacebookColorIcon,
   LinkedinColorIcon,
 } from "../common/icons";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { ResendMail } from "@/src/services/emailVerify";
-import { RegisterApi } from "@/src/services/registerApi";
 import { toast, ToastContainer } from "react-toastify";
+import { stepSchemas } from "@/src/validators/auth";
+import { FormDataType } from "@/src/lib/interface";
+import { SIGNUP_STEPS } from "@/src/lib/constant";
+import { RegisterApi } from "@/src/services/authLoginApi";
 
-export type FormDataType = {
-  firstName: string;
-  role: string;
-  companyName: string;
-  mobile: string;
-  email: string;
-  password: string;
-  conformPassword: string;
-};
+
 const Signup = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState(1);
-  type FormFieldKey = keyof FormDataType;
-  const [errors, setErrors] = useState({
-    firstName: "",
-    role: "",
-    companyName: "",
-    mobile: "",
-    email: "",
-    conformPassword: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState<any>({});
+  type FormData = Record<string, string>;
+
+const stepFields: Record<number, (keyof FormData)[]> = {
+  1: ["name"],
+  2: ["role", "companyName"],
+  3: ["email"],
+  4: ["password", "confirmPassword"],
+};
   const [formData, setFormData] = useState<FormDataType>({
-    firstName: "",
+    name: "",
     role: "",
     companyName: "",
     mobile: "",
     email: "",
-    conformPassword: "",
+    confirmPassword: "",
     password: "",
   });
-  console.log(formData, "formdata");
-  const validateFields = () => {
-    let isValid = true;
-    const newErrors = {
-      firstName: "",
-      role: "",
-      companyName: "",
-      mobile: "",
-      email: "",
-      conformPassword: "",
-      password: "",
-    };
 
-    switch (step) {
-      case 1:
-        if (!formData.firstName.trim()) {
-          newErrors.firstName = "Name is required.";
-          isValid = false;
-        }
-        break;
-      case 2:
-        if (!formData.role.trim()) {
-          newErrors.role = "Role is required.";
-          isValid = false;
-        }
-        if (!formData.companyName.trim()) {
-          newErrors.companyName = "Company name is required.";
-          isValid = false;
-        }
-        break;
-      case 3:
-        if (!formData.email.trim()) {
-          newErrors.email = "Email is required.";
-          isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-          newErrors.email = "Enter a valid email address.";
-          isValid = false;
-        }
-        // Optional: Validate mobile
-        break;
-      case 4:
-        if (!formData.email.trim()) {
-          newErrors.email = "Email is required.";
-          isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-          newErrors.email = "Enter a valid email address.";
-          isValid = false;
-        }
+const getStepFormData = (
+  step: number,
+): Partial<FormDataType> => {
+  const fields = stepFields[step] as (keyof FormDataType)[];
+  return fields.reduce((acc, key) => {
+    acc[key] = formData[key];
+    return acc;
+  }, {} as Partial<FormDataType>);
+};
 
-        if (!formData.password.trim()) {
-          newErrors.password = "Password is required.";
-          isValid = false;
-        } else if (
-          !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-            formData.password
-          )
-        ) {
-          newErrors.password =
-            "Password must be at least 8 characters, include letters, numbers & special characters.";
-          isValid = false;
-        }
+  const validateFields = (step: number): boolean => {
+    const stepForm = getStepFormData(step);
+    const schema = stepSchemas[step];
 
-        if (!formData.conformPassword.trim()) {
-          newErrors.conformPassword = "Confirm Password is required.";
-          isValid = false;
-        } else if (formData.password !== formData.conformPassword) {
-          newErrors.conformPassword = "Passwords do not match.";
-          isValid = false;
-        }
-        break;
-    }
-
+    const { error } = schema.validate(stepForm, { abortEarly: false });
+    console.log(error)
+    if (!error) return true;
+    
+    const newErrors: Record<string, string> = {};
+    error.details.forEach((item) => {
+      newErrors[item.path[0]] = item.message;
+    });
     setErrors(newErrors);
-    return isValid;
+    return false;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,87 +74,37 @@ const Signup = () => {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  // const handlesubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (validateFields()) {
-  //     if (step <= 4) setStep(step + 1);
-  //   }
-  // };
-
-  // const handlesubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (validateFields()) {
-  //     try {
-  //       console.log(formData, "formData");
-  //       const response = await RegisterApi(formData);
-
-  //       if (response?.data?.success == true) {
-  //         toast.success("Account created successfully!");
-  //         setTimeout(() => router.push("/emailVerify"), 1500);
-  //       } else {
-  //         toast.error(response?.data?.message || "Email already exists.");
-  //       }
-  //     } catch (error: unknown) {
-  //       console.error("error", error);
-  //     }
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validateFields()) {
-    try {
-     const response =  await RegisterApi(formData);
-      //  await RegisterCreateProfile(formData);
+    e.preventDefault();
+    if (validateFields(step)) {
+      try {
+        const response = await RegisterApi(formData);
+        //  await RegisterCreateProfile(formData);
 
-      if(response){
- const isOtpSent = await ResendMail(formData.email);
-        // router.push("/emailVerify");
-        router.push({
-          pathname:"/emailVerify",
-          query:{email:formData.email,otpStatus:isOtpSent}
-        })
+        if (response) {
+          // const isOtpSent = await ResendMail(formData.email);
+          router.push({
+            pathname: "/emailVerify",
+            query: { email: formData.email, otpStatus: true },
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Something went wrong.");
       }
-       
-      
-
-    } catch (err) {
-      console.log(err);
-      
-      toast.error("something went wrong try again later");
     }
-  }
-};
+  };
 
-  const stepperProgress = useMemo(() => {
-    const getWidth = (fields: FormFieldKey[]) => {
-      const filledFields = fields.filter(
-        (field) => formData?.[field]?.length > 0
-      ).length;
-      return filledFields === fields.length ? 100 : filledFields > 0 ? 50 : 10;
-    };
-    switch (step) {
-      case 1:
-        return getWidth(["firstName"]);
-      case 2:
-        return getWidth(["role", "companyName"]);
-      case 3:
-        return getWidth(["email", "mobile"]);
-      case 4:
-        return getWidth(["email", "password"]);
-      default:
-        return 10;
-    }
-  }, [step, formData]);
   const handleStep = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateFields()) {
+    if (validateFields(step)) {
       setStep((prevStep) => prevStep + 1);
     }
   };
 
   return (
-    <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
-      <ToastContainer/>
+    <div className="w-full flex min-h-screen flex-col md:flex-row  overflow-x-hidden ">
+      <ToastContainer />
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
           <BubblLogo color="white" />
@@ -219,60 +113,32 @@ const Signup = () => {
           <div className="flex justify-start space-x-2 mb-8">
             {[1, 2, 3, 4].map((item, key: number) => (
               <div
-                onClick={() => setStep(item)}
+                onClick={() => {
+                  if(item <= step){
+                    setStep(item)
+                  }
+                }}
                 key={key}
-                className={`w-[70px] h-[5px] rounded-[25px] bg-[#262626] flex`}
+                className="w-[70px] h-[5px] rounded-[25px] bg-[#262626] flex cursor-pointer"
               >
                 <div
                   style={{
                     background: "#7939CC",
                     height: "100%",
                     borderRadius: "25px",
-                    width: `${
-                      step > item ? 100 : step == item ? stepperProgress : 0
-                    }%`,
+                    width: `${step > item ? 100 : step == item ? 30 : 0}%`,
                   }}
                 ></div>
               </div>
             ))}
           </div>
           <div className="text-start mb-2">
-            {step === 1 && (
-              <>
-                <h1 className="text-2xl font-bold  ">Welcome Aboard!</h1>
+            {<>
+                <h1 className="text-2xl font-bold  ">{SIGNUP_STEPS[step - 1]?.title}</h1>
                 <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
-                  Let&apos;s set up your account for a seamless experience
+                  {SIGNUP_STEPS[step - 1].subtitle}
                 </p>
-              </>
-            )}
-            {step === 2 && (
-              <>
-                <h1 className="text-2xl font-bold ">Your Work, Your Way</h1>
-                <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
-                  Describe your work to customize tools and resources
-                </p>
-              </>
-            )}
-            {step === 3 && (
-              <>
-                <h1 className="text-2xl font-bold ">
-                  Let&apos;s Make Connection Simple
-                </h1>
-                <p className="text-[#606060] text-sm font-[500] mt-[10px] leading-[1.3]">
-                  Share your contact info to ensure smooth effortless
-                  connectivity
-                </p>
-              </>
-            )}
-            {step === 4 && (
-              <>
-                <h1 className="text-2xl font-bold ">You&apos;re All Set</h1>
-                <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
-                  Now, save your card by signing up below. Welcome to the future
-                  of networking.
-                </p>
-              </>
-            )}
+              </>}
           </div>
           <form className="w-full max-w-xs">
             {step === 1 && (
@@ -285,19 +151,19 @@ const Signup = () => {
                 </label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] ${
-                    errors.firstName
+                    errors?.name
                       ? "border border-red-500 focus:outline-none"
                       : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                   }`}
                   placeholder="Enter your name"
                 />
-                {errors.firstName && (
+                {errors?.name && (
                   <p className="text-red-500 text-sm  mt-1">
-                    {errors.firstName}
+                    {errors?.name}
                   </p>
                 )}
               </div>
@@ -318,13 +184,13 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your role"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.role
+                      errors?.role
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.role && (
-                    <p className="text-red-500 text-sm mt-1">{errors.role}</p>
+                  {errors?.role && (
+                    <p className="text-red-500 text-sm mt-1">{errors?.role}</p>
                   )}
                 </div>
                 <div className="mb-6 mt-[20px]">
@@ -341,14 +207,14 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your company name"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.companyName
+                      errors?.companyName
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.companyName && (
+                  {errors?.companyName && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.companyName}
+                      {errors?.companyName}
                     </p>
                   )}
                 </div>
@@ -370,13 +236,15 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your email"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.email
+                      errors?.email
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm  mt-1">{errors.email}</p>
+                  {errors?.email && (
+                    <p className="text-red-500 text-sm  mt-1">
+                      {errors?.email}
+                    </p>
                   )}
                 </div>
                 <div className="mb-6 mt-[20px]">
@@ -393,14 +261,14 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your mobile number"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.mobile
+                      errors?.mobile
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
                   />
-                  {errors.mobile && (
+                  {errors?.mobile && (
                     <p className="text-red-500 text-sm  mt-1">
-                      {errors.mobile}
+                      {errors?.mobile}
                     </p>
                   )}
                 </div>
@@ -408,64 +276,6 @@ const Signup = () => {
             )}
             {step === 4 && (
               <>
-                <div className="mb-6 mt-[20px]">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-[#909090] mb-2 "
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.email
-                        ? "border border-red-500 focus:outline-none"
-                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="text-red-500  text-sm mt-1">{errors.email}</p>
-                  )}
-                </div>
-                {/* <div className="mb-6 relative">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-[#909090] mb-2 "
-                  >
-                    Password <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Enter your password"
-                    className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.password
-                        ? "border border-red-500 focus:outline-none"
-                        : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
-                    }`}
-                  />
-                  <span
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute right-3 top-[42px] text-center text-gray-400 cursor-pointer"
-                  >
-                    {showConfirmPassword ? (
-                      <AiOutlineEyeInvisible />
-                    ) : (
-                      <AiOutlineEye />
-                    )}
-                  </span>
-                  {errors.password && (
-                    <p className="text-red-500 text-sm  mt-1">
-                      {errors.password}
-                    </p>
-                  )}
-                </div> */}
                 <div className="mb-6 relative">
                   <label
                     htmlFor="password"
@@ -480,7 +290,7 @@ const Signup = () => {
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 pr-10 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.password
+                      errors?.password
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
@@ -495,9 +305,9 @@ const Signup = () => {
                       <AiOutlineEye />
                     )}
                   </span>
-                  {errors.password && (
+                  {errors?.password && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.password}
+                      {errors?.password}
                     </p>
                   )}
                 </div>
@@ -506,16 +316,16 @@ const Signup = () => {
                     htmlFor="password"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    ConformPassword <span className="text-red-500">*</span>
+                    Confirm Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    name="conformPassword"
-                    value={formData.conformPassword}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="Enter your password"
                     className={`w-full p-2 rounded-[8px] mt-[2px] bg-[#262626] text-white pl-[4%] placeholder:text-[13px] placeholder:text-[#666161] outline-none ${
-                      errors.conformPassword
+                      errors?.confirmPassword
                         ? "border border-red-500 focus:outline-none"
                         : "focus:outline focus:outline-1 focus:outline-[#9747FF] focus:outline-offset-0"
                     }`}
@@ -530,25 +340,16 @@ const Signup = () => {
                       <AiOutlineEye />
                     )}
                   </span>
-                  {errors.conformPassword && (
+                  {errors?.confirmPassword && (
                     <p className="text-red-500 text-sm  mt-1">
-                      {errors.conformPassword}
+                      {errors?.confirmPassword}
                     </p>
                   )}
                 </div>
               </>
             )}
-            {/* Continue Button */}
-            {/* {step === 4 ? (
-              <button
-                type="submit"
-                className="w-full p-[10px]  bg-[#7939CC] rounded-[10px] text-white text-[14px]  hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                Verify account
-              </button>
-            ) : ( */}
+  
             <button
-              // type={step === 4 ? "submit" : "button"}
               onClick={step === 4 ? handleSubmit : handleStep}
               className="w-full p-[10px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -596,17 +397,8 @@ const Signup = () => {
       <div className=" hidden md:flex w-1/2 bg-gray-800 items-center justify-center ">
         <div className="w-[300px] p-4 bg-black rounded-lg shadow-lg  bordr">
           <div className="flex items-center  bg-blue justify-center w-full ">
-            <Image
-              className="inline-block animate-wave delay-100 text:4xl"
-              role="img"
-              aria-label="waving-hand"
-              src="/hand.png"
-              alt="Hand icon"
-              width={20}
-              height={20}
-            />
-            <p className="text-[10px] text-center text-white mt-1">
-              Welcome {formData.firstName}
+            <p className="text-xs text-center text-white mt-1 truncate max-w-[190px]">
+             &#x1F44B; Welcome {formData.name}
             </p>
           </div>
           <div className=" mt-[14px] relative w-50 p-2 rounded-lg shadow-lg  overflow-hidden bg-[#141414]">
@@ -615,21 +407,21 @@ const Signup = () => {
               <div className="absolute inset-0 w-full h-full bg-center backdrop-blur-lg bg-black/30 rounded-lg"></div>
 
               {/* Content */}
-              <div className="relative z-10">
+              <div className="flex flex-col gap-1 z-10 relative">
                 <Image
                   src="/profile.png"
                   alt="Profile"
-                  className="w-20 h-20 rounded-full mx-auto mb-4"
+                  className="w-20 h-20 rounded-full mx-auto"
                   width={100}
                   height={100}
                 />
-                <h2 className="text-[18px] font-[700] text-center text-black mb-2">
-                  {formData.firstName}
+                <h2 className="text-[18px] font-[700] text-center text-black">
+                  {formData.name}
                 </h2>
                 <p className="text-[14px] text-center text-black/60 font-semibold">
                   {formData.role}
                 </p>
-                <p className="text-[14px] text-center p-2 text-black/60 font-semibold">
+                <p className="text-[14px] text-center text-black/60 font-semibold">
                   {formData.companyName}
                 </p>
               </div>

@@ -82,7 +82,7 @@ function Products(props: ProductProps) {
                 {title[product.sectionType]?.description}
               </p>
             </div>
-            <div className="grid lg:grid-cols-[repeat(3,minmax(320px,1fr))] md:grid-cols-[repeat(2,minmax(320px,1fr))] sm:grid-cols-none xs:grid-cols-none gap-5 w-full box-border ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full box-border ">
               {product.cards.map((card: Card) => (
                 <div
                   key={card.id}

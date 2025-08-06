@@ -72,3 +72,26 @@ export type CartItem = {
   deviceTypeId: number;
   deviceType: string;
 };
+
+export type FormDataType = {
+  name: string;
+  role: string;
+  companyName: string;
+  mobile: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type FieldConfig = {
+  name: keyof FormDataType;
+  label: string;
+  type: "text" | "password" | "email";
+  required?: boolean;
+  showToggle?: boolean;
+};
+
+export type StepConfig = {
+  title: string;
+  subtitle: string;
+};
