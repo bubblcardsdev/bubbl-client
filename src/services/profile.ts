@@ -1,15 +1,15 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
-import { FormDataType } from "../components/signup";
+import { FormDataType } from "../lib/interface";
 
 
 export const RegisterCreateProfile = async(formData:FormDataType)=>{
 
-  const [firstName, ...rest] = formData?.firstName?.trim().split(/\s+/); 
+  const [name, ...rest] = formData?.name?.trim().split(/\s+/); 
 const lastName = rest.join(" ");  
 
 const payload = {
-  firstName,
+  firstName: name,
   lastName,
   emailIds: [
     {
