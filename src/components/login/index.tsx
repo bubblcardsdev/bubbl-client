@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
   FacebookColorIcon,
@@ -8,7 +8,6 @@ import {
 } from "../common/icons";
 import Image from "next/image";
 import Link from "next/link";
-import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { loginUser } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
@@ -24,34 +23,29 @@ const LoginPage = () => {
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/;
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
+    try {
+      if (!loginForm.email || !loginForm.password) {
+        toast.error("Email or password is empty");
+        return;
+      }
 
- async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault()
-  setLoading(true);
-  try {
-    if (!loginForm?.email || !loginForm?.password) {
-      return toast.error("Email or password is empty");
+      const success = await loginUser(loginForm.email, loginForm.password);
+
+      if (success) {
+        toast.success("Logged in successfully!");
+        router.push("/myprofile");
+      }
+    } catch (err) {
+      console.error("Unexpected error in handleSubmit:", err);
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
     }
-
-    const response = await loginUser(loginForm.email, loginForm.password);
-    console.log(response,"/");
-    
-    if (response?.status !== true) {
-        return  toast.error(response?.error || "Invalid credentials");  
-    } 
-  
-   toast.success("Logged in successfully!");
-      router.push("/myprofile");
-    
-  } catch (err: any) {
-    console.error("Unexpected crash in handleLogin:", err);
-    toast.error("Something went wrong. Please try again.");
-  }
-  finally{
-    setLoading(false)
-  }
-}
+  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -72,42 +66,6 @@ const LoginPage = () => {
         : "Password must be at least 8 characters long and include both letters and numbers",
     }));
   };
-
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (!errors.emailError && !errors.passwordError) {
-  //     setLoading(true);
-  //     try {
-  //       const res = await loginUser(loginForm.email, loginForm.password);
-  //       console.log(res, "res");
-  //       if (res?.success) {
-  //         localStorage.setItem("loginDetails", JSON.stringify(res.data));
-  //         toast.success("Login  successfully!");
-
-  //         setTimeout(() => router.push("/overview"), 1500);
-  //       } else {
-  //         console.error(res?.data?.message);
-  //       }
-  //     } catch (err) {
-  //       console.error("Login Error", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
-
-  const RightImageRender = useMemo(() => {
-    const randomIndex = Math.floor(Math.random() * 8);
-    return (
-      <Image
-        src={LOGIN_IMAGES[randomIndex]}
-        alt="Login image"
-        fill
-        style={{ objectFit: "cover" }}
-      />
-    );
-  }, []);
 
   return (
     <div className="h-screen bg-black">
@@ -219,7 +177,7 @@ const LoginPage = () => {
           </div>
 
           <div className="flex justify-between w-full text-gray-500 text-xs py-0 mx-auto">
-            <p className="text-[14px]">© {new Date().getFullYear()} Bubbl</p>
+            <p className="text-[14px]">© 2025 Bubbl</p>
             <Link href="mailto:sales@bubbl.cards" className="text-[14px]">
               sales@bubbl.cards
             </Link>
@@ -227,7 +185,14 @@ const LoginPage = () => {
         </div>
 
         <div className="hidden md:flex w-1/2 items-center justify-center bg-white h-screen relative">
-          {RightImageRender}
+          <Image
+            src="/images/metalicBlue.jpg"
+            alt="Login image"
+            sizes="50vw"
+            priority
+            fill
+            className="object-cover"
+          />
         </div>
       </div>
     </div>

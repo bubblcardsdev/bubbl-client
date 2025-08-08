@@ -18,7 +18,6 @@ axiosInstance.interceptors.response.use(
   (response) => response, // if the response is successful, return it
   async (error) => {
     const originalRequest = error.config;
-    console.log("error", error);
     // Check if the response exists and status is 401 (Unauthorized)
     if (
       error.response &&

@@ -1,4 +1,4 @@
-import { FAQItem, WhyChooseUsTypes } from "./interface";
+import { FAQItem, StepConfig, WhyChooseUsTypes } from "./interface";
 
 export const themeObject: { [key: string]: string } = {
   "/home": "linear-gradient(to right, #4A4A4A, #000000)",
@@ -377,6 +377,7 @@ export const WHY_CHOOSE_US: WhyChooseUsTypes[] = [
       "Share your contact details with just a tap—no apps or setup needed. Seamlessly connect with any smartphone, making networking faster and smarter than ever.",
   },
 ];
+
 export const countryCodesData = [
   { code: "+1", name: "United States", iso: "US" },
   { code: "+91", name: "India", iso: "IN" },
@@ -465,4 +466,24 @@ export const countryCodesData = [
   { code: "+998", name: "Uzbekistan", iso: "UZ" },
   { code: "+84", name: "Vietnam", iso: "VN" },
   { code: "+967", name: "Yemen", iso: "YE" },
+
+]
+
+export const SIGNUP_STEPS: StepConfig[] = [
+  {
+    title: "Welcome Aboard!",
+    subtitle: "Let's set up your account for a seamless experience"
+  },
+  {
+    title: "Your Work, Your Way",
+    subtitle: "Describe your work to customize tools and resources",
+  },
+  {
+    title: "Let's Make Connection Simple",
+    subtitle: "Share your contact info to ensure smooth effortless connectivity",
+  },
+  {
+    title: "You're All Set",
+    subtitle: "Now, save your card by signing up below.",
+  },
 ];
