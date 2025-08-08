@@ -107,7 +107,7 @@ export const ProTemplateSpahire = ({
         </div>
         <div className="p-0">
           {/* Contact Information */}
-          <h2 className="text-lg font-bold mb-4">Contact Information</h2>
+          <h2 className="text-lg font-bold mb-4 text-left text-black">Contact Information</h2>
           <div className="grid grid-cols-4 gap-4 mb-6">
             <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <CallProfileIcon color={color} />
@@ -133,7 +133,7 @@ export const ProTemplateSpahire = ({
             </div>
           </div>
           {/* Social Media */}
-          <h2 className="text-lg font-bold mb-4">Social Media</h2>
+          <h2 className="text-lg font-bold mb-4 text-left text-black">Social Media</h2>
           <div className="grid grid-cols-4 gap-4">
             <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
               <InstagramFill_icon color={color} />
@@ -155,7 +155,8 @@ export const ProTemplateSpahire = ({
               <TwitterIcon color={color} />
             </div>
           </div>
-          <h2 className="text-lg font-bold mb-6">Digital payments</h2>
+          <div>
+          <h2 className="text-lg font-bold mt-4 text-black text-left">Digital payments</h2>
           <div className="grid grid-cols-4 gap-4">
             <div className="flex items-center justify-center w-14 h-14  rounded-md shadow-md ">
               <Googlepay_icon />
@@ -170,9 +171,10 @@ export const ProTemplateSpahire = ({
               {/* <p className="text-[12px]">{formData?.digitalLinks?.[2]}</p> */}
             </div>
           </div>
+          </div>
           <hr className="border-gray-300 mb-1 mt-4 border-1 " />
           <div className="flex flex-col justify-center items-center">
-            <p className="text-sm font-semibold mb-4 mt-3">
+            <p className="text-sm font-semibold mb-4 mt-3 text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
             <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">

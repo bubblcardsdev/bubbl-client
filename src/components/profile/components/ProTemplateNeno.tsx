@@ -21,9 +21,9 @@ export const ProTemplateNeno = ({ formData }: { formData: any }) => {
   return (
     <div className="flex  flex-col items-center align-middle justify-between bg-gray-400 ">
       <div className="">
-      <div className="bg-gray-500  w-[400px] h-[350px] object-cover rounded-[0_0_0px_0px]">
+        <div className="bg-gray-500  w-[400px] h-[350px] object-cover rounded-[0_0_0px_0px]">
           <Image
-          src={formData?.profileImageUrl || "/profile.png"}
+            src={formData?.profileImageUrl || "/profile.png"}
             alt=""
             height={500}
             width={500}
@@ -41,18 +41,19 @@ export const ProTemplateNeno = ({ formData }: { formData: any }) => {
                 className="object-fill h-12 w-12"
               />
             </div>
-            <div className="mt-0 flex flex-col gap-y-1">
-              <h2 className="text-lg font-semibold">Your Name</h2>
+            <div className="mt-0 flex flex-col gap-y-1 text-left ">
+              <h2 className="text-lg font-semibold">
+                {" "}
+                {formData?.name || "Name"}{" "}
+              </h2>
               <p className="text-sm font-semibold tracking-wide text-white/70 ">
-                Designation
+                {formData?.position || "Designation"}{" "}
               </p>
               <p className="text-sm font-semibold tracking-wide text-white/70 ">
-                company Name
+                {formData?.companyName || "company name"}
               </p>
               <p className="text-sm text-white/80 leading-relaxed mt-3">
-                Lorem ipsum dolor sit amet, minim veniam incididunt ut labore et
-                dolore magna aliqua. Ut enim ad quis nostrud exercitation. , sed
-                do eiusmod tempor consectetur adipiscing elit
+                {formData?.bio}
               </p>
               <div className="flex gap-4 mt-6">
                 <button className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 px-4 rounded-md">
@@ -67,7 +68,7 @@ export const ProTemplateNeno = ({ formData }: { formData: any }) => {
               </div>
             </div>
           </div>
-          <div className=" rounded-lg p-4 md:p-5 w-full text-white relative z-10  backdrop-blur bg-opacity border border-gray-400   ">
+          <div className=" text-left rounded-lg p-4 md:p-5 w-full text-white relative z-10  backdrop-blur bg-opacity border border-gray-400   ">
             <p className="text-xl text-white">Contact Information</p>
             <div className="flex flex-row justify-evenly gap-x-16 mt-6">
               <CallProfileIcon />
@@ -118,4 +119,3 @@ export const ProTemplateNeno = ({ formData }: { formData: any }) => {
     </div>
   );
 };
-

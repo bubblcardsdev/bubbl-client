@@ -20,7 +20,7 @@ const PostLoginHeader = (props:FunctionProps) => {
       </div>
       <div className="flex justify-between gap-3">
         <p className="text-center py-1">
-          <NottifycationIcon />
+          {/* <NottifycationIcon /> */}
         </p>
         <p>
           <ProfileIcon />

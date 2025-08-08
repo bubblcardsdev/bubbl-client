@@ -74,7 +74,7 @@ function ContactPage() {
           </div>
         </div>
         <ContactForm />
-        <div className="mt-[60px]">
+        <div className="mb-8">
           <BubblCommunity />
         </div>
     </section>

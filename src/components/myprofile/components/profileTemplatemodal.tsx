@@ -2,11 +2,13 @@
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+
 type Template = {
   label: string;
   value: string;
   image: string;
 };
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -14,6 +16,7 @@ type Props = {
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
 };
+
 export default function ProfileTemplateModal({
   isOpen,
   onClose,
@@ -21,22 +24,32 @@ export default function ProfileTemplateModal({
   currentIndex,
   setCurrentIndex,
 }: Props) {
-  const nextSlide = () => {
-    const next = (currentIndex + 1) % templates.length;
-    setCurrentIndex(next);
+  const [currentPage, setCurrentPage] = React.useState(0);
+
+  const templatesPerPage = 3;
+  const totalPages = Math.ceil(templates.length / templatesPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => (prev + 1 < totalPages ? prev + 1 : 0));
   };
-  const prevSlide = () => {
-    const prev = (currentIndex - 1 + templates.length) % templates.length;
-    setCurrentIndex(prev);
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
   };
-  const getVisibleTemplates = () => {
-    return [0, 1, 2].map((offset) => (currentIndex + offset) % templates.length);
+
+  const getPaginatedTemplates = () => {
+    const start = currentPage * templatesPerPage;
+    const end = start + templatesPerPage;
+    return templates.slice(start, end);
   };
-  const visibleIndices = getVisibleTemplates();
+
+  const visibleTemplates = getPaginatedTemplates();
+
   if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1f1f1f] text-white rounded-2xl max-w-3xl w-full p-6 relative">
+      <div className="bg-[#1f1f1f] text-white rounded-2xl max-w-4xl w-full p-6 relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -44,40 +57,70 @@ export default function ProfileTemplateModal({
         >
           <X size={24} />
         </button>
+
         {/* Header */}
         <h2 className="text-xl font-semibold mb-6">
           Profile templates ({templates.length})
         </h2>
-        {/* Template Preview Carousel */}
+
+        {/* Carousel */}
         <div className="relative flex items-center justify-center">
           {/* Left Arrow */}
           <button
-            onClick={prevSlide}
-            className="absolute left-[-32px] z-10 p-2 text-white hover:text-gray-300"
+            onClick={handlePrevPage}
+            className="absolute left-0 z-10 p-2 text-white hover:text-gray-300"
           >
             <ChevronLeft size={32} />
           </button>
 
           {/* Template Cards */}
           <div className="flex gap-6">
-            {visibleIndices.map((templateIndex) => {
-              const template = templates[templateIndex];
+            {visibleTemplates.map((template) => {
+              const index = templates.findIndex(
+                (t) => t.value === template.value
+              );
+              const isSelected = index === currentIndex;
+
               return (
                 <div
                   key={template.value}
-                  className={`rounded-xl bg-black w-[160px] h-[300px] overflow-hidden shadow-md border-2 ${
-                    templateIndex === currentIndex
-                      ? "border-white"
-                      : "border-transparent"
-                  }`}
+                  className={`flex flex-col items-center  w-[160px]`}
                 >
-                  <Image
-                    src={template.image}
-                    alt={template.label}
-                    width={160}
-                    height={300}
-                    className="object-cover"
-                  />
+                  {/* Image */}
+                  <div className={`w-full h-[300px] overflow-hidden shadow-md rounded-xl cursor-pointer border-2 transition-all duration-300 ${
+                    isSelected
+                      ? "border-white bg-[#2a2a2a]"
+                      : "border-[#333] bg-[#1a1a1a]"
+                  }`}
+                   onClick={() => setCurrentIndex(index)}
+                  >
+                    <Image
+                      src={template.image}
+                      alt={template.label}
+                      width={160}
+                      height={300}
+                      className="object-contain rounded-md"
+                    />
+                  </div>
+
+                  {/* Label & Radio */}
+                  <div className="py-3 flex flex-col items-center">
+                    <input
+                      type="radio"
+                      name="template"
+                      value={template.value}
+                      checked={isSelected}
+                      onChange={() => setCurrentIndex(index)}
+                      className="w-4 h-4 mb-1 accent-white cursor-pointer"
+                    />
+                    <span
+                      className={`text-sm ${
+                        isSelected ? "text-white" : "text-gray-400"
+                      }`}
+                    >
+                      {template.label}
+                    </span>
+                  </div>
                 </div>
               );
             })}
@@ -85,44 +128,14 @@ export default function ProfileTemplateModal({
 
           {/* Right Arrow */}
           <button
-            onClick={nextSlide}
-            className="absolute right-[-32px] z-10 p-2 text-white hover:text-gray-300"
+            onClick={handleNextPage}
+            className="absolute right-0 z-10 p-2 text-white hover:text-gray-300"
           >
             <ChevronRight size={32} />
           </button>
-        </div>
-
-        {/* Radio Selectors for Visible Templates */}
-        <div className="flex justify-center mt-6 gap-[150px]">
-          {visibleIndices.map((templateIndex) => {
-            const template = templates[templateIndex];
-            return (
-              <label
-                key={template.value}
-                className="flex flex-col items-center text-sm cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="template"
-                  value={template.value}
-                  checked={templateIndex === currentIndex}
-                  onChange={() => setCurrentIndex(templateIndex)}
-                  className="w-4 h-4 mb-1 accent-white"
-                />
-                <span
-                  className={
-                    templateIndex === currentIndex
-                      ? "text-white"
-                      : "text-gray-400"
-                  }
-                >
-                  {template.label}
-                </span>
-              </label>
-            );
-          })}
         </div>
       </div>
     </div>
   );
 }
+

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Password from "../settings/components/password";
-import {Plus} from "lucide-react";
+import { Plus } from "lucide-react";
 
 const Settings: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -96,7 +96,7 @@ const Settings: React.FC = () => {
             Update
           </button>
         </div> */}
-        <div className="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col items-start sm:items-center lg:gap-[150px] sm:gap-[50px] xs:gap-[50px] justify-around mt-[40px]">
+        {/* <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 xs:grid-cols-1 px-0  lg:gap-[150px] sm:gap-[50px] xs:gap-[50px] justify-around mt-[40px] items-center ">
           <div className="relative w-20 h-20 border rounded-full">
             {image ? (
               <Image
@@ -125,14 +125,12 @@ const Settings: React.FC = () => {
             )}
           </div>
 
-          <p className="text-xs text-gray-400">(upload max 2mb)</p>
+          <div className="text-xs text-gray-400">(upload max 2mb)</div>
 
           <div className="flex flex-col items-center">
             <label className="bg-white text-black px-4 py-[8px] rounded text-sm hover:bg-gray-200 cursor-pointer">
               upload
-              <div className="absolute inset-0 w-[120px] h-[120px] top-7  opacity-100 group-hover:bg-black/50 flex items-center justify-center text-white text-xs transition rounded-full">
-                <Plus size={16} />
-              </div>
+            
               <input
                 type="file"
                 accept="image/*"
@@ -140,14 +138,57 @@ const Settings: React.FC = () => {
                 className="hidden"
               />
             </label>
+          </div>
+        </div> */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-[50px] lg:gap-[150px] items-center justify-center mt-10">
+          {/* Profile Image Preview */}
+          <div className="relative w-20 h-20 border rounded-full mx-auto">
+            {image ? (
+              <Image
+                src={image}
+                alt="Profile"
+                fill
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <Image
+                src="/default-profile.png" // <-- Add fallback image path
+                alt="img"
+                fill
+                className="rounded-full object-cover"
+              />
+            )}
 
-            {/* {image && (
-              <button className="bg-white text-black px-4 py-[8px] rounded text-sm hover:bg-gray-200">
-                Update
+            {image && (
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute -top-1 -right-1 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+              >
+                x
               </button>
-            )} */}
+            )}
+          </div>
+
+          {/* Upload Note */}
+          <div className="text-center text-xs text-gray-400">
+            (Upload max 2MB)
+          </div>
+
+          {/* Upload Button */}
+          <div className="flex justify-center">
+            <label className="bg-white text-black px-4 py-2 rounded text-sm hover:bg-gray-200 cursor-pointer">
+              Upload
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
         </div>
+
         <form
           onSubmit={handleSubmit}
           className="mt-[60px] grid grid-cols-1 md:grid-cols-2 gap-4"

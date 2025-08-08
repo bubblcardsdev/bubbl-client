@@ -55,8 +55,8 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // If the refresh token also fails, redirect to the login page
         console.error("Refresh token failed:", refreshError);
-        localStorage.clear();
-        Router.push("/login?lt=1"); // Redirect to login on token refresh failure
+        // localStorage.clear();
+        // Router.push("/login?lt=1"); // Redirect to login on token refresh failure
         return Promise.reject(refreshError); // Reject the original promise
       }
     }
@@ -64,8 +64,8 @@ axiosInstance.interceptors.response.use(
     // If the error is not a 401 or other conditions fail, push to login and reject
     if (error.response && error.response.status === 401) {
       console.log("Refresh token failed:", error?.response);
-      localStorage.clear();
-      Router.push("/login?lt=1"); // Redirect to login on token expiration
+      // localStorage.clear();
+      // Router.push("/login?lt=1"); // Redirect to login on token expiration
     }
 
     return Promise.reject(error); // Reject the original error promise

@@ -35,9 +35,17 @@ export const FreeTemplateRuby = ({
     setColor(selected);
     console.log(selected, "theme");
   }, [selectedTheme]);
+
+  const openInNewTab = (url: string) => {
+    if (!url.startsWith("http")) {
+      url = `https://${url}`;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="flex items-center align-middle justify-center">
-      <div className="relative w-full max-w-sm">
+      <div className="relative w-full ">
         <div className="h-[230px] bg-yellow-500  rounded-t-2xl ">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
@@ -99,214 +107,281 @@ export const FreeTemplateRuby = ({
               </span>
             </button>
           </div>
-          <p className="text-gray-700 text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full">
+          <p className="text-gray-700 text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
             {formData?.bio}
           </p>
           <div className="py-4">
-            <h2 className="text-xl font-bold mb-3 text-left">
-              Contact Information
-            </h2>
+            {(formData?.mobileNumbers?.[0]?.number ||
+              formData?.emails?.[0] ||
+              formData?.websiteLinks?.[0] ||
+              (formData?.state && formData?.country)) && (
+              <h2 className="text-xl font-bold mb-3 text-left">
+                Contact Information
+              </h2>
+            )}
             <div className="space-y-4">
               {/* Phone */}
-              <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 p-4">
-                  <PhoneColorIcon />
-                  <span className="ml-1 flex-grow">
-                    {formData?.mobileNumbers?.[0]?.countryCode}{" "}
-                    {formData?.mobileNumbers?.[0]?.number}
-                  </span>
+              {formData?.mobileNumbers?.[0]?.number && (
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <PhoneColorIcon />
+                    <span className="ml-1 flex-grow text-left">
+                      {formData?.mobileNumbers?.[0]?.countryCode}{" "}
+                      {formData?.mobileNumbers?.[0]?.number}
+                    </span>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
+                  </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+              )}
               {/* mail*/}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 p-4">
-                  <MailIconbackgroundFill />
-                  <span className="ml-1 flex-grow">
-                    {formData?.emails?.[0]}
-                  </span>
+              {formData?.emails?.[0] && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <MailIconbackgroundFill />
+                    <span className="ml-1 flex-grow">
+                      {formData?.emails?.[0]}
+                    </span>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
+                  </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+              )}
               {/* website */}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 p-4">
-                  <WebIconBackgroundFill />
-                  <span className="ml-1 flex-grow">
-                    {formData?.websiteLinks?.[0]}
-                  </span>
+              {formData?.websiteLinks?.[0] && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <WebIconBackgroundFill />
+                    <span className="ml-1 flex-grow">
+                      {formData?.websiteLinks?.[0]}
+                    </span>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
+                  </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+              )}
               {/* location */}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 p-4">
-                  <MapIconBackgroundFill />
-                  <span className="ml-1 flex-grow">
-                    {formData?.state && formData?.country
-                      ? formData?.state + ", " + formData?.country
-                      : ""}
-                  </span>
+              {formData?.state && formData?.country && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                  <div className="flex-1 flex items-center gap-3 p-4">
+                    <MapIconBackgroundFill />
+                    <span className="ml-1 flex-grow">
+                      {formData?.state && formData?.country
+                        ? formData?.state + ", " + formData?.country
+                        : ""}
+                    </span>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
+                  </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+              )}
             </div>
           </div>
           <div className="py-4">
-            <h2 className="text-xl font-bold mb-4 text-left">Social Media</h2>
+            {formData?.socialLinks?.length > 0 &&
+              (formData?.socialLinks?.[0]?.length > 0 ||
+                formData?.socialLinks?.[1]?.length > 0 ||
+                formData?.socialLinks?.[2]?.length > 0 ||
+                formData?.socialLinks?.[3]?.length > 0 ||
+                formData?.socialLinks?.[4]?.length > 0 ||
+                formData?.socialLinks?.[5]?.length > 0) && (
+                <h2 className="text-xl font-bold mb-4 text-left">
+                  Social Media
+                </h2>
+              )}
+
             <div className="space-y-4 ">
               {/* instagram */}
-              <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <InstagramBackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Instagram
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[0]}</p>
+              {formData?.socialLinks?.[0] &&
+                formData?.socialLinks?.[0]?.length > 0 && (
+                  <div
+                    role="button"
+                    onClick={() => openInNewTab(formData?.socialLinks?.[0])}
+                    className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
+                  >
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <InstagramBackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Instagram
+                        </h1>
+                        {/* <p className="text-[12px]">
+                        {formData?.socialLinks?.[0]}
+                      </p> */}
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+                )}
               {/* facebook */}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <FacebookIconbackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Facebook
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[1]}</p>
+              {formData?.socialLinks?.[1] &&
+                formData?.socialLinks?.[1]?.length > 0 && (
+                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <FacebookIconbackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Facebook
+                        </h1>
+                        {/* <p className="text-[12px]">
+                        {formData?.socialLinks?.[1]}
+                      </p> */}
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+                )}
               {/* youtube */}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <YoutubeIconbackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Youtube
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[2]}</p>
+              {formData?.socialLinks?.[2] &&
+                formData?.socialLinks?.[2]?.length > 0 && (
+                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <YoutubeIconbackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Youtube
+                        </h1>
+                        {/* <p className="text-[12px]">
+                        {formData?.socialLinks?.[2]}
+                      </p> */}
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 text-white  ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 text-white  ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+                )}
               {/* twitter*/}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <TwitterIconbackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Twitter
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[3]}</p>
+              {formData?.socialLinks?.[3] &&
+                formData?.socialLinks?.[3]?.length > 0 && (
+                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <TwitterIconbackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Twitter
+                        </h1>
+                        <p className="text-[12px]">
+                          {formData?.socialLinks?.[3]}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <WhatsappIconbackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Whatsapp
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[4]}</p>
+                )}
+              {/* whatsapp */}
+              {formData?.socialLinks?.[4] &&
+                formData?.socialLinks?.[4]?.length > 0 && (
+                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <WhatsappIconbackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Whatsapp
+                        </h1>
+                        <p className="text-[12px]">
+                          {formData?.socialLinks?.[4]}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+                )}
               {/* linkedin */}
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <LinkedinIconbackgroundFill />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Linkedin
-                    </h1>
-                    <p className="text-[12px]">{formData?.socialLinks?.[5]}</p>
+              {formData?.socialLinks?.[5] &&
+                formData?.socialLinks?.[5]?.length > 0 && (
+                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                      <LinkedinIconbackgroundFill />
+                      <div className="px-0">
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                          Linkedin
+                        </h1>
+                        <p className="text-[12px]">
+                          {formData?.socialLinks?.[5]}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+                )}
             </div>
           </div>
           <div className="py-4">
-            <h2 className="text-xl font-bold mb-4 text-left">
-              Digital Payments
-            </h2>
+            {formData?.digitalLinks?.Digitalpay?.[0] && (
+              <h2 className="text-xl font-bold mb-4 text-left">
+                Digital Payments
+              </h2>
+            )}
             <div className="space-y-4 ">
-              <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <Googlepay_icon />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      Gpay
-                    </h1>
-                    <p className="text-[12px]">{formData?.digitalLinks?.[0]}</p>
+              {formData?.digitalLinks?.Digitalpay?.[0] && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
+                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                    <Googlepay_icon />
+                    <div className="px-0">
+                      <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                        Gpay
+                      </h1>
+                      <p className="text-[10px]">
+                        {formData?.digitalLinks?.[2]}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
                   </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-center justify-between  ">
-                {/* Left side: Icon + text */}
-                <div className="flex items-center gap-4 ml-3">
-                  <Phonepay_icon color="#673594" className="w-6 h-6" />
-                  <div>
-                    <h1 className="text-black font-semibold text-[16px] leading-none">
-                      Phone pay
-                    </h1>
-                    <p className="text-[12px] text-gray-600 leading-tight w-[180px] truncate">
-                      {formData?.digitalLinks?.[1]}
-                    </p>
+              )}
+              {formData?.digitalLinks?.Digitalpay?.[0] && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                    <Phonepay_icon color="#673594" className="w-6 h-6" />
+                    <div className="px-0">
+                      <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                        phonepe
+                      </h1>
+                      <p className="text-[10px]">
+                        {formData?.digitalLinks?.[1]}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
                   </div>
                 </div>
-
-                {/* Right side: Arrow icon */}
-                <div className="bg-[#E5E5E5] px-2 py-4 rounded-md">
-                  <Arrow_icon color={color} className="w-4 h-4" />
-                </div>
-              </div>
-
-              <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                  <Paytm_icon />
-                  <div className="px-0">
-                    <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                      paytm
-                    </h1>
-                    <p className="text-[12px]">{formData?.digitalLinks?.[2]}</p>
+              )}
+              {formData?.digitalLinks?.Digitalpay?.[0] && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                    <Paytm_icon />
+                    <div className="px-0">
+                      <h1 className=" flex-grow text-black font-semibold text-[16px] ">
+                        paytm
+                      </h1>
+                      <p className="text-[10px]">
+                        {formData?.digitalLinks?.[2]}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                    <Arrow_icon color={color} />
                   </div>
                 </div>
-                <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                  <Arrow_icon color={color} />
-                </div>
-              </div>
+              )}
             </div>
           </div>
           <hr className="border-gray-300 mb-4" />

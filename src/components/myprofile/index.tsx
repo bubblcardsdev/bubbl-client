@@ -13,7 +13,7 @@ export default function MyprofilePage() {
   };
   return (
     <div>
-      <div className=" text-white  md:p-0 mt-4">
+      <div className=" text-white  md:p-0 mt-4 ">
         <h2 className="text-xl font-semibold mb-1">Profiles</h2>
         <p className="text-sm text-gray-400 mb-6">
           Customize your profile to reflect your professional identity

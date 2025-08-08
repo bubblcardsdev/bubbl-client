@@ -51,12 +51,12 @@ export const ProTemplateQuartz = ({
       <div className="px-4 py-8 w-full space-y-3 bg-[#E9BCFF] relative">
         <div className="flex items-center gap-3 ">
           {/* Save Contact Button with Share Icon */}
-          <div className="flex items-center justify-between gap-8 ml-2">
+          <div className="flex items-center justify-between gap-8 ml-2 mt-10">
             <button
               className="flex-1 px-6 py-2 rounded-lg"
               style={{ backgroundColor: color }}
             >
-              <span className="text-sm text-white">Save Contact</span>
+              <span className="text-sm text-white whitespace-nowrap">Save Contact</span>
             </button>
             <button
               className="p-2  rounded-lg"
@@ -65,19 +65,19 @@ export const ProTemplateQuartz = ({
               <Qr_icon />
             </button>
           </div>
-          <div className="absolute lg:w-24 lg:h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-8 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
+          <div className="absolute w-24 h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-5 md:right-0 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
             <Image
               src={formData?.companyLogoUrl || "/profile.png"}
               alt=""
-              className="object-contain"
-              width={200}
-              height={200}
+              className="object-contain w-full h-full rounded-2xl"
+              width={100}
+              height={100}
             />
           </div>
         </div>
         <div className=" w-full">
           {/* Text Content */}
-          <div className="relative w-[80%] h-34 p-2">
+          <div className="relative w-[80%] h-34 p-2 text-left">
             <p className="text-lg font-bold text-black">Your Name</p>
             <p className="text-md text-black font-semibold">Designation</p>
             <p className="text-sm text-gray-600 mt-0">
@@ -87,9 +87,9 @@ export const ProTemplateQuartz = ({
             </p>
           </div>
         </div>
-        <div className="p-2">
+        <div className="p-0">
           {/* Contact Information */}
-          <h2 className="text-lg font-bold mb-2">Contact Information</h2>
+          <h2 className="text-lg font-bold mb-2 text-black text-left">Contact Information</h2>
           <div className="flex flex-col gap-4 p-0">
             {/* Phone Number Button */}
             <button
@@ -99,7 +99,7 @@ export const ProTemplateQuartz = ({
             >
               <div className="flex items-center gap-3">
                 <CallProfileIcon color={"#FFFFFF"} />
-                <span className="text-sm">Phone Number</span>
+                {formData?.mobileNumbers?.[0]?.number&&formData?.mobileNumbers?.[0]?.number?.length<=0&&<span className="text-sm">Phone Number</span>}
                 <span className="ml-1 flex-grow">
                   {formData?.mobileNumbers?.[0]?.countryCode}{" "}
                   {formData?.mobileNumbers?.[0]?.number}
@@ -151,8 +151,8 @@ export const ProTemplateQuartz = ({
             </button>
           </div>
           {/* Social Media */}
-          <h2 className="text-lg font-bold mb-4 mt-4">Social Media</h2>
-          <div className="grid grid-cols-4 gap-4">
+          <h2 className="text-lg font-bold mb-4 mt-4 text-black text-left">Social Media</h2>
+          <div className="grid grid-cols-4 gap-x-4 gap-y-4 ">
             <div
               className="flex items-center justify-center w-14 h-14  rounded-md shadow-md"
               style={{ backgroundColor: color }}
@@ -185,7 +185,7 @@ export const ProTemplateQuartz = ({
             </div>
           </div>
           <h2 className="text-lg font-bold mb-4 mt-4">Social Media</h2>
-          <div className="grid grid-cols-4 gap-4 mb-4 mt-4">
+          <div className="grid grid-cols-3 gap-4 mb-4 mt-4">
             <div className="flex items-center justify-center w-14 h-14 bg-[#8D00D2] rounded-md shadow-md">
               <Googlepay_icon />
             </div>

@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from "react";
-import { Trash2, Plus,Check } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Trash2, Plus, Check } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
 import {
@@ -16,7 +16,7 @@ import {
 import ProfileTemplateModal from "./profileTemplatemodal";
 import LivePreview from "./livePreview";
 import CropModal from "../../common/CropModal";
-import {theme} from '../../../utils/profileThemecolor'
+import { theme } from "../../../utils/profileThemecolor";
 const socialLinks = [
   {
     name: "Instagram",
@@ -132,7 +132,7 @@ const EditProfile = () => {
     city: "",
     zipcode: "",
     bio: "",
-    socialLinks: Array(socialLinks.length).fill(""),
+    socialLinks: Array(socialLinks.length).fill([]),
     digitalLinks: Digitalpay.map((item) => item.link),
     profileImageUrl: "", // will store preview URL as string
     companyLogoUrl: "", // will store preview URL as string
@@ -251,7 +251,7 @@ const EditProfile = () => {
       <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Form Section */}
-        <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-6 space-y-6">
+        <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
           {/* Profile Title & Layout */}
           <div className="space-y-4">
             <div>
@@ -299,10 +299,10 @@ const EditProfile = () => {
                   : formData.companyLogoUrl;
 
               return (
-                <div key={type} className="flex flex-col items-center relative">
+                <div key={type} className="flex flex-col items-center ">
                   <span className="text-sm mb-2 text-gray-300">{label}</span>
 
-                  <div className="w-[120px] h-[120px] rounded-full bg-black overflow-hidden">
+                  <div className="w-[120px] h-[120px] rounded-full relative bg-black">
                     {/* Image if present */}
                     {imageUrl ? (
                       <>
@@ -318,7 +318,7 @@ const EditProfile = () => {
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(type)}
-                          className="absolute top-10 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-10 shadow-md"
+                          className="absolute top-4 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-[10] shadow-md"
                         >
                           ✕
                         </button>
@@ -326,7 +326,7 @@ const EditProfile = () => {
                     ) : (
                       // Upload trigger (when no image)
                       <label className="absolute inset-0 cursor-pointer group">
-                        <div className="absolute inset-0 w-[120px] h-[120px] top-7  opacity-100 group-hover:bg-black/50 flex  items-center lg:justify-center md:justify-center sm:justify-end xs:justify-end text-white text-xs transition rounded-full">
+                        <div className="absolute inset-0 w-[120px] h-[120px] opacity-100 group-hover:bg-black/50 flex  items-center justify-center text-white text-xs transition rounded-full">
                           <Plus size={16} />
                         </div>
                         <input
@@ -472,12 +472,14 @@ const EditProfile = () => {
                 </div>
               ))}
 
-              <button
-                onClick={() => addToArray("mobileNumbers")}
-                className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
-              >
-                <Plus className="w-4 h-4" /> Add Mobile Number
-              </button>
+              {formData?.mobileNumbers?.length < 2 && (
+                <button
+                  onClick={() => addToArray("mobileNumbers")}
+                  className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+                >
+                  <Plus className="w-4 h-4" /> Add Mobile Number
+                </button>
+              )}
             </div>
 
             {/* Emails */}
@@ -498,17 +500,20 @@ const EditProfile = () => {
                     }
                     className="truncate w-0 flex-1 bg-[#2a2a2a] p-[10px] outline-none text-white"
                   />
+
                   <button onClick={() => removeFromArray("emails", idx)}>
                     <Trash2 className="w-4 h-4 text-white" />
                   </button>
                 </div>
               ))}
-              <button
-                onClick={() => addToArray("emails")}
-                className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
-              >
-                <Plus className="w-4 h-4" /> Add Email
-              </button>
+              {formData?.emails?.length < 2 && (
+                <button
+                  onClick={() => addToArray("emails")}
+                  className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+                >
+                  <Plus className="w-4 h-4" /> Add Email
+                </button>
+              )}
             </div>
           </div>
           {/* Website Links */}
@@ -537,12 +542,14 @@ const EditProfile = () => {
                 </button>
               </div>
             ))}
-            <button
-              onClick={() => addToArray("websiteLinks")}
-              className="mt-2 text-sm flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
-            >
-              <Plus className="w-4 h-4" /> Add website Link
-            </button>
+            {formData?.websiteLinks?.length < 2 && (
+              <button
+                onClick={() => addToArray("websiteLinks")}
+                className="mt-2 text-sm flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+              >
+                <Plus className="w-4 h-4" /> Add website Link
+              </button>
+            )}
           </div>
 
           {/* Address */}
@@ -619,11 +626,11 @@ const EditProfile = () => {
               className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg"
             />
           </div>
-         {/* theme color */}
+          {/* theme color */}
           <div className="bg-[#1f1f1f]  rounded-xl w-full mt-10 ">
             <h3 className="text-sm text-gray-300 mb-2"> Profile Theme</h3>
             <div className="grid grid-cols-8 gap-4 items-center bg-[#2c2c2c] p-3 rounded-xl">
-              {theme.map((theme:any) => (
+              {theme.map((theme: any) => (
                 <button
                   key={theme.name}
                   className={clsx(
@@ -705,10 +712,15 @@ const EditProfile = () => {
         </div>
 
         {/* Right Preview Section */}
-        <div className="w-full lg:w-[400px] sm:w-full xs:w-full">
-          <div className="sticky top-6 max-h-[calc(100vh-48px)] overflow-y-auto bg-gradient-to-b from-[#1f0128] to-black rounded-2xl lg:px-6 md:px-6 sm:px-0 xs:px-0 py-6 text-gray-200 text-center">
-            Live preview
-            <div className="mt-4 px-2">
+        <div className="w-full lg:w-[400px]">
+          <div className=" sticky top-2 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-none bg-gradient-to-b from-[#1f0128] to-black rounded-2xl pb-5  text-gray-200 text-center">
+            {/* Sticky Live Preview Heading */}
+            <p className="sticky top-0 py-2 z-[99999] text-lg font-medium pt-4 bg-[#1f0128]">
+              Live preview
+            </p>
+
+            {/* Preview content */}
+            <div className="mt-4 px-6">
               <LivePreview
                 currentTemplate={templates?.[currentIndex]}
                 formData={formData}

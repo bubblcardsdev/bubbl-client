@@ -6,6 +6,8 @@ import { SearchIcon } from "../../common/icons";
 import Products from "./products";
 import { fetchAllDevices } from "../../../services/alldevicesApi";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { NewsLetterApi } from "../../../services/newsLetterApi";
 
 // TYPES
 interface DeviceItem {
@@ -78,7 +80,35 @@ function CardSection() {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("All products");
   const [searchProduct, setSearchProduct] = useState("");
-  const options = ["Category 1", "Category 2"];
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSubscribe = async () => {
+    if (!email.trim()) {
+      toast.error("Please enter your email");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await NewsLetterApi(email);
+      toast.success(res.message || "Subscribed successfully!");
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to subscribe. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const options = ["BasicCard", "customCard"];
   const isOpenSelect = () => {
     setIsOpen(!isOpen);
   };
@@ -227,14 +257,16 @@ function CardSection() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <input
                   type="email"
-                  // value={email}
-                  // onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="flex max-w-md px-6 py-2  border border-gray-300 rounded-lg  text-black focus:ring-1 focus:ring-purple-500 focus:border-transparent outline-none"
                   required
                 />
                 <button
                   type="submit"
+                  onClick={handleSubscribe}
+                  disabled={loading}
                   className="px-6 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600 transition-colors duration-200 "
                 >
                   Subscribe

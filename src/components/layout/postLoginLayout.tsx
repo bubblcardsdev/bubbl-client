@@ -4,6 +4,7 @@ import PostLoginSidebar, { FunctionProps } from "./postLoginSidebar";
 import PostLoginHeader from "./postLoginHeader";
 import useWindowSize from "@/src/hooks/useWindowSize";
 import ProtectedAuth from "@/src/auth/protectedAuth";
+import { ToastContainer } from "react-toastify";
 const PostLoginLayoutPage = (props: FunctionProps) => {
   const { currentPage } = props;
   const [isOpen, setIsOpen] = useState(false);
@@ -47,10 +48,11 @@ const PostLoginLayoutPage = (props: FunctionProps) => {
             </div>
           </div>
           {/* <div className="lg:px-[50px] md:px-[50px] sm:px-[20px] xs:px-[18px] py-[20px]"> */}
-          <div className="p-[24px] max-w-[1100px] w-full mx-auto">
+          <div className="p-[24px] max-w-[1200px] w-full mx-auto">
             {props?.children}
           </div>
         </div>
+        <ToastContainer />
       </div>
     </ProtectedAuth>
   );

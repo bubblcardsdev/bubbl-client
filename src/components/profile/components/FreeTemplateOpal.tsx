@@ -83,26 +83,32 @@ export const FreeTemplateOpal = ({
               />
             </div>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold mb-1">
+              <h1 className="text-2xl font-bold mb-1 text-left text-black">
                 {formData?.name || "Name"}{" "}
               </h1>
-              <p className="text-[16px] text-gray-700 mb-2">
+              <p className="text-[16px] text-gray-700 mb-2 text-left">
                 {formData?.position || "Designation"}{" "}
               </p>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-sm text-left">
                 {formData?.companyName || "company name"}
               </p>
             </div>
             <div className="">
-              <h2 className="text-xl font-bold mb-3">Contact Information</h2>
+                 {(formData?.mobileNumbers?.[0]?.number ||
+              formData?.emails?.[0] ||
+              formData?.websiteLinks?.[0] ||
+              (formData?.state && formData?.country)) && (
+              <h2 className="text-xl font-bold mb-3 text-black text-left">Contact Information</h2>)}
               {/* Contact Items */}
-              <div className="space-y-4">
+              <div className="space-y-4 text-black text-left ">
                 {/* Phone */}
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                 {formData?.mobileNumbers?.[0]?.number && (
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden ">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <Phone_icon color={color} />
-                    <span className="ml-1 flex-grow">
-                      {formData?.mobileNumbers?.[0]?.countryCode}{" "}
+                    <span className="ml-1 flex-grow ">
+                      {formData?.mobileNumbers?.[0]?.countryCode}
+                      {" "}
                       {formData?.mobileNumbers?.[0]?.number}
                     </span>
                   </div>
@@ -110,25 +116,27 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* mail*/}
+                     {formData?.emails?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <Mail_icon color={color} />
-                    <span className="ml-1 flex-grow">
-                      {formData?.emails?.[0]}{" "}
+                    <span className="ml-1 flex-grow truncate w-full max-w-[120px]">
+                      {formData?.emails?.[0]}
                     </span>
                   </div>
                   <div className="flex items-center px-3 "
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* website */}
+                 {formData?.websiteLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <WebIcon_thin color={color} />
-                    <span className="ml-1 flex-grow">
+                    <span className="ml-1 flex-grow truncate w-full max-w-[120px] ">
                       {formData?.websiteLinks?.[0]}
                     </span>
                   </div>
@@ -136,8 +144,9 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* location */}
+                   {formData?.state && formData?.country && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <Location_icon color={color} />
@@ -151,13 +160,16 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
               </div>
             </div>
             <div className="">
-              <h2 className="text-xl font-bold mb-3">social media </h2>
+                {formData?.socialLinks?.[0] && (
+              <h2 className="text-xl font-bold mb-3 text-left text-black">social media </h2>
+                )}
               <div className="space-y-4 ">
                 {/* instagram */}
+                  {formData?.socialLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
                     <Instagram_icon color={color} />
@@ -165,7 +177,7 @@ export const FreeTemplateOpal = ({
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Instagram
                       </h1>
-                      <p className="text-[12px]">
+                      <p className="text-[12px] truncate w-full max-w-[120px]">
                         {formData?.socialLinks?.[0]}
                       </p>
                     </div>
@@ -175,7 +187,9 @@ export const FreeTemplateOpal = ({
                     <Arrow_icon />
                   </div>
                 </div>
+                  )}
                 {/* twitter*/}
+                  {formData?.socialLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
                     <Twitter_icon_thin color={color} />
@@ -183,7 +197,7 @@ export const FreeTemplateOpal = ({
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Twitter
                       </h1>
-                      <p className="text-[12px]">
+                      <p className="text-[12px] truncate w-full max-w-[120px]">
                         {formData?.socialLinks?.[3]}
                       </p>
                     </div>
@@ -192,8 +206,9 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* linkedin */}
+                  {formData?.socialLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
                     <Linkedin_icon_thin color={color} />
@@ -201,7 +216,7 @@ export const FreeTemplateOpal = ({
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Linkedin
                       </h1>
-                      <p className="text-[12px]">
+                      <p className="text-[12px] truncate w-full max-w-[120px]">
                         {formData?.socialLinks?.[5]}
                       </p>
                     </div>
@@ -210,8 +225,9 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* youtube */}
+                  {formData?.socialLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
                     <Youtube_icon color={color} />
@@ -219,7 +235,7 @@ export const FreeTemplateOpal = ({
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Youtube
                       </h1>
-                      <p className="text-[12px]">
+                      <p className="text-[12px] truncate w-full max-w-[120px]">
                         {formData?.socialLinks?.[2]}
                       </p>
                     </div>
@@ -228,8 +244,9 @@ export const FreeTemplateOpal = ({
                    style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
                 {/* facebook */}
+                  {formData?.socialLinks?.[0] && (
                 <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
                   <div className="flex-1 flex items-center gap-3 px-4 py-2">
                     <Facebook_icon_thin color={color} />
@@ -237,7 +254,7 @@ export const FreeTemplateOpal = ({
                       <h1 className=" flex-grow text-black font-semibold text-[16px]">
                         Facebook
                       </h1>
-                      <p className="text-[12px]">
+                      <p className="text-[12px] truncate w-full max-w-[120px]">
                         {formData?.socialLinks?.[1]}
                       </p>
                     </div>
@@ -245,24 +262,28 @@ export const FreeTemplateOpal = ({
                   <div className=" flex items-center px-3 "  style={{ backgroundColor: color }}>
                     <Arrow_icon />
                   </div>
-                </div>
+                </div>)}
               </div>
             </div>
             <div className="rounded-lg w-full">
-              <h2 className="text-xl font-bold mb-4">Digital Payments</h2>
-              <div className="flex justify-start gap-4 mb-6">
+                    {formData?.digitalLinks?.Digitalpay?.[0] && (
+              <h2 className="text-xl font-bold mb-4 text-left text-black ">Digital Payments</h2>)}
+              <div className="flex justify-start gap-4 mb-6 truncate w-full max-w-[120px]">
+                    {formData?.digitalLinks?.Digitalpay?.[0] && (
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
                   <Googlepay_icon />
-                </div>
+                </div>)}
+                    {formData?.digitalLinks?.Digitalpay?.[0] && (
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
                   <Phonepay_icon color="#8D00D2" />
-                </div>
+                </div>)}
+                    {formData?.digitalLinks?.Digitalpay?.[0] && (
                 <div className="bg-[#F4F4F4] p-3 rounded-lg ">
                   <Paytm_icon />
-                </div>
+                </div>)}
               </div>
               <hr className="border-gray-300 mb-4" />
-              <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-col justify-center items-center text-black">
                 <p className="text-sm font-semibold mb-4">
                   Go Digital - Save Paper, Trees & Our Earth.
                 </p>

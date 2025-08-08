@@ -156,30 +156,27 @@ const Signup = () => {
   //   }
   // };
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (validateFields()) {
-    try {
-     const response =  await RegisterApi(formData);
-      //  await RegisterCreateProfile(formData);
+    e.preventDefault();
+    if (validateFields()) {
+      try {
+        const response = await RegisterApi(formData);
+        //  await RegisterCreateProfile(formData);
 
-      if(response){
- const isOtpSent = await ResendMail(formData.email);
-        // router.push("/emailVerify");
-        router.push({
-          pathname:"/emailVerify",
-          query:{email:formData.email,otpStatus:isOtpSent}
-        })
+        if (response) {
+          const isOtpSent = await ResendMail(formData.email);
+          // router.push("/emailVerify");
+          router.push({
+            pathname: "/emailVerify",
+            query: { email: formData.email, otpStatus: isOtpSent },
+          });
+        }
+      } catch (err) {
+        console.log(err);
+
+        toast.error("something went wrong try again later");
       }
-       
-      
-
-    } catch (err) {
-      console.log(err);
-      
-      toast.error("something went wrong try again later");
     }
-  }
-};
+  };
 
   const stepperProgress = useMemo(() => {
     const getWidth = (fields: FormFieldKey[]) => {
@@ -210,7 +207,7 @@ const Signup = () => {
 
   return (
     <div className="flex h-screen flex-col md:flex-row  overflow-hidden ">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
           <BubblLogo color="white" />
