@@ -4,6 +4,19 @@ import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../../../lib/getCroppedImg"; // Your utility function
 import Image from "next/image";
 
+/**
+ * ImageCrop component — clickable avatar thumbnail that lets the user pick and crop an image.
+ *
+ * Displays a circular thumbnail (using `currentImage` or a fallback) which opens a file picker when clicked.
+ * When an image is selected it shows a 1:1 crop UI (react-easy-crop); after cropping it calls `onCropComplete`
+ * with the provided `index` and the cropped image URL, then closes the cropper.
+ *
+ * @param onCropComplete - Callback invoked with (index, croppedUrl) when the user confirms a crop.
+ * @param index - Numeric identifier passed back to `onCropComplete`; useful when multiple ImageCrop instances exist.
+ * @param label - Accessible label / caption displayed above the thumbnail.
+ * @param currentImage - URL of the current thumbnail image; falling back to "/logo.png" when falsy.
+ * @returns A React element rendering the thumbnail, hidden file input and conditional cropping UI.
+ */
 export default function ImageCrop({
   onCropComplete,
   index,

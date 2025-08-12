@@ -17,6 +17,24 @@ const modeOptions = [
   "Contact Card",
 ];
 
+/**
+ * Renders a client-side list of device cards with per-device profile and mode controls and an "Add New Device" tile.
+ *
+ * Each card displays device metadata (id, title, activation date, status, image) and provides two dropdowns to switch
+ * the device's profile and mode. Component manages local state:
+ * - `devices`: array of device objects shown in the UI.
+ * - `openDropdown`: which device and which dropdown ("profile" | "mode") is currently open.
+ *
+ * Exposed behaviors:
+ * - addDevice: appends a new device with a generated id and preset fields.
+ * - updateDevice(id, field, value): updates the specified device's `profile` or `mode` and closes any open dropdown.
+ *
+ * Interaction notes:
+ * - Only one dropdown can be open at a time; clicking the same control toggles its dropdown.
+ * - Selecting an option updates the device's field and closes the dropdown.
+ *
+ * @returns A JSX element containing the device cards and the Add New Device control.
+ */
 export default function DeviceCards() {
   const [devices, setDevices] = useState([
     {

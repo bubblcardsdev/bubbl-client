@@ -32,6 +32,15 @@ export const getCroppedImg = async (imageSrc: string, pixelCrop: any): Promise<B
   });
 };
 
+/**
+ * Loads an image from a URL and returns the resolved HTMLImageElement.
+ *
+ * The created image has `crossOrigin` set to `"anonymous"` so it can be used
+ * with a canvas without tainting it when the remote server permits CORS.
+ *
+ * @param url - The source URL of the image to load.
+ * @returns A promise that resolves with the loaded HTMLImageElement or rejects if loading fails.
+ */
 function createImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image();

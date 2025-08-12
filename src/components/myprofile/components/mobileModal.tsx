@@ -1,6 +1,15 @@
 // components/CustomModal.tsx
 "use client";
 
+/**
+ * Render a centered modal overlay with a header and close control.
+ *
+ * Renders nothing when `show` is false. When visible, displays a full-screen translucent backdrop and a centered panel containing the provided `title`, a close button that calls `onClose`, and the `children` as the modal body.
+ *
+ * @param show - If true, the modal is rendered; otherwise returns `null`.
+ * @param onClose - Callback invoked when the close button is clicked.
+ * @returns The modal's React element when visible, or `null` when hidden.
+ */
 export default function CustomModal({
   show,
   onClose,

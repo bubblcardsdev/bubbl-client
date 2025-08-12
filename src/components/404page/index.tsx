@@ -1,5 +1,14 @@
 import { useRouter } from "next/router";
 
+/**
+ * Full-screen 404 (Not Found) React page that displays responsive background video and a "Back to Home" button.
+ *
+ * Renders mobile and desktop background videos ("/video/m_404_v2.mp4" for small screens, "/video/404_v2.mp4" for md+)
+ * that autoplay, loop, and are muted. A centered action button at the lower portion of the viewport navigates to the
+ * root path ("/") using the Next.js router when clicked.
+ *
+ * @returns The NotFound page as a React element.
+ */
 export default function NotFound() {
   const router = useRouter();
   return (

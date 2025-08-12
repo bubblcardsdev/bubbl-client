@@ -17,6 +17,22 @@ type Props = {
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
 };
+/**
+ * Modal component that displays a 3-item template preview carousel with navigation and radio selection.
+ *
+ * Renders a centered modal overlay showing three adjacent template cards (current index and next two, wrapped),
+ * left/right navigation arrows, and radio controls to select the visible templates. Calls `setCurrentIndex`
+ * when navigating or selecting a radio option. If `isOpen` is false, the component returns `null`.
+ *
+ * Note: `templates` must be a non-empty array; the component uses modulo arithmetic and will error if `templates.length === 0`.
+ *
+ * @param isOpen - Whether the modal is visible.
+ * @param onClose - Callback invoked when the modal's close button is clicked.
+ * @param templates - Array of template objects (each with `label`, `value`, and `image`) used to render cards.
+ * @param currentIndex - Index of the currently selected template within `templates`.
+ * @param setCurrentIndex - Setter called with a new index to update the current selection.
+ * @returns The modal's JSX element when open, or `null` when closed.
+ */
 export default function ProfileTemplateModal({
   isOpen,
   onClose,

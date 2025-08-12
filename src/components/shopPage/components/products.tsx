@@ -62,6 +62,18 @@ type ProductProps = {
   data: ProductSection[];
 };
 
+/**
+ * Renders a responsive grid of product sections and cards.
+ *
+ * Each section displays a heading and description (from the provided `title` map) and a grid of product cards.
+ * Cards show an image, name, price, optional color indicators, and a discount badge. Clicking a card navigates
+ * to `/product/{id}`. If `data` is empty, nothing is rendered.
+ *
+ * @param title - A TitleMap that provides `title` and `description` entries keyed by each section's `sectionType`.
+ * @param data - Array of ProductSection objects; each section's `cards` array is rendered into the grid.
+ *
+ * @returns A JSX element containing the rendered product sections.
+ */
 function Products(props: ProductProps) {
   const { data = [], title } = props;
   const [hoverImage, setHoverImage] = useState<number | string | null>(null);

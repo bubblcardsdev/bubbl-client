@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 
+/**
+ * Renders a pricing section with a monthly/yearly toggle and three plan cards.
+ *
+ * Pro and Pro + show prices that update when the billing cycle is switched; Enterprise displays "Custom".
+ * The component maintains internal state for the billing cycle (defaults to `"monthly"`).
+ *
+ * @returns The pricing UI as a React element.
+ */
 function Pricings() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "monthly"
