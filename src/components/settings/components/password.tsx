@@ -1,6 +1,19 @@
 "use client";
 import { useState } from "react";
 
+/**
+ * Renders a password-change form with client-side validation.
+ *
+ * The component provides inputs for current password, new password, and confirm new password.
+ * Validation rules:
+ * - All fields are required.
+ * - New password must be at least 8 characters.
+ * - New password and confirmation must match.
+ *
+ * On validation failure an inline error message is shown. On success the error is cleared and a browser alert "Password updated successfully!" is shown. A Cancel button clears all inputs and errors.
+ *
+ * @returns The JSX element for the change-password form.
+ */
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");

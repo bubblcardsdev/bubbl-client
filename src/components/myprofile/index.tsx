@@ -5,7 +5,15 @@ import { useRouter } from 'next/router';
 //   { title: "Client", name: "Kishore" },
 //   { title: "Portfolio", name: "kalai" },
 //   { title: "Client", name: "Tharun" },
-// ];
+/**
+ * MyprofilePage component — renders the Profiles UI and a card to create a new profile.
+ *
+ * Renders a header and a responsive grid of profile tiles. Currently the dynamic list of
+ * profile cards is disabled; a static "Create New Profile" tile is shown. Clicking that tile
+ * performs client-side navigation to "/createNewProfile".
+ *
+ * @returns The Profiles page JSX.
+ */
 export default function MyprofilePage() {
   const router = useRouter();
   const handleClick = (path: string) => {

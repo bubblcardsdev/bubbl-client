@@ -73,6 +73,16 @@ const sectionTypes = [
     type: "others",
   },
 ];
+/**
+ * CardSection component — searchable product section with responsive filter and newsletter CTA.
+ *
+ * Renders a search input, a responsive filter dropdown, product sections derived from fetched device data, and a newsletter signup block. On mount and whenever the search term changes it fetches device groups via `fetchAllDevices`, stores them in local state, and derives visible sections by filtering products whose `productName` includes the current search term (case-insensitive). The filter dropdown state (`isOpen`) and selected label (`selected`) control the UI only; the current implementation uses the search input for actual product filtering.
+ *
+ * Side effects:
+ * - Calls `fetchAllDevices()` inside an effect; caught errors are logged to the console.
+ *
+ * @returns The CardSection React element.
+ */
 function CardSection() {
   const [data, setData] = useState<Record<string, DeviceItem[]>>({});
   const [isOpen, setIsOpen] = useState(false);
