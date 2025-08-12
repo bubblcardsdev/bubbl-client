@@ -1,6 +1,6 @@
 import EditProfile from "@/src/components/myprofile/components/editProfile";
 import PostLoginLayout from "../../src/components/layout/postLoginLayout";
-export default function EditPrrofilesection() {
+export default function EditProfileSection() {
   const pageData = {
     title: "Edit My Profile",
     name: "myprofile",
