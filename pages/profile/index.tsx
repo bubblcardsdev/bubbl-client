@@ -1,6 +1,17 @@
-// import Profile from "../../src/components/profile";
+import Profile from "@/src/components/profile";
 
-export default function ProfilePage() {
-  // return <Profile />;
-  return <></>
+interface Props {
+  query: {
+    profileId: string;
+  };
 }
+
+const ProfilePage = (props: Props) => {
+  return <Profile profileId={props?.query?.profileId || ""}/>;
+};
+
+ProfilePage.getInitialProps = ({ query }: Props) => {
+  return { query };
+};
+
+export default ProfilePage;

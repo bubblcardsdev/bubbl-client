@@ -11,31 +11,61 @@ import {
   Googlepay_icon,
   LinledinFill_icon,
   MailProfileIcon,
-  WebProfileIcon,
   InstagramFill_icon,
   WhatsappFill_icon,
   LocationFill_icon,
   FacebookFill_icon,
+  WebIcon_thin,
+  // YoutubeIcon, // ✅ make sure this exists in ../../common/icons
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
+import { openInNewTab } from "../../../utils/commonLogics";
 
-export const ProTemplateSpahire = ({
+const ProTemplateSpahire = ({
   formData,
   selectedTheme,
 }: {
   formData: any;
   selectedTheme: any;
 }) => {
-  // const toggleSection = (section: any) => {
-  //   setOpenSection(openSection === section ? "" : section);
-  // };
   const [color, setColor] = useState<string>("");
+
   useEffect(() => {
     const selected =
       theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
     setColor(selected);
-    console.log(selected, "theme");
   }, [selectedTheme]);
+
+  // Counts
+  const phoneNumbersCount = formData?.phoneNumbers?.filter(
+    (value: any) => value?.phoneNumber?.length > 0
+  )?.length;
+
+  const websitesCount = formData?.websites?.filter(
+    (value: any) => value?.website?.length > 0
+  )?.length;
+
+  const emailIdsCount = formData?.emailIds?.filter(
+    (value: any) => value?.emailId?.length > 0
+  )?.length;
+
+  // ✅ Social icons mapped by ID
+  const SocialIconsObj: any = {
+    "1": InstagramFill_icon,
+    "2": FacebookFill_icon,
+    "3": FacebookFill_icon,
+    "4": TwitterIcon,
+    "5": WhatsappFill_icon,
+    "6": LinledinFill_icon,
+  };
+
+  // ✅ Payment icons mapped by name
+  const PaymentIconsObj: any = {
+    "1": Googlepay_icon,
+    "2": Phonepay_icon,
+    "3": Paytm_icon,
+  };
+
   return (
     <div className="w-full max-w-[400px] mx-auto overflow-hidden ">
       <div className=" bg-gray-200">
@@ -49,129 +79,190 @@ export const ProTemplateSpahire = ({
       </div>
 
       <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full space-y-3 bg-white">
+        {/* Profile header */}
         <div className="relative rounded-lg w-full h-34 bg-[#ccc] flex items-center flex-row border">
-          {/* Text Content */}
           <div className="relative w-[320px] h-34 p-2 text-left">
-            <p className="text-lg font-bold" style={{ color: color }}>
-              Your Name
-            </p>
-            <p className="text-black text-xl font-bold">
-              {formData?.name || "Name"}{" "}
-            </p>
-            <p className="text-black text-md">
-              {formData?.position || "Designation"}
+            <p
+              className="text-black text-xl font-bold "
+              style={{ color: color }}
+            >
+              {formData?.firstName + " " + formData?.lastName || "Name"}
             </p>
             <p className="text-black text-md">
-              {formData?.companyName || "company name"}
+              {formData?.designation || "Designation"}
+            </p>
+            <p className="text-black text-md">
+              {formData?.companyName || "Company Name"}
+            </p>
+            <p className="text-black text-sm mt-6 pl-0 w-full text-left">
+              {formData?.shortDescription}
             </p>
           </div>
-          {/* Logo Div (Overlapping) */}
-          <div className=" bg-black h-[60px] w-[60px] absolute  -right-5 flex items-center">
-            <p className="text-white font-semibold rounded-md">
-              <Image
-                src={formData?.companyLogoUrl ||"/profile.png"}
-                alt=""
-                height={100}
-                width={100}
-              />
-            </p>
+          <div className=" bg-black h-[60px] w-[60px] absolute -right-5 flex items-center">
+            <Image
+              src={formData?.companyLogoUrl || "/profile.png"}
+              alt=""
+              height={100}
+              width={100}
+            />
           </div>
         </div>
+
+        {/* Save contact + QR */}
         <div className="flex items-center gap-3 px-0">
-          {/* Save Contact Button with Share Icon */}
           <div
-            className="flex items-center justify-between rounded-lg border-2 border-purple-600  flex-1 h-[45px]"
+            className="flex items-center justify-between rounded-lg border-2 border-purple-600 flex-1 h-[45px]"
             style={{ border: "2px solid " + color }}
           >
-            <button className="flex-1  h-fit w-[10px]">
-              <span
-                className="text-md  font-semibold"
-                style={{ color: color }}
-              >
+            <button className="flex-1 h-fit w-[10px]">
+              <span className="text-md font-semibold" style={{ color: color }}>
                 Save Contact
               </span>
             </button>
             <div
-              className="border-l-2  h-full flex items-center  px-2"
+              className="border-l-2 h-full flex items-center px-2"
               style={{ borderLeft: "2px solid " + color }}
             >
               <Share_icon color={color} />
             </div>
           </div>
-          {/* QR Code Button */}
-          <button className="p-[10px]  rounded-lg"
-           style={{ backgroundColor: color }}
+          <button
+            className="p-[10px] rounded-lg"
+            style={{ backgroundColor: color }}
           >
             <Qr_icon />
           </button>
         </div>
+
+        {/* Contact Info */}
         <div className="p-0">
-          {/* Contact Information */}
-          <h2 className="text-lg font-bold mb-4 text-left text-black">Contact Information</h2>
+          {(formData?.phoneNumbers?.[0]?.phoneNumber ||
+            formData?.emailIds?.[0]?.emailId?.length > 0 ||
+            formData?.websites?.[0]?.website?.length > 0 ||
+            (formData?.state && formData?.country)) && (
+            <h2 className="text-lg font-bold mb-4 text-left text-black">
+              Contact Information
+            </h2>
+          )}
+
           <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <CallProfileIcon color={color} />
-              {/* <span className="ml-1 flex-grow">
-                {formData?.mobileNumbers?.[0]?.number}
-              </span> */}
-            </div>
-            <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <MailProfileIcon color={color} />
-              {/* <span className="ml-1 flex-grow">{formData?.emails?.[0]}</span> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <LocationFill_icon color={color}/>
-              {/* <span className="ml-1 flex-grow">
-                {formData?.websiteLinks?.[0]}
-              </span> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <WebProfileIcon color={color} />
-              {/* <span className="ml-1 flex-grow">
-                {formData?.websiteLinks?.[0]}
-              </span> */}
-            </div>
+            {formData?.phoneNumbers?.[0]?.phoneNumber && (
+              <div className="relative">
+                <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
+                  <CallProfileIcon color={color} />
+                </div>
+                {phoneNumbersCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
+                  >
+                    <span>{phoneNumbersCount}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {formData?.emailIds?.[0]?.emailId?.length > 0 && (
+              <div className="relative">
+                <div className="relative flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
+                  <MailProfileIcon color={color} />
+                </div>
+                {emailIdsCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
+                  >
+                    <span>{emailIdsCount}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {formData?.state && formData?.country && (
+              <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
+                <LocationFill_icon color={color} />
+              </div>
+            )}
+
+            {formData?.websites?.[0]?.website?.length > 0 && (
+              <div className="relative">
+                <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
+                  <WebIcon_thin color={color} />
+                </div>
+                {websitesCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
+                  >
+                    <span>{websitesCount}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
+
           {/* Social Media */}
-          <h2 className="text-lg font-bold mb-4 text-left text-black">Social Media</h2>
+          {formData?.socialMediaNames?.some(
+            (v: any) => v?.socialMediaName?.length > 0
+          ) && (
+            <h2 className="text-lg font-bold mb-4 text-left text-black">
+              Social Media
+            </h2>
+          )}
+
           <div className="grid grid-cols-4 gap-4">
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <InstagramFill_icon color={color} />
-              {/* <p className="text-[12px]">{formData?.socialLinks?.[0]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <WhatsappFill_icon color={color} />
-              {/* <p className="text-[12px]">{formData?.socialLinks?.[4]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <FacebookFill_icon color={color} />
-              {/* <p className="text-[12px]">{formData?.socialLinks?.[5]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <LinledinFill_icon color={color} />
-              {/* <p className="text-[12px]">{formData?.socialLinks?.[5]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <TwitterIcon color={color} />
-            </div>
+            {formData?.socialMediaNames &&
+              [...formData.socialMediaNames] // clone array so original isn't mutated
+                .sort(
+                  (a: any, b: any) =>
+                    (a?.profileSocialMediaId || 0) -
+                    (b?.profileSocialMediaId || 0)
+                ) // sort by ID
+                .map((value: any, index: number) => {
+                  const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
+                  if (value?.socialMediaName?.length > 0) {
+                    return (
+                      <div
+                        key={index}
+                        role="button"
+                        onClick={() => openInNewTab(value?.socialMediaName)}
+                        className="flex items-center justify-center w-12 h-12 bg-[#ccc] rounded-md shadow-md"
+                      >
+                        <Icon color={color} />
+                      </div>
+                    );
+                  }
+                })}
           </div>
-          <div>
-          <h2 className="text-lg font-bold mt-4 text-black text-left">Digital payments</h2>
+
+          {/* Digital Payments */}
+          {formData?.digitalPaymentLinks?.some(
+            (v: any) => v?.digitalPaymentLink?.length > 0
+          ) && (
+            <h2 className="text-lg font-bold mt-4 text-black text-left">
+              Digital Payments
+            </h2>
+          )}
+
           <div className="grid grid-cols-4 gap-4">
-            <div className="flex items-center justify-center w-14 h-14  rounded-md shadow-md ">
-              <Googlepay_icon />
-              {/* <p className="text-[12px]">{formData?.digitalLinks?.[0]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <Phonepay_icon color="#5F259F" />
-              {/* <p className="text-[12px]">{formData?.digitalLinks?.[1]}</p> */}
-            </div>
-            <div className="flex items-center justify-center w-14 h-14 bg-[#ccc] rounded-md shadow-md">
-              <Paytm_icon />
-              {/* <p className="text-[12px]">{formData?.digitalLinks?.[2]}</p> */}
-            </div>
+            {formData?.digitalPaymentLinks &&
+              formData?.digitalPaymentLinks?.map(
+                (value: any, index: number) => {
+                  const Icon = PaymentIconsObj?.[value?.digitalPaymentName];
+                  if (!Icon || !value?.digitalPaymentLink?.length) return null;
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-center w-12 h-12 rounded-md shadow-md"
+                    >
+                      <Icon color={"#8D00D2"} />
+                    </div>
+                  );
+                }
+              )}
           </div>
-          </div>
+
+          {/* Footer */}
           <hr className="border-gray-300 mb-1 mt-4 border-1 " />
           <div className="flex flex-col justify-center items-center">
             <p className="text-sm font-semibold mb-4 mt-3 text-black">
@@ -189,3 +280,5 @@ export const ProTemplateSpahire = ({
     </div>
   );
 };
+
+export default ProTemplateSpahire;

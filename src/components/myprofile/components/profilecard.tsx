@@ -1,6 +1,4 @@
-// components/MobileModel.tsx
 import React from "react";
-
 interface MobileModelProps {
   show: boolean;
   onClose: () => void;
@@ -8,7 +6,6 @@ interface MobileModelProps {
   children: React.ReactNode;
   name?: string;
 }
-
 const MobileModel = ({ show, onClose, title, children }: MobileModelProps) => {
   if (!show) return null;
 

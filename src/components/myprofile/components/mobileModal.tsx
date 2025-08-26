@@ -1,11 +1,9 @@
-// components/CustomModal.tsx
 "use client";
-
 export default function CustomModal({
   show,
   onClose,
   title,
-  children, 
+  children,
 }: {
   show: boolean;
   onClose: () => void;
@@ -19,7 +17,9 @@ export default function CustomModal({
       <div className="bg-white w-[90%] max-w-md p-6 rounded-xl shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{title}</h2>
-          <button onClick={onClose} className="text-gray-600 text-lg">×</button>
+          <button onClick={onClose} className="text-gray-600 text-lg">
+            ×
+          </button>
         </div>
         {children}
       </div>

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Password from "../settings/components/password";
-import { Plus } from "lucide-react";
+// import { Plus } from "lucide-react";
 
 const Settings: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);

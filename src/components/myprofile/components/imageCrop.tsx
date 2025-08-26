@@ -1,4 +1,3 @@
-// common/imageCrop.tsx or ./imageCrop.tsx
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../../../lib/getCroppedImg"; // Your utility function

@@ -25,8 +25,24 @@ export default function ProfileTemplateModal({
   setCurrentIndex,
 }: Props) {
   const [currentPage, setCurrentPage] = React.useState(0);
+  const [templatesPerPage, setTemplatesPerPage] = React.useState(3);
 
-  const templatesPerPage = 3;
+  // Adjust templates per page based on screen size
+  React.useEffect(() => {
+    const updateTemplatesPerPage = () => {
+      if (window.innerWidth < 640) {
+        setTemplatesPerPage(1); // mobile
+      } else if (window.innerWidth < 1024) {
+        setTemplatesPerPage(2); // tablet
+      } else {
+        setTemplatesPerPage(3); // desktop
+      }
+    };
+    updateTemplatesPerPage();
+    window.addEventListener("resize", updateTemplatesPerPage);
+    return () => window.removeEventListener("resize", updateTemplatesPerPage);
+  }, []);
+
   const totalPages = Math.ceil(templates.length / templatesPerPage);
 
   const handleNextPage = () => {
@@ -49,7 +65,7 @@ export default function ProfileTemplateModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1f1f1f] text-white rounded-2xl max-w-4xl w-full p-6 relative">
+      <div className="bg-[#1f1f1f] text-white rounded-2xl max-w-2xl w-full p-6 relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -87,12 +103,13 @@ export default function ProfileTemplateModal({
                   className={`flex flex-col items-center  w-[160px]`}
                 >
                   {/* Image */}
-                  <div className={`w-full h-[300px] overflow-hidden shadow-md rounded-xl cursor-pointer border-2 transition-all duration-300 ${
-                    isSelected
-                      ? "border-white bg-[#2a2a2a]"
-                      : "border-[#333] bg-[#1a1a1a]"
-                  }`}
-                   onClick={() => setCurrentIndex(index)}
+                  <div
+                    className={`w-full h-[300px] overflow-hidden shadow-md rounded-xl cursor-pointer border-2 transition-all duration-300 ${
+                      isSelected
+                        ? "border-white bg-[#2a2a2a]"
+                        : "border-[#333] bg-[#1a1a1a]"
+                    }`}
+                    onClick={() => setCurrentIndex(index)}
                   >
                     <Image
                       src={template.image}
@@ -138,4 +155,3 @@ export default function ProfileTemplateModal({
     </div>
   );
 }
-

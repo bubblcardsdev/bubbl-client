@@ -292,8 +292,8 @@ export const Play_icon = (props: iconProps) => {
 export const Qr_icon = (props: iconProps) => {
   return (
     <svg
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -465,8 +465,8 @@ export const ScannerQr_icon = (props: iconProps) => {
 export const Googlepay_icon = () => {
   return (
     <svg
-      width="26"
-      height="26"
+      width="24"
+      height="24"
       viewBox="0 0 23 21"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -781,8 +781,8 @@ export const LinledinFill_icon = (props: iconProps) => {
 export const InstagramFill_icon = (props: iconProps) => {
   return (
     <svg
-      width="24"
-      height="24"
+      width="28"
+      height="28"
       viewBox="0 0 37 36"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1340,8 +1340,8 @@ export const MapIconBackgroundFill = (props: iconProps) => {
 export const MailIconbackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="32"
+      width="24"
+      height="24"
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1371,8 +1371,8 @@ export const MailIconbackgroundFill = () => {
 export const WebIconBackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="32"
+      width="24"
+      height="24"
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1403,8 +1403,8 @@ export const WebIconBackgroundFill = () => {
 export const InstagramBackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="33"
+      width="24"
+      height="24"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1477,8 +1477,8 @@ export const InstagramBackgroundFill = () => {
 export const TwitterIconbackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="33"
+      width="24"
+      height="24"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1505,8 +1505,8 @@ export const TwitterIconbackgroundFill = () => {
 export const LinkedinIconbackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="33"
+      width="24"
+      height="24"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1541,8 +1541,8 @@ export const LinkedinIconbackgroundFill = () => {
 export const YoutubeIconbackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="33"
+      width="24"
+      height="24"
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1564,8 +1564,8 @@ export const FacebookIconbackgroundFill = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="32"
-      height="32"
+      width="24"
+      height="24"
       viewBox="0 0 32 32"
       fill="none"
     >
@@ -1583,8 +1583,8 @@ export const FacebookIconbackgroundFill = () => {
 export const WhatsappIconbackgroundFill = () => {
   return (
     <svg
-      width="32"
-      height="32"
+      width="24"
+      height="24"
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

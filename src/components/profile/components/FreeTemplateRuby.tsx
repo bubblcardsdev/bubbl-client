@@ -20,8 +20,7 @@ import {
   Phonepay_icon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
-
-export const FreeTemplateRuby = ({
+const FreeTemplateRuby = ({
   formData,
   selectedTheme,
 }: {
@@ -42,9 +41,21 @@ export const FreeTemplateRuby = ({
     }
     window.open(url, "_blank", "noopener,noreferrer");
   };
-
+  const SocialIconsObj: any = {
+    "1": InstagramBackgroundFill,
+    "2": FacebookIconbackgroundFill,
+    "3": YoutubeIconbackgroundFill,
+    "4": TwitterIconbackgroundFill,
+    "5": WhatsappIconbackgroundFill,
+    "6": LinkedinIconbackgroundFill,
+  };
+  const DigitalIconsObj: any = {
+    "1": Googlepay_icon,
+    "2": Phonepay_icon,
+    "3": Paytm_icon,
+  };
   return (
-    <div className="flex items-center align-middle justify-center">
+    <div className="flex items-center align-middle justify-center ">
       <div className="relative w-full ">
         <div className="h-[230px] bg-yellow-500  rounded-t-2xl ">
           <Image
@@ -70,13 +81,16 @@ export const FreeTemplateRuby = ({
           <div className="flex justify-between items-start mt-6 ">
             <div className="text-left flex flex-col gap-1">
               <p className="text-black text-xl font-bold">
-                {formData?.name || "Name"}{" "}
+                {formData?.firstName + "" + formData.lastName || "Name"}{" "}
               </p>
               <p className="text-black text-md">
                 {formData?.position || "Designation"}
               </p>
               <p className="text-black text-md">
                 {formData?.companyName || "company name"}
+              </p>
+              <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
+                {formData?.shortDescription || "Description"}
               </p>
             </div>
             <div className="bg-gray-100 p-1 rounded-xl  text-sm font-semibold text-gray-800">
@@ -107,27 +121,27 @@ export const FreeTemplateRuby = ({
               </span>
             </button>
           </div>
-          <p className="text-gray-700 text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
+          <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
             {formData?.bio}
           </p>
           <div className="py-4">
-            {(formData?.mobileNumbers?.[0]?.number ||
-              formData?.emails?.[0] ||
-              formData?.websiteLinks?.[0] ||
+            {(formData?.phoneNumbers?.[0]?.phoneNumber ||
+              formData?.emailIds?.[0]?.emailId?.length > 0 ||
+              formData?.websites?.[0]?.website?.length > 0 ||
               (formData?.state && formData?.country)) && (
-              <h2 className="text-xl font-bold mb-3 text-left">
+              <h2 className="text-xl font-bold mb-3 text-left text-black">
                 Contact Information
               </h2>
             )}
             <div className="space-y-4">
               {/* Phone */}
-              {formData?.mobileNumbers?.[0]?.number && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+              {formData?.phoneNumbers?.[0]?.phoneNumber && (
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <PhoneColorIcon />
                     <span className="ml-1 flex-grow text-left">
-                      {formData?.mobileNumbers?.[0]?.countryCode}{" "}
-                      {formData?.mobileNumbers?.[0]?.number}
+                      {formData?.phoneNumbers?.[0]?.countryCode}{" "}
+                      {formData?.phoneNumbers?.[0]?.phoneNumber}
                     </span>
                   </div>
                   <div className="bg-[#E5E5E5] flex items-center px-3 ">
@@ -136,12 +150,12 @@ export const FreeTemplateRuby = ({
                 </div>
               )}
               {/* mail*/}
-              {formData?.emails?.[0] && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
+              {formData?.emailIds?.[0]?.emailId?.length > 0 && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden text-black text-left">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <MailIconbackgroundFill />
                     <span className="ml-1 flex-grow">
-                      {formData?.emails?.[0]}
+                      {formData?.emailIds?.[0]?.emailId}
                     </span>
                   </div>
                   <div className="bg-[#E5E5E5] flex items-center px-3 ">
@@ -150,12 +164,12 @@ export const FreeTemplateRuby = ({
                 </div>
               )}
               {/* website */}
-              {formData?.websiteLinks?.[0] && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+              {formData?.websites?.[0]?.website?.length > 0 && (
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <WebIconBackgroundFill />
-                    <span className="ml-1 flex-grow">
-                      {formData?.websiteLinks?.[0]}
+                    <span className="ml-1 flex-grow text-black">
+                      {formData?.websites?.[0]?.website}
                     </span>
                   </div>
                   <div className="bg-[#E5E5E5] flex items-center px-3 ">
@@ -165,10 +179,10 @@ export const FreeTemplateRuby = ({
               )}
               {/* location */}
               {formData?.state && formData?.country && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
+                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <MapIconBackgroundFill />
-                    <span className="ml-1 flex-grow">
+                    <span className="ml-1 flex-grow text-black">
                       {formData?.state && formData?.country
                         ? formData?.state + ", " + formData?.country
                         : ""}
@@ -182,211 +196,100 @@ export const FreeTemplateRuby = ({
             </div>
           </div>
           <div className="py-4">
-            {formData?.socialLinks?.length > 0 &&
-              (formData?.socialLinks?.[0]?.length > 0 ||
-                formData?.socialLinks?.[1]?.length > 0 ||
-                formData?.socialLinks?.[2]?.length > 0 ||
-                formData?.socialLinks?.[3]?.length > 0 ||
-                formData?.socialLinks?.[4]?.length > 0 ||
-                formData?.socialLinks?.[5]?.length > 0) && (
-                <h2 className="text-xl font-bold mb-4 text-left">
-                  Social Media
-                </h2>
-              )}
+            {formData?.socialMediaNames
+              ?.map((value: any) => value?.socialMediaName?.length > 0)
+              ?.includes(true) && (
+              <h2 className="text-xl font-bold mb-4 text-left text-black">
+                Social Media
+              </h2>
+            )}
 
             <div className="space-y-4 ">
-              {/* instagram */}
-              {formData?.socialLinks?.[0] &&
-                formData?.socialLinks?.[0]?.length > 0 && (
-                  <div
-                    role="button"
-                    onClick={() => openInNewTab(formData?.socialLinks?.[0])}
-                    className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
-                  >
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <InstagramBackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Instagram
-                        </h1>
-                        {/* <p className="text-[12px]">
-                        {formData?.socialLinks?.[0]}
-                      </p> */}
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
-              {/* facebook */}
-              {formData?.socialLinks?.[1] &&
-                formData?.socialLinks?.[1]?.length > 0 && (
-                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <FacebookIconbackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Facebook
-                        </h1>
-                        {/* <p className="text-[12px]">
-                        {formData?.socialLinks?.[1]}
-                      </p> */}
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
-              {/* youtube */}
-              {formData?.socialLinks?.[2] &&
-                formData?.socialLinks?.[2]?.length > 0 && (
-                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <YoutubeIconbackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Youtube
-                        </h1>
-                        {/* <p className="text-[12px]">
-                        {formData?.socialLinks?.[2]}
-                      </p> */}
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 text-white  ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
-              {/* twitter*/}
-              {formData?.socialLinks?.[3] &&
-                formData?.socialLinks?.[3]?.length > 0 && (
-                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <TwitterIconbackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Twitter
-                        </h1>
-                        <p className="text-[12px]">
-                          {formData?.socialLinks?.[3]}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
-              {/* whatsapp */}
-              {formData?.socialLinks?.[4] &&
-                formData?.socialLinks?.[4]?.length > 0 && (
-                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <WhatsappIconbackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Whatsapp
-                        </h1>
-                        <p className="text-[12px]">
-                          {formData?.socialLinks?.[4]}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
-              {/* linkedin */}
-              {formData?.socialLinks?.[5] &&
-                formData?.socialLinks?.[5]?.length > 0 && (
-                  <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                    <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                      <LinkedinIconbackgroundFill />
-                      <div className="px-0">
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                          Linkedin
-                        </h1>
-                        <p className="text-[12px]">
-                          {formData?.socialLinks?.[5]}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                      <Arrow_icon color={color} />
-                    </div>
-                  </div>
-                )}
+              {formData?.socialMediaNames &&
+                [...formData.socialMediaNames] // clone array so original isn't mutated
+                  .sort(
+                    (a: any, b: any) =>
+                      (a?.profileSocialMediaId || 0) -
+                      (b?.profileSocialMediaId || 0)
+                  ) // sort by ID
+                  .map((value: any, index: number) => {
+                    const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
+                    const name: any = {
+                      1: "Instagram",
+                      2: "Facebook",
+                      3: "Youtube",
+                      4: "Twitter",
+                      5: "WhatsApp",
+                      6: "LinkedIn",
+                    };
+
+                    if (value?.socialMediaName?.length > 0) {
+                      return (
+                        <div
+                          key={index}
+                          role="button"
+                          onClick={() =>
+                            openInNewTab(formData?.socialLinks?.[0])
+                          }
+                          className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
+                        >
+                          <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                            {Icon && <Icon color={color} />}
+                            <div className="px-0">
+                              <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                                {name?.[value?.profileSocialMediaId]}
+                              </h1>
+                              <p className="text-[12px]">
+                                {formData?.socialLinks?.[0]}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                            <Arrow_icon color={color} />
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
             </div>
           </div>
           <div className="py-4">
-            {formData?.digitalLinks?.Digitalpay?.[0] && (
-              <h2 className="text-xl font-bold mb-4 text-left">
-                Digital Payments
-              </h2>
-            )}
+            {formData?.digitalPaymentLinks?.map &&
+              formData?.digitalPaymentLinks
+                ?.map((value: any) => value?.digitalPaymentLink?.length > 0)
+                ?.includes(true) && (
+                <h2 className="text-xl font-bold mb-4 text-left text-black">
+                  Digital Payments
+                </h2>
+              )}
             <div className="space-y-4 ">
-              {formData?.digitalLinks?.Digitalpay?.[0] && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden">
-                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Googlepay_icon />
-                    <div className="px-0">
-                      <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                        Gpay
-                      </h1>
-                      <p className="text-[10px]">
-                        {formData?.digitalLinks?.[2]}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-              {formData?.digitalLinks?.Digitalpay?.[0] && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Phonepay_icon color="#673594" className="w-6 h-6" />
-                    <div className="px-0">
-                      <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                        phonepe
-                      </h1>
-                      <p className="text-[10px]">
-                        {formData?.digitalLinks?.[1]}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-              {formData?.digitalLinks?.Digitalpay?.[0] && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4">
-                  <div className="flex-1 flex items-center gap-3 px-4 py-2">
-                    <Paytm_icon />
-                    <div className="px-0">
-                      <h1 className=" flex-grow text-black font-semibold text-[16px] ">
-                        paytm
-                      </h1>
-                      <p className="text-[10px]">
-                        {formData?.digitalLinks?.[2]}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
+              {formData?.digitalPaymentLinks &&
+                formData?.digitalPaymentLinks?.map(
+                  (value: any, index: number) => {
+                    const Icon =
+                      DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+                    if (value?.digitalPaymentLink?.length > 0) {
+                      return (
+                        <div
+                          key={index}
+                          className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden"
+                        >
+                          <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                            <Icon color={"#8D00D2"} />
+                          </div>
+                          <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                            <Arrow_icon color={color} />
+                          </div>
+                        </div>
+                      );
+                    }
+                  }
+                )}
             </div>
           </div>
           <hr className="border-gray-300 mb-4" />
           <div className="flex flex-col justify-center items-center">
-            <p className="text-sm font-semibold mb-4">
+            <p className="text-sm font-semibold mb-4 text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
             <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold  hover:bg-[#9000FF]">
@@ -401,3 +304,4 @@ export const FreeTemplateRuby = ({
     </div>
   );
 };
+export default FreeTemplateRuby;

@@ -1,5 +1,15 @@
 import { FAQItem, StepConfig, WhyChooseUsTypes } from "./interface";
-
+import {
+  Twitter_icon_thin,
+  Paytm_icon,
+  Phonepay_icon,
+  Googlepay_icon,
+  Facebook_icon_thin,
+  Linkedin_icon_thin,
+  Youtube_icon,
+  Instagram_icon,
+  WhatsappIconbackgroundFill,
+} from "../../src/components/common/icons";
 export const themeObject: { [key: string]: string } = {
   "/home": "linear-gradient(to right, #4A4A4A, #000000)",
   "/": "linear-gradient(to right, #4A4A4A, #000000)",
@@ -466,13 +476,12 @@ export const countryCodesData = [
   { code: "+998", name: "Uzbekistan", iso: "UZ" },
   { code: "+84", name: "Vietnam", iso: "VN" },
   { code: "+967", name: "Yemen", iso: "YE" },
-
-]
+];
 
 export const SIGNUP_STEPS: StepConfig[] = [
   {
     title: "Welcome Aboard!",
-    subtitle: "Let's set up your account for a seamless experience"
+    subtitle: "Let's set up your account for a seamless experience",
   },
   {
     title: "Your Work, Your Way",
@@ -480,10 +489,25 @@ export const SIGNUP_STEPS: StepConfig[] = [
   },
   {
     title: "Let's Make Connection Simple",
-    subtitle: "Share your contact info to ensure smooth effortless connectivity",
+    subtitle:
+      "Share your contact info to ensure smooth effortless connectivity",
   },
   {
     title: "You're All Set",
     subtitle: "Now, save your card by signing up below.",
   },
 ];
+
+  export const SocialIconsObj: any = {
+    "1": Instagram_icon,
+    "2": Facebook_icon_thin,
+    "3": Youtube_icon,
+    "4": Twitter_icon_thin,
+    "5": WhatsappIconbackgroundFill,
+    "6": Linkedin_icon_thin,
+  };
+  export const DigitalIconsObj: any = {
+    "1": Googlepay_icon,
+    "2": Phonepay_icon,
+    "3": Paytm_icon,
+  };

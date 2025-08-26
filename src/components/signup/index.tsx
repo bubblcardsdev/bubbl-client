@@ -18,7 +18,6 @@ import { FormDataType } from "@/src/lib/interface";
 import { SIGNUP_STEPS } from "@/src/lib/constant";
 import { RegisterApi } from "@/src/services/authLoginApi";
 
-
 const Signup = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
