@@ -1,0 +1,31 @@
+# .coderabbit.yaml
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+
+language: en-US
+
+reviews:
+  # Status + workflow
+  review_status: true                  # show summarized status on the PR
+  commit_status: true                  # set commit status pending/success for reviews
+  fail_commit_status: true             # mark status as failure if CodeRabbit can't review (e.g., checkout issues)
+  request_changes_workflow: true       # auto-approve once CodeRabbit's comments are resolved
+
+  # Auto review for PRs into dev
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    base_branches: ["dev"]
+    drafts: false
+
+  # (Optional) wait longer for CI checks to report before summarizing status
+  tools:
+    github-checks:
+      enabled: true
+      timeout_ms: 180000               # 3 minutes (default is 90000)
+
+# Let CodeRabbit read and enforce your standards docs
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CODING_STANDARDS.md"          # add more paths if you keep guides elsewhere
