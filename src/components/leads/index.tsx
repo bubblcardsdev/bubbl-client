@@ -426,7 +426,7 @@ const Leads = () => {
   };
 
   return (
-    <div className="text-white">
+    <div className="text-white ">
       {/* <div className="bg-[#ccc] w-full"> */}
       <div className=" p-2 bg-[#2B2B2B] rounded-md items-center justify-between mt-[10px] lg:flex md:flex sm:hidden xs:hidden ">
         <div className="flex items-center  px-2 py-1.5 rounded-xl w-full max-w-[200px] border-2 border-[#393939] bg-[#232323]">
@@ -907,22 +907,74 @@ const Leads = () => {
               <div className="flex items-center gap-3">
                 <div>
                   <p className="font-semibold text-white leading-4">
-                    {lead?.name || "Unknown"}
+                    {lead?.name}
                   </p>
-                  <p className="text-sm text-gray-400">
-                    {lead?.location || "Not specified"}
-                  </p>
+                  <p className="text-sm text-gray-400">{lead?.location}</p>
                 </div>
               </div>
 
               {/* Right: Date & Menu */}
-              <div className="flex items-center gap-3 text-sm text-gray-400">
+              {/* <div className="flex items-center gap-3 text-sm text-gray-400">
                 <span>
                   {lead?.updatedAt ? formatDateToDDMMYYYY(lead.updatedAt) : "-"}
                 </span>
                 <button className="p-1 rounded-full hover:bg-gray-700 transition">
                   <FaEllipsisV  className="text-gray-500" />
                 </button>
+              </div> */}
+              <div className="flex items-center gap-3 text-sm text-gray-400 relative">
+                {/* Date */}
+                <span>
+                  {lead?.updatedAt ? formatDateToDDMMYYYY(lead.updatedAt) : "-"}
+                </span>
+
+                {/* Action Menu Trigger */}
+                <button
+                  className="p-1 rounded-full hover:bg-gray-700 transition"
+                  onClick={() =>
+                    setIsOpenAction(
+                      isOpenAction === index + 1 ? null : index + 1
+                    )
+                  }
+                >
+                  <FaEllipsisV className="text-gray-500" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isOpenAction === index + 1 && (
+                  <div className="absolute right-0 top-8 w-32 bg-[#2A2A2A] rounded-md shadow-lg z-10">
+                    <button
+                      onClick={() => {
+                        setIsDrawerOpen(true);
+                        setFormData(lead);
+                        setCurrentAction("view");
+                      }}
+                      className="block w-full px-4 py-2 text-left text-sm text-gray-200 hover:bg-gray-700"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsDrawerOpen(true);
+                        setFormData(lead);
+                        setCurrentAction("update");
+                      }}
+                      className="block w-full px-4 py-2 text-left text-sm text-gray-200 hover:bg-gray-700"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowDeleteConfirm(true);
+                        setDeleteType("single");
+                        setLeadToDelete((prev: any) => [...prev, lead?.id]);
+                      }}
+                      className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
