@@ -1,327 +1,200 @@
+
+
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { Plus, MoreVertical, ChevronDown } from "lucide-react";
+
+import { useEffect, useRef, useState } from "react";
+import { BsThreeDotsVertical, BsChevronDown, BsPlus } from "react-icons/bs";
 import Image from "next/image";
 
-interface Device {
-  id: string;
-  title: string;
-  activationDate: string;
-  status: string;
-  profile: string;
-  mode: string;
-  imageUrl?: string;
-}
-interface DropdownState {
-  id: string;
-  type: "profile" | "mode";
-}
+export default function DeviceCards() {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [modeOpen, setModeOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-const profileOptions = [
-  "Personal",
-  "Business Deal",
-  "Portfolio",
-  "Client",
-  "Office",
-];
-const modeOptions = [
-  "Bubbl profile",
-  "Direct URL",
-  "Lead Form",
-  "Contact Card",
-];
+  const [profile, setProfile] = useState("Personal");
+  const [mode, setMode] = useState("Bubbl profile");
 
-type DeviceCardsProps = {
-  initialDevices?: Device[];
-};
+  const profiles = ["Personal", "Business Deal", "Portfolio", "Client", "Office"];
+  const modes = ["Bubbl profile", "Direct URL", "Lead Form", "Contact Card"];
 
-export default function DeviceCards({ initialDevices = [] }: DeviceCardsProps) {
-  const [devices, setDevices] = useState<Device[]>(initialDevices);
-  const [openDropdown, setOpenDropdown] = useState<DropdownState | null>(null);
-  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
-  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [loadingDevices, setLoadingDevices] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
+  // click outside to close any menu
   useEffect(() => {
-    if (initialDevices.length === 0) {
-      setLoadingDevices(true);
-      let cancelled = false;
-      // Simulate API fetch
-      setTimeout(() => {
-        if (!cancelled) {
-          setDevices([
-            {
-              id: crypto.randomUUID(),
-              title: "Bubbl Blue",
-              activationDate: new Date().toISOString().slice(0, 10),
-              status: "Active",
-              profile: "Personal",
-              mode: "Bubbl profile",
-              imageUrl: "/purple.png",
-            },
-          ]);
-          setLoadingDevices(false);
-        }
-      }, 500);
-      return () => {
-        cancelled = true;
-      };
-    }
-  }, [initialDevices]);
-
-  const addDevice = (
-    title: string = "Bubbl Blue",
-    status: string = "Active",
-    profile: string = "Personal",
-    mode: string = "Bubbl profile",
-    imageUrl: string = "/purple.png"
-  ) => {
-    const newDevice: Device = {
-      id: crypto.randomUUID(),
-      title,
-      activationDate: new Date().toISOString().slice(0, 10),
-      status,
-      profile,
-      mode,
-      imageUrl,
-    };
-    setDevices((prev) => [...prev, newDevice]);
-  };
-
-  const updateDevice = (
-    id: string,
-    field: "profile" | "mode",
-    value: string
-  ) => {
-    setDevices((prev) =>
-      prev.map((device) =>
-        device.id === id ? { ...device, [field]: value } : device
-      )
-    );
-    setOpenDropdown(null);
-  };
-
-  // Handle MoreVertical menu outside click and keyboard
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        menuOpenId &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        menuButtonRef.current &&
-        !menuButtonRef.current.contains(event.target as Node)
-      ) {
-        setMenuOpenId(null);
+    function onDocClick(e: MouseEvent) {
+      if (!rootRef.current?.contains(e.target as Node)) {
+        setProfileOpen(false);
+        setModeOpen(false);
+        setMenuOpen(false);
       }
     }
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setMenuOpenId(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [menuOpenId]);
-
-  const handleMenuToggle = (id: string) => {
-    setMenuOpenId((prev) => (prev === id ? null : id));
-  };
-
-  const handleMenuAction = () => {
-    // Implement your logic here
-    setMenuOpenId(null);
-  };
-
-  const handleAddDeviceKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      addDevice();
-    }
-  };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
 
   return (
-    <div className="flex flex-wrap gap-4 p-4 text-white">
-      {loadingDevices ? (
-        <div className="text-gray-400">Loading devices...</div>
-      ) : (
-        devices.map((device) => (
-          <div
-            key={device.id}
-            className="bg-[#1e1e1e] p-4 rounded-xl w-[300px] shadow-md relative"
-          >
-            {/* Dots Icon */}
+    <div className=" text-white p-3 sm:p-4 md:p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto C" ref={rootRef} >
+        {/* Device Card */}
+        <div className="bg-[#1F1F1F] rounded-2xl p-4 sm:p-5 md:p-6 w-full mx-auto relative border border-[#2A2A2A] ">
+          {/* Three dots menu at top-right */}
+          <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
             <button
-              ref={menuButtonRef}
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              aria-haspopup="true"
-              aria-expanded={menuOpenId === device.id}
-              onClick={() => handleMenuToggle(device.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleMenuToggle(device.id);
-                }
+              onClick={() => {
+                setMenuOpen((v) => !v);
+                setProfileOpen(false);
+                setModeOpen(false);
               }}
+              className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-[#2A2A2A]"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
             >
-              <MoreVertical className="w-4 h-4" />
+              <BsThreeDotsVertical size={16} />
             </button>
-            {menuOpenId === device.id && (
+
+            {menuOpen && (
               <div
-                ref={menuRef}
-                className="absolute top-10 right-3 bg-[#2a2a2a] rounded-md z-30 shadow-md flex flex-col min-w-[120px]"
                 role="menu"
+                className="absolute right-0 mt-2 w-32 bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-20 overflow-hidden"
               >
-                <button
-                  className="px-3 py-2 text-sm hover:bg-[#3a3a3a] text-left"
-                  onClick={() => handleMenuAction()}
-                  role="menuitem"
-                >
-                  Edit
-                </button>
-                <button
-                  className="px-3 py-2 text-sm hover:bg-[#3a3a3a] text-left"
-                  onClick={() => handleMenuAction()}
-                  role="menuitem"
-                >
-                  Delete
-                </button>
-                <button
-                  className="px-3 py-2 text-sm hover:bg-[#3a3a3a] text-left"
-                  onClick={() => handleMenuAction()}
-                  role="menuitem"
-                >
-                  Duplicate
-                </button>
-              </div>
-            )}
-
-            {/* ID */}
-            <p className="text-xs text-gray-400 mb-2">ID: {device.id}</p>
-
-            {/* Title / Activation / Status / Image */}
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-lg font-semibold">{device.title}</h2>
-                <p className="text-xs text-gray-400 mt-1">
-                  Activation date: {device.activationDate}
-                </p>
-                <div className="flex items-center text-sm text-gray-400 mt-1 gap-3">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  {device.status}
+                <div className="flex flex-row">
+                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-[#3A3A3A] transition-colors border-r border-[#3A3A3A]">
+                    Edit
+                  </button>
+                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-[#3A3A3A] transition-colors border-r border-[#3A3A3A]">
+                    Duplicate
+                  </button>
+                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-red-600 hover:text-white transition-colors">
+                    Delete
+                  </button>
                 </div>
               </div>
-              <DeviceImage imageUrl={device.imageUrl} />
+            )}
+          </div>
+
+          {/* ID */}
+          <p className="text-xs text-[#666666] mb-3 pr-8">ID : kjbasdfdoashbfads</p>
+
+          {/* Device info and image */}
+          <div className="flex justify-between items-start mb-4 sm:mb-6">
+            <div className="flex-1 pr-2">
+              <h2 className="text-lg sm:text-xl font-semibold text-white mb-1">Bubbl Blue</h2>
+              <p className="text-xs sm:text-sm text-[#888888] mb-2">Activation date: 19/10/2025</p>
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <span className="text-xs sm:text-sm text-white">Active</span>
+              </div>
+            </div>
+            
+            {/* Device image placeholder */}
+            <div className=" rounded-lg w-[60px] sm:w-[80px] h-[40px] sm:h-[50px] flex items-center justify-center  flex-shrink-0">
+              {/* <span className="text-white text-xs font-medium">bubbl</span> */}
+              <Image src="/purple.png" alt="purple" height={150} width={150}/>
+            </div>
+          </div>
+
+          {/* Switch profile and Modes sections - Side by Side Layout */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Switch profile */}
+            <div>
+              <p className="text-xs text-[#888888] mb-2 ">Switch profile</p>
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setProfileOpen((v) => !v);
+                    setModeOpen(false);
+                    setMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
+                  aria-haspopup="listbox"
+                  aria-expanded={profileOpen}
+                >
+                  <span className="text-white w-full truncate">{profile}</span>
+                  <BsChevronDown
+                    size={14}
+                    className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${profileOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                    <div className="flex flex-col">
+                      {profiles.map((p) => (
+                        <div
+                          key={p}
+                          role="option"
+                          aria-selected={p === profile}
+                          onClick={() => {
+                            setProfile(p);
+                            setProfileOpen(false);
+                          }}
+                          className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
+                        >
+                          {p}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Profile + Modes */}
-            <div className="mt-4 flex justify-between text-sm relative">
-              {/* Profile Dropdown */}
-              <div className="flex flex-col w-[48%] relative">
-                <span className="text-gray-400 text-xs mb-1">Switch profile</span>
+            {/* Modes */}
+            <div>
+              <p className="text-xs text-[#888888] mb-2">Modes</p>
+              <div className="relative">
                 <button
-                  onClick={() =>
-                    setOpenDropdown(
-                      openDropdown?.id === device.id &&
-                        openDropdown.type === "profile"
-                        ? null
-                        : { id: device.id, type: "profile" }
-                    )
-                  }
-                  className="bg-[#2a2a2a] flex items-center justify-between px-3 py-2 rounded-lg"
+                  onClick={() => {
+                    setModeOpen((v) => !v);
+                    setProfileOpen(false);
+                    setMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
+                  aria-haspopup="listbox"
+                  aria-expanded={modeOpen}
                 >
-                  {device.profile}
-                  <ChevronDown className="w-4 h-4 ml-2" />
+                  <span className="text-white truncate">{mode}</span>
+                  <BsChevronDown
+                    size={14}
+                    className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${modeOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
-                {openDropdown?.id === device.id &&
-                  openDropdown.type === "profile" && (
-                    <div className="absolute top-full left-0 mt-1 w-[48%] bg-[#2a2a2a] rounded-md z-20 shadow-md">
-                      {profileOptions.map((option) => (
-                        <div
-                          key={option}
-                          onClick={() =>
-                            updateDevice(device.id, "profile", option)
-                          }
-                          className="px-3 py-2 text-sm hover:bg-[#3a3a3a] cursor-pointer"
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-              </div>
 
-              {/* Mode Dropdown */}
-              <div className="flex flex-col w-[48%] relative">
-                <span className="text-gray-400 text-xs mb-1">Modes</span>
-                <button
-                  onClick={() =>
-                    setOpenDropdown(
-                      openDropdown?.id === device.id &&
-                        openDropdown.type === "mode"
-                        ? null
-                        : { id: device.id, type: "mode" }
-                    )
-                  }
-                  className="bg-[#2a2a2a] flex items-center justify-between px-3 py-2 rounded-lg"
-                >
-                  {device.mode}
-                  <ChevronDown className="w-4 h-4 ml-2" />
-                </button>
-                {openDropdown?.id === device.id &&
-                  openDropdown.type === "mode" && (
-                    <div className="absolute top-full right-0 mt-1 w-[48%] bg-[#2a2a2a] rounded-md z-20 shadow-md">
-                      {modeOptions.map((option) => (
+                {modeOpen && (
+                  <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                    <div className="flex flex-col">
+                      {modes.map((m) => (
                         <div
-                          key={option}
-                          onClick={() => updateDevice(device.id, "mode", option)}
-                          className="px-3 py-2 text-sm hover:bg-[#3a3a3a] cursor-pointer"
+                          key={m}
+                          role="option"
+                          aria-selected={m === mode}
+                          onClick={() => {
+                            setMode(m);
+                            setModeOpen(false);
+                          }}
+                          className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
                         >
-                          {option}
+                          {m}
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        ))
-      )}
-
-      {/* Add New Device Button */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label="Add New Device"
-        onClick={() => addDevice()}
-        onKeyDown={handleAddDeviceKeyDown}
-        className="cursor-pointer w-[250px] h-[250px] flex flex-col justify-center items-center bg-[#1e1e1e] border-2 border-gray-500 rounded-xl hover:bg-[#2a2a2a] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
-      >
-        <div className="w-10 h-10 bg-[#2a2a2a] rounded-full flex items-center justify-center mb-2">
-          <Plus className="text-white w-5 h-5" />
         </div>
-        <p className="text-white">Add New Device</p>
+
+        {/* Add New Device Card */}
+        <div className="bg-[#1F1F1F] rounded-2xl w-full max-w-[350px] mx-auto h-[250px] sm:h-[280px] flex items-center justify-center cursor-pointer hover:bg-[#252525] transition-colors">
+          <div className="flex flex-col items-center justify-center text-center p-4 ">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#2A2A2A] rounded-[10px] flex items-center justify-center mb-3 border border-[#3A3A3A] border-dashed">
+              <BsPlus size={18} className="text-gray-400 sm:w-5 sm:h-5" />
+            </div>
+            <p className="text-gray-300 text-xs sm:text-sm font-medium">Add New Device</p>
+          </div>
+        </div>
       </div>
     </div>
   );
-
 }
-
-// DeviceImage component for fallback
-function DeviceImage({ imageUrl }: { imageUrl?: string }) {
-  const [src, setSrc] = useState(imageUrl || "/purple.png");
-  const fallback = "/purple.png";
-  return (
-    <Image
-      src={src}
-      alt="Card"
-      width={100}
-      height={100}
-      className="rounded mt-1"
-      onError={() => setSrc(fallback)}
-    />
-  );
-}
-

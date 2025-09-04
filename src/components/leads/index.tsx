@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV, FaPlus } from "react-icons/fa";
 import Drawer from "../common/Drawer";
 import {
   LeadsArrowIcon,
@@ -13,102 +13,39 @@ import {
   LeadsDeleteIcon,
   LeadsDownloadIcon,
 } from "../common/icons";
-import { CalendarDays, ChevronDown } from "lucide-react";
-
+import { CalendarDays, ChevronDown, CloudCog } from "lucide-react";
 import useWindowSize from "@/src/hooks/useWindowSize";
+import {
+  GetAllLeadsData,
+  CreateLeadApi,
+  UpdateLead,
+  DeleteLead,
+} from "../../services/leadsApi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+//interface for Lead data
 interface Lead {
+  id: number; //  added id so we can track selections
   name: string;
-  role: string;
-  orderId: string;
-  connection: string;
-  date: string;
-  avatar: string;
+  emailId: string;
+  mobileNumber: string;
+  where_you_met: string;
+  location: string;
+  company: string;
+  updatedAt: string;
 }
 
-const leads = [
-  {
-    name: "Natali Craig",
-    role: "Graphic designer",
-    orderId: "#CM9801",
-    connection: "Bubbl card 1",
-    date: "Just now",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Kate Morrison",
-    role: "Front end developer",
-    orderId: "#CM9803",
-    connection: "Bubbl card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Drew Cano",
-    role: "Designer",
-    orderId: "#CM9803",
-    connection: "Bubbl card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Orlando Diggs",
-    role: "Designer",
-    orderId: "#CM9804",
-    connection: "Bubbl card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Andi Lane",
-    role: "Chef",
-    orderId: "#CM9805",
-    connection: "Card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Natali Craig",
-    role: "Artist",
-    orderId: "#CM9801",
-    connection: "Bubbl card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Kate Morrison",
-    role: "Media",
-    orderId: "#CM9802",
-    connection: "Bubbl card 1",
-    date: "A minute ago",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Drew Cano",
-    role: "Client Project",
-    orderId: "#CM9803",
-    connection: "Bubbl card 1",
-    date: "1 hour ago",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Orlando Diggs",
-    role: "Admin Dashboard",
-    orderId: "#CM9804",
-    connection: "Bubbl card 1",
-    date: "Yesterday",
-    avatar: "/IconSet.png",
-  },
-  {
-    name: "Andi Lane",
-    role: "App Landing Page",
-    orderId: "#CM9805",
-    connection: "Bubbl card 1",
-    date: "Feb 2, 2023",
-    avatar: "/IconSet.png",
-  },
-];
+const INITIAL_LEAD_FORM_DATA: any = {
+  name: "",
+  emailId: "",
+  mobileNumber: "",
+  location: "",
+  where_you_met: "",
+  company: "",
+};
 
+//helper to parse date strings safely
 const parseDate = (dateStr: string): number => {
   const map: { [key: string]: Date } = {
     "Just now": new Date(),
@@ -121,6 +58,25 @@ const parseDate = (dateStr: string): number => {
   return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 };
 
+//helper to format ISO date to DD-MM-YYYY
+const formatDateToDDMMYYYY = (isoDateString: string): string => {
+  try {
+    const date = new Date(isoDateString);
+    if (isNaN(date.getTime())) {
+      return isoDateString; // Return original if invalid
+    }
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  } catch (error) {
+    return isoDateString; // Return original if error
+  }
+};
+
+//sorting function
 const sortData = (
   data: Lead[],
   field: keyof Lead,
@@ -129,20 +85,15 @@ const sortData = (
   return [...data].sort((a, b) => {
     const aValue = a[field];
     const bValue = b[field];
-
-    if (field === "date") {
-      // Safely parse dates as numbers
+    if (field === "updatedAt") {
       const aDate = parseDate(aValue as string);
       const bDate = parseDate(bValue as string);
-
       if (aDate < bDate) return ascending ? -1 : 1;
       if (aDate > bDate) return ascending ? 1 : -1;
       return 0;
     } else {
-      // Ensure comparison is done as lowercase strings
       const aStr = String(aValue).toLowerCase();
       const bStr = String(bValue).toLowerCase();
-
       if (aStr < bStr) return ascending ? -1 : 1;
       if (aStr > bStr) return ascending ? 1 : -1;
       return 0;
@@ -158,9 +109,208 @@ const Leads = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortField, setSortField] = useState<keyof Lead>("name");
   const [ascending, setAscending] = useState<boolean>(true);
-  const [sortedLeads, setSortedLeads] = useState<Lead[]>(
-    sortData(leads, "name", true)
-  );
+
+  const [leadsData, setLeadsData] = useState<Lead[]>([]);
+  const [sortedLeads, setSortedLeads] = useState<Lead[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState<any>(INITIAL_LEAD_FORM_DATA);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [leadTypeFilter, setLeadTypeFilter] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [currentAction, setCurrentAction] = useState("save");
+
+  // Temporary filter states (not applied until Apply Filters is clicked)
+  const [tempSearchTerm, setTempSearchTerm] = useState("");
+  const [tempDateFilter, setTempDateFilter] = useState("");
+  const [tempStartDate, setTempStartDate] = useState("");
+  const [tempEndDate, setTempEndDate] = useState("");
+  const [tempLeadTypeFilter, setTempLeadTypeFilter] = useState("");
+  const [tempSortOrder, setTempSortOrder] = useState("newest");
+
+  // Delete confirmation states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteType, setDeleteType] = useState<"single" | "bulk">("single");
+  const [leadToDelete, setLeadToDelete] = useState<Lead | any | null>([]);
+
+  // Get filtered leads based on all filter criteria (using applied filters, not temp ones)
+  const getFilteredLeads = () => {
+    let filtered = [...leadsData];
+
+    // Search filter - search across all fields
+    if (searchTerm.trim()) {
+      filtered = filtered.filter((lead) =>
+        [
+          lead.name,
+          lead.emailId,
+          lead.mobileNumber,
+          lead.location,
+          lead.company,
+          lead.where_you_met,
+        ].some((field) =>
+          field?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+
+    // Date range filter
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (dateFilter === "today") {
+      filtered = filtered.filter((lead) => {
+        const leadDate = new Date(lead.updatedAt);
+        const leadDay = new Date(
+          leadDate.getFullYear(),
+          leadDate.getMonth(),
+          leadDate.getDate()
+        );
+        return leadDay.getTime() === today.getTime();
+      });
+    } else if (dateFilter === "thisweek") {
+      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      filtered = filtered.filter((lead) => {
+        const leadDate = new Date(lead.updatedAt);
+        return leadDate >= weekAgo;
+      });
+    } else if (dateFilter === "thismonth") {
+      const monthAgo = new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        today.getDate()
+      );
+      filtered = filtered.filter((lead) => {
+        const leadDate = new Date(lead.updatedAt);
+        return leadDate >= monthAgo;
+      });
+    } else if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      filtered = filtered.filter((lead) => {
+        const leadDate = new Date(lead.updatedAt);
+        return leadDate >= start && leadDate <= end;
+      });
+    }
+
+    // Lead type filter
+    if (leadTypeFilter) {
+      filtered = filtered.filter(
+        (lead) =>
+          lead.where_you_met?.toLowerCase() === leadTypeFilter.toLowerCase()
+      );
+    }
+
+    // Sort order
+    filtered.sort((a, b) => {
+      const aDate = new Date(a.updatedAt).getTime();
+      const bDate = new Date(b.updatedAt).getTime();
+      return sortOrder === "newest" ? bDate - aDate : aDate - bDate;
+    });
+
+    return filtered;
+  };
+
+  const filteredLeads = getFilteredLeads();
+
+  // Reset filters
+  const resetFilters = () => {
+    // setTempSearchTerm("");
+    setSearchTerm("");
+    setTempDateFilter("");
+    setTempStartDate("");
+    setTempEndDate("");
+    setTempLeadTypeFilter("");
+    setTempSortOrder("newest");
+  };
+
+  // Apply filters (apply temp states to actual filter states)
+  const applyFilters = () => {
+    // setSearchTerm(tempSearchTerm);
+    setDateFilter(tempDateFilter);
+    setStartDate(tempStartDate);
+    setEndDate(tempEndDate);
+    setLeadTypeFilter(tempLeadTypeFilter);
+    setSortOrder(tempSortOrder);
+    setIsOpen(false);
+    setCurrentPage(1);
+  };
+
+  // Handle quick date filter selection (temp state)
+  const handleDateFilter = (filter: string) => {
+    setTempDateFilter(filter);
+    setTempStartDate("");
+    setTempEndDate("");
+  };
+
+  // Handle custom date range selection (unselect quick date filters)
+  const handleDateRangeChange = (type: "start" | "end", value: string) => {
+    if (type === "start") {
+      setTempStartDate(value);
+    } else {
+      setTempEndDate(value);
+    }
+    // Clear quick date filter when custom date range is used
+    if (value) {
+      setTempDateFilter("");
+    }
+  };
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, dateFilter, startDate, endDate, leadTypeFilter, sortOrder]);
+
+  const fetchProfiles = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const data = await GetAllLeadsData();
+      const leads = data?.getLeads || []; // adjust to your API shape
+      setLeadsData(leads);
+      setSortedLeads(sortData(leads, sortField, ascending));
+    } catch (err: any) {
+      setError("Failed to fetch leads");
+      toast.error("Failed to fetch leads");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLeadDataSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (currentAction === "save") {
+        const response: any = await CreateLeadApi(formData);
+        if (response?.data?.success) {
+          toast.success("Lead added successfully!");
+          setIsDrawerOpen(false);
+          setFormData(INITIAL_LEAD_FORM_DATA);
+          fetchProfiles(); // refresh
+        }
+      } else if (currentAction === "update") {
+        const response: any = await UpdateLead(formData); // pass id + payload
+        console.log("qqq-0009", response);
+        if (response?.success) {
+          toast.success("Lead updated successfully!");
+          setIsDrawerOpen(false);
+          setFormData(INITIAL_LEAD_FORM_DATA);
+          fetchProfiles(); // refresh
+        }
+      }
+    } catch (error) {
+      console.error("Error saving lead:", error);
+      toast.error("Failed to save lead");
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
 
   const { width } = useWindowSize();
 
@@ -172,22 +322,48 @@ const Leads = () => {
   };
 
   const popoverRef = useRef<HTMLDivElement | null>(null);
-  const leadsPerPage = 5;
-  const totalPages = Math.ceil(leads.length / leadsPerPage);
+  const leadsPerPage = 8;
+  const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
 
-  const paginatedLeads = sortedLeads.slice(
+  const paginatedLeads = filteredLeads.slice(
     (currentPage - 1) * leadsPerPage,
     currentPage * leadsPerPage
   );
 
-  const toggleCheckbox = (id: number) => {
-    const updated = new Set(selectedLeads);
-    if (updated.has(id)) {
-      updated.delete(id);
-    } else {
-      updated.add(id);
-    }
-    setSelectedLeads(updated);
+  const toggleCheckbox = (data: any, id: number | any, all: boolean) => {
+    setSelectedLeads((prev: Set<number>) => {
+      const updated = new Set(prev);
+
+      if (all) {
+        // Select or unselect all leads
+        if (updated.size === filteredLeads?.length) {
+          // already all selected → unselect all
+          updated.clear();
+          setLeadToDelete([]);
+        } else {
+          // select all
+          filteredLeads?.forEach((lead: any) => updated.add(lead.id));
+          setLeadToDelete(filteredLeads?.map((lead: any) => lead.id) || []);
+        }
+      } else {
+        // Toggle single checkbox
+        if (updated.has(id)) {
+          updated.delete(id);
+          setLeadToDelete((prev: number[]) =>
+            prev.filter((leadId) => leadId !== id)
+          );
+        } else {
+          updated.add(id);
+          if (data) {
+            setLeadToDelete((prev: number[]) =>
+              prev.includes(data.id) ? prev : [...prev, data.id]
+            );
+          }
+        }
+      }
+
+      return updated;
+    });
   };
 
   useEffect(() => {
@@ -196,22 +372,61 @@ const Leads = () => {
         popoverRef.current &&
         !popoverRef.current.contains(event.target as Node)
       ) {
-        setIsOpenAction(null);
+        setTimeout(() => {
+          setIsOpenAction(null);
+        }, 300);
       }
     };
-
     if (isOpenAction !== null) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpenAction]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-  console.log(width);
+  // multi delete
+  const deleteMultipleLeads = async (ids: number[]) => {
+    try {
+      const promises = ids.map((id) => DeleteLead(id)); // fire all requests
+      const results = await Promise.all(promises); // wait for all
+
+      // check if all deletes were successful
+      const allSuccess = results.every((res) => res?.success);
+
+      if (allSuccess) {
+        //remove deleted IDs from state
+        setLeadToDelete((prev: any) =>
+          prev.filter((id: any) => !ids.includes(id))
+        );
+        setSelectedLeads(new Set());
+
+        // trigger your custom task (example: refresh leads list)
+        await fetchProfiles(); // or any function you use to reload data
+
+        //optional: show success toast
+        toast.success("Selected leads deleted successfully!");
+      } else {
+        toast.error("Some leads could not be deleted.");
+      }
+
+      return results;
+    } catch (error) {
+      console.error("Error deleting multiple leads:", error);
+      toast.error("Error deleting selected leads.");
+      throw error;
+    }
+  };
+
   return (
-    <div className="">
+    <div className="text-white">
       {/* <div className="bg-[#ccc] w-full"> */}
       <div className=" p-2 bg-[#2B2B2B] rounded-md items-center justify-between mt-[10px] lg:flex md:flex sm:hidden xs:hidden ">
         <div className="flex items-center  px-2 py-1.5 rounded-xl w-full max-w-[200px] border-2 border-[#393939] bg-[#232323]">
@@ -220,6 +435,8 @@ const Leads = () => {
             type="text"
             placeholder="Search"
             className="bg-transparent outline-none text-sm text-white placeholder-[#4F4F4F] w-full"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div className="flex items-center space-x-2 ml-4 gap-3">
@@ -241,21 +458,23 @@ const Leads = () => {
                     <div className="flex items-center gap-4">
                       <div className="relative w-full">
                         <input
-                          type="text"
-                          value="09-10-2025"
+                          type="date"
+                          value={tempStartDate}
                           className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
-                          readOnly
+                          onChange={(e) =>
+                            handleDateRangeChange("start", e.target.value)
+                          }
                         />
-                        <CalendarDays className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
                       </div>
                       <div className="relative w-full">
                         <input
-                          type="text"
-                          value="09-11-2025"
+                          type="date"
+                          value={tempEndDate}
                           className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
-                          readOnly
+                          onChange={(e) =>
+                            handleDateRangeChange("end", e.target.value)
+                          }
                         />
-                        <CalendarDays className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
                       </div>
                     </div>
 
@@ -264,7 +483,12 @@ const Leads = () => {
                       {["Today", "This Week", "This Month"].map((label) => (
                         <button
                           key={label}
-                          className="w-full bg-[#2A2A2A] text-sm py-2 rounded-md hover:bg-[#3A3A3A]"
+                          onClick={() => handleDateFilter(label.toLowerCase())}
+                          className={`w-full bg-[#2A2A2A] text-sm py-2 rounded-md hover:bg-[#3A3A3A] ${
+                            tempDateFilter === label.toLowerCase()
+                              ? "bg-[#9747FF]"
+                              : ""
+                          }`}
                         >
                           {label}
                         </button>
@@ -276,7 +500,12 @@ const Leads = () => {
                   <div className="space-y-2">
                     <label className="text-sm text-gray-300">Lead Type</label>
                     <div className="relative">
-                      <select className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10">
+                      <select
+                        className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10"
+                        value={tempLeadTypeFilter}
+                        onChange={(e) => setTempLeadTypeFilter(e.target.value)}
+                      >
+                        <option></option>
                         <option>Lead Capture Form</option>
                         <option>Referral</option>
                         <option>Manual</option>
@@ -289,7 +518,11 @@ const Leads = () => {
                   <div className="space-y-2">
                     <label className="text-sm text-gray-300">Amount</label>
                     <div className="relative">
-                      <select className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10">
+                      <select
+                        className="w-full bg-[#2A2A2A] text-sm py-2 px-4 rounded-md appearance-none pr-10"
+                        value={tempSortOrder}
+                        onChange={(e) => setTempSortOrder(e.target.value)}
+                      >
                         <option>Newest - oldest</option>
                         <option>Oldest - newest</option>
                         <option>High - low</option>
@@ -301,11 +534,17 @@ const Leads = () => {
 
                   {/* Buttons */}
                   <div className="flex justify-between items-center pt-2">
-                    <button className="text-sm text-[#9E7FFF] hover:underline">
+                    <button
+                      className="text-sm text-[#9E7FFF] hover:underline"
+                      onClick={resetFilters}
+                    >
                       Reset All
                     </button>
-                    <button className="bg-[#9E7FFF] text-sm font-semibold px-4 py-2 rounded-md">
-                      Apply Filters(2)
+                    <button
+                      className="bg-[#9E7FFF] text-sm font-semibold px-4 py-2 rounded-md"
+                      onClick={applyFilters}
+                    >
+                      Apply Filters
                     </button>
                   </div>
                 </div>
@@ -319,7 +558,10 @@ const Leads = () => {
             </span>
           </div>
           <button
-            onClick={() => setIsDrawerOpen(true)}
+            onClick={() => {
+              setIsDrawerOpen(true);
+              setCurrentAction("save");
+            }}
             className="px-3 py-1.5 rounded-md bg-[#4F4F4F] text-white text-sm hover:bg-[#505050]"
           >
             + Add lead
@@ -333,17 +575,32 @@ const Leads = () => {
               <th className="p-3 w-[40px]">
                 <input
                   type="checkbox"
-                  className="accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#494949] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-center"
+                  className="accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#494949] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center  justify-center  checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-center"
+                  onChange={() => toggleCheckbox(false, false, true)}
                 />
               </th>
-              <th className="p-3 w-[200px]">User</th>
-              <th className="p-3 w-[160px]">Role</th>
-              <th className="p-3 w-[180px]">Order ID</th>
-              <th className="p-3 w-[200px]">Connected with</th>
-              <th className="p-3 w-[160px]">Date</th>
-              <th className="p-3 w-[80px]">
+              <th className="p-3 w-[150px] text-[18px] truncate">Name</th>
+              {/* <th className="p-3 w-[200px] text-[18px] truncate">Email</th> */}
+              <th className="p-3 w-[200px] text-[18px] truncate">Mobile</th>
+              <th className="p-3 w-[150px] text-[18px] truncate">Location</th>
+              <th className="p-3 w-[150px] text-[18px] truncate">
+                WhereYouMet
+              </th>
+              <th className="p-3 w-[150px] text-[18px] truncate">Company</th>
+              <th className="p-3 w-[150px] text-[18px] truncate">Date</th>
+              <th className="p-3 ">
                 <div className="flex gap-3 items-center justify-center">
-                  <LeadsDeleteIcon />
+                  {leadToDelete?.length > 0 && (
+                    <div
+                      role="button"
+                      onClick={() => {
+                        setShowDeleteConfirm(true);
+                        setDeleteType("single");
+                      }}
+                    >
+                      <LeadsDeleteIcon />
+                    </div>
+                  )}
                   <LeadsDownloadIcon />
                 </div>
               </th>
@@ -360,35 +617,44 @@ const Leads = () => {
                     <input
                       type="checkbox"
                       className={`accent-[#9747FF] appearance-none h-[16px] w-[17px] rounded-md border border-[#535353] bg-transparent checked:bg-[#D6D3FB] checked:border-none checked:text-black flex items-center justify-center checked:after:content-['✓'] checked:after:text-[12px] checked:after:font-bold checked:after:flex checked:after:justify-center checked:after:items-center ${
-                        selectedLeads.has(index)
+                        selectedLeads.has(index) || selectedLeads.has(lead?.id)
                           ? "opacity-100"
                           : "opacity-0 group-hover:opacity-100"
                       } transition-opacity duration-200`}
-                      checked={selectedLeads.has(index)}
-                      onChange={() => toggleCheckbox(index)}
+                      checked={
+                        selectedLeads.has(index) || selectedLeads.has(lead?.id)
+                      }
+                      onChange={() => toggleCheckbox(lead, index, false)}
                     />
                   </td>
                   <td className="p-3 w-[200px] flex items-center gap-3 align-middle">
-                    <Image
+                    {/* <Image
                       src={lead?.avatar}
                       alt="avatar"
                       className="w-8 h-8 rounded-full object-cover"
                       height={100}
                       width={100}
-                    />
+                    /> */}
                     {lead?.name}
                   </td>
-                  <td className="p-3 w-[160px] align-middle">{lead?.role}</td>
+                  {/* <td className="p-3 w-[160px] align-middle">
+                    {lead?.emailId}
+                  </td> */}
                   <td className="p-3 w-[180px] align-middle">
-                    {lead?.orderId}
+                    {lead?.mobileNumber}
                   </td>
                   <td className="p-3 w-[200px] align-middle">
-                    {lead?.connection}
+                    {lead?.location}
+                  </td>
+                  <td className="p-3 w-[200px] align-middle">
+                    {lead?.where_you_met}
+                  </td>
+                  <td className="p-3 w-[200px] align-middle">
+                    {lead?.company}
                   </td>
                   <td className="p-3 w-[160px] align-middle">
                     <span className="flex gap-2">
-                    <CalendarDays className="w-3 h-4 text-gray-400 border  " />
-                    {lead?.date}
+                      {formatDateToDDMMYYYY(lead?.updatedAt)}
                     </span>
                   </td>
                   <td
@@ -412,8 +678,39 @@ const Leads = () => {
                       />
                       {isOpenAction === index + 1 && (
                         <div className="min-w-20 rounded-md py-2 px-5 bg-black absolute top-4 z-10">
-                          <p>Edit</p>
-                          <p>View</p>
+                          <p
+                            role="button"
+                            onClick={() => {
+                              setIsDrawerOpen(true);
+                              setFormData(lead);
+                              setCurrentAction("update");
+                            }}
+                          >
+                            Edit
+                          </p>
+                          <p
+                            role="button"
+                            onClick={() => {
+                              setIsDrawerOpen(true);
+                              setFormData(lead);
+                              setCurrentAction("view");
+                            }}
+                          >
+                            View
+                          </p>
+                          <p
+                            role="button"
+                            onClick={() => {
+                              setShowDeleteConfirm(true);
+                              setDeleteType("single");
+                              setLeadToDelete((prev: any) => [
+                                ...prev,
+                                lead?.id,
+                              ]);
+                            }}
+                          >
+                            Delete
+                          </p>
                         </div>
                       )}
                     </div>
@@ -479,82 +776,8 @@ const Leads = () => {
         className="lg:w-96 md:w-96 sm:w-full xs:w-full"
         // width={width && width <= 576 ? "100%" : "550px"}
       >
-        {/* <div className="">
-          <div className=" h-[180px] w-full flex justify-center items-center px-4 ">
-            <Image
-              src="/IconSet.png"
-              alt=""
-              width={200}
-              height={200}
-              className="w-24 h-24 rounded-full  "
-            />
-          </div>
-          <form className="w-full">
-            <div className="flex flex-col space-y-2 mt-[15px] text-sm px-4 text-[12px] ">
-              <label className="text-[#828282]">Name</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Company</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Position</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Phone Number</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Email</label>
-              <input
-                className="bg-[#262626] text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Location</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Website</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Where you met</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Linked in</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text-[14px]"
-              />
-            </div>
-            <div className="flex gap-6 sticky bottom-0 h-[80px] items-center w-full px-4 justify-between bg-[#000]">
-              <button
-                type="submit"
-                className="bg-[#39393957] hover:bg-[#9747FF] text-white py-2 px-[20px]  rounded-lg w-1/2 text-[14px]"
-              >
-                cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-[#9747FF] hover:bg-[#252525] text-white py-2 px-[20px] rounded-lg w-1/2 text-[14px]"
-              >
-                save
-              </button>
-            </div>
-          </form>
-        </div> */}
         <div className=" ">
-          <div className=" h-[180px] w-full flex justify-center items-center px-4  flex-col  mt-10">
+          {/* <div className=" h-[180px] w-full flex justify-center items-center px-4  flex-col  mt-10">
             <Image
               src="/IconSet.png"
               alt=""
@@ -564,59 +787,83 @@ const Leads = () => {
             />
             <p className="text-[30px] mb-0">Jordan Miller</p>
             <p className="">Bubbl cards</p>
-          </div>
+          </div> */}
           <form className="w-full ">
-            <div className="flex flex-col space-y-2 mt-[120px] text-sm px-5  text-[12px] ">
-              <label className="text-[#828282]">Position</label>
+            <p className="text-3xl px-5">Leads Form</p>
+            <div className="flex flex-col mt-[40px] text-sm px-5  text-[12px] gap-6">
+              <label className="text-[#828282]">Name</label>
               <input
+                name="name"
+                value={formData.name}
+                readOnly={currentAction === "view"}
+                onChange={handleChange}
                 className="bg-[#262626]  text-white p-[10px] rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Phone Number</label>
-              <input
-                className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
                 type="text"
               />
               <label className="text-[#828282]">Email</label>
               <input
+                name="emailId"
+                value={formData.emailId}
+                readOnly={currentAction === "view"}
+                onChange={handleChange}
                 className="bg-[#262626] text-white p-[10px]  rounded-md outline-none"
+                type="text"
+              />
+              <label className="text-[#828282]">Phone Number</label>
+              <input
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                readOnly={currentAction === "view"}
+                onChange={handleChange}
+                className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
                 type="text"
               />
               <label className="text-[#828282]">Location</label>
               <input
-                className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
-                type="text"
-              />
-              <label className="text-[#828282]">Website</label>
-              <input
+                name="location"
+                readOnly={currentAction === "view"}
+                value={formData.location}
+                onChange={handleChange}
                 className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
                 type="text"
               />
               <label className="text-[#828282]">Where you met</label>
               <input
+                name="where_you_met"
+                readOnly={currentAction === "view"}
+                value={formData.where_you_met}
+                onChange={handleChange}
                 className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
                 type="text"
               />
-              <label className="text-[#828282]">Linked in</label>
+              <label className="text-[#828282]">company</label>
               <input
+                name="company"
+                readOnly={currentAction === "view"}
+                value={formData.company}
+                onChange={handleChange}
                 className="bg-[#262626]  text-white p-[10px]  rounded-md outline-none"
-                type="text-[14px]"
+                type="text"
               />
             </div>
-            <div className="flex gap-6 sticky bottom-0 h-[80px] items-center w-full px-4 justify-between bg-[#000]">
-              <button
-                type="submit"
-                className="bg-[#39393957] hover:bg-[#9747FF] text-white py-2 px-[20px]  rounded-lg w-1/2 text-[14px]"
-              >
-                cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-[#9747FF] hover:bg-[#252525] text-white py-2 px-[20px] rounded-lg w-1/2 text-[14px]"
-              >
-                Edit
-              </button>
-            </div>
+            {currentAction !== "view" && (
+              <div className="flex gap-6 sticky bottom-0 h-[80px] items-center w-full px-4 justify-between bg-[#000]">
+                <button
+                  type="submit"
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="bg-[#39393957] hover:bg-[#9747FF] text-white py-2 px-[20px]  rounded-lg w-1/2 text-[14px]"
+                >
+                  cancel
+                </button>
+                <button
+                  onClick={handleLeadDataSave}
+                  type="submit"
+                  className="bg-[#9747FF] hover:bg-[#252525] text-white py-2 px-[20px] rounded-lg w-1/2 text-[14px]"
+                >
+                  {currentAction}
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </Drawer>
@@ -624,9 +871,6 @@ const Leads = () => {
       <div className="w-full text-white px-4 py-6 lg:hidden md:hidden sm:block xs:block ">
         <div className="flex justify-between items-center mb-6 ">
           <h1 className="text-3xl font-bold">Leads</h1>
-          {/* <button className="flex items-center gap-2 bg-[#2E2E2E] px-4 py-2 rounded-xl text-sm font-medium">
-            <FaPlus /> Add
-          </button> */}
           <button
             onClick={() => setIsDrawerOpen(true)}
             className="px-3 py-1.5 rounded-md bg-[#4F4F4F] text-white text-sm hover:bg-[#505050]"
@@ -642,6 +886,8 @@ const Leads = () => {
               type="text"
               placeholder="Search"
               className="bg-transparent outline-none text-sm text-white placeholder-[#4F4F4F] w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button
@@ -652,93 +898,34 @@ const Leads = () => {
           </button>
         </div>
         <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/card.png"
-                alt="Chris Taylor"
-                width={100}
-                height={100}
-                className="rounded-full w-10 h-10"
-              />
-              <div>
-                <p className="font-semibold text-white leading-4">
-                  Chris Taylor
-                </p>
-                <p className="text-sm text-gray-400">Microsoft</p>
+          {paginatedLeads.map((lead: Lead, index: number) => (
+            <div
+              key={lead.id || index}
+              className="flex items-center justify-between border-b border-gray-800 pb-4"
+            >
+              {/* Left: Name & Location */}
+              <div className="flex items-center gap-3">
+                <div>
+                  <p className="font-semibold text-white leading-4">
+                    {lead?.name || "Unknown"}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    {lead?.location || "Not specified"}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="text-sm text-gray-400 flex items-center gap-2">
-              <span>18/01/2024</span>
-              <FaEllipsisV className="text-gray-500" />
-            </div>
-          </div>
 
-          <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/card.png"
-                alt="Alex Parker"
-                width={40}
-                height={40}
-                className="rounded-full  w-10 h-10"
-              />
-              <div>
-                <p className="font-semibold text-white leading-4">
-                  Alex Parker
-                </p>
-                <p className="text-sm text-gray-400">Accenture</p>
+              {/* Right: Date & Menu */}
+              <div className="flex items-center gap-3 text-sm text-gray-400">
+                <span>
+                  {lead?.updatedAt ? formatDateToDDMMYYYY(lead.updatedAt) : "-"}
+                </span>
+                <button className="p-1 rounded-full hover:bg-gray-700 transition">
+                  <FaEllipsisV  className="text-gray-500" />
+                </button>
               </div>
             </div>
-            <div className="text-sm text-gray-400 flex items-center gap-2">
-              <span>24/02/2024</span>
-              <FaEllipsisV className="text-gray-500" />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/card.png"
-                alt="Jordan Blake"
-                width={40}
-                height={40}
-                className="rounded-full  w-10 h-10"
-              />
-              <div>
-                <p className="font-semibold text-white leading-4">
-                  Jordan Blake
-                </p>
-                <p className="text-sm text-gray-400">H&M</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-400 flex items-center gap-2">
-              <span>16/03/2024</span>
-              <FaEllipsisV className="text-gray-500" />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between  pb-4 border-b border-b-gray-700">
-            <div className="flex items-center gap-3 ">
-              <Image
-                src="/card.png"
-                alt="Jessie Lane"
-                width={40}
-                height={40}
-                className="rounded-full  w-10 h-10"
-              />
-              <div className="">
-                <p className="font-semibold text-white leading-4">
-                  Jessie Lane
-                </p>
-                <p className="text-sm text-gray-400">Zara</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-400 flex items-center gap-2">
-              <span>02/01/2024</span>
-              <FaEllipsisV className="text-gray-500" />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -754,13 +941,22 @@ const Leads = () => {
             <p className="text-sm font-medium mt-[30px]">Date Range</p>
           </div>
           <div className="grid grid-cols-2 gap-6 mt-3">
-            <button className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm">
+            <button
+              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
+              onClick={() => handleDateFilter("today")}
+            >
               Today
             </button>
-            <button className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm">
+            <button
+              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
+              onClick={() => handleDateFilter("week")}
+            >
               This Week
             </button>
-            <button className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm">
+            <button
+              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
+              onClick={() => handleDateFilter("month")}
+            >
               This Month
             </button>
             <button className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm">
@@ -771,7 +967,11 @@ const Leads = () => {
           <div className="mt-4">
             <div className="text-sm font-medium mt-2">Lead Type</div>
             <div className="relative mt-3 w-full">
-              <select className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select
+                className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={tempLeadTypeFilter}
+                onChange={(e) => setTempLeadTypeFilter(e.target.value)}
+              >
                 <option className="bg-[#9747FF] text-white hover:bg-[#9e76d2]">
                   Lead Capture Form
                 </option>
@@ -802,7 +1002,11 @@ const Leads = () => {
               <option>Oldest - newest</option>
             </select> */}
             <div className="relative mt-3 w-full">
-              <select className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <select
+                className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={tempSortOrder}
+                onChange={(e) => setTempSortOrder(e.target.value)}
+              >
                 <option className="bg-[#9747FF] text-white hover:bg-[#9e76d2]">
                   Newest - oldest
                 </option>
@@ -827,13 +1031,45 @@ const Leads = () => {
           </div>
 
           <div className="flex justify-between items-center text-sm  ">
-            <button className="text-purple-400">Reset All</button>
-            <button className="bg-[#9747FF] text-white px-2 py-2 rounded-lg ">
-              Apply Filters(2)
+            <button className="text-purple-400" onClick={resetFilters}>
+              Reset All
+            </button>
+            <button
+              className="bg-[#9747FF] text-white px-2 py-2 rounded-lg "
+              onClick={applyFilters}
+            >
+              Apply Filters
             </button>
           </div>
         </div>
       </div>
+      {showDeleteConfirm && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-[#282828] rounded-md p-4">
+            <p className="text-lg font-bold">Delete Confirmation</p>
+            <p className="text-sm text-gray-500">
+              Are you sure you want to delete ?
+            </p>
+            <div className="flex gap-2 mt-4">
+              <button
+                className="text-white py-2 px-4 rounded-md"
+                onClick={() => {
+                  deleteMultipleLeads(leadToDelete);
+                  setShowDeleteConfirm(false);
+                }}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-500 text-white py-2 px-4 rounded-md"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
