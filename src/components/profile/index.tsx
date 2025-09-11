@@ -14,7 +14,7 @@ interface Props {
 }
 
 function Profile(props: Props) {
-  const { deviceUid, profileId } = props;
+  const {  profileId } = props;
   const [profileData, setProfileData] = useState<any>(null);
   const [selectedTheme, setSelectedTheme] = useState<any>({});
   const formDataBuilder = (data: any) => {

@@ -6,8 +6,6 @@ import {
   CallProfileIcon,
   MailProfileIcon,
   InstagramFill_icon,
-  // WhatsappFill_icon,
-  // FacebookFill_icon,
   Arrow_icon,
   Paytm_icon,
   Phonepay_icon,
@@ -15,7 +13,6 @@ import {
   WebIcon,
   LocationFill_icon,
   LinkedinIconbackgroundFill,
-  // Twitter_icon_thin,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import { openInNewTab } from "../../../utils/commonLogics";
@@ -27,7 +24,7 @@ const ProTemplateQuartz = ({
   formData: any;
   selectedTheme: any;
 }) => {
-  const [openSection, setOpenSection] = useState("");
+  // const [openSection, setOpenSection] = useState("");
   // const toggleSection = (section: string) => {
   //   setOpenSection(openSection === section ? "" : section);
   // };
@@ -38,19 +35,19 @@ const ProTemplateQuartz = ({
     setColor(selected);
     console.log(selected, "theme");
   }, [selectedTheme]);
-    const SocialIconsObj: any = {
-      "1": InstagramFill_icon,
-      "2": Googlepay_icon,
-      "3": Googlepay_icon,
-      "4": Googlepay_icon,
-      "5": Googlepay_icon,
-      "6": LinkedinIconbackgroundFill,
-    };
-    const DigitalIconsObj: any = {
-      "1": Googlepay_icon,
-      "2": Phonepay_icon,
-      "3": Paytm_icon,
-    };
+  const SocialIconsObj: any = {
+    "1": InstagramFill_icon,
+    "2": Googlepay_icon,
+    "3": Googlepay_icon,
+    "4": Googlepay_icon,
+    "5": Googlepay_icon,
+    "6": LinkedinIconbackgroundFill,
+  };
+  const DigitalIconsObj: any = {
+    "1": Googlepay_icon,
+    "2": Phonepay_icon,
+    "3": Paytm_icon,
+  };
   return (
     <div className="w-full max-w-[400px] mx-auto overflow-hidden">
       <div className=" bg-[#D9D9D9] ">
@@ -83,7 +80,7 @@ const ProTemplateQuartz = ({
           </div>
           <div className="absolute w-24 h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-5 md:right-0 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
             <Image
-              src={formData?.companyLogoUrl || "/profile.png"}
+              src={formData?.companyLogoUrl || "/logo.png"}
               alt=""
               className="object-contain w-full h-full rounded-2xl"
               width={100}
@@ -136,9 +133,9 @@ const ProTemplateQuartz = ({
                 </div>
                 <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
                   <Arrow_icon
-                    className={`transition-transform duration-300 ${
-                      openSection === "phone" ? "rotate-180" : ""
-                    }`}
+                  // className={`transition-transform duration-300 ${
+                  //   openSection === "phone" ? "rotate-180" : ""
+                  // }`}
                   />
                 </div>
               </button>
@@ -158,9 +155,9 @@ const ProTemplateQuartz = ({
                 </div>
                 <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2 ">
                   <Arrow_icon
-                    className={`transition-transform duration-300 ${
-                      openSection === "email" ? "rotate-180" : ""
-                    }`}
+                  // className={`transition-transform duration-300 ${
+                  //   openSection === "email" ? "rotate-180" : ""
+                  // }`}
                   />
                 </div>
               </button>
@@ -181,9 +178,9 @@ const ProTemplateQuartz = ({
                 </div>
                 <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2  ">
                   <Arrow_icon
-                    className={`transition-transform duration-300 ${
-                      openSection === "website" ? "rotate-180" : ""
-                    }`}
+                  // className={`transition-transform duration-300 ${
+                  //   openSection === "website" ? "rotate-180" : ""
+                  // }`}
                   />
                 </div>
               </button>
@@ -204,9 +201,9 @@ const ProTemplateQuartz = ({
                 </div>
                 <div className="absolute bg-[#D47DFF] py-[12px] px-[12px] rounded-[100%] backdrop-blur-sm shadow-md -right-2  ">
                   <Arrow_icon
-                    className={`transition-transform duration-300 ${
-                      openSection === "website" ? "rotate-180" : ""
-                    }`}
+                  // className={`transition-transform duration-300 ${
+                  //   openSection === "website" ? "rotate-180" : ""
+                  // }`}
                   />
                 </div>
               </button>
@@ -228,11 +225,12 @@ const ProTemplateQuartz = ({
                     (a?.profileSocialMediaId || 0) -
                     (b?.profileSocialMediaId || 0)
                 ) // sort by ID
-                .map((value: any, index: number) => {
+                .map((value: any) => {
                   const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
                   if (value?.socialMediaName?.length > 0) {
                     return (
                       <div
+                        key={value}
                         role="button"
                         onClick={() => openInNewTab(value?.socialMediaName)}
                         className="flex items-center justify-center w-10 h-10  rounded-md shadow-md"

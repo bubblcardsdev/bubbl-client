@@ -28,12 +28,12 @@ const FreeTemplateOpal = ({
   }, [selectedTheme]);
 
 
-  const openInNewTab = (url: string) => {
-    if (!url.startsWith("http")) {
-      url = `https://${url}`;
-    }
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
+  // const openInNewTab = (url: string) => {
+  //   if (!url.startsWith("http")) {
+  //     url = `https://${url}`;
+  //   }
+  //   window.open(url, "_blank", "noopener,noreferrer");
+  // };
   console.log(selectedTheme,'opal')
   return (
     <div className="w-full flex justify-center items-center">
@@ -48,7 +48,7 @@ const FreeTemplateOpal = ({
         <div className="relative flex justify-center pt-[50px] xs:pt-[60px] sm:pt-[70px] md:pt-[80px] pb-3 sm:pb-4">
           <div className="bg-white rounded-full p-0.5 sm:p-1 shadow-lg">
             <Image
-              src={formData?.profileImageUrl || "/profile.png"}
+              src={formData?.profileImageUrl || "/Iconset.png"}
               alt="profile_Img"
               width={120}
               height={120}
@@ -87,7 +87,7 @@ const FreeTemplateOpal = ({
             <div className="flex-shrink-0">
               <div className="w-[60px] h-[60px] xs:w-[70px] xs:h-[70px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px] bg-black rounded-full flex items-center justify-center overflow-hidden">
                 <Image
-                  src={formData?.companyLogoUrl || "/profile.png"}
+                  src={formData?.companyLogoUrl || "/logo.png"}
                   width={110}
                   height={110}
                   alt="company_logo"
@@ -127,7 +127,7 @@ const FreeTemplateOpal = ({
             <div className="space-y-2 xs:space-y-3 sm:space-y-4">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden  text-black text-left">
                   <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                     <Phone_icon color={color} />
                     <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
@@ -146,7 +146,7 @@ const FreeTemplateOpal = ({
 
               {/* Email */}
               {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                   <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                     <Mail_icon color={color} />
                     <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
@@ -164,7 +164,7 @@ const FreeTemplateOpal = ({
 
               {/* Website */}
               {formData?.websites?.[0]?.website?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
                   <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                     <WebIcon_thin color={color} />
                     <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
@@ -182,7 +182,7 @@ const FreeTemplateOpal = ({
 
               {/* Location */}
               {formData?.state && formData?.country && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden">
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                   <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                     <Location_icon color={color} />
                     <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
@@ -211,7 +211,7 @@ const FreeTemplateOpal = ({
                 Social Media
               </h2>
             )}
-            <div className="space-y-2 xs:space-y-3 sm:space-y-4">
+            <div className="space-y-2 xs:space-y-3 sm:space-y-4 text-left">
               {formData?.socialMediaNames &&
                 [...formData.socialMediaNames]
                   .sort(

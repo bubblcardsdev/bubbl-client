@@ -32,7 +32,7 @@ export const CreateLeadApi = async (formData: LeadFormData) => {
     return false;
   }
 };
-export const GetAllLeadsData = async () => {
+export const GetAllLeadsByIdData = async () => {
   try {
     const token = getAccessToken(); // get token from storage
 
@@ -100,4 +100,29 @@ export const DeleteLead = async (id: string | number) => {
   }
 };
 
+export const GetOverViewData = async () => {
+  try {
+    const token = getAccessToken(); // get token from storage
+
+    const response = await axiosInstance.get("analytics/getOverView", {
+      headers: {
+        Authorization: token, //  add Bearer prefix
+      },
+    });
+
+    console.log("overview API Response:", response.data);
+
+    //  handle API success/failure
+    if (response.data?.success) {
+      return response.data; // contains your leads
+    } else {
+      toast.error(response.data?.message || "Failed to fetch overview");
+      return null;
+    }
+  } catch (error: any) {
+    console.error("Error fetching overview:", error?.response?.data || error);
+    toast.error(error?.response?.data?.message || "Failed to fetch overview");
+    return null;
+  }
+};
 

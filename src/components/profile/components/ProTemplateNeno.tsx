@@ -71,7 +71,7 @@ const ProTemplateNeno = ({
           <div className=" rounded-xl p-4 md:p-5 w-full text-white relative z-10  backdrop-blur-[5px] bg-opacity border border-gray-400  ">
             <div className="absolute top-0 right-0 bg-gray-500 text-black p-7 rounded-[0_10px_0px_0]">
               <Image
-                src={formData?.companyLogoUrl || "/profile.png"}
+                src={formData?.companyLogoUrl || "/logo.png"}
                 alt=""
                 width={100}
                 height={100}

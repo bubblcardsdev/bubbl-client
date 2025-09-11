@@ -147,7 +147,7 @@ export default function AnalyticsPro() {
     contactTap: { deviceId: "All", range: "weekly" },
   });
 
-  // 🔹 Fetch social media taps dynamically
+  // 🔹 Social Media
   useEffect(() => {
     const fetchSocialTaps = async () => {
       try {
@@ -173,25 +173,26 @@ export default function AnalyticsPro() {
             },
           }));
         } else {
-          //  API failed → remove key
           setChartData((prev: any) => {
-            const { socialMedia, ...rest } = prev;
-            return rest;
+            const updated = { ...prev };
+            delete updated.socialMedia;
+            return updated;
           });
         }
       } catch (error) {
         console.error("Error fetching social taps:", error);
-
-        //  API error → remove key
         setChartData((prev: any) => {
-          const { socialMedia, ...rest } = prev;
-          return rest;
+          const updated = { ...prev };
+          delete updated.socialMedia;
+          return updated;
         });
       }
     };
 
     fetchSocialTaps();
   }, [filter?.socialMedia]);
+
+  // 🔹 Contact Taps
   useEffect(() => {
     const fetchContactTaps = async () => {
       try {
@@ -217,25 +218,26 @@ export default function AnalyticsPro() {
             },
           }));
         } else {
-          // API failed → remove key
           setChartData((prev: any) => {
-            const { contactTap, ...rest } = prev;
-            return rest;
+            const updated = { ...prev };
+            delete updated.contactTap;
+            return updated;
           });
         }
       } catch (error) {
-        console.error("Error fetching social taps:", error);
-
-        // API error → remove key
+        console.error("Error fetching contact taps:", error);
         setChartData((prev: any) => {
-          const { contactTap, ...rest } = prev;
-          return rest;
+          const updated = { ...prev };
+          delete updated.contactTap;
+          return updated;
         });
       }
     };
 
     fetchContactTaps();
   }, [filter?.contactTap]);
+
+  // 🔹 Payment Taps
   useEffect(() => {
     const fetchPaymentTaps = async () => {
       try {
@@ -261,25 +263,26 @@ export default function AnalyticsPro() {
             },
           }));
         } else {
-          // API failed → remove key
           setChartData((prev: any) => {
-            const { paymentTap, ...rest } = prev;
-            return rest;
+            const updated = { ...prev };
+            delete updated.paymentTap;
+            return updated;
           });
         }
       } catch (error) {
-        console.error("Error fetching social taps:", error);
-
-        // API error → remove key
+        console.error("Error fetching payment taps:", error);
         setChartData((prev: any) => {
-          const { paymentTap, ...rest } = prev;
-          return rest;
+          const updated = { ...prev };
+          delete updated.paymentTap;
+          return updated;
         });
       }
     };
 
     fetchPaymentTaps();
   }, [filter?.paymentTap]);
+
+  // 🔹 Device Type
   useEffect(() => {
     const fetchDeviceType = async () => {
       try {
@@ -305,25 +308,26 @@ export default function AnalyticsPro() {
             },
           }));
         } else {
-          // API failed → remove key
           setChartData((prev: any) => {
-            const { deviceType, ...rest } = prev;
-            return rest;
+            const updated = { ...prev };
+            delete updated.deviceType;
+            return updated;
           });
         }
       } catch (error) {
-        console.error("Error fetching social taps:", error);
-
-        // API error → remove key
+        console.error("Error fetching device type:", error);
         setChartData((prev: any) => {
-          const { deviceType, ...rest } = prev;
-          return rest;
+          const updated = { ...prev };
+          delete updated.deviceType;
+          return updated;
         });
       }
     };
 
     fetchDeviceType();
   }, [filter?.deviceType]);
+
+  // 🔹 Mode Usage
   useEffect(() => {
     const fetchModeUsageType = async () => {
       try {
@@ -349,25 +353,25 @@ export default function AnalyticsPro() {
             },
           }));
         } else {
-          // API failed → remove key
           setChartData((prev: any) => {
-            const { modeUsage, ...rest } = prev;
-            return rest;
+            const updated = { ...prev };
+            delete updated.modeUsage;
+            return updated;
           });
         }
       } catch (error) {
-        console.error("Error fetching social taps:", error);
-
-        // API error → remove key
+        console.error("Error fetching mode usage:", error);
         setChartData((prev: any) => {
-          const { modeUsage, ...rest } = prev;
-          return rest;
+          const updated = { ...prev };
+          delete updated.modeUsage;
+          return updated;
         });
       }
     };
 
     fetchModeUsageType();
   }, [filter?.modeUsage]);
+
   const CHARTS = [
     { title: "Device Type", name: "deviceType" },
     { title: "Mode Usage", name: "modeUsage" },

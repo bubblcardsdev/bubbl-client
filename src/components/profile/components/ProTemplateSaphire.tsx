@@ -100,7 +100,7 @@ const ProTemplateSpahire = ({
           </div>
           <div className=" bg-black h-[60px] w-[60px] absolute -right-5 flex items-center">
             <Image
-              src={formData?.companyLogoUrl || "/profile.png"}
+              src={formData?.companyLogoUrl || "/logo.png"}
               alt=""
               height={100}
               width={100}

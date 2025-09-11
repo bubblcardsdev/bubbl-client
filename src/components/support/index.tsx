@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Location_icon, Phone_icon, MailProfileIcon } from "../common/icons";
-// import Link from "next/link";
 import { toast } from "react-toastify";
 import { SupportApi } from "@/src/services/supportApi";
+
 interface FormDataType {
   firstName: string;
   lastName: string;
@@ -11,6 +11,7 @@ interface FormDataType {
   phoneNumber: string;
   message: string;
 }
+
 const Support = () => {
   const initial = {
     firstName: "",
@@ -68,34 +69,34 @@ const Support = () => {
       toast.success("Form submitted successfully!");
       setFormData(initial);
     } catch (error) {
-      toast.error("Failed to submit form");
+      console.log(error, "Failed to submit form");
     }
   };
 
   return (
-    <div className="text-white mt-5 px-4 md:px-8 lg:px-16">
+    <div className="text-white mt-8 container max-w-[1200px] mx-auto px-4">
       <p className="text-lg">Get in touch</p>
-      <p className="text-sm mt-1">
+      <p className="text-sm mt-1 text-gray-300">
         We’d love to hear from you. Please fill out this form.
       </p>
 
-      <div className="grid lg:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
         {/* Left Contact Info Panel */}
         <div className="w-full bg-gradient-to-br from-[#8654E1] to-[#1A1A1A] rounded-lg p-6 space-y-6">
           <div className="space-y-4">
-            <p className="text-3xl">Let&apos;s Connect</p>
-            <p>
-              Got questions, feedback, or just want to say hi? We&apos;d <br />
-              love to hear from you!
-              <br />
-              Reach out to our team and we’ll get back to you as <br />
+            <p className="text-2xl md:text-3xl font-semibold">
+              Let&apos;s Connect
+            </p>
+            <p className="text-sm md:text-base leading-relaxed text-gray-300">
+              Got questions, feedback, or just want to say hi? We&apos;d love to
+              hear from you! Reach out to our team and we’ll get back to you as
               soon as possible.
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <span className="text-lg bg-[#282828] rounded-full p-3">
-              <MailProfileIcon />
+              <MailProfileIcon color={"#8654E1"} />
             </span>
             <div>
               <p className="font-medium text-[#BDBDBD]">Email</p>
@@ -103,18 +104,19 @@ const Support = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <span className="text-lg bg-[#282828] rounded-full p-3">
-              <Phone_icon />
+              <Phone_icon color={"#8654E1"} />
             </span>
             <div>
               <p className="font-medium text-[#BDBDBD]">Phone</p>
               <p className="text-gray-300">+91 99999 99999</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-start gap-4">
             <span className="text-lg bg-[#282828] rounded-full p-3">
-              <Location_icon />
+              <Location_icon  color={"#8654E1"}/>
             </span>
             <div>
               <p className="font-medium text-[#BDBDBD]">Office</p>
@@ -131,9 +133,9 @@ const Support = () => {
         {/* Right Form Panel */}
         <form
           onSubmit={handleSubmit}
-          className="w-full bg-[#1f1f1f] p-6 rounded-md space-y-5"
+          className="w-full bg-[#1f1f1f] p-6 rounded-md space-y-6"
         >
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm mb-2 block">First name</label>
               <input
@@ -164,7 +166,7 @@ const Support = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="text-sm mb-2 block">Email</label>
               <input
@@ -191,10 +193,10 @@ const Support = () => {
                   onChange={handleChange}
                   className="flex-1 bg-transparent p-3 text-sm text-white placeholder-[#4F4F4F] outline-none"
                 />
-                {errors.phoneNumber && (
-                  <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
-                )}
               </div>
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+              )}
             </div>
           </div>
 
@@ -213,33 +215,10 @@ const Support = () => {
             )}
           </div>
 
-          {/* <div className="flex items-start gap-2 text-sm text-white">
-            <input
-              type="checkbox"
-              name="privacy"
-              checked={FormData.privacy}
-              onChange={handleChange}
-              className="accent-[#9747FF] h-4 w-4 rounded border border-[#494949] checked:bg-[#D6D3FB]"
-            />
-            <p className="text-[#B3B3B3]">
-              You agree to our friendly{" "}
-              <Link
-                href="/privacyPolicy"
-                className="underline hover:text-[#a66bf4]"
-              >
-                privacy policy
-              </Link>
-              .
-            </p>
-          </div>
-          {errors.privacy && (
-            <p className="text-red-500 text-sm">{errors.privacy}</p>
-          )} */}
-
           <div className="text-right">
             <button
               type="submit"
-              className="bg-[#9747FF] hover:bg-[#7a36e4] text-white text-sm px-5 py-2 rounded-md"
+              className="bg-[#9747FF] hover:bg-[#7a36e4] text-white text-sm px-5 py-2 rounded-md w-full sm:w-auto"
             >
               Send message
             </button>

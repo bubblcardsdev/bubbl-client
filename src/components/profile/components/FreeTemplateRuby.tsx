@@ -95,7 +95,7 @@ const FreeTemplateRuby = ({
             </div>
             <div className="bg-gray-100 p-1 rounded-xl  text-sm font-semibold text-gray-800">
               <Image
-                src={formData?.companyLogoUrl || "/profile.png"}
+                src={formData?.companyLogoUrl || "/logo.png"}
                 alt="logo"
                 width={80}
                 height={80}
@@ -136,7 +136,7 @@ const FreeTemplateRuby = ({
             <div className="space-y-4">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
+                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                   <div className="flex-1 flex items-center gap-3 p-4">
                     <PhoneColorIcon />
                     <span className="ml-1 flex-grow text-left">
@@ -204,7 +204,7 @@ const FreeTemplateRuby = ({
               </h2>
             )}
 
-            <div className="space-y-4 ">
+            <div className="space-y-4  text-left">
               {formData?.socialMediaNames &&
                 [...formData.socialMediaNames] // clone array so original isn't mutated
                   .sort(
