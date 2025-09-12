@@ -78,7 +78,7 @@ const ProTemplateSpahire = ({
         />
       </div>
 
-      <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full space-y-3 bg-white">
+      <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full space-y-3 bg-white ">
         {/* Profile header */}
         <div className="relative rounded-lg w-full h-34 bg-[#ccc] flex items-center flex-row border">
           <div className="relative w-[320px] h-34 p-2 text-left">

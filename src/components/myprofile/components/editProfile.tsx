@@ -1,4 +1,3 @@
-
 /* eslint-disable */
 
 import React, { useEffect, useState } from "react";
@@ -242,7 +241,7 @@ const EditProfile: React.FC = () => {
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [customName, setCustomName] = useState("");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-const [mode, setMode] = React.useState("dark"); // or "edit" / default value
+  const [mode, setMode] = React.useState("dark"); // or "edit" / default value
 
   // formData (API shaped)
   const [formData, setFormData] = useState<any>(INITIAL_FORM_DATA);
@@ -432,10 +431,11 @@ const [mode, setMode] = React.useState("dark"); // or "edit" / default value
     if (type === "profile") {
       setFormData((prev: any) => ({ ...prev, profileImageUrl: "" }));
       setProfileImg(null);
+    } else {
+      setFormData((prev: any) => ({ ...prev, companyLogoUrl: "" }));
       setCompanyLogoImg(null);
-    } else setFormData((prev: any) => ({ ...prev, companyLogoUrl: "" }));
+    }
   };
-
   // Template selection: keep currentIndex for preview & set templateId in state
   const onTemplateSelect = (index: number) => {
     setCurrentIndex(index);
@@ -578,7 +578,7 @@ const [mode, setMode] = React.useState("dark"); // or "edit" / default value
       <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
       <div className="flex flex-col lg:flex-col xl:flex-row gap-6">
         {/* Left Form Section */}
-        <div className="w-full max-w-[500px]">
+        <div className="w-full max-w-[600px]">
           <ProfileForm
             formData={formData}
             setFormData={setFormData}
@@ -603,23 +603,21 @@ const [mode, setMode] = React.useState("dark"); // or "edit" / default value
             handleNestedArrayChange={handleNestedArrayChange}
             socialLinks={socialLinks}
             Digitalpay={Digitalpay}
-            // handleRemoveImage={handleRemoveImage}
+            handleRemoveImage={handleRemoveImage}
             setMode={setMode}
             mode={mode}
             // setActiveIndex={setActiveIndex}
-            // removeFromArray={removeFromArray} 
-                  />
+            // removeFromArray={removeFromArray}
+          />
         </div>
         {/* Right Preview Section */}
-        <div className="w-full max-w-[500px]">
-          <div className="sticky top-2 max-h-[calc(100vh-80px)] overflow-y-auto scrollbar-none bg-gradient-to-b from-[#1f0128] to-black rounded-2xl pb-5  text-gray-200 text-center">
+        <div className="w-full max-w-[400px]">
+          <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
+            <p className="text-sm text-gray-400 my-6">Live Preview</p>
             {/* Sticky Live Preview Heading */}
-            <p className="sticky top-0 py-2 z-[99999] text-lg font-medium pt-4 bg-[#1f0128]">
-              Live preview
-            </p>
+            <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF]">
 
-            {/* Preview content */}
-            <div className="mt-4 px-6">
+
               <LivePreview
                 currentTemplate={templates?.[currentIndex]}
                 formData={formData}

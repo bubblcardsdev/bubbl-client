@@ -32,6 +32,7 @@ const ProfileForm = ({
   Digitalpay,
   mode,
   setMode,
+  handleRemoveImage,
 }: {
   formData: any;
   setFormData: any;
@@ -58,6 +59,7 @@ const ProfileForm = ({
   Digitalpay: any;
   mode: any;
   setMode: any;
+  handleRemoveImage: any;
 }) => {
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
@@ -126,17 +128,19 @@ const ProfileForm = ({
                   <>
                     <Image
                       src={imageUrl}
-                      alt={imageType}
+                      alt={label}
                       width={120}
                       height={120}
                       className="object-cover w-full h-full rounded-full"
                     />
                     <button
                       type="button"
-                      onClick={() => console.log('Remove image functionality not implemented')}
+                      aria-label={`Remove ${label.toLowerCase()}`}
+                      title={`Remove ${label.toLowerCase()}`}
+                      onClick={() => handleRemoveImage(imageType)}
                       className="absolute top-4 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-[10] shadow-md"
                     >
-                      ✕
+                      ✕{" "}
                     </button>
                   </>
                 ) : (
@@ -252,25 +256,24 @@ const ProfileForm = ({
         </div>
       </div>
 
-      <div className="flex lg:flex-row md:flex-row sm:flex-col xs:flex-col gap-4">
+      <div className="flex lg:flex-col md:flex-col sm:flex-col xs:flex-col gap-4">
         <div className="w-full">
           <label className="text-sm mb-1 block text-gray-300">
             Mobile number
           </label>
           {formData.phoneNumbers.map((mobile: any, idx: number) => {
             if (mobile?.activeStatus) {
-
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-0 rounded-lg mt-1"
+                  className="flex items-center gap-0 bg-[#2a2a2a] px-0 py-0 rounded-lg mt-1"
                 >
                   {/* Dropdown */}
                   <select
                     value={mobile.phoneNumberType || ""}
                     onChange={(e) => {
                       if (e.target.value === "custom") {
-                        console.log('Custom modal functionality not implemented');
+                        setIsCustomModalOpen(true);
                       } else {
                         handleNestedArrayChange(
                           "phoneNumbers",
@@ -280,7 +283,7 @@ const ProfileForm = ({
                         );
                       }
                     }}
-                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-3 py-2 outline-none hover:cursor-pointer"
+                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-1 outline-none hover:cursor-pointer w-[65px] "
                   >
                     <option value="home">Home</option>
                     <option value="work">Work</option>
@@ -308,7 +311,7 @@ const ProfileForm = ({
                         e.target.value
                       )
                     }
-                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-2 py-2 outline-none"
+                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-0 py-0 outline-none  w-[65px] "
                   >
                     {countryCodesData
                       .sort(
@@ -338,9 +341,20 @@ const ProfileForm = ({
                   />
                   {/* Delete */}
                   <button
-                    onClick={() => console.log('Remove functionality not implemented')}
-                    className="text-white"
+                    type="button"
+                    aria-label="Remove phone number"
+                    title="Remove phone number"
+                    onClick={() =>
+                      handleNestedArrayChange(
+                        "phoneNumbers",
+                        idx,
+                        "activeStatus",
+                        false
+                      )
+                    }
+                    className="text-white px-2"
                   >
+                    {" "}
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -404,7 +418,6 @@ const ProfileForm = ({
           </label>
           {formData.emailIds.map((email: any, idx: number) => {
             if (email?.activeStatus) {
-
               return (
                 <div
                   key={idx}
@@ -418,12 +431,25 @@ const ProfileForm = ({
                         "emailIds",
                         idx,
                         "emailId",
-                        e.target.value
+                        e.target.value ? e.target.value.toLowerCase() : ""
                       )
                     }
                     className="truncate w-0 flex-1 bg-[#2a2a2a] p-[10px] outline-none text-white"
                   />
-                  <button onClick={() => console.log('Remove functionality not implemented')}>
+                  <button
+                    type="button"
+                    aria-label="Remove email"
+                    title="Remove email"
+                    onClick={() =>
+                      handleNestedArrayChange(
+                        "emailIds",
+                        idx,
+                        "activeStatus",
+                        false
+                      )
+                    }
+                  >
+                    {" "}
                     <Trash2 className="w-4 h-4 text-white" />
                   </button>
                 </div>
@@ -449,7 +475,6 @@ const ProfileForm = ({
         <label className="text-sm mb-1 block text-gray-300">Website</label>
         {formData.websites.map((link: any, idx: number) => {
           if (link?.activeStatus) {
-
             return (
               <div
                 key={idx}
@@ -468,7 +493,19 @@ const ProfileForm = ({
                   }
                   className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white"
                 />
-                <button onClick={() => console.log('Remove functionality not implemented')}>
+                <button
+                  type="button"
+                  aria-label="Remove website"
+                  title="Remove website"
+                  onClick={() =>
+                    handleNestedArrayChange(
+                      "websites",
+                      idx,
+                      "activeStatus",
+                      false
+                    )
+                  }
+                >
                   <Trash2 className="w-4 h-4 text-white" />
                 </button>
                 {errors.websites && (

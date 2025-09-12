@@ -14,7 +14,7 @@ interface Props {
 }
 
 function Profile(props: Props) {
-  const {  profileId } = props;
+  const {  profileId = "", deviceUid="" } = props;
   const [profileData, setProfileData] = useState<any>(null);
   const [selectedTheme, setSelectedTheme] = useState<any>({});
   const formDataBuilder = (data: any) => {
@@ -57,8 +57,14 @@ function Profile(props: Props) {
   };
   const getProfileData = async () => {
     try {
-      if (profileId) {
-        const res: any = await GetProfileByUuid(profileId);
+      
+        let res = null
+        if(deviceUid){
+          res = await GetProfileByUuid(deviceUid)
+        }else{
+          res = await GetProfileByUuid(profileId)
+        }
+        
         if (res) {
           setSelectedTheme((prev: any) => ({
             ...prev,
@@ -75,7 +81,7 @@ function Profile(props: Props) {
           const response = formDataBuilder(obj);
           setProfileData(response);
         }
-      }
+      
     } catch (error) {
       console.error("Error calling Profile", error);
     }

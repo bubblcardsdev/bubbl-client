@@ -55,8 +55,10 @@ const FreeTemplateRuby = ({
     "3": Paytm_icon,
   };
   return (
-    <div className="flex items-center align-middle justify-center ">
-      <div className="relative w-full ">
+    <div
+      className="flex items-center align-middle justify-center  overflow-hidden "
+    >
+      <div className="relative w-full max-w-[400px]">
         <div className="h-[230px] bg-yellow-500  rounded-t-2xl ">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}

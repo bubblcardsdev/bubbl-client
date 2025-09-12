@@ -49,7 +49,7 @@ const ProTemplateQuartz = ({
     "3": Paytm_icon,
   };
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden">
+    <div className="w-full max-w-[400px] mx-auto overflow-hidden  ">
       <div className=" bg-[#D9D9D9] ">
         <Image
           src={formData?.profileImageUrl || "/profile.png"}

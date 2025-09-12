@@ -21,11 +21,7 @@ const LivePreview = ({
     neno: ProTemplateNeno,
   };
   const Component = templates?.[currentTemplate?.value];
-  return (
-    <div>
-      <Component formData={formData} selectedTheme={selectedTheme} />
-    </div>
-  );
+  return <Component formData={formData} selectedTheme={selectedTheme} />;
 };
 
 export default LivePreview;
