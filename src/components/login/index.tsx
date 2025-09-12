@@ -2,15 +2,18 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
-  FacebookColorIcon,
+  // FacebookColorIcon,
   LinkedinColorIcon,
   BubblLogo,
 } from "../common/icons";
 import Image from "next/image";
 import Link from "next/link";
-import { loginUser } from "../../services/authLoginApi";
+import { loginUser, responseMessage } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+
+
 const LoginPage = () => {
   const router = useRouter();
 
@@ -18,7 +21,6 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({ emailError: "", passwordError: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/;
@@ -26,6 +28,7 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+console.log("comes here");
 
     try {
       if (!loginForm.email || !loginForm.password) {
@@ -46,6 +49,10 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
+ 
+
+
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -148,20 +155,46 @@ const LoginPage = () => {
 
               {/* Social Login Icons */}
               <div className="flex justify-around mt-[16px] space-x-4">
-                <button className="py-2 px-0 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                <GoogleOAuthProvider clientId="381109639208-5a8i0egsdut082f395brann2n340lbpe.apps.googleusercontent.com">
+                <GoogleLogin 
+    onSuccess={(response) => responseMessage(response, router)} 
+    onError={() => console.log("Login Failed")} 
+    useOneTap 
+  />
+                </GoogleOAuthProvider>
+                {/* <button 
+                // onClick={handleGoogleLogin}
+                  type="button" className="py-2 px-0 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
                   <Image
                     src="/images/googleLogo.png"
                     height={24}
                     width={23}
                     alt="google"
                   />
-                </button>
-                <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                </button> */}
+                {/* <button  type="button" className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
                   <FacebookColorIcon />
-                </button>
-                <button className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                </button> */}
+           {/* <FacebookLogin
+  appId="1173697296846078"
+  fields="id,name,email"
+  scope="public_profile,email"
+  responseType="token"
+  callback={(response: any) => responseFacebook(response, router)}
+  render={(renderProps: any) => (
+    <button
+      type="button"
+      onClick={renderProps.onClick} // triggers the Facebook login popup
+      className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center"
+    >
+      <FacebookColorIcon />
+    </button>
+  )}
+/> */}
+
+                <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('https://devapii.bubbl.cards/api/verifylinkedinuserLatest')}&scope=profile%20email%20openid`} className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
                   <LinkedinColorIcon />
-                </button>
+                </a>
               </div>
 
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
