@@ -14,7 +14,6 @@ import { theme } from "../../utils/profileThemecolor";
 import { downloadVCard } from "../../utils/downloadVcard";
 import { generateVCard } from "../../utils/generateVCard";
 import { useRouter } from "next/router";
-import { type } from "os";
 interface Props {
   deviceUid?: string;
   profileId?: string;

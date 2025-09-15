@@ -8,7 +8,6 @@ import {
   DeleteUserImage,
   UpdateSettingFormData,
 } from "../../services/settings";
-import { useRouter } from "next/router";
 
 export interface SettingFormDataType {
   firstName: string;
@@ -36,12 +35,8 @@ const Settings: React.FC = () => {
   const [formData, setFormData] = useState<any>(INICILAZED_FORM_DATA);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
-  // const [notFound, setNotFound] = useState(false);
-  // const router = useRouter();
-
   // ✅ Fetch user data
   useEffect(() => {
-    // if (notFound) router.push("/404");
     const fetchUserData = async () => {
       try {
         const res = await SettingGetuserData();
@@ -150,174 +145,6 @@ const Settings: React.FC = () => {
   }
 
   return (
-    // <React.Fragment>
-    //   <div className="mt-[5px]">
-    //     <p className="text-md text-white mb-2">Personal Info</p>
-    //     <p className="text-[#828282] mb-4">
-    //       Update your photo and personal details here.
-    //     </p>
-    //   </div>
-    //   <hr className="py-[0px] border-[#494949]" />
-    //   <div className="bg-[#1f1f1f] text-white p-6 rounded-xl shadow mt-8">
-    //     <h2 className="text-lg font-semibold mb-1">Profile Picture</h2>
-    //     <p className="text-sm text-gray-400 mb-4">
-    //       This will be displayed on your profile.
-    //     </p>
-
-    //     {/* Profile Image + Upload */}
-    //     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-[50px] lg:gap-[150px] items-center justify-center mt-10">
-    //       <div className="relative w-20 h-20 border rounded-full mx-auto">
-    //         {image ? (
-    //           <Image
-    //             src={image}
-    //             alt="Profile"
-    //             fill
-    //             className="rounded-full object-cover"
-    //           />
-    //         ) : (
-    //           <Image
-    //             src="/default-profile.png"
-    //             alt="img"
-    //             fill
-    //             className="rounded-full object-cover"
-    //           />
-    //         )}
-
-    //         {image && (
-    //           <button
-    //             type="button"
-    //             onClick={removeImage}
-    //             className="absolute -top-1 -right-1 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-    //           >
-    //             x
-    //           </button>
-    //         )}
-    //       </div>
-
-    //       <div className="text-center text-xs text-gray-400">
-    //         (Upload max 2MB)
-    //       </div>
-
-    //       <div className="flex justify-center">
-    //         <label className="bg-white text-black px-4 py-2 rounded text-sm hover:bg-gray-200 cursor-pointer">
-    //           Upload
-    //           <input
-    //             type="file"
-    //             accept="image/*"
-    //             onChange={handleImageChange}
-    //             className="hidden"
-    //           />
-    //         </label>
-    //       </div>
-    //     </div>
-
-    //     {/* ✅ Form */}
-    //     <form
-    //       onSubmit={handleSubmit}
-    //       className="mt-[60px] grid grid-cols-1 md:grid-cols-2 gap-4"
-    //     >
-    //       <div>
-    //         <label className="text-sm">User Name</label>
-    //         <input
-    //           name="username"
-    //           value={formData?.firstName}
-    //           onChange={handleChange}
-    //           placeholder="Enter Your Name"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.username && (
-    //           <p className="text-xs text-red-400">{errors.username}</p>
-    //         )}
-    //       </div>
-
-    //       <div>
-    //         <label className="text-sm">Phone number</label>
-    //         <input
-    //           name="phone"
-    //           value={formData.phoneNumber}
-    //           onChange={handleChange}
-    //           placeholder="Enter your phone number"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.phone && (
-    //           <p className="text-xs text-red-400">{errors.phone}</p>
-    //         )}
-    //       </div>
-
-    //       <div>
-    //         <label className="text-sm">Email</label>
-    //         <input
-    //           name="email"
-    //           value={formData.email}
-    //           onChange={handleChange}
-    //           placeholder="Enter your email"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.email && (
-    //           <p className="text-xs text-red-400">{errors.email}</p>
-    //         )}
-    //       </div>
-
-    //       <div>
-    //         <label className="text-sm">DOB</label>
-    //         <input
-    //           name="dob"
-    //           value={formData.DOB}
-    //           onChange={handleChange}
-    //           placeholder="Enter your DOB"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.dob && <p className="text-xs text-red-400">{errors.dob}</p>}
-    //       </div>
-
-    //       <div>
-    //         <label className="text-sm">Gender</label>
-    //         <input
-    //           name="gender"
-    //           value={formData.gender}
-    //           onChange={handleChange}
-    //           placeholder="Enter Your Gender"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.gender && (
-    //           <p className="text-xs text-red-400">{errors.gender}</p>
-    //         )}
-    //       </div>
-
-    //       <div>
-    //         <label className="text-sm">Country</label>
-    //         <input
-    //           name="country"
-    //           value={formData.country}
-    //           onChange={handleChange}
-    //           placeholder="Enter your Country"
-    //           className="w-full mt-[8px] p-2 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-[14px]"
-    //         />
-    //         {errors.country && (
-    //           <p className="text-xs text-red-400">{errors.country}</p>
-    //         )}
-    //       </div>
-
-    //       {/* ✅ Buttons */}
-    //       <div className="mt-6 flex justify-end gap-3 col-span-2">
-    //         <button
-    //           type="button"
-    //           className="px-4 py-2 bg-[#282828] text-white rounded-lg hover:bg-[#3a3a3a]"
-    //         >
-    //           Cancel
-    //         </button>
-    //         <button
-    //           type="submit"
-    //           className="px-4 py-2 bg-[#a855f7] text-white rounded-lg hover:bg-[#9333ea]"
-    //         >
-    //           Save
-    //         </button>
-    //       </div>
-    //     </form>
-    //   </div>
-
-    //   <ChangePasswordComponent />
-    // </React.Fragment>
     <React.Fragment>
       <div className="mt-[5px]">
         <p className="text-md text-white mb-2">Personal Info</p>

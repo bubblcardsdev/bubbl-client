@@ -23,13 +23,11 @@ import { theme } from "../../../utils/profileThemecolor";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
-    handleSave,
-
+  handleSave,
 }: {
   formData: any;
   selectedTheme: any;
   handleSave: () => void;
-
 }) => {
   const [color, setColor] = useState<string>("");
   useEffect(() => {
@@ -59,9 +57,7 @@ const FreeTemplateRuby = ({
     "3": Paytm_icon,
   };
   return (
-    <div
-      className="flex items-center align-middle justify-center  overflow-hidden "
-    >
+    <div className="flex items-center align-middle justify-center  overflow-hidden ">
       <div className="relative w-full max-w-[400px]">
         <div className="h-[230px] bg-yellow-500  rounded-t-2xl ">
           <Image
@@ -111,6 +107,7 @@ const FreeTemplateRuby = ({
           </div>
           <div className="mt-6 flex gap-3 ">
             <button
+              onClick={handleSave}
               className="bg-gray-100 text-lg  font-semibold p-[10px]  rounded-[10px] w-[70%]"
               style={{ color: color }}
             >
