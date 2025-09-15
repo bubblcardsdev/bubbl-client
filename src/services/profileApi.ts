@@ -1,6 +1,7 @@
 import axiosInstance from "../helpers/axios";
 import { Id, toast } from "react-toastify";
 import { getAccessToken } from "../helpers/localStorage";
+import axios from "axios";
 
 export type PhoneNumber = {
   // phoneNumberId?: number;
@@ -46,6 +47,7 @@ export type DigitalPaymentLink = {
 export interface ProfileFormData {
   profileId: Id;
   profileUid?: string;
+  // deviceUid?: string;
   userId?: number;
   profileName: string;
   templateId: number;
@@ -76,7 +78,35 @@ export interface ProfileFormData {
   socialMediaName: SocialMediaName[];
   digitalPaymentLinks: DigitalPaymentLink[];
 }
-
+export const GetDeviceByUuid = async (deviceUid: string) => {
+  try {
+    const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+    console.log(response?.data?.deviceUid, "res");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching profile:", error);
+  }
+};
+export const GetProfileByUniqueName = async (uniqueName: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `profile?uniqueName=${uniqueName}`
+    );
+    if (response?.data?.success) {
+      return response?.data;
+    }
+    return null;
+  } catch (error: any) {
+    console.error(error);
+    const errMsg = axios.isAxiosError(error)
+      ? error.response?.data?.data?.message ||
+        error.response?.data?.message ||
+        error.message
+      : "Something went wrong";
+    toast.error(errMsg);
+    return null;
+  }
+};
 export const CreateMyProfileApi = async (formData: ProfileFormData) => {
   try {
     const token = getAccessToken();
@@ -196,7 +226,7 @@ export const UpdateProfile = async (
     delete payload?.profileUid;
     delete payload?.userId;
     const response = await axiosInstance.put(
-      `/profile/update-profile`, // ⚠️ might be wrong
+      `/profile/update-profile`,
       payload,
       {
         headers: {
@@ -305,12 +335,12 @@ export const DeleteProfileImageApi = async (id: string | number) => {
 
     return response.data;
   } catch (error) {
-    console.error(error,'ProfileImage not delete');
+    console.error(error, "ProfileImage not delete");
   }
 };
 export const DeletePbrandinglogoImage = async (id: string | number) => {
   try {
-    const token = getAccessToken(); 
+    const token = getAccessToken();
 
     const response = await axiosInstance.put(
       "profile/deletebradingimage",

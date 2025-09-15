@@ -8,6 +8,7 @@ import {
   DeleteUserImage,
   UpdateSettingFormData,
 } from "../../services/settings";
+import { useRouter } from "next/router";
 
 export interface SettingFormDataType {
   firstName: string;
@@ -35,9 +36,12 @@ const Settings: React.FC = () => {
   const [formData, setFormData] = useState<any>(INICILAZED_FORM_DATA);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
+  // const [notFound, setNotFound] = useState(false);
+  // const router = useRouter();
 
   // ✅ Fetch user data
   useEffect(() => {
+    // if (notFound) router.push("/404");
     const fetchUserData = async () => {
       try {
         const res = await SettingGetuserData();

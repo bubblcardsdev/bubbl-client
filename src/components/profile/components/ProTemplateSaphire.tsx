@@ -24,9 +24,11 @@ import { openInNewTab } from "../../../utils/commonLogics";
 const ProTemplateSpahire = ({
   formData,
   selectedTheme,
+  handleSave,
 }: {
   formData: any;
   selectedTheme: any;
+  handleSave: () => void;
 }) => {
   const [color, setColor] = useState<string>("");
 
@@ -114,7 +116,7 @@ const ProTemplateSpahire = ({
             className="flex items-center justify-between rounded-lg border-2 border-purple-600 flex-1 h-[45px]"
             style={{ border: "2px solid " + color }}
           >
-            <button className="flex-1 h-fit w-[10px]">
+            <button className="flex-1 h-fit w-[10px]" onClick={handleSave}>
               <span className="text-md font-semibold" style={{ color: color }}>
                 Save Contact
               </span>

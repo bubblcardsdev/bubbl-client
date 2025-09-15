@@ -4,6 +4,8 @@ import FreeTemplateRuby from "../../profile/components/FreeTemplateRuby";
 import ProTemplateNeno from "../../profile/components/ProTemplateNeno";
 import ProTemplateQuartz from "../../profile/components/ProTemplateQuartz";
 import ProTemplateSaphire from "../../profile/components/ProTemplateSaphire";
+import { downloadVCard } from "../../../utils/downloadVcard";
+import { generateVCard } from "../../../utils/generateVCard";
 const LivePreview = ({
   currentTemplate,
   formData,
@@ -21,7 +23,19 @@ const LivePreview = ({
     neno: ProTemplateNeno,
   };
   const Component = templates?.[currentTemplate?.value];
-  return <Component formData={formData} selectedTheme={selectedTheme} />;
+  const contact = {
+    name:formData?.firstName+" "+formData?.lastName,
+    countryCode: "+91",
+    mobileNumbers:formData?.phoneNumbers,
+    emails:formData?.emailIds,
+    websites:formData?.websites,
+  };
+
+  const handleSave = () => {
+    const vcard = generateVCard(contact);
+    downloadVCard(vcard, `${contact.name}.vcf`);
+  };
+  return <Component formData={formData} selectedTheme={selectedTheme}  handleSave={handleSave}/>;
 };
 
 export default LivePreview;

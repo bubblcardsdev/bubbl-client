@@ -20,9 +20,12 @@ import { openInNewTab } from "../../../utils/commonLogics";
 const ProTemplateQuartz = ({
   formData,
   selectedTheme,
+    handleSave,
 }: {
   formData: any;
   selectedTheme: any;
+    handleSave: () => void;
+
 }) => {
   // const [openSection, setOpenSection] = useState("");
   // const toggleSection = (section: string) => {
@@ -65,6 +68,7 @@ const ProTemplateQuartz = ({
           <div className="flex items-center justify-between gap-8 ml-2 mt-10">
             <button
               className="flex-1 px-6 py-2 rounded-lg"
+              onClick={  handleSave}
               style={{ backgroundColor: color }}
             >
               <span className="text-sm text-white whitespace-nowrap">

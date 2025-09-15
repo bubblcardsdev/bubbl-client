@@ -114,7 +114,7 @@ export const SettingGetuserData = async () => {
   } catch (error: any) {
     console.error("Error fetching profile:", error);
     toast.error("Failed to fetch profile data.");
-    throw error;
+    return null;
   }
 };
 export const ChangePassword = async (data: any) => {

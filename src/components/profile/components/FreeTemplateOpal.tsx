@@ -15,9 +15,11 @@ import { theme } from "../../../utils/profileThemecolor";
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
+  handleSave,
 }: {
   formData: any;
   selectedTheme: any;
+  handleSave: () => void;
 }) => {
   const [color, setColor] = useState<string>("");
   useEffect(() => {
@@ -62,6 +64,7 @@ const FreeTemplateOpal = ({
           <div className="flex justify-between items-start gap-2 xs:gap-3 sm:gap-4">
             <div className="flex flex-col space-y-2 xs:space-y-3 sm:space-y-4 flex-1">
               <button
+              onClick={handleSave}
                 className="px-3 xs:px-4 sm:px-6 md:px-8 py-1.5 xs:py-2 sm:py-[10px] text-white rounded-[6px] text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap"
                 style={{ backgroundColor: color }}
               >

@@ -23,9 +23,13 @@ import { theme } from "../../../utils/profileThemecolor";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
+    handleSave,
+
 }: {
   formData: any;
   selectedTheme: any;
+  handleSave: () => void;
+
 }) => {
   const [color, setColor] = useState<string>("");
   useEffect(() => {

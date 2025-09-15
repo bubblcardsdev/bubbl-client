@@ -275,9 +275,11 @@ import { theme } from "../../../utils/profileThemecolor";
 const ProTemplateNeno = ({
   formData,
   selectedTheme,
+  handleSave,
 }: {
   formData: any;
   selectedTheme: any;
+  handleSave: () => void;
 }) => {
   const phoneNumbersCount = formData?.phoneNumbers?.filter(
     (value: any) => value?.phoneNumber?.length > 0 && value?.activeStatus
@@ -363,7 +365,9 @@ const ProTemplateNeno = ({
 
               {/* Buttons */}
               <div className="flex gap-3 mt-6">
-                <button className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 rounded-md">
+                <button
+                onClick={  handleSave}
+                 className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 rounded-md">
                   Save Contact
                 </button>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
