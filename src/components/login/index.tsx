@@ -192,7 +192,7 @@ console.log("comes here");
   )}
 /> */}
 
-                <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('https://devapii.bubbl.cards/api/verifylinkedinuserLatest')}&scope=profile%20email%20openid`} className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('http://localhost:3000/linkedin-callback')}&scope=profile%20email%20openid`} className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
                   <LinkedinColorIcon />
                 </a>
               </div>
