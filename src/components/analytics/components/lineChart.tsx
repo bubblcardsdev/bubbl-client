@@ -23,58 +23,6 @@ const Analytics = () => {
   const [chartData, setChartData] = useState<any>(null);
   const [totalTaps, setTotalTaps] = useState(0);
   const [range, setRange] = useState("Weekly"); // default filter
-  const labels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await GetTapsData(range);
-
-        if (response?.success && response?.data) {
-          const values = response.data.map((item: any) => item.count);
-          const lbls = response.data.map((item: any) => item.label) || labels;
-
-          setChartData({
-            labels: lbls,
-            datasets: [
-              {
-                label: "No of taps",
-                data: values,
-                borderColor: "#8B5CF6",
-                backgroundColor: "#8B5CF6",
-                tension: 0.4,
-                pointBorderColor: "#fff",
-                pointBackgroundColor: "#8B5CF6",
-                pointHoverBackgroundColor: "#fff",
-                pointHoverBorderColor: "#8B5CF6",
-                pointRadius: 4,
-                pointHoverRadius: 6,
-              },
-            ],
-          });
-
-          setTotalTaps(values.reduce((acc: number, val: number) => acc + val, 0));
-        }
-      } catch (error) {
-        console.error("Error fetching tap data:", error);
-      }
-    };
-
-    fetchData();
-  }, [range]);
 
   const options = {
     responsive: true,
@@ -89,22 +37,66 @@ const Analytics = () => {
       },
     },
     scales: {
-      x: {
-        ticks: { color: "#aaa", font: { size: 10 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
-      y: {
-        ticks: { color: "#aaa", font: { size: 10 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
+      x: { ticks: { color: "#aaa", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.1)" } },
+      y: { ticks: { color: "#aaa", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.1)" } },
     },
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await GetTapsData(range);
+
+        if (response?.success) {
+          let dataArray: any[] = [];
+
+          if (range === "Weekly") dataArray = response.week || [];
+          else if (range === "Monthly") dataArray = response.month || [];
+          else if (range === "Yearly") dataArray = response.year || [];
+
+          if (dataArray.length > 0) {
+            const labels = dataArray.map(item => item.day || item.date || item.month);
+            const values = dataArray.map(item => item.totalTaps || 0);
+
+            setChartData({
+              labels,
+              datasets: [
+                {
+                  label: "No of taps",
+                  data: values,
+                  borderColor: "#8B5CF6",
+                  backgroundColor: "#8B5CF6",
+                  tension: 0.4,
+                  pointBorderColor: "#fff",
+                  pointBackgroundColor: "#8B5CF6",
+                  pointHoverBackgroundColor: "#fff",
+                  pointHoverBorderColor: "#8B5CF6",
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                },
+              ],
+            });
+          } else {
+            setChartData(null);
+          }
+
+          setTotalTaps(response.totalTaps || 0);
+        }
+      } catch (error) {
+        console.error("Error fetching tap data:", error);
+        setChartData(null);
+        setTotalTaps(0);
+      }
+    };
+
+    fetchData();
+  }, [range]);
+
   return (
-    <div className="w-full flex justify-center px-2 sm:px-4 lg:px-0 ">
-      <div className="w-full rounded-2xl p-3 sm:p-4 md:p-6 text-white ">
+    <div className="w-full flex justify-center px-2 sm:px-4 lg:px-0">
+      <div className="w-full rounded-2xl p-3 sm:p-4 md:p-6 text-white">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4 ">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
           <div className="flex-1 min-w-0">
             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
               Analytics Free
@@ -118,7 +110,7 @@ const Analytics = () => {
           </div>
         </div>
 
-        <div className="bg-[#282828] rounded-2xl p-3 sm:p-5 ">
+        <div className="bg-[#282828] rounded-2xl p-3 sm:p-5">
           <div className="flex flex-row sm:flex-row sm:justify-between xs:justify-between sm:items-center mb-6 gap-4">
             <div className="text-center sm:text-left lg:m-[10px_0_10px_0]">
               <p className="text-gray-400 text-sm mb-2">No of taps</p>
@@ -126,12 +118,12 @@ const Analytics = () => {
                 {totalTaps}
               </h3>
             </div>
-            <div className="flex flex-wrap justify-center sm:justify-end gap-2 lg:text-[13px] md:text-[12px] sm:text-[12px] xs:text-[12px] ">
+            <div className="flex flex-wrap justify-center sm:justify-end gap-2 lg:text-[13px] md:text-[12px] sm:text-[12px] xs:text-[12px]">
               {["Weekly", "Monthly", "Yearly"].map((item) => (
                 <button
                   key={item}
                   onClick={() => setRange(item)}
-                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px]  rounded-lg  transition-colors  ${
+                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${
                     item === range
                       ? "bg-purple-600 text-white"
                       : "bg-[#4F4F4F] text-gray-300"
