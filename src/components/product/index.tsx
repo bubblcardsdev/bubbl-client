@@ -81,15 +81,18 @@ const ProductList: React.FC = () => {
   const { id } = router.query;
 
   const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
 
   const getProductDetail = async () => {
+    setLoading(true);
     try {
       const response = await fetchProductDetails(id as string);
       setData(response);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
+    setLoading(false);
   };
 
   const {
@@ -174,8 +177,13 @@ const ProductList: React.FC = () => {
       colors: ["red", "blue", "green", "yellow", "purple"],
     },
   ];
-
-  return (
+  const productImage =
+    (currentImage === "front"
+      ? primaryImage
+      : secondaryImage || primaryImage) || null;
+  return loading ? (
+    <div className="flex justify-center items-center h-screen"></div>
+  ) : (
     <div className="max-w-[1300px] mx-auto pt-12 p-6 mb-4">
       <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
         {/* Left Section - Image */}
@@ -183,14 +191,11 @@ const ProductList: React.FC = () => {
           <BreadCrumbs value={data?.productDetail?.name || ""} />
           <div className="relative bg-[#EFEFEF] rounded-2xl lg:p-4 w-full">
             <Image
-              src={
-                currentImage === "front"
-                  ? primaryImage
-                  : secondaryImage || primaryImage
-              }
+              src={productImage}
               alt="Bubbl Card"
               width={400}
               height={400}
+              priority
               className="rounded-md object-fill w-full"
             />
             <div className="flex justify-center mt-2">
