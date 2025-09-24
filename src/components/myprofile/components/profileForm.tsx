@@ -5,7 +5,6 @@ import { countryCodesData } from "@/src/lib/constant";
 import { theme } from "@/src/utils/profileThemecolor";
 import { Plus, Trash2, Check } from "lucide-react";
 import clsx from "clsx";
-
 const ProfileForm = ({
   formData,
   setFormData,
@@ -97,7 +96,7 @@ const ProfileForm = ({
             onClick={() => setIsModalOpen(true)}
             className="w-full flex justify-between items-center bg-[#2a2a2a] p-[10px] text-sm rounded-lg text-white"
           >
-            {templates[currentIndex]?.label}{" "}
+            {templates[currentIndex]?.label}
             <span className="text-gray-400">›</span>
           </button>
         </div>
@@ -138,7 +137,7 @@ const ProfileForm = ({
                       aria-label={`Remove ${label.toLowerCase()}`}
                       title={`Remove ${label.toLowerCase()}`}
                       onClick={() => handleRemoveImage(imageType)}
-                      className="absolute top-4 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-[10] shadow-md"
+                      className="absolute top-4 right-0 w-6 h-6 bg-black rounded-full flex items-center justify-center text-white text-sm z-1 shadow-md"
                     >
                       ✕{" "}
                     </button>
@@ -183,7 +182,7 @@ const ProfileForm = ({
                 }));
               }
             }}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white "
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
           {errors.firstName && (
             <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
@@ -203,7 +202,7 @@ const ProfileForm = ({
                 }));
               }
             }}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
           {errors.lastName && (
             <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
@@ -228,7 +227,7 @@ const ProfileForm = ({
                 }));
               }
             }}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white "
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm "
           />
           {errors.companyName && (
             <p className="text-red-500 text-xs mt-1">{errors.companyName}</p>
@@ -248,7 +247,7 @@ const ProfileForm = ({
                 }));
               }
             }}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white "
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm "
           />
           {errors.designation && (
             <p className="text-red-500 text-xs mt-1">{errors.designation}</p>
@@ -261,7 +260,7 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">
             Mobile number
           </label>
-          {formData.phoneNumbers.map((mobile: any, idx: number) => {
+          {formData?.phoneNumbers?.map((mobile: any, idx: number) => {
             if (mobile?.activeStatus) {
               return (
                 <div
@@ -270,7 +269,7 @@ const ProfileForm = ({
                 >
                   {/* Dropdown */}
                   <select
-                    value={mobile.phoneNumberType || ""}
+                    value={mobile?.phoneNumberType || ""}
                     onChange={(e) => {
                       if (e.target.value === "custom") {
                         setIsCustomModalOpen(true);
@@ -283,26 +282,25 @@ const ProfileForm = ({
                         );
                       }
                     }}
-                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-1 outline-none hover:cursor-pointer w-[65px] "
+                    className="bg-[#2a2a2a] text-white  rounded-lg px-1 outline-none hover:cursor-pointer w-[65px] text-sm placeholder:text-sm "
                   >
                     <option value="home">Home</option>
                     <option value="work">Work</option>
-                    <option value="other">Other</option>
                     <option value="custom">Custom</option>
                     {/* If user already saved custom, show it */}
                     {mobile.phoneNumberType &&
-                      !["home", "work", "other", "custom"].includes(
-                        mobile.phoneNumberType
+                      !["home", "work", "custom"].includes(
+                        mobile?.phoneNumberType
                       ) && (
-                        <option value={mobile.phoneNumberType}>
-                          {mobile.phoneNumberType}
+                        <option value={mobile?.phoneNumberType}>
+                          {mobile?.phoneNumberType}
                         </option>
                       )}
                   </select>
 
                   {/* Country code dropdown */}
                   <select
-                    value={mobile.countryCode}
+                    value={mobile?.countryCode}
                     onChange={(e) =>
                       handleNestedArrayChange(
                         "phoneNumbers",
@@ -311,7 +309,7 @@ const ProfileForm = ({
                         e.target.value
                       )
                     }
-                    className="bg-[#2a2a2a] text-white text-sm rounded-lg px-0 py-0 outline-none  w-[65px] "
+                    className="bg-[#2a2a2a] text-white  rounded-lg px-0 py-0 outline-none  w-[65px] text-sm placeholder:text-sm "
                   >
                     {countryCodesData
                       .sort(
@@ -328,7 +326,7 @@ const ProfileForm = ({
                   {/* Phone number input */}
                   <input
                     type="text"
-                    value={mobile.phoneNumber}
+                    value={mobile?.phoneNumber}
                     onChange={(e: any) =>
                       handleNestedArrayChange(
                         "phoneNumbers",
@@ -337,7 +335,7 @@ const ProfileForm = ({
                         e.target.value
                       )
                     }
-                    className="w-full bg-[#2a2a2a] p-[10px] text-white rounded-lg outline-none"
+                    className="w-full bg-[#2a2a2a] p-[10px] text-white rounded-lg outline-none text-sm placeholder:text-sm"
                   />
                   {/* Delete */}
                   <button
@@ -387,7 +385,7 @@ const ProfileForm = ({
                   type="text"
                   value={customName}
                   onChange={(e) => setCustomName(e.target.value)}
-                  className="w-full mt-2 mb-4 bg-[#2a2a2a] p-2 rounded-lg text-white outline-none"
+                  className="w-full mt-2 mb-4 bg-[#2a2a2a] p-2 rounded-lg text-white outline-none text-sm placeholder:text-sm"
                   placeholder="Enter custom name"
                 />
                 <div className="flex justify-between gap-4">
@@ -416,7 +414,7 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">
             Contact mail
           </label>
-          {formData.emailIds.map((email: any, idx: number) => {
+          {formData?.emailIds?.map((email: any, idx: number) => {
             if (email?.activeStatus) {
               return (
                 <div
@@ -425,7 +423,7 @@ const ProfileForm = ({
                 >
                   <input
                     type="email"
-                    value={email.emailId}
+                    value={email?.emailId}
                     onChange={(e) =>
                       handleNestedArrayChange(
                         "emailIds",
@@ -434,7 +432,7 @@ const ProfileForm = ({
                         e.target.value ? e.target.value.toLowerCase() : ""
                       )
                     }
-                    className="truncate w-0 flex-1 bg-[#2a2a2a] p-[10px] outline-none text-white"
+                    className="truncate w-0 flex-1 bg-[#2a2a2a] p-[10px] outline-none text-white text-sm placeholder:text-sm"
                   />
                   <button
                     type="button"
@@ -456,13 +454,13 @@ const ProfileForm = ({
               );
             }
           })}
-          {errors.emailIds && (
-            <p className="text-red-500 text-xs mt-1">{errors.emailIds}</p>
+          {errors?.emailIds && (
+            <p className="text-red-500 text-xs mt-1">{errors?.emailIds}</p>
           )}
           {formData?.emailIds?.length < 2 && (
             <button
               onClick={() => addToArray("emailIds")}
-              className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+              className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white  placeholder:text-sm"
             >
               <Plus className="w-4 h-4" /> Add Email
             </button>
@@ -473,7 +471,7 @@ const ProfileForm = ({
       {/* Website Links */}
       <div>
         <label className="text-sm mb-1 block text-gray-300">Website</label>
-        {formData.websites.map((link: any, idx: number) => {
+        {formData?.websites?.map((link: any, idx: number) => {
           if (link?.activeStatus) {
             return (
               <div
@@ -482,7 +480,7 @@ const ProfileForm = ({
               >
                 <input
                   type="text"
-                  value={link.website}
+                  value={link?.website}
                   onChange={(e) =>
                     handleNestedArrayChange(
                       "websites",
@@ -491,7 +489,7 @@ const ProfileForm = ({
                       e.target.value
                     )
                   }
-                  className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white"
+                  className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white text-sm placeholder:text-sm"
                 />
                 <button
                   type="button"
@@ -508,8 +506,8 @@ const ProfileForm = ({
                 >
                   <Trash2 className="w-4 h-4 text-white" />
                 </button>
-                {errors.websites && (
-                  <p className="text-red-500 text-xs mt-1">{errors.websites}</p>
+                {errors?.websites && (
+                  <p className="text-red-500 text-xs mt-1">{errors?.websites}</p>
                 )}
               </div>
             );
@@ -519,7 +517,7 @@ const ProfileForm = ({
         {formData?.websites?.length < 2 && (
           <button
             onClick={() => addToArray("websites")}
-            className="mt-2 text-sm flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
+            className="mt-2  flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white text-sm placeholder:text-sm"
           >
             <Plus className="w-4 h-4" /> Add website Link
           </button>
@@ -531,12 +529,12 @@ const ProfileForm = ({
         <label className="text-sm mb-1 block text-gray-300">Address</label>
         <input
           type="text"
-          value={formData.address}
+          value={formData?.address}
           onChange={(e) => handleInputChange("address", e.target.value)}
-          className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+          className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
         />
         {errors.address && (
-          <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+          <p className="text-red-500 text-xs mt-1">{errors?.address}</p>
         )}
       </div>
 
@@ -546,12 +544,12 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">Country</label>
           <input
             type="text"
-            value={formData.country}
+            value={formData?.country}
             onChange={(e) => handleInputChange("country", e.target.value)}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
-          {errors.country && (
-            <p className="text-red-500 text-xs mt-1">{errors.country}</p>
+          {errors?.country && (
+            <p className="text-red-500 text-xs mt-1">{errors?.country}</p>
           )}
         </div>
 
@@ -559,12 +557,12 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">State</label>
           <input
             type="text"
-            value={formData.state}
+            value={formData?.state}
             onChange={(e) => handleInputChange("state", e.target.value)}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
-          {errors.state && (
-            <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+          {errors?.state && (
+            <p className="text-red-500 text-xs mt-1">{errors?.state}</p>
           )}
         </div>
 
@@ -572,12 +570,12 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">City</label>
           <input
             type="text"
-            value={formData.city}
+            value={formData?.city}
             onChange={(e) => handleInputChange("city", e.target.value)}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
           {errors.city && (
-            <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+            <p className="text-red-500 text-xs mt-1">{errors?.city}</p>
           )}
         </div>
 
@@ -585,12 +583,12 @@ const ProfileForm = ({
           <label className="text-sm mb-1 block text-gray-300">Zipcode</label>
           <input
             type="text"
-            value={formData.zipCode}
+            value={formData?.zipCode}
             onChange={(e) => handleInputChange("zipCode", e.target.value)}
-            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white"
+            className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
           />
-          {errors.zipCode && (
-            <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+          {errors?.zipCode && (
+            <p className="text-red-500 text-xs mt-1">{errors?.zipCode}</p>
           )}
         </div>
       </div>
@@ -600,18 +598,17 @@ const ProfileForm = ({
         <label className="text-sm mb-1 block text-gray-300">Bio</label>
         <textarea
           rows={4}
-          value={formData.shortDescription}
+          value={formData?.shortDescription}
           onChange={(e) =>
             handleInputChange("shortDescription", e.target.value)
           }
           placeholder="Write your bio here..."
-          className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg"
+          className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg text-sm placeholder:text-sm"
         />
-        {errors.shortDescription && (
-          <p className="text-red-500 text-xs mt-1">{errors.shortDescription}</p>
+        {errors?.shortDescription && (
+          <p className="text-red-500 text-xs mt-1">{errors?.shortDescription}</p>
         )}
       </div>
-
       {/* theme color */}
       {/* <div className="bg-[#1f1f1f]  rounded-xl w-full mt-10 ">
         <h3 className="text-sm text-gray-300 mb-2"> Profile Theme</h3>
@@ -653,7 +650,6 @@ const ProfileForm = ({
               </button>
             ))}
           </div>
-
           {/* Mode Toggle */}
           <div className="flex gap-4 bg-[#2c2c2c] p-[10px] rounded-lg">
             <button
@@ -689,7 +685,6 @@ const ProfileForm = ({
           const socialItem = formData.socialMediaNames.find(
             (s: any) => s.profileSocialMediaId === item.id
           );
-
           return (
             <div
               key={item.id}
@@ -711,7 +706,7 @@ const ProfileForm = ({
                     socialMediaNames: updated,
                   }));
                 }}
-                className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white"
+                className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white text-sm placeholder:text-sm"
               />
             </div>
           );
@@ -740,7 +735,7 @@ const ProfileForm = ({
                   e.target.value
                 )
               }
-              className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm"
+              className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
             />
           </div>
         ))}

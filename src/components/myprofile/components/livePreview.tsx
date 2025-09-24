@@ -30,12 +30,10 @@ const LivePreview = ({
     emails:formData?.emailIds,
     websites:formData?.websites,
   };
-
   const handleSave = () => {
     const vcard = generateVCard(contact);
     downloadVCard(vcard, `${contact.name}.vcf`);
   };
   return <Component formData={formData} selectedTheme={selectedTheme}  handleSave={handleSave}/>;
 };
-
 export default LivePreview;

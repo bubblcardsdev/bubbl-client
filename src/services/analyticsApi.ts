@@ -6,10 +6,10 @@ export const GetPaymentTaps:any = async (filter:any) => {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getPaymentTaps",
-      filter||{ deviceId: "All", range: "Weekly" }, // ✅ body
+      filter||{ deviceId: "All", range: "Weekly" }, //  body
       {
         headers: {
-          Authorization: token, // ✅ header
+          Authorization: token, // header
         },
       }
     );
@@ -91,12 +91,12 @@ export const GetModeUsageType:any = async (filter: any) => {
     console.error("Get modeusage Type API Error:", error?.response || error);
   }
 };
-export const GetTapsData:any = async () => {
+export const GetTapsData:any = async (range:string) => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getTapsData",
-       { deviceId: "All", range: "Weekly" }, // body
+       { deviceId: "All", range: range }, // body
       {
         headers: {
           Authorization: token, //  header

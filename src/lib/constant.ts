@@ -6,10 +6,11 @@ import {
   Googlepay_icon,
   Facebook_icon_thin,
   Linkedin_icon_thin,
-  Youtube_icon,
   Instagram_icon,
-  WhatsappIconbackgroundFill,
+  OpalWhatsappIcon,
+  OpalYoutubeIcon,
 } from "../../src/components/common/icons";
+
 export const themeObject: { [key: string]: string } = {
   "/home": "linear-gradient(to right, #4A4A4A, #000000)",
   "/": "linear-gradient(to right, #4A4A4A, #000000)",
@@ -465,7 +466,6 @@ export const countryCodesData = [
   { code: "+967", name: "Yemen", iso: "YE", flag: "🇾🇪" },
 ];
 
-
 export const SIGNUP_STEPS: StepConfig[] = [
   {
     title: "Welcome Aboard!",
@@ -486,20 +486,20 @@ export const SIGNUP_STEPS: StepConfig[] = [
   },
 ];
 
-  export const SocialIconsObj: any = {
-    "1": Instagram_icon,
-    "2": Facebook_icon_thin,
-    "3": Youtube_icon,
-    "4": Twitter_icon_thin,
-    "5": WhatsappIconbackgroundFill,
-    "6": Linkedin_icon_thin,
-  };
-  export const DigitalIconsObj: any = {
-    "1": Googlepay_icon,
-    "2": Phonepay_icon,
-    "3": Paytm_icon,
-  };
-  
+export const SocialIconsObj: any = {
+  "1": Instagram_icon,
+  "2": Facebook_icon_thin,
+  "3": Twitter_icon_thin,
+  "4": OpalYoutubeIcon,
+  "5": Linkedin_icon_thin,
+  "6": OpalWhatsappIcon,
+};
+export const DigitalIconsObj: any = {
+  "1": Googlepay_icon,
+  "2": Phonepay_icon,
+  "3": Paytm_icon,
+};
+
 //   const colorTemplateMap = {
 //   1: [
 //     "#9000FF",

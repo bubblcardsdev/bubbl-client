@@ -2,7 +2,6 @@ import axiosInstance from "../helpers/axios";
 import { Id, toast } from "react-toastify";
 import { getAccessToken } from "../helpers/localStorage";
 import axios from "axios";
-
 export type PhoneNumber = {
   // phoneNumberId?: number;
   countryCode: string;
@@ -11,7 +10,6 @@ export type PhoneNumber = {
   checkBoxStatus: boolean;
   activeStatus: boolean;
 };
-
 export type EmailId = {
   // emailIdNumber?: number;
   emailId: string;
@@ -19,7 +17,6 @@ export type EmailId = {
   checkBoxStatus: boolean;
   activeStatus: boolean;
 };
-
 export type Website = {
   // websiteId?: number;
   website: string;
@@ -27,7 +24,6 @@ export type Website = {
   checkBoxStatus: boolean;
   activeStatus: boolean;
 };
-
 export type SocialMediaName = {
   // profileSocialMediaLinkId?: number;
   profileSocialMediaId: number;
@@ -35,7 +31,6 @@ export type SocialMediaName = {
   enableStatus: boolean;
   activeStatus: boolean;
 };
-
 export type DigitalPaymentLink = {
   // profileDigitalPaymentLinkId?: number;
   profileDigitalPaymentsId: number;
@@ -43,7 +38,6 @@ export type DigitalPaymentLink = {
   enableStatus: boolean;
   activeStatus: boolean;
 };
-
 export interface ProfileFormData {
   profileId: Id;
   profileUid?: string;
@@ -85,6 +79,13 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
     return response.data;
   } catch (error: any) {
     console.error("Error fetching profile:", error);
+    const errMsg = axios.isAxiosError(error)
+      ? error.response?.data?.data?.message ||
+        error.response?.data?.message ||
+        error.message
+      : "Something went wrong";
+    toast.error(errMsg);
+    return null;
   }
 };
 export const GetProfileByUniqueName = async (uniqueName: string) => {
@@ -183,25 +184,21 @@ export const GetOneProfileApi = async (id: number) => {
     return null;
   }
 };
-
 export const GetProfileByUuid = async (id: string) => {
   try {
     const response = await axiosInstance.post(
       `profile/getProfileByUid`,
       { profileUid: id } // ✅ send profileId in body
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Error duplicating profile:", error?.response?.data || error);
     return null;
   }
 };
-
 export const DeleteProfileApi = async (id: string | number) => {
   try {
     const token = getAccessToken();
-
     const response = await axiosInstance.delete(
       `profile/delete-profile?profileId=${id}`,
       {
@@ -210,7 +207,6 @@ export const DeleteProfileApi = async (id: string | number) => {
         },
       }
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Error deleting profile:", error);
@@ -234,7 +230,6 @@ export const UpdateProfile = async (
         },
       }
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Update Profile API Error:", error?.response || error);
@@ -244,37 +239,32 @@ export const UpdateProfile = async (
 export const DuplicateProfileApi = async (id: string | number) => {
   try {
     const token = getAccessToken();
-
     const response = await axiosInstance.post(
       `profile/duplicate-profile`,
-      { profileId: id }, // ✅ send profileId in body
+      { profileId: id }, // send profileId in body
       {
         headers: {
           Authorization: token,
         },
       }
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Error duplicating profile:", error?.response?.data || error);
     throw error;
   }
 };
-
 export const UploadProfileImage = async (
   file: File | any,
   id: number | string
 ) => {
   try {
     const token = getAccessToken();
-
     // Prepare form data
     const formData: any = new FormData();
     formData.append("squareImage", file);
     formData.append("rectangleImage", file);
     formData.append("profileId", id);
-
     const response = await axiosInstance.post(
       "upload/profileImage", // <-- relative path since axiosInstance has baseURL
       formData,
@@ -285,7 +275,6 @@ export const UploadProfileImage = async (
         },
       }
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Error uploading Profile Image:", error);
@@ -302,7 +291,6 @@ export const UploadbrandinglogoImage = async (
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
     formData.append("profileId", id);
-
     const response = await axiosInstance.post(
       "upload/brandinglogo", // <-- relative path since axiosInstance has baseURL
       formData,
@@ -313,7 +301,6 @@ export const UploadbrandinglogoImage = async (
         },
       }
     );
-
     return response.data;
   } catch (error: any) {
     console.error("Error uploading Profile Image:", error);
@@ -322,7 +309,6 @@ export const UploadbrandinglogoImage = async (
 export const DeleteProfileImageApi = async (id: string | number) => {
   try {
     const token = getAccessToken();
-
     const response = await axiosInstance.put(
       "profile/deleteprofileimage",
       { profileId: id },
@@ -332,7 +318,6 @@ export const DeleteProfileImageApi = async (id: string | number) => {
         },
       }
     );
-
     return response.data;
   } catch (error) {
     console.error(error, "ProfileImage not delete");

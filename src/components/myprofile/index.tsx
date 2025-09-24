@@ -10,7 +10,6 @@ import Image from "next/image";
 import { MoreVertical, Edit3, Share2 } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 export default function MyprofilePage() {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +83,6 @@ export default function MyprofilePage() {
 
   if (loading) return <p className="text-gray-400">Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
-  console.log(profiles, "p");
   return (
     <div className="text-white mt-4">
       <h2 className="text-xl font-semibold mb-1">Profiles</h2>

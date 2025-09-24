@@ -26,10 +26,11 @@ function Profile(props: Props) {
   const [notFound, setNotFound] = useState(false);
   const router = useRouter();
   const formDataBuilder = (data: any) => {
+    console.log(data,'d')
     return {
       profileId: data?.id,
       profileUid: data?.profileUid,
-      deviceUid: data?.devices?.deviceUid,
+      deviceUid: data?.deviceUid,
       userId: data?.userId,
       profileName: data?.profileName || "",
       templateId: data?.templateId,
@@ -90,6 +91,7 @@ function Profile(props: Props) {
           deviceBranding: res?.data?.deviceBranding,
           profileImg: res?.data?.profileImgs?.[0]?.image,
           companyLogoUrl: res?.data?.profile?.brandingLogoUrl,
+          deviceUid: res?.data?.deviceUid?.deviceUid
         };
         const response = formDataBuilder(obj);
         setProfileData(response);

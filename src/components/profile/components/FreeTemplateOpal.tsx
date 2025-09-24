@@ -3,15 +3,16 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Share_icon,
-  Qr_icon,
   Phone_icon,
   Mail_icon,
   WebIcon_thin,
   Location_icon,
   Arrow_icon,
 } from "../../common/icons";
-import {SocialIconsObj,DigitalIconsObj} from '../../../lib/constant'
+import { SocialIconsObj, DigitalIconsObj } from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
+import QrGenerator from "./QrGenerator";
+import { openInNewTab } from "@/src/utils/commonLogics";
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
@@ -29,26 +30,17 @@ const FreeTemplateOpal = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
 
-
-  // const openInNewTab = (url: string) => {
-  //   if (!url.startsWith("http")) {
-  //     url = `https://${url}`;
-  //   }
-  //   window.open(url, "_blank", "noopener,noreferrer");
-  // };
-  console.log(selectedTheme,'opal')
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-[400px] bg-[#EDEDED] relative overflow-hidden shadow-lg">
+      <div className="w-full max-w-[400px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
         {/* Header curved background */}
         <div
           className="absolute top-0 left-0 w-full h-[100px] xs:h-[120px] sm:h-[140px] md:h-[165px] rounded-br-[250px] xs:rounded-br-[300px] sm:rounded-br-[400px] md:rounded-br-[550px]"
           style={{ backgroundColor: color }}
         ></div>
-        
         {/* Profile Image - Centered and responsive */}
         <div className="relative flex justify-center pt-[50px] xs:pt-[60px] sm:pt-[70px] md:pt-[80px] pb-3 sm:pb-4">
-          <div className="bg-white rounded-full p-0.5 sm:p-1 shadow-lg">
+          <div className=" rounded-full p-0.5 sm:p-1 ">
             <Image
               src={formData?.profileImageUrl || "/Iconset.png"}
               alt="profile_Img"
@@ -64,7 +56,7 @@ const FreeTemplateOpal = ({
           <div className="flex justify-between items-start gap-2 xs:gap-3 sm:gap-4">
             <div className="flex flex-col space-y-2 xs:space-y-3 sm:space-y-4 flex-1">
               <button
-              onClick={handleSave}
+                onClick={handleSave}
                 className="px-3 xs:px-4 sm:px-6 md:px-8 py-1.5 xs:py-2 sm:py-[10px] text-white rounded-[6px] text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap"
                 style={{ backgroundColor: color }}
               >
@@ -77,18 +69,24 @@ const FreeTemplateOpal = ({
                 >
                   <Share_icon />
                 </button>
-                <button
+                {/* <button
+                  onClick={() => setIsQrOpen(true)}
                   className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0"
                   style={{ backgroundColor: color }}
                 >
                   <Qr_icon />
-                </button>
+                </button> */}
+                <QrGenerator
+                  color={color}
+                  deviceIdQR={formData?.deviceUid}
+                  qrBubbl=""
+                  qrImageUrl=""
+                />
               </div>
             </div>
-            
             {/* Company Logo - Responsive sizing */}
             <div className="flex-shrink-0">
-              <div className="w-[60px] h-[60px] xs:w-[70px] xs:h-[70px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px] bg-black rounded-full flex items-center justify-center overflow-hidden">
+              <div className="w-[60px] h-[60px] xs:w-[70px] xs:h-[70px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]  rounded-full flex items-center justify-center overflow-hidden ">
                 <Image
                   src={formData?.companyLogoUrl || "/logo.png"}
                   width={110}
@@ -112,7 +110,8 @@ const FreeTemplateOpal = ({
               {formData?.companyName || "Company Name"}
             </p>
             <p className="text-xs sm:text-sm text-gray-600 text-left leading-relaxed">
-              {formData?.shortDescription || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."}
+              {formData?.shortDescription ||
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."}
             </p>
           </div>
 
@@ -126,81 +125,99 @@ const FreeTemplateOpal = ({
                 Contact Information
               </h2>
             )}
-            
-            <div className="space-y-2 xs:space-y-3 sm:space-y-4">
+
+            <div className="space-y-2 xs:space-y-3 sm:space-y-4 flex flex-col ">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden  text-black text-left">
-                  <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
-                    <Phone_icon color={color} />
-                    <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
-                      {formData?.phoneNumbers?.[0]?.countryCode}{" "}
-                      {formData?.phoneNumbers?.[0]?.phoneNumber}
-                    </span>
+                <a
+                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode}${formData?.phoneNumbers?.[0]?.phoneNumber}`}
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
+                      <Phone_icon color={color} />
+                      <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
+                        {formData?.phoneNumbers?.[0]?.countryCode}{" "}
+                        {formData?.phoneNumbers?.[0]?.phoneNumber}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center px-2 xs:px-3 flex-shrink-0"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Arrow_icon />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center px-2 xs:px-3 flex-shrink-0"
-                    style={{ backgroundColor: color }}
-                  >
-                    <Arrow_icon />
-                  </div>
-                </div>
+                </a>
               )}
 
               {/* Email */}
               {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
-                    <Mail_icon color={color} />
-                    <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
-                      {formData?.emailIds?.[0]?.emailId}
-                    </span>
+                <a href={`mailto:${formData?.emailIds?.[0]?.emailId}`}>
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
+                      <Mail_icon color={color} />
+                      <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
+                        {formData?.emailIds?.[0]?.emailId}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center px-2 xs:px-3 flex-shrink-0"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Arrow_icon />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center px-2 xs:px-3 flex-shrink-0"
-                    style={{ backgroundColor: color }}
-                  >
-                    <Arrow_icon />
-                  </div>
-                </div>
+                </a>
               )}
 
               {/* Website */}
               {formData?.websites?.[0]?.website?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
-                  <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
-                    <WebIcon_thin color={color} />
-                    <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
-                      {formData?.websites?.[0]?.website}
-                    </span>
+                <a
+                  href={formData?.websites?.[0]?.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
+                    <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
+                      <WebIcon_thin color={color} />
+                      <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
+                        {formData?.websites?.[0]?.website}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center px-2 xs:px-3 flex-shrink-0"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Arrow_icon />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center px-2 xs:px-3 flex-shrink-0"
-                    style={{ backgroundColor: color }}
-                  >
-                    <Arrow_icon />
-                  </div>
-                </div>
+                </a>
               )}
 
               {/* Location */}
               {formData?.state && formData?.country && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
-                    <Location_icon color={color} />
-                    <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
-                      {formData?.state && formData?.country
-                        ? formData?.state + ", " + formData?.country
-                        : ""}
-                    </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    `${formData?.address},${formData?.city},${formData?.state}, ${formData?.country}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="w-full bg-[#F4F4F4] rou   nded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
+                      <Location_icon color={color} />
+                      <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
+                        {formData?.state}, {formData?.country}
+                      </span>
+                    </div>
+                    <div
+                      className="flex items-center px-2 xs:px-3 flex-shrink-0"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Arrow_icon />
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center px-2 xs:px-3 flex-shrink-0"
-                    style={{ backgroundColor: color }}
-                  >
-                    <Arrow_icon />
-                  </div>
-                </div>
+                </a>
               )}
             </div>
           </div>
@@ -223,8 +240,7 @@ const FreeTemplateOpal = ({
                       (b?.profileSocialMediaId || 0)
                   )
                   .map((value: any, index: number) => {
-                    const Icon =
-                      SocialIconsObj?.[value?.profileSocialMediaId];
+                    const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
                     const name: any = {
                       1: "Instagram",
                       2: "Facebook",
@@ -239,6 +255,7 @@ const FreeTemplateOpal = ({
                         <div
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                           key={index}
+                          onClick={() => openInNewTab(value?.socialMediaName)}
                         >
                           <div className="flex-1 flex items-center gap-2 xs:gap-3 px-2.5 xs:px-3 sm:px-4 py-2.5 xs:py-3 min-w-0">
                             {Icon && <Icon color={color} />}
@@ -249,6 +266,7 @@ const FreeTemplateOpal = ({
                               <p className="text-xs sm:text-[12px] text-gray-600 truncate">
                                 {formData?.socialLinks?.[0]}
                               </p>
+                              <p>{formData?.socialMediaName}</p>
                             </div>
                           </div>
                           <div
@@ -278,10 +296,14 @@ const FreeTemplateOpal = ({
               {formData?.digitalPaymentLinks &&
                 formData?.digitalPaymentLinks?.map(
                   (value: any, index: number) => {
-                    const Icon = DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+                    const Icon =
+                      DigitalIconsObj?.[value?.profileDigitalPaymentsId];
                     if (value?.digitalPaymentLink?.length > 0) {
                       return (
-                        <div key={index} className="bg-[#F4F4F4] p-2 xs:p-3 sm:p-4 rounded-lg flex items-center justify-center aspect-square">
+                        <div
+                          key={index}
+                          className="bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"
+                        >
                           <Icon color={"#8D00D2"} />
                         </div>
                       );

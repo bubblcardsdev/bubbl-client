@@ -2,30 +2,33 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
-  Qr_icon,
   CallProfileIcon,
   MailProfileIcon,
-  InstagramFill_icon,
   Arrow_icon,
   Paytm_icon,
   Phonepay_icon,
   Googlepay_icon,
   WebIcon,
   LocationFill_icon,
-  LinkedinIconbackgroundFill,
+  QuartzFacebookIcon,
+  QuartzWhatsappIcon,
+  QuartzTwitterIcon,
+  QuartzLinkedinIcon,
+  QuartzYoutubeIcon,
+  QuartzInstagramIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import { openInNewTab } from "../../../utils/commonLogics";
+import QrGenerator from "./QrGenerator";
 
 const ProTemplateQuartz = ({
   formData,
   selectedTheme,
-    handleSave,
+  handleSave,
 }: {
   formData: any;
   selectedTheme: any;
-    handleSave: () => void;
-
+  handleSave: () => void;
 }) => {
   // const [openSection, setOpenSection] = useState("");
   // const toggleSection = (section: string) => {
@@ -39,12 +42,12 @@ const ProTemplateQuartz = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
   const SocialIconsObj: any = {
-    "1": InstagramFill_icon,
-    "2": Googlepay_icon,
-    "3": Googlepay_icon,
-    "4": Googlepay_icon,
-    "5": Googlepay_icon,
-    "6": LinkedinIconbackgroundFill,
+    "1": QuartzInstagramIcon,
+    "2": QuartzFacebookIcon,
+    "3": QuartzTwitterIcon,
+    "4": QuartzYoutubeIcon,
+    "5": QuartzLinkedinIcon,
+    "6": QuartzWhatsappIcon,
   };
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
@@ -53,13 +56,13 @@ const ProTemplateQuartz = ({
   };
   return (
     <div className="w-full max-w-[400px] mx-auto overflow-hidden  ">
-      <div className=" bg-[#D9D9D9] ">
+      <div className=" bg-[#D9D9D9] border border-red-500 h-[400px] ">
         <Image
           src={formData?.profileImageUrl || "/profile.png"}
           alt=""
-          width={100}
-          height={100}
-          className="object-cover w-full"
+          width={500}
+          height={500}
+          className="object-fill w-full h-full "
         />
       </div>
       <div className="px-4 py-8 w-full space-y-3 bg-[#E9BCFF] relative">
@@ -68,7 +71,7 @@ const ProTemplateQuartz = ({
           <div className="flex items-center justify-between gap-8 ml-2 mt-10">
             <button
               className="flex-1 px-6 py-2 rounded-lg"
-              onClick={  handleSave}
+              onClick={handleSave}
               style={{ backgroundColor: color }}
             >
               <span className="text-sm text-white whitespace-nowrap">
@@ -79,7 +82,12 @@ const ProTemplateQuartz = ({
               className="p-2  rounded-lg"
               style={{ backgroundColor: color }}
             >
-              <Qr_icon />
+              <QrGenerator
+                color={color}
+                deviceIdQR={formData?.deviceUid}
+                qrBubbl=""
+                qrImageUrl=""
+              />
             </button>
           </div>
           <div className="absolute w-24 h-24 xs:w-[80px] xs:h-[80px] bg-white rounded-2xl lg:-top-10 lg:right-5 md:right-0 sm:-top-10 sm:right-8 xs:-top-10 xs:right-3">
@@ -237,7 +245,7 @@ const ProTemplateQuartz = ({
                         key={value}
                         role="button"
                         onClick={() => openInNewTab(value?.socialMediaName)}
-                        className="flex items-center justify-center w-10 h-10  rounded-md shadow-md"
+                        className="flex items-center justify-center w-10 h-10  rounded-md "
                         style={{ backgroundColor: color }}
                       >
                         <Icon color={"#ffffff"} size={24} />

@@ -259,7 +259,6 @@ const EditProfile: React.FC = () => {
         companyLogoUrl: data?.data?.profile?.brandingLogoUrl,
       };
       const response = formDataBuilder(obj);
-      console.log(response, "resbi");
       setCurrentIndex(Number(response?.templateId) - 1);
       setFormData(response);
     } catch (err: any) {
@@ -611,13 +610,11 @@ const EditProfile: React.FC = () => {
           />
         </div>
         {/* Right Preview Section */}
-        <div className="w-full max-w-[400px]">
+        <div className="w-full max-w-[400px]  xl:block lg:hidden  md:hidden sm:hidden xs:hidden ">
           <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
             <p className="text-sm text-gray-400 my-6">Live Preview</p>
             {/* Sticky Live Preview Heading */}
-            <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF]">
-
-
+            <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF] text-left">
               <LivePreview
                 currentTemplate={templates?.[currentIndex]}
                 formData={formData}

@@ -8,6 +8,7 @@ import {
   DeleteUserImage,
   UpdateSettingFormData,
 } from "../../services/settings";
+import { toast } from "react-toastify";
 
 export interface SettingFormDataType {
   firstName: string;
@@ -77,19 +78,20 @@ const Settings: React.FC = () => {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      alert("Please upload an image smaller than 2MB.");
+      toast.error("Image size should be less than 2MB.");
       return;
     }
 
     try {
-      const res = await UpdateUserImage(file); // 🔥 API call
-      if (res?.userImage) {
-        // 🔥 use backend response
-        setImage(res.userImage);
-        setFormData((prev: any) => ({ ...prev, userImage: res.userImage }));
-      } else {
+      const res = await UpdateUserImage(file); //  API call
+
+      if (!res?.userImage) {
         setImage(URL.createObjectURL(file)); // fallback preview
+        return;
       }
+      //  use backend response
+      setImage(res.userImage);
+      setFormData((prev: any) => ({ ...prev, userImage: res.userImage }));
     } catch (err) {
       console.error("Image upload failed:", err);
       alert("Failed to upload image.");
@@ -297,7 +299,7 @@ const Settings: React.FC = () => {
             )}
           </div>
 
-          {/* ✅ Buttons */}
+          {/*  Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3 col-span-1 md:col-span-2">
             <button
               type="button"

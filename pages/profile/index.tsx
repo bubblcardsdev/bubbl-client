@@ -7,7 +7,9 @@ interface Props {
 }
 
 const ProfilePage = (props: Props) => {
-  return <Profile profileId={props?.query?.profileId || ""}/>;
+  // return <Profile profileId={props?.query?.profileId || ""}/>;
+    return <Profile profileId={props?.query?.profileId || ""}/>;
+
 };
 
 ProfilePage.getInitialProps = ({ query }: Props) => {

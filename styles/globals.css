@@ -82,3 +82,31 @@ html, body {
       border-radius: 9999px;
       transition: width 0.5s ease-in-out;
     }
+
+.qrSection {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 40px 0px;
+  border-radius: 20px;
+}
+
+.qrsection_qr {
+  padding: 40px 0 40px 0;
+}
+
+.qrSection_bubbl {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -5px;
+  bottom: 0;
+}
+
+.qrSection_bubbl_logo {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  z-index: 1;
+}

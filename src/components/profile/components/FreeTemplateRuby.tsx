@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Share_icon,
-  Qr_icon,
   PhoneColorIcon,
   Arrow_icon,
   MapIconBackgroundFill,
@@ -20,6 +19,8 @@ import {
   Phonepay_icon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
+import QrGenerator from "./QrGenerator";
+import { openInNewTab } from "@/src/utils/commonLogics";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
@@ -37,19 +38,13 @@ const FreeTemplateRuby = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
 
-  const openInNewTab = (url: string) => {
-    if (!url.startsWith("http")) {
-      url = `https://${url}`;
-    }
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
   const SocialIconsObj: any = {
     "1": InstagramBackgroundFill,
     "2": FacebookIconbackgroundFill,
-    "3": YoutubeIconbackgroundFill,
-    "4": TwitterIconbackgroundFill,
-    "5": WhatsappIconbackgroundFill,
-    "6": LinkedinIconbackgroundFill,
+    "3": TwitterIconbackgroundFill,
+    "4": YoutubeIconbackgroundFill,
+    "5": LinkedinIconbackgroundFill,
+    "6": WhatsappIconbackgroundFill,
   };
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
@@ -57,9 +52,9 @@ const FreeTemplateRuby = ({
     "3": Paytm_icon,
   };
   return (
-    <div className="flex items-center align-middle justify-center  overflow-hidden ">
+    <div className="flex items-center align-middle justify-center  overflow-hidden bg-gray-400 ">
       <div className="relative w-full max-w-[400px]">
-        <div className="h-[230px] bg-yellow-500  rounded-t-2xl ">
+        <div className=" bg-yellow-500  rounded-t-2xl ">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
             alt="profile"
@@ -74,16 +69,16 @@ const FreeTemplateRuby = ({
               <Image
                 src={formData?.profileImageUrl || "/profile.png"}
                 alt="profile"
-                width={150}
-                height={150}
-                className="rounded-[20px] object-cover"
+                width={500}
+                height={500}
+                className="rounded-[20px] object-cover w-full h-full"
               />
             </div>
           </div>
           <div className="flex justify-between items-start mt-6 ">
             <div className="text-left flex flex-col gap-1">
               <p className="text-black text-xl font-bold">
-                {formData?.firstName + "" + formData.lastName || "Name"}{" "}
+                {formData?.firstName + "" + formData.lastName || "Name"}
               </p>
               <p className="text-black text-md">
                 {formData?.position || "Designation"}
@@ -108,19 +103,24 @@ const FreeTemplateRuby = ({
           <div className="mt-6 flex gap-3 ">
             <button
               onClick={handleSave}
-              className="bg-gray-100 text-lg  font-semibold p-[10px]  rounded-[10px] w-[70%]"
+              className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"
               style={{ color: color }}
             >
               Save Contact
             </button>
-            <button className="bg-gray-100  p-[10px] rounded-[10px] w-[15%] ">
+            <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%] ">
               <span className="flex items-center align-middle justify-center">
                 <Share_icon color={color} />
               </span>
             </button>
-            <button className="bg-gray-100  p-[10px] rounded-[10px] w-[15%]">
+            <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]">
               <span className="flex items-center align-middle justify-center">
-                <Qr_icon color={color} />
+                <QrGenerator
+                  color={color}
+                  deviceIdQR={formData?.deviceUid}
+                  qrBubbl={""}
+                  qrImageUrl={""}
+                />
               </span>
             </button>
           </div>

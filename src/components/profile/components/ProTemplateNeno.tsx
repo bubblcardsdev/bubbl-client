@@ -255,22 +255,23 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Share_icon,
-  Qr_icon,
   CallProfileIcon,
   MailProfileIcon,
   LocationFill_icon,
   WebIcon_thin,
-  InstagramBackgroundFill,
-  TwitterIconbackgroundFill,
-  FacebookIconbackgroundFill,
-  WhatsappIconbackgroundFill,
-  YoutubeIconbackgroundFill,
-  LinkedinIconbackgroundFill,
   Googlepay_icon,
   Phonepay_icon,
   Paytm_icon,
+  NenoFacebookIcon,
+  NenoInstagramIcon,
+  NenoLinkedinIcon,
+  NenoTwitterIcon,
+  NenoYouTubeIcon,
+  NenoWhatsappIcon,
 } from "../../common/icons";
+
 import { theme } from "../../../utils/profileThemecolor";
+import QrGenerator from "./QrGenerator";
 
 const ProTemplateNeno = ({
   formData,
@@ -302,12 +303,12 @@ const ProTemplateNeno = ({
   }, [selectedTheme]);
 
   const SocialIconsObj: any = {
-    "1": InstagramBackgroundFill,
-    "2": FacebookIconbackgroundFill,
-    "3": YoutubeIconbackgroundFill,
-    "4": TwitterIconbackgroundFill,
-    "5": WhatsappIconbackgroundFill,
-    "6": LinkedinIconbackgroundFill,
+    "1": NenoInstagramIcon,
+    "2": NenoFacebookIcon,
+    "3": NenoYouTubeIcon,
+    "4": NenoTwitterIcon,
+    "5": NenoWhatsappIcon,
+    "6": NenoLinkedinIcon,
   };
 
   const DigitalIconsObj: any = {
@@ -366,15 +367,22 @@ const ProTemplateNeno = ({
               {/* Buttons */}
               <div className="flex gap-3 mt-6">
                 <button
-                onClick={  handleSave}
-                 className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 rounded-md">
+                  onClick={handleSave}
+                  className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 rounded-md"
+                >
                   Save Contact
                 </button>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
                   <Share_icon />
                 </button>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
-                  <Qr_icon />
+                  {/* <Qr_icon /> */}
+                  <QrGenerator
+                    color={color}
+                    deviceIdQR={formData?.deviceUid}
+                    qrBubbl=""
+                    qrImageUrl=""
+                  />
                 </button>
               </div>
             </div>
