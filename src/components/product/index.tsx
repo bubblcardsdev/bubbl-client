@@ -41,25 +41,6 @@ interface CartItemType {
   patterns?: PatternType | null;
 }
 
-interface CircleContainerProp {
-  colors: string[];
-}
-const CircleContainer = ({ colors }: CircleContainerProp) => (
-  <div className="relative max-w-[300px] z-10">
-    {colors.map((color, index) => (
-      <div
-        key={index}
-        className="absolute w-[15px] h-[15px] rounded-full transition-all ease-in-out duration-500 bottom-[-6px]"
-        style={{
-          backgroundColor: color,
-          right: `${10 + index * 3}px`,
-          transform: `translateX(-${15 * index}px)`,
-        }}
-      />
-    ))}
-  </div>
-);
-
 const steps = [
   { id: 1, image: "/bubbl_product.png", title: "Order your bubbl right now" },
   {
@@ -81,18 +62,25 @@ const ProductList: React.FC = () => {
   const { id } = router.query;
 
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
+  
 
   const getProductDetail = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await fetchProductDetails(id as string);
       setData(response);
+      const layout = document.getElementById("siteLayout");
+      console.log(layout);
+      if (layout) {
+        layout.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      // window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   const {
@@ -148,40 +136,12 @@ const ProductList: React.FC = () => {
     toast.success("Item added to cart!");
   };
 
-  const Products = [
-    {
-      id: 1,
-      name: "Full Custom",
-      title: "Bubbl Full Custom",
-      price: "Rs.999",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-    {
-      id: 2,
-      name: "Name Custom",
-      title: "Bubbl Name Custom",
-      price: "Rs.799",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-    {
-      id: 3,
-      name: "Tile v2",
-      title: "Bubbl Tile",
-      price: "Rs.1999",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-  ];
-  const productImage =
+
+  const productImage = 
     (currentImage === "front"
       ? primaryImage
-      : secondaryImage || primaryImage) || null;
-  return loading ? (
+      : secondaryImage || primaryImage) 
+  return !data ? (
     <div className="flex justify-center items-center h-screen"></div>
   ) : (
     <div className="max-w-[1300px] mx-auto pt-12 p-6 mb-4">
@@ -196,7 +156,7 @@ const ProductList: React.FC = () => {
               width={400}
               height={400}
               priority
-              className="rounded-md object-fill w-full"
+              className="rounded-md object-fill w-full max-w-[380px] mx-auto"
             />
             <div className="flex justify-center mt-2">
               <div
@@ -218,10 +178,10 @@ const ProductList: React.FC = () => {
           <p className="text-center text-sm mt-2 capitalize">
             ( {currentImage} View )
           </p>
-          <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center">
+          <div className="xs:hidden mt-6 md:flex flex-col md:flex-row gap-4 justify-center">
             <button
               onClick={addToCart}
-              className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:bg-[#9747FF] hover:text-white"
+              className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
             >
               Add to cart
             </button>
@@ -233,7 +193,7 @@ const ProductList: React.FC = () => {
 
         {/* Right Section */}
         <div className="w-full md:w-[55%] mt-[24px]">
-          <ProductInfo details={data || null} />
+          <ProductInfo details={data || null} addToCart={addToCart} />
         </div>
       </div>
 
@@ -264,7 +224,7 @@ const ProductList: React.FC = () => {
       </section>
 
       {/* Similar items section */}
-      <div className="w-full mt-10 pl-2">
+      {/* <div className="w-full mt-10 pl-2">
         <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
           Similar Items You Might Also Like
         </h2>
@@ -306,7 +266,7 @@ const ProductList: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

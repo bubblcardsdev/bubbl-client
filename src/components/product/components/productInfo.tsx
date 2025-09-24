@@ -28,13 +28,14 @@ interface MaterialType {
 
 interface BubblCardProps {
   details: any;
+  addToCart: () => void;
 }
 
 const ProductInfo = (props: BubblCardProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>("select your font");
   const options = ["Amenti", "Roboto", "Montserrat"];
-  const { details } = props;
+  const { details, addToCart } = props;
   const materials = get(details, "materials", []);
   const colors = get(details, "colors", []);
   const patterns = get(details, "patterns", []);
@@ -192,7 +193,17 @@ const ProductInfo = (props: BubblCardProps) => {
           </div>
         </div>
       )}
-
+      <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
+        <button
+          onClick={addToCart}
+          className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
+        >
+          Add to cart
+        </button>
+        <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
+          Buy now
+        </button>
+      </div>
       {/* Description */}
       <div className="mt-10 border-t pt-4">
         <div className="flex flex-row gap-8">

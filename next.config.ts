@@ -4,7 +4,18 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
     images: {
-    domains: ['bubbldev.s3.ap-south-1.amazonaws.com', 'bubbls3.s3.ap-south-1.amazonaws.com'],
+    remotePatterns: [{
+        protocol: 'https',
+        hostname: 'bubbldev.s3.ap-south-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bubbls3.s3.ap-south-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },],
   },
 };
 

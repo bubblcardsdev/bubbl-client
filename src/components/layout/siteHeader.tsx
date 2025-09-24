@@ -1,19 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../../lib/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
 import Link from "next/link";
+import { getCart } from "@/src/helpers/localStorage";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = useRouter();
+  const [cards, setCards] = useState([]);
   const theme = themeObject[pathname.pathname] || "white";
   const isDarkTheme =
     theme === "black" ||
     theme === "linear-gradient(to right, #4A4A4A, #000000)";
-
+  useEffect(() => {
+    const storedCart = getCart();
+    if (storedCart) {
+      setCards(JSON.parse(storedCart));
+    }
+  }, []);
   return (
     <nav
       className={`flex items-center justify-between px-6 py-2 md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
@@ -52,7 +59,7 @@ const SiteHeader = () => {
         {/* Cart Icon */}
         <button
           aria-label="Cart"
-          className="text-xl hover:text-gray-600"
+          className="text-xl hover:text-gray-600 relative"
           style={{ color: isDarkTheme ? "white" : "black" }}
         >
           <span
@@ -60,6 +67,9 @@ const SiteHeader = () => {
             onClick={() => pathname.push("/cart")}
           >
             <CartIcon />
+          </span>
+          <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+            {cards.length}
           </span>
         </button>
         {/* Login Button */}

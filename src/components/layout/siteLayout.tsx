@@ -12,6 +12,7 @@ export default function SiteLayout(props: SiteLayoutProps) {
   const { darkTheme } = props;
   return (
     <div
+      id="siteLayout"
       className={`w-full h-screen overflow-y-auto overflow-x-hidden ${
         darkTheme ? "bg-black" : ""
       }`}

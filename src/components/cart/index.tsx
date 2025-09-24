@@ -2,11 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import CircleContainer from "../common/circleContainer";
 import { getCart, setCart } from "../../helpers/localStorage";
 import { isEmpty } from "lodash";
 import { CartItem } from "@/src/lib/interface";
-
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
@@ -25,10 +23,10 @@ const Cart = () => {
     }
   }, []);
 
-  const handleIncrease = (productId:string) => {
+  const handleIncrease = (productId: string) => {
     const updatedCards = cards.map((card) => {
       if (card.productId === productId) {
-        return { ...card, quantity: card.quantity + 1 };
+        return { ...card, quantity: card.quantity < 10 ? card.quantity + 1 : 10 };
       }
       return card;
     });
@@ -38,12 +36,12 @@ const Cart = () => {
     }
   };
 
-  const handleDecrease = (productId:string) => {
+  const handleDecrease = (productId: string) => {
     const updatedCards = cards
       .map((card) => {
         if (card.productId === productId) {
           const newQuantity = card.quantity - 1;
-          return newQuantity > 0 ? { ...card, quantity: newQuantity } : null;
+          return newQuantity > 0 ? { ...card, quantity: newQuantity } : card;
         }
         return card;
       })
@@ -55,7 +53,7 @@ const Cart = () => {
     }
   };
 
-  const handleRemove = (productId:string) => {
+  const handleRemove = (productId: string) => {
     const updatedCards = cards.filter((card) => card.productId !== productId);
     setCards(updatedCards);
     if (typeof window !== "undefined") {
@@ -71,41 +69,12 @@ const Cart = () => {
     (acc, item) => acc + item.originalPrice * item.quantity,
     0
   );
-  const shipping =  0; // Example fixed shipping cost
-  const discount = orginalPriceTotal - subTotal ; // Example: 0% discount
+  const shipping = 0; // Example fixed shipping cost
+  const discount = orginalPriceTotal - subTotal; // Example: 0% discount
   const total = subTotal + shipping;
 
-  const Products = [
-    {
-      id: 1,
-      name: "Full Custom",
-      title: "Bubbl Full Custom",
-      price: "Rs.999",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-    {
-      id: 2,
-      name: "Name Custom",
-      title: "Bubbl Name Custom",
-      price: "Rs.799",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-    {
-      id: 3,
-      name: "Metal Card",
-      title: "Bubbl Metal Card",
-      price: "Rs.1999",
-      image: "/purple.png",
-      discount: "18.77%",
-      colors: ["red", "blue", "green", "yellow", "purple"],
-    },
-  ];
   return (
-    <div className="max-w-[1300px] mx-auto pt-[100px] mb-4 2xl:px-[20px] xl:px-[30px] lg:px-[100px] md:px-[20px] sm:px-[20px] xs:px-[20px]">
+    <div className="max-w-[1300px] mx-auto min-h-[70vh] pt-[50px] md:pt-[100px] mb-4 p-6">
       <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
         <div className="w-full md:w-[60%] flex flex-col gap-1">
           {/* Shopping Cart */}
@@ -115,7 +84,7 @@ const Cart = () => {
           <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold py-0">
             Cart it, Love it, Own it.
           </p>
-          <div className="flex flex-col gap-4 px-3 py-4 md:flex-col sm:flex-col xs:flex-col bg-[#F5F5F5] rounded-xl mt-[20px]">
+          <div className="flex flex-col gap-6 p-6 bg-[#F5F5F5] rounded-xl mt-[20px]">
             {!isEmpty(cards) ? (
               cards.map((value: CartItem) => {
                 const {
@@ -123,15 +92,13 @@ const Cart = () => {
                   productId,
                   imageUrl,
                   sellingPrice,
+                  originalPrice,
                   name,
                   deviceType,
                 } = value;
                 return (
-                  <div
-                    key={productId}
-                    className="flex items-center  w-full xs:pl-1.5"
-                  >
-                    <div className="rounded-[8px] w-[90px] h-[65px] flex items-center justify-center  box-border bg-[#E5E5E5]">
+                  <div key={productId} className="flex w-full gap-6">
+                    <button onClick={() => router.push(`/product/${productId}`)} className="rounded-[8px] w-[90px] h-[90px] flex items-center justify-center  box-border bg-[#E5E5E5]">
                       <Image
                         src={imageUrl}
                         alt="card"
@@ -139,8 +106,48 @@ const Cart = () => {
                         height={100}
                         width={100}
                       />
+                    </button>
+                    <div className="flex flex-col gap-1">
+                      <p className="text-xs text-[#7F7F7F]">{deviceType}</p>
+                      <p className="text-black font-bold text-nowrap">
+                        {name}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        {Number(discount) > 0 && <p className="text-[#7F7F7F] text-sm line-through">
+                          ₹{quantity * originalPrice}
+                        </p>}
+                        <p className="font-bold text-nowrap leading-[20px]">
+                          ₹{quantity * sellingPrice}/-
+                        </p>
+                        {Number(discount) > 0 && <p className="text-[#9747FF] text-sm">
+                          {Number(discount)}% off
+                        </p>}
+                      </div>
+                      <div className="flex gap-6 mt-2">
+                        <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2 text-sm">
+                          <button
+                            className=" m-0 p-0 cursor-pointer"
+                            onClick={() => handleDecrease(productId)}
+                          >
+                            -
+                          </button>
+                          <p className="m-0 p-0">{quantity}</p>
+                          <button
+                            className=" m-0 p-0 cursor-pointer"
+                            onClick={() => handleIncrease(productId)}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <button
+                          className="underline text-sm"
+                          onClick={() => handleRemove(productId)}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center flex-col sm:flex-row px-2 gap-x-8 gap-y-2 w-full md:justify-between">
+                    {/* <div className="flex items-center flex-col sm:flex-row px-2 gap-x-8 gap-y-2 w-full md:justify-between">
                       <div className="flex justify-between w-full items-center lg:gap-x-10 md:gap-x-10 sm:gap-x-8 xs:gap-x-2">
                         <div className="space-y-2 sm:space-y-0 xs:space-y-0">
                           <p className="text-[16px] sm:text-[14px] xs:text-[12px] text-[#7F7F7F] font-semibold">
@@ -179,7 +186,7 @@ const Cart = () => {
                           Remove
                         </p>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 );
               })
@@ -232,51 +239,6 @@ const Cart = () => {
               Buy Now
             </button>
           </div>
-        </div>
-      </div>
-      <div className="w-full mt-10 pl-2 pr-0">
-        <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
-          Similar Items You Might Also Like
-        </h2>
-        <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4 ">
-          {Products.map((product) => (
-            <div
-              key={product.id}
-              className="snap-start rounded-lg  transition duration-300 ease-in-out"
-            >
-              <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
-                <div className="flex justify-center items-center px-2 py-2">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={400}
-                    height={400}
-                    className=" object-contain transition-transform duration-500"
-                  />
-                </div>
-                <div className="px-2 flex justify-between items-center">
-                  <div className="border rounded-lg bg-white px-2 py-[4px]">
-                    <p className="text-[#8C8C8C] text-sm">{product.name}</p>
-                  </div>
-                  {product.colors && product.colors.length > 0 && (
-                    <CircleContainer colors={product.colors} />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-4 px-2">
-                <div>
-                  <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
-                  <p className="text-black font-semibold text-lg">
-                    {product.price}
-                  </p>
-                </div>
-                <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
-                  {product.discount}
-                </p>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>
