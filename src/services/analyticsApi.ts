@@ -91,12 +91,14 @@ export const GetModeUsageType:any = async (filter: any) => {
     console.error("Get modeusage Type API Error:", error?.response || error);
   }
 };
-export const GetTapsData:any = async (range:string) => {
+export const GetTapsData:any = async (timeRange:string) => {
+  console.log(timeRange,"?");
+  
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getTapsData",
-       { deviceId: "All", range: range }, // body
+       { deviceId: "All", range: timeRange }, // body
       {
         headers: {
           Authorization: token, //  header

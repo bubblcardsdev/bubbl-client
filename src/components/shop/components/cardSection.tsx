@@ -1,8 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
-import { IoFilter, IoClose } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
-import { SearchIcon } from "../../common/icons";
+import React, { useState, useEffect } from "react";
 import Products from "./products";
 import { fetchAllDevices } from "../../../services/alldevicesApi";
 import Link from "next/link";
@@ -40,52 +37,39 @@ export type ProductSection = {
 };
 
 const title: Record<string, { title: string; description: string }> = {
-  custom_card: {
+  custom: {
     title: "Bubbl Custom Card",
     description:
       " Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today",
   },
-  basic_card: {
+  basic: {
     title: "Bubbl Basic Card",
     description:
       "Pick from our line of Bubbl- Basics - Affordable, Eco-friendly and perfect for first time users who just want to get the feel of futuristic networking.",
   },
-  bubbl_other_product: {
+  others: {
     title: "Bubbl  other product",
     description:
       "Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today!",
   },
-  bundle_devices: {
-    title: "Bubbl Bundle Device",
-    description:
-      "If you want to get a more than just one bubbl, don't worry, we have fan favourite bundles at great deals. Making new connections has never bees easier!",
-  },
+  // bundle_devices: {
+  //   title: "Bubbl Bundle Device",
+  //   description:
+  //     "If you want to get a more than just one bubbl, don't worry, we have fan favourite bundles at great deals. Making new connections has never bees easier!",
+  // },
 };
-const sectionTypes = [
-  {
-    title: "basic_card",
-    type: "basic",
-  },
-  {
-    title: "custom_card",
-    type: "custom",
-  },
-  {
-    title: "bubbl_other_product",
-    type: "others",
-  },
-];
+
 function CardSection() {
   const [data, setData] = useState<Record<string, DeviceItem[]>>({});
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("All products");
-  const [searchProduct, setSearchProduct] = useState("");
+
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
+
+  console.log(data, "data");
 
   const handleSubscribe = async () => {
     if (!email.trim()) {
@@ -108,10 +92,7 @@ function CardSection() {
       setLoading(false);
     }
   };
-  const options = ["BasicCard", "customCard"];
-  const isOpenSelect = () => {
-    setIsOpen(!isOpen);
-  };
+
   useEffect(() => {
     const getDevices = async () => {
       try {
@@ -125,42 +106,12 @@ function CardSection() {
     };
 
     getDevices();
-  }, [searchProduct]);
-  const filteredProduct: Array<ProductSection> = useMemo(() => {
-    const lowerCaseTerm = searchProduct.toLowerCase();
-
-    return sectionTypes
-      .map(({ title, type }) => {
-        const cards = (data[type] || [])
-          .filter((item: DeviceItem) =>
-            item.productName.toLowerCase().includes(lowerCaseTerm)
-          )
-          .map((item: DeviceItem) => ({
-            id: item.productId || "",
-            name: item.productName || "",
-            title: `${item.productName || ""}`,
-            price: `Rs.${item.sellingPrice || ""}`,
-            image: item.primaryImage || "",
-            discount: item.discount ? `${item.discount || 0}%` : "0%",
-            secondaryImage: item.secondaryImage || null,
-            colors: item.colors || [],
-            material: item.material || "",
-            cardType: type || "",
-          }));
-
-        return {
-          sectionType: title,
-          cards: cards,
-        };
-      })
-
-      .filter((section) => section.cards.length > 0);
-  }, [data, searchProduct]);
+  }, []);
 
   return (
-    <section className=" min-h-[calc(100vh-13vh)]  max-w-[1300px] mx-auto">
+    <section className="max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">
-        <div className="w-full flex justify-between ml-2  gap-4">
+        {/* <div className="w-full flex justify-between ml-2  gap-4">
           <div className="flex flex-col mb-4 md:mb-0  lg:w-2/5 w-full md:w-3/4 sm:w-3/4 xs:w-3/4">
             <div className="flex items-center w-full  h-12 bg-[#F5F5F5]  rounded-xl  ">
               <span className="px-4 ">
@@ -239,11 +190,11 @@ function CardSection() {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <Products
           // sectionTypes={sectionTypes}
           title={title}
-          data={filteredProduct}
+          data={data}
         />
         <div className="p-12 bg-[#F3F3F3]  rounded-lg mt-16  w-full ">
           <div className="text-center space-y-4">

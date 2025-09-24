@@ -54,9 +54,9 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
           }
           className="px-2 py-1 text-[12px] bg-[#4F4F4F] rounded-md"
         >
-          <option value="weekly">Weekly </option>
-          <option value="monthly">Monthly </option>
-          <option value="yearly">Yearly </option>
+          <option value="Weekly">Weekly </option>
+          <option value="Monthly">Monthly </option>
+          <option value="Yearly">Yearly </option>
         </select>
       </div>
       {isNoData && (
@@ -76,7 +76,7 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
 export default function AnalyticsPro() {
   const INITIAL_DATA = {
     deviceType: {
-      labels: ["Android", "iOS", "Other"],
+      labels: ["Android", "IOS", "Other"],
       datasets: [
         {
           data: [40, 30, 20],
@@ -140,11 +140,11 @@ export default function AnalyticsPro() {
   const [chartData, setChartData] = useState<any>(INITIAL_DATA);
 
   const [filter, setFilter] = useState({
-    deviceType: { deviceId: "All", range: "weekly" },
-    modeUsage: { deviceId: "All", range: "weekly" },
-    socialMedia: { deviceId: "All", range: "weekly" },
-    paymentTap: { deviceId: "All", range: "weekly" },
-    contactTap: { deviceId: "All", range: "weekly" },
+    deviceType: { deviceId: "All", range: "Weekly" },
+    modeUsage: { deviceId: "All", range: "Weekly" },
+    socialMedia: { deviceId: "All", range: "Weekly" },
+    paymentTap: { deviceId: "All", range: "Weekly" },
+    contactTap: { deviceId: "All", range: "Weekly" },
   });
 
   // 🔹 Social Media

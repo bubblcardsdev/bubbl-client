@@ -6,17 +6,15 @@ import {
   Share_icon,
   ScannerQr_icon,
   Arrow_icon,
-  FacebookColorIcon,
-  LinkedinColorIcon,
 } from "../common/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { stepSchemas } from "@/src/validators/auth";
 import { FormDataType } from "@/src/lib/interface";
 import { SIGNUP_STEPS } from "@/src/lib/constant";
-import { RegisterApi } from "@/src/services/authLoginApi";
+import { OauthRegisterApi, RegisterApi } from "@/src/services/authLoginApi";
 
 const Signup = () => {
   const router = useRouter();
@@ -25,6 +23,28 @@ const Signup = () => {
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<any>({});
   type FormData = Record<string, string>;
+
+const [isOauth, setIsOauth] = useState<boolean>(false);
+const [oAuthType, setOauthType] = useState<string>("local");
+
+useEffect(() => {
+  console.log(oAuthType);
+  
+  const oauth = localStorage.getItem("oauth");
+  const oauthType = localStorage.getItem("type");
+
+  if (oauth === "true" && typeof oauthType === "string") {
+    setIsOauth(true);
+    setOauthType(oauthType);
+  }
+
+  return () => {
+    // Clear only what you set
+    localStorage.removeItem("oauth");
+    localStorage.removeItem("type");
+  };
+}, []);
+// const [isOauth,setIsOauth] = useState<boolean>(false)
 
 const stepFields: Record<number, (keyof FormData)[]> = {
   1: ["name"],
@@ -77,16 +97,23 @@ const getStepFormData = (
     e.preventDefault();
     if (validateFields(step)) {
       try {
+        if(!isOauth){
         const response = await RegisterApi(formData);
-        //  await RegisterCreateProfile(formData);
-
-        if (response) {
+  if (response) {
           // const isOtpSent = await ResendMail(formData.email);
           router.push({
             pathname: "/emailVerify",
             query: { email: formData.email, otpStatus: true },
           });
         }
+        }
+        else{
+           const response = await OauthRegisterApi(formData,oAuthType);
+           if(response) router.push("/login")
+        }
+        //  await RegisterCreateProfile(formData);
+
+      
       } catch (err) {
         console.error(err);
         toast.error("Something went wrong.");
@@ -273,7 +300,7 @@ const getStepFormData = (
                 </div>
               </>
             )}
-            {step === 4 && (
+            {step === 4 && !isOauth && (
               <>
                 <div className="mb-6 relative">
                   <label
@@ -348,16 +375,24 @@ const getStepFormData = (
               </>
             )}
   
-            <button
-              onClick={step === 4 ? handleSubmit : handleStep}
-              className="w-full p-[10px]  bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {step === 4 ? "Verify account" : "Continue"}
-            </button>
+<button
+  onClick={(e) => {
+    if (step === 4) {
+      handleSubmit(e);
+    } else if (step === 3 && isOauth) {
+      handleSubmit(e);
+    } else {
+      handleStep(e);
+    }
+  }}
+  className="w-full p-[10px] bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+>
+  {step === 4 && !isOauth ? "Verify account" : "Continue"}
+</button>
             {/* )} */}
 
             {/* Social Icons */}
-            {step === 4 && (
+            {/* {step === 4 && (
               <div className="flex justify-around mt-[16px] space-x-4">
                 <button className="py-2 px-0 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center ">
                   <Image
@@ -374,7 +409,7 @@ const getStepFormData = (
                   <LinkedinColorIcon />
                 </button>
               </div>
-            )}
+            )} */}
             {(step === 4 || step === 1) && (
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
                 Already have an account?{" "}

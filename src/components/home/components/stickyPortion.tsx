@@ -61,7 +61,7 @@ const StickyPortion = () => {
             <div className="flex justify-center mt-10">
               <Image
                 className="w-full max-w-[280px] lg:max-w-[329px]"
-                src="/HomePageIcons/stocks.png"
+                src="/HomePageIcons/Stocks.png"
                 height={155}
                 width={329}
                 alt="stocks"
@@ -98,7 +98,7 @@ const StickyPortion = () => {
                 className="w-full max-w-[280px] lg:max-w-[329px]"
                 height={155}
                 width={329}
-                src="/HomePageIcons/stocks2.png"
+                src="/HomePageIcons/Stocks2.png"
                 alt="stocks2"
               />
             </div>
