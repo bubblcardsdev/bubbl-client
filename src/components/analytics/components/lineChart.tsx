@@ -37,8 +37,14 @@ const Analytics = () => {
       },
     },
     scales: {
-      x: { ticks: { color: "#aaa", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.1)" } },
-      y: { ticks: { color: "#aaa", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.1)" } },
+      x: {
+        ticks: { color: "#aaa", font: { size: 10 } },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+      y: {
+        ticks: { color: "#aaa", font: { size: 10 } },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
     },
   };
 
@@ -48,15 +54,17 @@ const Analytics = () => {
         const response = await GetTapsData(range);
 
         if (response?.success) {
-          let dataArray: any[] = [];
+          let dataArray: any[] = []
 
           if (range === "Weekly") dataArray = response.week || [];
           else if (range === "Monthly") dataArray = response.month || [];
           else if (range === "Yearly") dataArray = response.year || [];
 
           if (dataArray.length > 0) {
-            const labels = dataArray.map(item => item.day || item.date || item.month);
-            const values = dataArray.map(item => item.totalTaps || 0);
+            const labels = dataArray.map(
+              (item) => item?.day || item?.date || item?.month
+            );
+            const values = dataArray.map((item) => item?.totalTaps ?? null);
 
             setChartData({
               labels,
@@ -73,6 +81,14 @@ const Analytics = () => {
                   pointHoverBorderColor: "#8B5CF6",
                   pointRadius: 4,
                   pointHoverRadius: 6,
+                  spanGaps:false,
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                      },
+                    },
+                  },
                 },
               ],
             });

@@ -76,7 +76,7 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
 export default function AnalyticsPro() {
   const INITIAL_DATA = {
     deviceType: {
-      labels: ["Android", "iOS", "Other"],
+      labels: ["Android", "IOS", "Other"],
       datasets: [
         {
           data: [40, 30, 20],
