@@ -272,6 +272,7 @@ import {
 
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
+import { openInNewTab } from "@/src/utils/commonLogics";
 
 const ProTemplateNeno = ({
   formData,
@@ -467,6 +468,7 @@ const ProTemplateNeno = ({
                         <div
                           key={index}
                           className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full"
+                          // onClick={()=>openInNewTab(value?.socialMediaName)}
                         >
                           {Icon && <Icon color={color} />}
                         </div>

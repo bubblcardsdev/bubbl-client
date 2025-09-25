@@ -9,10 +9,17 @@ import {
   Location_icon,
   Arrow_icon,
 } from "../../common/icons";
-import { SocialIconsObj, DigitalIconsObj } from "../../../lib/constant";
+import {
+  SocialIconsObj,
+  DigitalIconsObj,
+  actions,
+  SOCIAL_MEDIA_IDS,
+  ActionKeys,
+} from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import { openInNewTab } from "@/src/utils/commonLogics";
+import { createTap } from "@/src/services/profileApi";
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
@@ -255,7 +262,20 @@ const FreeTemplateOpal = ({
                         <div
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                           key={index}
-                          onClick={() => openInNewTab(value?.socialMediaName)}
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
+                                  SOCIAL_MEDIA_IDS[
+                                    value.profileSocialMediaId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
+                            openInNewTab(value?.socialMediaName);
+                          }}
                         >
                           <div className="flex-1 flex items-center gap-2 xs:gap-3 px-2.5 xs:px-3 sm:px-4 py-2.5 xs:py-3 min-w-0">
                             {Icon && <Icon color={color} />}

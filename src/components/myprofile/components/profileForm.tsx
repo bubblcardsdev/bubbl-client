@@ -5,6 +5,7 @@ import { countryCodesData } from "@/src/lib/constant";
 import { theme } from "@/src/utils/profileThemecolor";
 import { Plus, Trash2, Check } from "lucide-react";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 const ProfileForm = ({
   formData,
   setFormData,
@@ -60,6 +61,7 @@ const ProfileForm = ({
   setMode: any;
   handleRemoveImage: any;
 }) => {
+  const router = useRouter()
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
       {/* Profile Title & Layout */}
@@ -514,7 +516,7 @@ const ProfileForm = ({
           }
         })}
 
-        {formData?.websites?.length < 2 && (
+        {formData?.websites?.length < 1 && (
           <button
             onClick={() => addToArray("websites")}
             className="mt-2  flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white text-sm placeholder:text-sm"
@@ -743,7 +745,7 @@ const ProfileForm = ({
 
       {/* Buttons */}
       <div className="sticky bottom-0 bg-[#1e1e1e] py-4 flex lg:justify-end md:justify-end sm:justify-between  xs:justify-between gap-3 z-10">
-        <button className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition">
+        <button className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition" onClick={()=>router.push("/myprofile")}>
           Cancel
         </button>
         <button
