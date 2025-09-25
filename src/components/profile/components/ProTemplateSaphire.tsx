@@ -19,10 +19,11 @@ import {
 } from "../../common/icons";
 
 import { theme } from "../../../utils/profileThemecolor";
-import { openInNewTab } from "../../../utils/commonLogics";
+import { navigatorShare, openInNewTab } from "../../../utils/commonLogics";
 import QrGenerator from "./QrGenerator";
 import { createTap } from "@/src/services/profileApi";
 import { ActionKeys, actions, SOCIAL_MEDIA_IDS } from "@/src/lib/constant";
+import { useRouter } from "next/router";
 
 const ProTemplateSpahire = ({
   formData,
@@ -54,7 +55,7 @@ const ProTemplateSpahire = ({
     (value: any) => value?.emailId?.length > 0
   )?.length;
 
-  // ✅ Social icons mapped by ID
+ 
   const SocialIconsObj: any = {
     "1": saphireInstagramIcon,
     "2": saphireFacebookIcon,
@@ -64,12 +65,13 @@ const ProTemplateSpahire = ({
     "6": saphireLinkedinIcon,
   };
 
-  // ✅ Payment icons mapped by name
+ 
   const PaymentIconsObj: any = {
     "1": Googlepay_icon,
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
+  const router = useRouter();
 
   return (
     // <div className="w-full max-w-[400px] mx-auto overflow-hidden  bg-gray-400">
@@ -337,6 +339,7 @@ const ProTemplateSpahire = ({
               Save Contact
             </button>
             <div
+             onClick={() => navigatorShare(window.location.href)}
               className="border-l flex items-center justify-center px-3 h-full"
               style={{ borderColor: color }}
             >
@@ -347,7 +350,7 @@ const ProTemplateSpahire = ({
             {/* <Qr_icon /> */}
             <QrGenerator
               color={color}
-              deviceIdQR={formData?.deviceUid}
+                deviceIdQR={formData?.profileUid}
               qrBubbl=""
               qrImageUrl=""
             />
@@ -521,7 +524,7 @@ const ProTemplateSpahire = ({
           <p className="text-sm font-semibold text-gray-700">
             Go Digital - Save Paper, Trees & Our Earth.
           </p>
-          <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#7a00cc]">
+          <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#7a00cc]">
             Join Now
           </button>
           <p className="text-xs text-gray-500">Powered by bubbl.cards ®</p>
