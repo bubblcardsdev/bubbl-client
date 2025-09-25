@@ -5,7 +5,8 @@
 //     window.open(url, "_blank", "noopener,noreferrer");
 //   };
 
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+
 
 // src/utils/commonLogics.ts
 export const openInNewTab = (url?: string) => {
@@ -31,5 +32,17 @@ export const navigatorShare = async (url: string) => {
     // If share fails for any reason, copy to clipboard
     await navigator.clipboard.writeText(url);
     toast.success("Copied to clipboard!");
+  }
+};
+
+export const copyText = async (links: string) => {
+  console.log(links);
+  
+  try {
+    await navigator.clipboard.writeText(links);
+    toast.success(`Copied to clipboard: ${links}`);
+  } catch (err) {
+    console.error("Clipboard copy failed:", err);
+    toast.error("Failed to copy. Please try manually.");
   }
 };

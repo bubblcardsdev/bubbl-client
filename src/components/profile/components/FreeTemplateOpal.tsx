@@ -18,10 +18,11 @@ import {
 } from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
+import { copyText, navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
 import { createTap } from "@/src/services/profileApi";
 import { useRouter } from "next/router";
 import { form } from "framer-motion/m";
+import { ToastContainer } from "react-toastify";
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
@@ -42,6 +43,7 @@ const FreeTemplateOpal = ({
   const router = useRouter();
   return (
     <div className="w-full flex justify-center items-center">
+       <ToastContainer />
       <div className="w-full max-w-[400px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
         {/* Header curved background */}
         <div
@@ -325,8 +327,10 @@ const FreeTemplateOpal = ({
                     if (value?.digitalPaymentLink?.length > 0) {
                       return (
                         <div
+                        onClick={()=> copyText(value?.digitalPaymentLink)
+                        }
                           key={index}
-                          className="bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"
+                          className=" cursor-pointer bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"
                         >
                           <Icon color={"#8D00D2"} />
                         </div>
