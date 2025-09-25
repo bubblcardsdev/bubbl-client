@@ -21,6 +21,8 @@ import {
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import { openInNewTab } from "@/src/utils/commonLogics";
+import { ActionKeys, actions, SOCIAL_MEDIA_IDS } from "@/src/lib/constant";
+import { createTap } from "@/src/services/profileApi";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
@@ -136,67 +138,92 @@ const FreeTemplateRuby = ({
                 Contact Information
               </h2>
             )}
-            <div className="space-y-4">
-              {/* Phone */}
-              {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <PhoneColorIcon />
-                    <span className="ml-1 flex-grow text-left">
-                      {formData?.phoneNumbers?.[0]?.countryCode}{" "}
-                      {formData?.phoneNumbers?.[0]?.phoneNumber}
-                    </span>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-              {/* mail*/}
-              {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <MailIconbackgroundFill />
-                    <span className="ml-1 flex-grow">
-                      {formData?.emailIds?.[0]?.emailId}
-                    </span>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-              {/* website */}
-              {formData?.websites?.[0]?.website?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <WebIconBackgroundFill />
-                    <span className="ml-1 flex-grow text-black">
-                      {formData?.websites?.[0]?.website}
-                    </span>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-              {/* location */}
-              {formData?.state && formData?.country && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <MapIconBackgroundFill />
-                    <span className="ml-1 flex-grow text-black">
-                      {formData?.state && formData?.country
-                        ? formData?.state + ", " + formData?.country
-                        : ""}
-                    </span>
-                  </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
-              )}
-            </div>
+           <div className="space-y-4">
+  {/* Phone */}
+  {formData?.phoneNumbers?.[0]?.phoneNumber && (
+    <a
+      href={`tel:${formData.phoneNumbers[0].countryCode}${formData.phoneNumbers[0].phoneNumber}`}
+      className="block"
+    >
+      <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+        <div className="flex-1 flex items-center gap-3 p-4">
+          <PhoneColorIcon />
+          <span className="ml-1 flex-grow text-left">
+            {formData.phoneNumbers[0].countryCode}{" "}
+            {formData.phoneNumbers[0].phoneNumber}
+          </span>
+        </div>
+        <div className="bg-[#E5E5E5] flex items-center px-3 ">
+          <Arrow_icon color={color} />
+        </div>
+      </div>
+    </a>
+  )}
+
+  {/* Email */}
+  {formData?.emailIds?.[0]?.emailId?.length > 0 && (
+    <a href={`mailto:${formData.emailIds[0].emailId}`} className="block">
+      <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden text-black text-left">
+        <div className="flex-1 flex items-center gap-3 p-4">
+          <MailIconbackgroundFill />
+          <span className="ml-1 flex-grow">
+            {formData.emailIds[0].emailId}
+          </span>
+        </div>
+        <div className="bg-[#E5E5E5] flex items-center px-3 ">
+          <Arrow_icon color={color} />
+        </div>
+      </div>
+    </a>
+  )}
+
+  {/* Website */}
+  {formData?.websites?.[0]?.website?.length > 0 && (
+    <a
+      href={formData.websites[0].website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+    >
+      <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
+        <div className="flex-1 flex items-center gap-3 p-4">
+          <WebIconBackgroundFill />
+          <span className="ml-1 flex-grow text-black">
+            {formData.websites[0].website}
+          </span>
+        </div>
+        <div className="bg-[#E5E5E5] flex items-center px-3 ">
+          <Arrow_icon color={color} />
+        </div>
+      </div>
+    </a>
+  )}
+
+  {/* Location */}
+  {formData?.state && formData?.country && (
+    <a
+      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${formData.address},${formData.city},${formData.state},${formData.country}`
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+    >
+      <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
+        <div className="flex-1 flex items-center gap-3 p-4">
+          <MapIconBackgroundFill />
+          <span className="ml-1 flex-grow text-black">
+            {formData.state}, {formData.country}
+          </span>
+        </div>
+        <div className="bg-[#E5E5E5] flex items-center px-3 ">
+          <Arrow_icon color={color} />
+        </div>
+      </div>
+    </a>
+  )}
+</div>
+
           </div>
           <div className="py-4">
             {formData?.socialMediaNames
@@ -231,9 +258,20 @@ const FreeTemplateRuby = ({
                         <div
                           key={index}
                           role="button"
-                          onClick={() =>
-                            openInNewTab(formData?.socialLinks?.[0])
-                          }
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
+                                  SOCIAL_MEDIA_IDS[
+                                    value.profileSocialMediaId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
+                            openInNewTab(value?.socialMediaName);
+                          }}
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
                         >
                           <div className="flex-1 flex items-center gap-3 px-4 py-2">

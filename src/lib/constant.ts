@@ -547,3 +547,32 @@ export const DigitalIconsObj: any = {
 //     "#b5e872",
 //   ],
 // };
+
+export const SOCIAL_MEDIA_IDS: Record<number, string> = {
+  1: "instagram",
+  2: "facebook",
+  3: "twitter",
+  4: "youtube",
+  5: "linkedin",
+  6: "whatsApp",
+};
+export const actions = {
+  tap: 1,
+  leads: 2,
+  contact: 3,
+  phone: 4,
+  email: 5,
+  website: 6,
+  location: 7,
+  instagram: 8,
+  linkedin: 9,
+  twitter: 10,
+  facebook: 11,
+  youtube: 12,
+  gpay: 13,
+  phonepe: 14,
+  paytm: 15,
+  qr: 16,
+};
+
+export type ActionKeys = keyof typeof actions;

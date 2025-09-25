@@ -20,6 +20,8 @@ import {
 import { theme } from "../../../utils/profileThemecolor";
 import { openInNewTab } from "../../../utils/commonLogics";
 import QrGenerator from "./QrGenerator";
+import { createTap } from "@/src/services/profileApi";
+import { ActionKeys, actions, SOCIAL_MEDIA_IDS } from "@/src/lib/constant";
 
 const ProTemplateQuartz = ({
   formData,
@@ -244,7 +246,13 @@ const ProTemplateQuartz = ({
                       <div
                         key={value}
                         role="button"
-                        onClick={() => openInNewTab(value?.socialMediaName)}
+                        onClick={() => {
+                           console.log(value,"/",formData);
+                           if(formData.deviceUid){
+                           createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId] as ActionKeys], formData.deviceUid)
+                           }
+                          openInNewTab(value?.socialMediaName)
+                        }}
                         className="flex items-center justify-center w-10 h-10  rounded-md "
                         style={{ backgroundColor: color }}
                       >
