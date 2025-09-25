@@ -272,7 +272,8 @@ import {
 
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { openInNewTab } from "@/src/utils/commonLogics";
+import { navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
+import { useRouter } from "next/router";
 
 const ProTemplateNeno = ({
   formData,
@@ -317,6 +318,7 @@ const ProTemplateNeno = ({
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
+  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto ">
@@ -373,14 +375,14 @@ const ProTemplateNeno = ({
                 >
                   Save Contact
                 </button>
-                <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
+                <button  onClick={() => navigatorShare(window.location.href)} className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
                   <Share_icon />
                 </button>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
                   {/* <Qr_icon /> */}
                   <QrGenerator
                     color={color}
-                    deviceIdQR={formData?.deviceUid}
+                     deviceIdQR={formData?.profileUid}
                     qrBubbl=""
                     qrImageUrl=""
                   />
@@ -513,7 +515,7 @@ const ProTemplateNeno = ({
             <p className="text-sm font-semibold mb-4 text-center text-white">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
-            <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#7a00d0]">
+            <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#7a00d0]">
               Join Now
             </button>
             <p className="text-xs text-gray-500 mt-4">

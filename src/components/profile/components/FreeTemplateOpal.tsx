@@ -18,8 +18,10 @@ import {
 } from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { openInNewTab } from "@/src/utils/commonLogics";
+import { navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
 import { createTap } from "@/src/services/profileApi";
+import { useRouter } from "next/router";
+import { form } from "framer-motion/m";
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
@@ -37,6 +39,7 @@ const FreeTemplateOpal = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
 
+  const router = useRouter();
   return (
     <div className="w-full flex justify-center items-center">
       <div className="w-full max-w-[400px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
@@ -71,6 +74,7 @@ const FreeTemplateOpal = ({
               </button>
               <div className="flex space-x-2 xs:space-x-3 sm:space-x-4">
                 <button
+                onClick={()=>navigatorShare(window.location.href)}
                   className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0"
                   style={{ backgroundColor: color }}
                 >
@@ -85,7 +89,7 @@ const FreeTemplateOpal = ({
                 </button> */}
                 <QrGenerator
                   color={color}
-                  deviceIdQR={formData?.deviceUid}
+                  deviceIdQR={formData?.profileUid}
                   qrBubbl=""
                   qrImageUrl=""
                 />
@@ -340,7 +344,7 @@ const FreeTemplateOpal = ({
               <p className="text-xs sm:text-sm font-semibold text-center px-2">
                 Go Digital - Save Paper, Trees & Our Earth.
               </p>
-              <button className="bg-[#9000FF] text-white px-3 xs:px-4 sm:px-6 py-1.5 xs:py-2 rounded-lg font-semibold shadow-md hover:bg-[#7a00d9] transition-colors text-xs xs:text-sm sm:text-base">
+              <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-3 xs:px-4 sm:px-6 py-1.5 xs:py-2 rounded-lg font-semibold shadow-md hover:bg-[#7a00d9] transition-colors text-xs xs:text-sm sm:text-base">
                 Join Now
               </button>
               <p className="text-xs text-gray-500 text-center">

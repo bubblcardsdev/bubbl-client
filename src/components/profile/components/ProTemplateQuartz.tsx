@@ -22,6 +22,7 @@ import { openInNewTab } from "../../../utils/commonLogics";
 import QrGenerator from "./QrGenerator";
 import { createTap } from "@/src/services/profileApi";
 import { ActionKeys, actions, SOCIAL_MEDIA_IDS } from "@/src/lib/constant";
+import { useRouter } from "next/router";
 
 const ProTemplateQuartz = ({
   formData,
@@ -56,6 +57,8 @@ const ProTemplateQuartz = ({
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
+    const router = useRouter();
+  
   return (
     <div className="w-full max-w-[400px] mx-auto overflow-hidden  ">
       <div className=" bg-[#D9D9D9] border border-red-500 h-[400px] ">
@@ -86,7 +89,7 @@ const ProTemplateQuartz = ({
             >
               <QrGenerator
                 color={color}
-                deviceIdQR={formData?.deviceUid}
+                  deviceIdQR={formData?.profileUid}
                 qrBubbl=""
                 qrImageUrl=""
               />
@@ -295,7 +298,7 @@ const ProTemplateQuartz = ({
             <p className="text-sm font-semibold mb-4 mt-3 text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
-            <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">
+            <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">
               Join Now
             </button>
             <p className="text-xs text-gray-500 mt-4">
