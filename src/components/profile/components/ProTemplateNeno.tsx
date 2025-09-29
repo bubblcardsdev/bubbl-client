@@ -272,8 +272,11 @@ import {
 
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
+import { copyText, navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
 import { useRouter } from "next/router";
+import { ActionKeys, actions, DIGITAL_MEDIA_IDS, SOCIAL_MEDIA_IDS, SocialIconsObj } from "@/src/lib/constant";
+import { ToastContainer } from "react-toastify";
+import { createTap } from "@/src/services/profileApi";
 
 const ProTemplateNeno = ({
   formData,
@@ -304,14 +307,6 @@ const ProTemplateNeno = ({
     setColor(selected);
   }, [selectedTheme]);
 
-  const SocialIconsObj: any = {
-    "1": NenoInstagramIcon,
-    "2": NenoFacebookIcon,
-    "3": NenoYouTubeIcon,
-    "4": NenoTwitterIcon,
-    "5": NenoWhatsappIcon,
-    "6": NenoLinkedinIcon,
-  };
 
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
@@ -322,6 +317,8 @@ const ProTemplateNeno = ({
 
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto ">
+             <ToastContainer />
+
       <div className="w-full">
         {/* Profile Image */}
         <div className="w-full h-60 sm:h-72 md:h-80 lg:h-96 bg-gray-500">
@@ -368,7 +365,7 @@ const ProTemplateNeno = ({
               </p>
 
               {/* Buttons */}
-              <div className="flex gap-3 mt-6">
+               {router.asPath.slice(1) !== "createNewProfile" &&<div className="flex gap-3 mt-6">
                 <button
                   onClick={handleSave}
                   className="flex-1 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-2 rounded-md"
@@ -380,75 +377,138 @@ const ProTemplateNeno = ({
                 </button>
                 <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
                   {/* <Qr_icon /> */}
-                  <QrGenerator
-                    color={color}
-                     deviceIdQR={formData?.profileUid}
-                    qrBubbl=""
-                    qrImageUrl=""
-                  />
+                <QrGenerator
+    color={color}
+    deviceIdQR={formData?.profileUid}
+    qrBubbl=""
+    qrImageUrl=""
+  />
                 </button>
-              </div>
+              </div>}
             </div>
           </div>
 
-          {/* Contact Info */}
-          {(formData?.phoneNumbers?.[0]?.phoneNumber ||
-            formData?.emailIds?.[0]?.emailId ||
-            formData?.websites?.[0]?.website ||
-            (formData?.state && formData?.country)) && (
-            <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
-              <p className="text-lg font-semibold text-left">
-                Contact Information
-              </p>
-              <div className="flex justify-around mt-6">
-                {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                  <div className="relative">
-                    <CallProfileIcon />
-                    {phoneNumbersCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-xs text-white flex items-center justify-center"
-                      >
-                        {phoneNumbersCount}
-                      </span>
-                    )}
-                  </div>
-                )}
-                {formData?.emailIds?.[0]?.emailId && (
-                  <div className="relative">
-                    <MailProfileIcon />
-                    {emailIdsCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-[10px] text-white flex items-center justify-center"
-                      >
-                        {emailIdsCount}
-                      </span>
-                    )}
-                  </div>
-                )}
-                {formData?.state && formData?.country && (
-                  <span>
-                    {" "}
-                    <LocationFill_icon />
-                  </span>
-                )}
-                {formData?.websites?.[0]?.website && (
-                  <div className="relative">
-                    <WebIcon_thin />
-                    {websitesCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs text-white flex items-center justify-center"
-                      >
-                        {websitesCount}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+     {/* Contact Info */}
+{(formData?.phoneNumbers?.[0]?.phoneNumber ||
+  formData?.emailIds?.[0]?.emailId ||
+  formData?.websites?.[0]?.website ||
+  (formData?.state && formData?.country)) && (
+  <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
+    <p className="text-lg font-semibold text-left">Contact Information</p>
+
+    <div className="flex justify-around mt-6">
+      {/* Phone */}
+      {formData?.phoneNumbers?.[0]?.phoneNumber && (
+        <div className="relative">
+         <a
+  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate dial
+    if (formData?.deviceUid) {
+      await createTap(4, formData.deviceUid); // log phone tap
+    }
+    // trigger call after logging
+    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+  }}
+>
+            <CallProfileIcon />
+          </a>
+          {phoneNumbersCount > 0 && (
+            <span
+              style={{ background: color }}
+              className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-xs text-white flex items-center justify-center"
+            >
+              {phoneNumbersCount}
+            </span>
           )}
+        </div>
+      )}
+
+      {/* Email */}
+      {formData?.emailIds?.[0]?.emailId && (
+        <div className="relative">
+        <a
+  href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(5, formData.deviceUid); // log email tap
+    }
+    // open email client after logging
+    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""}`;
+  }}
+>
+            <MailProfileIcon />
+          </a>
+          {emailIdsCount > 0 && (
+            <span
+              style={{ background: color }}
+              className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-[10px] text-white flex items-center justify-center"
+            >
+              {emailIdsCount}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Location */}
+      {formData?.state && formData?.country && (
+       <a
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+  )}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate redirect
+    if (formData?.deviceUid) {
+      await createTap(7, formData.deviceUid); // log location tap
+    }
+    // open Google Maps after logging
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+      )}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
+          <LocationFill_icon />
+        </a>
+      )}
+
+      {/* Website */}
+      {formData?.websites?.[0]?.website && (
+        <div className="relative">
+         <a
+  href={formData?.websites?.[0]?.website || ""}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(6, formData.deviceUid); // log website tap
+    }
+    // open website after logging
+    window.open(formData?.websites?.[0]?.website || "", "_blank", "noopener,noreferrer");
+  }}
+>
+            <WebIcon_thin />
+          </a>
+          {websitesCount > 0 && (
+            <span
+              style={{ background: color }}
+              className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs text-white flex items-center justify-center"
+            >
+              {websitesCount}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
           {/* Social Media */}
           {formData?.socialMediaNames?.some(
@@ -469,10 +529,22 @@ const ProTemplateNeno = ({
                       return (
                         <div
                           key={index}
-                          className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full"
-                          // onClick={()=>openInNewTab(value?.socialMediaName)}
+                          className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full cursor-pointer"
+                          onClick={() => {
+                                                if (formData.deviceUid) {
+                                                  createTap(
+                                                    actions[
+                                                      SOCIAL_MEDIA_IDS[
+                                                        value.profileSocialMediaId
+                                                      ] as ActionKeys
+                                                    ],
+                                                    formData.deviceUid
+                                                  );
+                                                }
+                                                openInNewTab(value?.socialMediaName);
+                                              }}
                         >
-                          {Icon && <Icon color={color} />}
+                          {Icon && <Icon color="#FFFFFF" />}
                         </div>
                       );
                     }
@@ -497,8 +569,19 @@ const ProTemplateNeno = ({
                     if (value?.digitalPaymentLink?.length > 0) {
                       return (
                         <div
+                        onClick={async()=>{
+                         if (formData.deviceUid) {
+                                          await createTap(
+                                            actions[
+                                              DIGITAL_MEDIA_IDS[value.profileDigitalPaymentsId] as ActionKeys
+                                            ],
+                                            formData.deviceUid
+                                          );
+                                        }
+                                   copyText(value?.digitalPaymentLink)
+                                  }}
                           key={index}
-                          className="flex items-center justify-center w-14 h-14 rounded-full"
+                          className="flex items-center justify-center w-14 h-14 rounded-full cursor-pointer"
                         >
                           {Icon && <Icon color="#8D00D2" />}
                         </div>

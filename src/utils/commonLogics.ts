@@ -6,6 +6,7 @@
 //   };
 
 import { toast } from "react-toastify";
+import { socialLinkRules } from "../lib/constant";
 
 
 // src/utils/commonLogics.ts
@@ -22,7 +23,7 @@ export const navigatorShare = async (url: string) => {
   try {
     if (navigator.share && navigator.canShare && navigator.canShare({ url })) {
       await navigator.share({ url });
-      toast.success("Shared successfully!");
+      // toast.success("Shared successfully!");
     } else {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(url);
@@ -44,5 +45,17 @@ export const copyText = async (links: string) => {
   } catch (err) {
     console.error("Clipboard copy failed:", err);
     toast.error("Failed to copy. Please try manually.");
+  }
+};
+
+export const normalizeSocialLink = (id: number, value: string): string => {
+  if (!value?.trim()) return ""; // empty -> skip
+  try {
+    // If already a valid URL, return as-is
+    new URL(value);
+    return value;
+  } catch {
+    // Otherwise, generate proper URL based on id
+    return socialLinkRules[id]?.(value.trim()) || value.trim();
   }
 };
