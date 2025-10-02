@@ -19,6 +19,7 @@ export const ProductDetailMapper = (data: any) => {
   const pattern = get(data, "pattern", "");
   const discountPercentage = get(data, "discountPercentage", 0);
   const deviceTypeId = get(data,"deviceTypeId", null);
+  const availability = get(data, "availability", true);
   return {
     productId,
     name,
@@ -37,6 +38,7 @@ export const ProductDetailMapper = (data: any) => {
     material,
     pattern,
     secondaryImage,
-    deviceTypeId
+    deviceTypeId,
+    availability,
   };
 };

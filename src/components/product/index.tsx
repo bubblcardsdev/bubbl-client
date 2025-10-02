@@ -64,7 +64,7 @@ const ProductList: React.FC = () => {
   const [data, setData] = useState<any>(null);
   // const [loading, setLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
-  
+
 
   const getProductDetail = async () => {
     // setLoading(true);
@@ -92,6 +92,7 @@ const ProductList: React.FC = () => {
     name,
     deviceTypeId,
     deviceType,
+    availability,
   } = ProductDetailMapper(data?.productDetail);
 
   useEffect(() => {
@@ -111,36 +112,36 @@ const ProductList: React.FC = () => {
 
     const updatedCart = isAlreadyInCart
       ? cartItems.map((item) =>
-          item.productId === id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
+        item.productId === id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
       : [
-          ...cartItems,
-          {
-            quantity: 1,
-            productId: id,
-            customName: null,
-            fontId: null,
-            imageUrl: primaryImage,
-            sellingPrice,
-            originalPrice,
-            discountPercentage,
-            name,
-            deviceTypeId,
-            deviceType,
-          },
-        ];
+        ...cartItems,
+        {
+          quantity: 1,
+          productId: id,
+          customName: null,
+          fontId: null,
+          imageUrl: primaryImage,
+          sellingPrice,
+          originalPrice,
+          discountPercentage,
+          name,
+          deviceTypeId,
+          deviceType,
+        },
+      ];
 
     setCart(JSON.stringify(updatedCart));
     toast.success("Item added to cart!");
   };
 
 
-  const productImage = 
+  const productImage =
     (currentImage === "front"
       ? primaryImage
-      : secondaryImage || primaryImage) 
+      : secondaryImage || primaryImage)
   return !data ? (
     <div className="flex justify-center items-center h-screen"></div>
   ) : (
@@ -162,23 +163,21 @@ const ProductList: React.FC = () => {
               <div
                 role="button"
                 onClick={() => flipImage("front")}
-                className={`h-1 w-12 mb-2 ${
-                  currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
-                } rounded-full mr-2 p-1`}
+                className={`h-1 w-12 mb-2 ${currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
+                  } rounded-full mr-2 p-1`}
               />
               <div
                 role="button"
                 onClick={() => flipImage("back")}
-                className={`h-1 w-12 ${
-                  currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
-                } rounded-full mr-2 p-1`}
+                className={`h-1 w-12 ${currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
+                  } rounded-full mr-2 p-1`}
               />
             </div>
           </div>
           <p className="text-center text-sm mt-2 capitalize">
             ( {currentImage} View )
           </p>
-          <div className="xs:hidden mt-6 md:flex flex-col md:flex-row gap-4 justify-center">
+          {availability ? <div className="xs:hidden mt-6 md:flex flex-col md:flex-row gap-4 justify-center">
             <button
               onClick={addToCart}
               className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
@@ -188,7 +187,7 @@ const ProductList: React.FC = () => {
             <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
               Buy now
             </button>
-          </div>
+          </div> : <p className="text-red-600 xs:hidden md:block font-semibold text-center mt-6">Currently Unavailable</p>}
         </div>
 
         {/* Right Section */}

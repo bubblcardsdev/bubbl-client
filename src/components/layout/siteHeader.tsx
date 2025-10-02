@@ -27,9 +27,8 @@ const SiteHeader = () => {
       style={{
         background: theme,
         color: isDarkTheme ? "white" : "black",
-        borderBottom: `1px solid ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
-        }`,
+        borderBottom: `1px solid ${isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
+          }`,
       }}
     >
       {/* Logo */}
@@ -44,9 +43,8 @@ const SiteHeader = () => {
         {["Shop", "Plans", "About"].map((item) => (
           <div
             key={item}
-            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${
-              isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-            }`}
+            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+              }`}
             onClick={() => pathname.push(`/${item.toLowerCase()}`)}
           >
             <span className="font-bold">{item}</span>
@@ -68,9 +66,9 @@ const SiteHeader = () => {
           >
             <CartIcon />
           </span>
-          <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-            {cards.length}
-          </span>
+          {(Array.isArray(cards) && cards.length > 0) && <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+            {cards.length > 9 ? "9+" : cards.length}
+          </span>}
         </button>
         {/* Login Button */}
         <button
@@ -113,18 +111,16 @@ const SiteHeader = () => {
 
       {/* Mobile Menu Drawer */}
       <div
-        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? "max-h-96" : "max-h-0"
-        }`}
+        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-96" : "max-h-0"
+          }`}
         style={{ backgroundColor: isDarkTheme ? "black" : "white" }}
       >
         <div className="flex flex-col items-center space-y-2 py-[20px]">
           {["Shop", "Plans", "About", "Cart", "Login"].map((item) => (
             <div
               key={item}
-              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${
-                isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-              }`}
+              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+                }`}
               onClick={() => pathname.push(`/${item.toLowerCase()}`)}
             >
               <span className="font-bold">{item}</span>

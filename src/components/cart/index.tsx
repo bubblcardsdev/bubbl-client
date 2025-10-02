@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { getCart, setCart } from "../../helpers/localStorage";
+import { getAccessToken, getCart, setCart } from "../../helpers/localStorage";
 import { isEmpty } from "lodash";
 import { CartItem } from "@/src/lib/interface";
+import { fetchAllDevices } from "@/src/services/alldevicesApi";
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
@@ -16,10 +17,39 @@ const Cart = () => {
       router.push("/checkout");
     }
   };
+
+  const getUpdatedCart = async(cartData:string) => {
+    const token = getAccessToken();
+    const storedCart = JSON.parse(cartData);
+    
+    if (token) {
+      const getCart
+      
+    } else {
+      const devices = await fetchAllDevices();
+      const combined = [...devices.custom, ...devices.basic, ...devices.others];
+      const updatedCart = storedCart.map((item: CartItem) => {
+        const product = combined.find((prod) => prod.productId === item.productId);
+        if (product) {
+          return {
+            ...item,
+            name: product.productName,
+            imageUrl: product.primaryImage,
+            sellingPrice: product.sellingPrice,
+            originalPrice: product.sellingPrice + (product.discount || 0),
+            deviceType: product.productType,
+            availability: product.availability,
+          };
+        }
+        return item; 
+      });
+      setCards(updatedCart);
+    }
+  }
   useEffect(() => {
     const storedCart = getCart();
     if (storedCart) {
-      setCards(JSON.parse(storedCart));
+      getUpdatedCart(storedCart);
     }
   }, []);
 

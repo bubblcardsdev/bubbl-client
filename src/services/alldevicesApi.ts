@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import axiosInstance from "../helpers/axios";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 export const fetchAllDevices = async () => {
   try {

@@ -148,6 +148,7 @@ function Products(props: ProductProps) {
                             </div>
                           )}
                         </div>
+                        {!card.availability && <p className="text-red-600 font-semibold text-sm px-2">Out of Stock</p>}
                       </div>
                     );
                   })}
