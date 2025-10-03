@@ -262,12 +262,6 @@ import {
   Googlepay_icon,
   Phonepay_icon,
   Paytm_icon,
-  NenoFacebookIcon,
-  NenoInstagramIcon,
-  NenoLinkedinIcon,
-  NenoTwitterIcon,
-  NenoYouTubeIcon,
-  NenoWhatsappIcon,
 } from "../../common/icons";
 
 import { theme } from "../../../utils/profileThemecolor";

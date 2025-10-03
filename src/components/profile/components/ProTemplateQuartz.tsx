@@ -10,12 +10,6 @@ import {
   Googlepay_icon,
   WebIcon,
   LocationFill_icon,
-  QuartzFacebookIcon,
-  QuartzWhatsappIcon,
-  QuartzTwitterIcon,
-  QuartzLinkedinIcon,
-  QuartzYoutubeIcon,
-  QuartzInstagramIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import { copyText, openInNewTab } from "../../../utils/commonLogics";

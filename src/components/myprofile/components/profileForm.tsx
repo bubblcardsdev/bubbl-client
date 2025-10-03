@@ -31,8 +31,6 @@ const ProfileForm = ({
   handleNestedArrayChange,
   socialLinks,
   Digitalpay,
-  mode,
-  setMode,
   handleRemoveImage,
 }: {
   formData: any;

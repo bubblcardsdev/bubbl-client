@@ -25,6 +25,8 @@ export const navigatorShare = async (url: string) => {
     }
   } catch (err) {
     // If share fails for any reason, copy to clipboard
+    console.log(err);
+    
     await navigator.clipboard.writeText(url);
     toast.success("Copied to clipboard!");
   }
