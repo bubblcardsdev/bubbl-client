@@ -7,7 +7,6 @@ import {
   AboutLightIcon,
   AboutCollaborationIcon,
   AboutSustainabilityIcon,
-  AboutWhyChooseIcon,
 } from "../common/icons";
 import BubblCommunity from "../common/BubblCommunity";
 import { WHY_CHOOSE_US } from "@/src/lib/constant";
