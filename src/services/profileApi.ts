@@ -111,24 +111,53 @@ export const GetProfileByUniqueName = async (uniqueName: string) => {
 export const CreateMyProfileApi = async (formData: ProfileFormData) => {
   try {
     const token = getAccessToken();
-    console.log(token, "token");
     const response = await axiosInstance.post(
       `/profile/create-profile`,
       formData,
       {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: token },
       }
     );
-    console.log(response.data, "res");
     return response;
   } catch (error: any) {
-    toast.error(error.response?.data?.message || "Failed to create profile.");
+    let message = "Failed to create profile.";
+
+    const errors = error.response?.data?.data?.error;
+    if (Array.isArray(errors) && errors.length > 0) {
+      message = formatValidationErrors(errors);
+    } else if (error.response?.data?.message) {
+      message = error.response.data.message;
+    }
+
+    toast.error(message);
     return false;
   }
 };
 
+
+function formatValidationErrors(errors: any[]): string {
+  return errors
+    .map((err) => {
+      let msg = err.message;
+
+      // Remove quotes
+      msg = msg.replace(/\"/g, "");
+
+      // Clean array indices: phoneNumbers[0].phoneNumber → Phone Number
+      msg = msg.replace(/\[0\]/g, ""); 
+
+      // Replace technical field names with user-friendly labels
+      msg = msg
+        .replace("profileName", "Profile Title")
+        .replace("phoneNumbers.phoneNumber", "Phone Number")
+        .replace("emailIds.emailId", "Email")
+        .replace("socialMediaNames.socialMediaName", "Social Media Link")
+        .replace("digitalPaymentLinks.digitalPaymentLink", "Payment Link");
+
+      return msg;
+    })
+    .join("\n");
+}
 export const GetAllProfile = async () => {
   try {
     const token = getAccessToken(); // get token from localStorage or your helper
