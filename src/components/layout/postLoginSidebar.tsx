@@ -22,13 +22,13 @@ const menuItems = [
   {
     label: "My profiles",
     icon: <MyProfileIcon />,
-    name: "myprofile",
+    name: "Editprofile",
     path: "/myprofile",
   },
   {
     label: "My Devices",
     icon: <MyDeviceIcon />,
-    name: "mydevices",
+    name: "mydevice",
     path: "/mydevice",
   },
   { label: "Leads", icon: <LeadsIcon />, name: "leads", path: "/leads" },
@@ -75,6 +75,9 @@ export type FunctionProps ={
 }
 const PostLoginSidebar = (props: FunctionProps) => {
   const { currentPage } = props;
+  console.log(currentPage);
+  
+  
   const router = useRouter();
   const handleNavigate = (path: string) => {
     router.push(path);

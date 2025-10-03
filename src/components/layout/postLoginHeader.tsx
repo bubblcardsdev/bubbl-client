@@ -6,8 +6,10 @@ import {
 } from "../common/icons";
 import { LuMenu } from "react-icons/lu";
 import { FunctionProps } from "./postLoginSidebar";
+import { useRouter } from "next/router";
 const PostLoginHeader = (props:FunctionProps) => {
   const { onSideBarOpen } = props;
+  const router = useRouter()
   return (
     <div className="flex justify-between py-4 w-full ">
       <div className="flex items-center gap-12">
@@ -22,7 +24,7 @@ const PostLoginHeader = (props:FunctionProps) => {
         <p className="text-center py-1">
           {/* <NottifycationIcon /> */}
         </p>
-        <p>
+        <p onClick={()=>router.push("/settings")} className="cursor-pointer">
           <ProfileIcon />
         </p>
       </div>

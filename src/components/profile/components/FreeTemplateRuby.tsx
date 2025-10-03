@@ -8,19 +8,27 @@ import {
   MapIconBackgroundFill,
   MailIconbackgroundFill,
   WebIconBackgroundFill,
-  InstagramBackgroundFill,
-  TwitterIconbackgroundFill,
-  LinkedinIconbackgroundFill,
-  YoutubeIconbackgroundFill,
-  FacebookIconbackgroundFill,
-  WhatsappIconbackgroundFill,
   Googlepay_icon,
   Paytm_icon,
   Phonepay_icon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { openInNewTab } from "@/src/utils/commonLogics";
+import {
+  copyText,
+  navigatorShare,
+  openInNewTab,
+} from "@/src/utils/commonLogics";
+import {
+  ActionKeys,
+  actions,
+  DIGITAL_MEDIA_IDS,
+  SOCIAL_MEDIA_IDS,
+  SocialIconsObj,
+} from "@/src/lib/constant";
+import { createTap } from "@/src/services/profileApi";
+import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
@@ -38,21 +46,16 @@ const FreeTemplateRuby = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
 
-  const SocialIconsObj: any = {
-    "1": InstagramBackgroundFill,
-    "2": FacebookIconbackgroundFill,
-    "3": TwitterIconbackgroundFill,
-    "4": YoutubeIconbackgroundFill,
-    "5": LinkedinIconbackgroundFill,
-    "6": WhatsappIconbackgroundFill,
-  };
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
+  const router = useRouter();
   return (
     <div className="flex items-center align-middle justify-center  overflow-hidden bg-gray-400 ">
+      <ToastContainer />
+
       <div className="relative w-full max-w-[400px]">
         <div className=" bg-yellow-500  rounded-t-2xl ">
           <Image
@@ -100,30 +103,35 @@ const FreeTemplateRuby = ({
               />
             </div>
           </div>
-          <div className="mt-6 flex gap-3 ">
-            <button
-              onClick={handleSave}
-              className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"
-              style={{ color: color }}
-            >
-              Save Contact
-            </button>
-            <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%] ">
-              <span className="flex items-center align-middle justify-center">
-                <Share_icon color={color} />
-              </span>
-            </button>
-            <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]">
-              <span className="flex items-center align-middle justify-center">
-                <QrGenerator
-                  color={color}
-                  deviceIdQR={formData?.deviceUid}
-                  qrBubbl={""}
-                  qrImageUrl={""}
-                />
-              </span>
-            </button>
-          </div>
+          {router.asPath.slice(1) !== "createNewProfile" && (
+            <div className="mt-6 flex gap-3 ">
+              <button
+                onClick={handleSave}
+                className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"
+                style={{ color: color }}
+              >
+                Save Contact
+              </button>
+              <button
+                onClick={() => navigatorShare(window.location.href)}
+                className="bg-gray-100  p-[3px] rounded-[10px] w-[15%] "
+              >
+                <span className="flex items-center align-middle justify-center">
+                  <Share_icon color={color} />
+                </span>
+              </button>
+              <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]">
+                <span className="flex items-center align-middle justify-center">
+                  <QrGenerator
+                    color={color}
+                    deviceIdQR={formData?.profileUid}
+                    qrBubbl={""}
+                    qrImageUrl={""}
+                  />
+                </span>
+              </button>
+            </div>
+          )}
           <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
             {formData?.bio}
           </p>
@@ -136,65 +144,132 @@ const FreeTemplateRuby = ({
                 Contact Information
               </h2>
             )}
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <PhoneColorIcon />
-                    <span className="ml-1 flex-grow text-left">
-                      {formData?.phoneNumbers?.[0]?.countryCode}{" "}
-                      {formData?.phoneNumbers?.[0]?.phoneNumber}
-                    </span>
+                <a
+                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${
+                    formData?.phoneNumbers?.[0]?.phoneNumber || ""
+                  }`}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (formData?.deviceUid)
+                      await createTap(4, formData.deviceUid);
+                    window.location.href = `tel:${
+                      formData?.phoneNumbers?.[0]?.countryCode || ""
+                    }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                  }}
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-3 p-4">
+                      <PhoneColorIcon />
+                      <span className="ml-1 flex-grow text-left">
+                        {formData.phoneNumbers[0].countryCode}{" "}
+                        {formData.phoneNumbers[0].phoneNumber}
+                      </span>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
+                </a>
               )}
-              {/* mail*/}
+
+              {/* Email */}
               {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <MailIconbackgroundFill />
-                    <span className="ml-1 flex-grow">
-                      {formData?.emailIds?.[0]?.emailId}
-                    </span>
+                <a
+                  href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (formData?.deviceUid)
+                      await createTap(5, formData.deviceUid);
+                    window.location.href = `mailto:${
+                      formData?.emailIds?.[0]?.emailId || ""
+                    }`;
+                  }}
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-3 p-4">
+                      <MailIconbackgroundFill />
+                      <span className="ml-1 flex-grow">
+                        {formData.emailIds[0].emailId}
+                      </span>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
+                </a>
               )}
-              {/* website */}
+
+              {/* Website */}
               {formData?.websites?.[0]?.website?.length > 0 && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <WebIconBackgroundFill />
-                    <span className="ml-1 flex-grow text-black">
-                      {formData?.websites?.[0]?.website}
-                    </span>
+                <a
+                  href={formData?.websites?.[0]?.website || ""}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (formData?.deviceUid)
+                      await createTap(6, formData.deviceUid);
+                    window.open(
+                      formData?.websites?.[0]?.website || "",
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-3 p-4">
+                      <WebIconBackgroundFill />
+                      <span className="ml-1 flex-grow">
+                        {formData.websites[0].website}
+                      </span>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
+                </a>
               )}
-              {/* location */}
+
+              {/* Location */}
               {formData?.state && formData?.country && (
-                <div className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden mt-4 text-black text-left">
-                  <div className="flex-1 flex items-center gap-3 p-4">
-                    <MapIconBackgroundFill />
-                    <span className="ml-1 flex-grow text-black">
-                      {formData?.state && formData?.country
-                        ? formData?.state + ", " + formData?.country
-                        : ""}
-                    </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    `${formData?.address || ""}, ${formData?.city || ""}, ${
+                      formData?.state || ""
+                    }, ${formData?.country || ""}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    if (formData?.deviceUid)
+                      await createTap(7, formData.deviceUid);
+                    window.open(
+                      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                        `${formData?.address || ""}, ${formData?.city || ""}, ${
+                          formData?.state || ""
+                        }, ${formData?.country || ""}`
+                      )}`,
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                >
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
+                    <div className="flex-1 flex items-center gap-3 p-4">
+                      <MapIconBackgroundFill />
+                      <span className="ml-1 flex-grow">
+                        {formData.state}, {formData.country}
+                      </span>
+                    </div>
+                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                      <Arrow_icon color={color} />
+                    </div>
                   </div>
-                  <div className="bg-[#E5E5E5] flex items-center px-3 ">
-                    <Arrow_icon color={color} />
-                  </div>
-                </div>
+                </a>
               )}
             </div>
           </div>
@@ -231,9 +306,20 @@ const FreeTemplateRuby = ({
                         <div
                           key={index}
                           role="button"
-                          onClick={() =>
-                            openInNewTab(formData?.socialLinks?.[0])
-                          }
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
+                                  SOCIAL_MEDIA_IDS[
+                                    value.profileSocialMediaId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
+                            openInNewTab(value?.socialMediaName);
+                          }}
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
                         >
                           <div className="flex-1 flex items-center gap-3 px-4 py-2">
@@ -274,6 +360,19 @@ const FreeTemplateRuby = ({
                     if (value?.digitalPaymentLink?.length > 0) {
                       return (
                         <div
+                          onClick={async () => {
+                            if (formData.deviceUid) {
+                              await createTap(
+                                actions[
+                                  DIGITAL_MEDIA_IDS[
+                                    value.profileDigitalPaymentsId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            copyText(value?.digitalPaymentLink);
+                          }}
                           key={index}
                           className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden"
                         >
@@ -295,7 +394,10 @@ const FreeTemplateRuby = ({
             <p className="text-sm font-semibold mb-4 text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
-            <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold  hover:bg-[#9000FF]">
+            <button
+              onClick={() => router.push("/")}
+              className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold  hover:bg-[#9000FF]"
+            >
               Join Now
             </button>
             <p className="text-xs text-gray-500 mt-4">

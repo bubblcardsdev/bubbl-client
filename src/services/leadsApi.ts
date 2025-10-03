@@ -85,10 +85,10 @@ export const DeleteLead = async (id: string | number) => {
     const token = getAccessToken();
 
     const response = await axiosInstance.delete(
-      `/analytics/deleteLead?leadId=${id}`, 
+      `analytics/deleteLead?leadId=${id}`,
       {
         headers: {
-          Authorization: token, 
+          Authorization: token,
         },
       }
     );

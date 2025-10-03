@@ -7,7 +7,7 @@ interface Props {
   qrImageUrl: string;
 }
 
-function generateQR(URL: String, imagePath: String) {
+function generateQR(URL: string, imagePath: string) {
   let qrURL = `https://quickchart.io/qr?text=${URL}&size=200`;
   if (imagePath) {
     qrURL += `&centerImageUrl=${imagePath?.replaceAll("&", "%26")}`;
@@ -19,8 +19,10 @@ function generateQR(URL: String, imagePath: String) {
 const QrCodeImage = (props: Props) => {
   console.log(props,'props')
 
-  const { deviceIdQR, qrBubbl, qrImageUrl } = props;
-  const url = `https://bubbl.cards/profile/${deviceIdQR}`;
+  // const { deviceIdQR, qrBubbl, qrImageUrl } = props;
+    const { deviceIdQR } = props;
+
+  const url = `https://dev.bubbl.cards/profile/?profileId=${deviceIdQR}`;
   const [urlOpened, setUrlOpened] = useState(false);
 
   useEffect(() => {
@@ -31,25 +33,6 @@ const QrCodeImage = (props: Props) => {
     }
   }, [urlOpened, url]);
   return (
-    // <div className={"qrSection "}>
-    //   <div className=" flex items-center justify-center ">
-    //     <Image
-    //       loader={({ src }) => src}
-    //       src={"https://bubbl.cards/_next/static/media/qrBubbl.39f75756.png"}
-    //       width={20}
-    //       height={20}
-    //       className={"qrSection_bubbl_logo "}
-    //       alt="Icon"
-    //     />
-    //   </div>
-    //   <Image
-    //     loader={({ src }) => src}
-    //     src={generateQR(url, "")}
-    //     width={200}
-    //     height={200}
-    //     alt="test"
-    //   />
-    // </div>
     <div className="qrSection flex justify-center items-center">
       <div className="relative w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] md:w-[250px] md:h-[250px] lg:w-[300px] lg:h-[300px]">
         {/* QR Code */}
@@ -60,7 +43,6 @@ const QrCodeImage = (props: Props) => {
           fill
           className="object-contain"
         />
-
         {/* Logo at center */}
         <div className="absolute inset-0 flex items-center justify-center">
           {/* <Image

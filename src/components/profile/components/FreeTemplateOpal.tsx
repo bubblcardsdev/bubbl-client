@@ -9,10 +9,23 @@ import {
   Location_icon,
   Arrow_icon,
 } from "../../common/icons";
-import { SocialIconsObj, DigitalIconsObj } from "../../../lib/constant";
+import {
+  SocialIconsObj,
+  DigitalIconsObj,
+  actions,
+  SOCIAL_MEDIA_IDS,
+  ActionKeys,
+  DIGITAL_MEDIA_IDS,
+} from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
-import { openInNewTab } from "@/src/utils/commonLogics";
+import { copyText, navigatorShare, openInNewTab } from "@/src/utils/commonLogics";
+import { createTap } from "@/src/services/profileApi";
+import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
+
+
+
 const FreeTemplateOpal = ({
   formData,
   selectedTheme,
@@ -22,6 +35,8 @@ const FreeTemplateOpal = ({
   selectedTheme: any;
   handleSave: () => void;
 }) => {
+  console.log(formData,"?");
+  
   const [color, setColor] = useState<string>("");
   useEffect(() => {
     const selected =
@@ -29,9 +44,14 @@ const FreeTemplateOpal = ({
     setColor(selected);
     console.log(selected, "theme");
   }, [selectedTheme]);
+  
+
+  const router = useRouter();
+    console.log(router.asPath.slice(1));
 
   return (
     <div className="w-full flex justify-center items-center">
+       <ToastContainer />
       <div className="w-full max-w-[400px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
         {/* Header curved background */}
         <div
@@ -62,8 +82,9 @@ const FreeTemplateOpal = ({
               >
                 Save Contact
               </button>
-              <div className="flex space-x-2 xs:space-x-3 sm:space-x-4">
+             {router.asPath.slice(1) !== "createNewProfile" && <div className="flex space-x-2 xs:space-x-3 sm:space-x-4">
                 <button
+                onClick={()=>navigatorShare(window.location.href)}
                   className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0"
                   style={{ backgroundColor: color }}
                 >
@@ -78,11 +99,11 @@ const FreeTemplateOpal = ({
                 </button> */}
                 <QrGenerator
                   color={color}
-                  deviceIdQR={formData?.deviceUid}
+                  deviceIdQR={formData?.profileUid}
                   qrBubbl=""
                   qrImageUrl=""
                 />
-              </div>
+              </div>}
             </div>
             {/* Company Logo - Responsive sizing */}
             <div className="flex-shrink-0">
@@ -129,9 +150,17 @@ const FreeTemplateOpal = ({
             <div className="space-y-2 xs:space-y-3 sm:space-y-4 flex flex-col ">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <a
-                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode}${formData?.phoneNumbers?.[0]?.phoneNumber}`}
-                >
+             <a
+  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate dial
+    if (formData?.deviceUid) {
+      await createTap(4, formData.deviceUid);
+    }
+    // manually trigger call after logging
+    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+  }}
+>
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <Phone_icon color={color} />
@@ -152,7 +181,17 @@ const FreeTemplateOpal = ({
 
               {/* Email */}
               {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <a href={`mailto:${formData?.emailIds?.[0]?.emailId}`}>
+              <a
+  href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(5, formData.deviceUid); // log email tap
+    }
+    // manually trigger email client after logging
+    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""}`;
+  }}
+>
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <Mail_icon color={color} />
@@ -172,11 +211,19 @@ const FreeTemplateOpal = ({
 
               {/* Website */}
               {formData?.websites?.[0]?.website?.length > 0 && (
-                <a
-                  href={formData?.websites?.[0]?.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+               <a
+  href={formData?.websites?.[0]?.website || ""}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(6, formData.deviceUid);
+    }
+    // open website after logging
+    window.open(formData?.websites?.[0]?.website || "", "_blank", "noopener,noreferrer");
+  }}
+>
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <WebIcon_thin color={color} />
@@ -197,12 +244,26 @@ const FreeTemplateOpal = ({
               {/* Location */}
               {formData?.state && formData?.country && (
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address},${formData?.city},${formData?.state}, ${formData?.country}`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+  )}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // prevent immediate redirect
+    if (formData?.deviceUid) {
+      await createTap(7, formData.deviceUid); // log tap for location
+    }
+    // open Google Maps after logging
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+      )}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
                   <div className="w-full bg-[#F4F4F4] rou   nded-md flex items-stretch overflow-hidden text-black text-left">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <Location_icon color={color} />
@@ -255,7 +316,20 @@ const FreeTemplateOpal = ({
                         <div
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                           key={index}
-                          onClick={() => openInNewTab(value?.socialMediaName)}
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
+                                  SOCIAL_MEDIA_IDS[
+                                    value.profileSocialMediaId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
+                            openInNewTab(value?.socialMediaName);
+                          }}
                         >
                           <div className="flex-1 flex items-center gap-2 xs:gap-3 px-2.5 xs:px-3 sm:px-4 py-2.5 xs:py-3 min-w-0">
                             {Icon && <Icon color={color} />}
@@ -294,22 +368,34 @@ const FreeTemplateOpal = ({
               )}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 md:gap-6">
               {formData?.digitalPaymentLinks &&
-                formData?.digitalPaymentLinks?.map(
-                  (value: any, index: number) => {
-                    const Icon =
-                      DigitalIconsObj?.[value?.profileDigitalPaymentsId];
-                    if (value?.digitalPaymentLink?.length > 0) {
-                      return (
-                        <div
-                          key={index}
-                          className="bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"
-                        >
-                          <Icon color={"#8D00D2"} />
-                        </div>
-                      );
-                    }
-                  }
-                )}
+  formData?.digitalPaymentLinks?.map((value: any, index: number) => {
+    const Icon = DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+    
+    console.log(value,"?");
+    
+    if (value?.digitalPaymentLink?.length > 0 && Icon) { // Added Icon check
+      return (
+        <div
+          onClick={async()=>{
+ if (formData.deviceUid) {
+                  await createTap(
+                    actions[
+                      DIGITAL_MEDIA_IDS[value.profileDigitalPaymentsId] as ActionKeys
+                    ],
+                    formData.deviceUid
+                  );
+                }
+           copyText(value?.digitalPaymentLink)
+          }}
+          key={index}
+          className=" cursor-pointer bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"
+        >
+          <Icon color={"#8D00D2"} />
+        </div>
+      );
+    }
+    return null; // Explicitly return null for items that don't meet conditions
+  })}
             </div>
           </div>
 
@@ -320,7 +406,7 @@ const FreeTemplateOpal = ({
               <p className="text-xs sm:text-sm font-semibold text-center px-2">
                 Go Digital - Save Paper, Trees & Our Earth.
               </p>
-              <button className="bg-[#9000FF] text-white px-3 xs:px-4 sm:px-6 py-1.5 xs:py-2 rounded-lg font-semibold shadow-md hover:bg-[#7a00d9] transition-colors text-xs xs:text-sm sm:text-base">
+              <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-3 xs:px-4 sm:px-6 py-1.5 xs:py-2 rounded-lg font-semibold shadow-md hover:bg-[#7a00d9] transition-colors text-xs xs:text-sm sm:text-base">
                 Join Now
               </button>
               <p className="text-xs text-gray-500 text-center">

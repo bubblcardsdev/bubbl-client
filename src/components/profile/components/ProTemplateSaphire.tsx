@@ -19,8 +19,12 @@ import {
 } from "../../common/icons";
 
 import { theme } from "../../../utils/profileThemecolor";
-import { openInNewTab } from "../../../utils/commonLogics";
+import { copyText, navigatorShare, openInNewTab } from "../../../utils/commonLogics";
 import QrGenerator from "./QrGenerator";
+import { createTap } from "@/src/services/profileApi";
+import { ActionKeys, actions, DIGITAL_MEDIA_IDS, SOCIAL_MEDIA_IDS } from "@/src/lib/constant";
+import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 
 const ProTemplateSpahire = ({
   formData,
@@ -52,7 +56,7 @@ const ProTemplateSpahire = ({
     (value: any) => value?.emailId?.length > 0
   )?.length;
 
-  // ✅ Social icons mapped by ID
+ 
   const SocialIconsObj: any = {
     "1": saphireInstagramIcon,
     "2": saphireFacebookIcon,
@@ -62,12 +66,13 @@ const ProTemplateSpahire = ({
     "6": saphireLinkedinIcon,
   };
 
-  // ✅ Payment icons mapped by name
+ 
   const PaymentIconsObj: any = {
     "1": Googlepay_icon,
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
+  const router = useRouter();
 
   return (
     // <div className="w-full max-w-[400px] mx-auto overflow-hidden  bg-gray-400">
@@ -282,6 +287,8 @@ const ProTemplateSpahire = ({
     //   </div>
     // </div>
     <div className="w-full max-w-[420px] mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+      <ToastContainer />
+
       {/* Profile Image */}
       <div className="w-full h-52 relative">
         <Image
@@ -322,7 +329,7 @@ const ProTemplateSpahire = ({
         </div>
 
         {/* Save Contact + QR */}
-        <div className="flex items-center gap-3">
+     {router.asPath.slice(1) !== "createNewProfile" &&    <div className="flex items-center gap-3">
           <div
             className="flex items-center justify-between flex-1 rounded-lg border h-[45px] overflow-hidden"
             style={{ border: `2px solid ${color}` }}
@@ -335,6 +342,7 @@ const ProTemplateSpahire = ({
               Save Contact
             </button>
             <div
+             onClick={() => navigatorShare(window.location.href)}
               className="border-l flex items-center justify-center px-3 h-full"
               style={{ borderColor: color }}
             >
@@ -345,12 +353,12 @@ const ProTemplateSpahire = ({
             {/* <Qr_icon /> */}
             <QrGenerator
               color={color}
-              deviceIdQR={formData?.deviceUid}
+                deviceIdQR={formData?.profileUid}
               qrBubbl=""
               qrImageUrl=""
             />
           </button>
-        </div>
+        </div>}
 
         {/* Contact Info */}
         {(formData?.phoneNumbers?.[0]?.phoneNumber ||
@@ -361,55 +369,122 @@ const ProTemplateSpahire = ({
             <h2 className="text-lg font-bold text-gray-800">
               Contact Information
             </h2>
-            <div className="grid grid-cols-4 gap-4">
-              {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <div className="relative flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
-                  <CallProfileIcon color={color} />
-                  {phoneNumbersCount > 0 && (
-                    <span
-                      className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
-                      style={{ background: color }}
-                    >
-                      {phoneNumbersCount}
-                    </span>
-                  )}
-                </div>
-              )}
+           <div className="grid grid-cols-4 gap-4">
+  {/* Phone */}
+  {formData?.phoneNumbers?.[0]?.phoneNumber && (
+   <a
+  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate dial
+    if (formData?.deviceUid) {
+      await createTap(4, formData.deviceUid); // log phone tap
+    }
+    // trigger call after logging
+    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+  }}
+>
+      <div className="flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
+        <CallProfileIcon color={color} />
+        {phoneNumbersCount > 0 && (
+          <span
+            className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
+            style={{ background: color }}
+          >
+            {phoneNumbersCount}
+          </span>
+        )}
+      </div>
+    </a>
+  )}
 
-              {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <div className="relative flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
-                  <MailProfileIcon color={color} />
-                  {emailIdsCount > 0 && (
-                    <span
-                      className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
-                      style={{ background: color }}
-                    >
-                      {emailIdsCount}
-                    </span>
-                  )}
-                </div>
-              )}
+  {/* Email */}
+  {formData?.emailIds?.[0]?.emailId?.length > 0 && (
+    <a
+  href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(5, formData.deviceUid); // log email tap
+    }
+    // open email client after logging
+    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""}`;
+  }}
+   className="relative flex items-center justify-center w-14 h-14"
+>
+    
+      <div className="flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
+        <MailProfileIcon color={color} />
+        {emailIdsCount > 0 && (
+          <span
+            className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
+            style={{ background: color }}
+          >
+            {emailIdsCount}
+          </span>
+        )}
+      </div>
+    </a>
+  )}
 
-              {formData?.state && formData?.country && (
-                <div className="flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
-                  <LocationFill_icon color={color} />
-                </div>
-              )}
+  {/* Location */}
+  {formData?.state && formData?.country && (
+   <a
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+  )}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate redirect
+    if (formData?.deviceUid) {
+      await createTap(7, formData.deviceUid); // log location tap
+    }
+    // open Google Maps after logging
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""}, ${formData?.country || ""}`
+      )}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
+      <div className="flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
+        <LocationFill_icon color={color} />
+      </div>
+    </a>
+  )}
 
-              {formData?.websites?.[0]?.website?.length > 0 && (
-                <div className="relative flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
-                  <WebIcon_thin color={color} />
-                  {websitesCount > 0 && (
-                    <span
-                      className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
-                      style={{ background: color }}
-                    >
-                      {websitesCount}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
+  {/* Website */}
+  {formData?.websites?.[0]?.website?.length > 0 && (
+    <a
+  href={formData?.websites?.[0]?.website || ""}
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={async (e) => {
+    e.preventDefault(); // stop immediate navigation
+    if (formData?.deviceUid) {
+      await createTap(6, formData.deviceUid); // log website tap
+    }
+    // open website after logging
+    window.open(formData?.websites?.[0]?.website || "", "_blank", "noopener,noreferrer");
+  }}
+>
+      <div className="flex items-center justify-center w-14 h-14 bg-gray-100 rounded-lg shadow">
+        <WebIcon_thin color={color} />
+        {websitesCount > 0 && (
+          <span
+            className="absolute -top-2 right-1 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full"
+            style={{ background: color }}
+          >
+            {websitesCount}
+          </span>
+        )}
+      </div>
+    </a>
+  )}
+</div>
+
           </>
         )}
 
@@ -434,7 +509,20 @@ const ProTemplateSpahire = ({
                         <div
                           key={index}
                           role="button"
-                          onClick={() => openInNewTab(value?.socialMediaName)}
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
+                                  SOCIAL_MEDIA_IDS[
+                                    value.profileSocialMediaId
+                                  ] as ActionKeys
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
+                            openInNewTab(value?.socialMediaName);
+                          }}
                           className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg shadow"
                         >
                           <Icon color={color} />
@@ -446,39 +534,53 @@ const ProTemplateSpahire = ({
           </>
         )}
 
-        {/* Digital Payments */}
-        {formData?.digitalPaymentLinks?.some(
-          (v: any) => v?.digitalPaymentLink?.length > 0
-        ) && (
-          <>
-            <h2 className="text-lg font-bold text-gray-800">
-              Digital Payments
-            </h2>
-            <div className="grid grid-cols-4 gap-4">
-              {formData?.digitalPaymentLinks?.map(
-                (value: any, index: number) => {
-                  const Icon = PaymentIconsObj?.[value?.digitalPaymentName];
-                  if (!Icon || !value?.digitalPaymentLink?.length) return null;
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg shadow"
-                    >
-                      <Icon color={"#8D00D2"} />
-                    </div>
+       {/* Digital Payments */}
+{/* Digital Payments */}
+{formData?.digitalPaymentLinks?.some(
+  (v: any) => v?.digitalPaymentLink?.length > 0
+) && (
+  <>
+    <h2 className="text-lg font-bold text-gray-800 mt-4">
+      Digital Payments
+    </h2>
+    <div className="grid grid-cols-4 gap-4">
+      {formData?.digitalPaymentLinks
+        .filter((v: any) => v?.digitalPaymentLink?.length > 0) // only show active
+        .map((value: any, index: number) => {
+          const Icon =
+            PaymentIconsObj?.[value?.profileDigitalPaymentsId]; // use ID mapping
+          if (!Icon) return null;
+          return (
+            <div
+              key={index}
+              role="button"
+              onClick={() => {
+                if (formData.deviceUid) {
+                  createTap(
+                    actions[
+                      DIGITAL_MEDIA_IDS[value.profileDigitalPaymentsId] as ActionKeys
+                    ],
+                    formData.deviceUid
                   );
                 }
-              )}
+                copyText(value?.digitalPaymentLink)
+              }}
+              className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-lg shadow"
+            >
+              <Icon color={"#8D00D2"} />
             </div>
-          </>
-        )}
+          );
+        })}
+    </div>
+  </>
+)}
 
         {/* Footer */}
         <div className="border-t pt-4 text-center space-y-3">
           <p className="text-sm font-semibold text-gray-700">
             Go Digital - Save Paper, Trees & Our Earth.
           </p>
-          <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#7a00cc]">
+          <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#7a00cc]">
             Join Now
           </button>
           <p className="text-xs text-gray-500">Powered by bubbl.cards ®</p>

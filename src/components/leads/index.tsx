@@ -15,6 +15,10 @@ import "react-toastify/dist/ReactToastify.css";
 import LeadsForm from "./components/leadsForm";
 import LeadsTable from "./components/LeadsTable";
 import LeadsTableHeader from "./components/leadsTableHeader";
+import { downloadLeadsAsXLSX } from "../../utils/downloadUtils";
+import Joi from "joi";
+import { isEmpty } from "lodash";
+// import { ChevronDown } from "lucide-react";
 //interface for Lead data
 interface Lead {
   id: number; //  added id so we can track selections
@@ -27,6 +31,34 @@ interface Lead {
   updatedAt: string;
 }
 
+// Validation schema for lead form
+const leadValidationSchema = Joi.object({
+  name: Joi.string().min(2).max(100).required().messages({
+    'string.empty': 'Name is required',
+    'string.min': 'Name must be at least 2 characters long',
+    'string.max': 'Name cannot exceed 100 characters'
+  }),
+  emailId: Joi.string().email({ tlds: { allow: false } }).required().messages({
+    'string.email': 'Please enter a valid email address',
+    'string.empty': 'Email is required'
+  }),
+  mobileNumber: Joi.string().pattern(/^[\+]?[0-9\-\(\)\s]{10,15}$/).required().messages({
+    'string.pattern.base': 'Please enter a valid phone number',
+    'string.empty': 'Phone number is required'
+  }),
+  location: Joi.string().max(100).allow('').optional().messages({
+    'string.max': 'Location cannot exceed 100 characters'
+  }),
+  where_you_met: Joi.string().min(2).max(100).required().messages({
+    'string.empty': 'Where you met is required',
+    'string.min': 'Where you met must be at least 2 characters long',
+    'string.max': 'Where you met cannot exceed 100 characters'
+  }),
+  company: Joi.string().max(100).allow('').optional().messages({
+    'string.max': 'Company name cannot exceed 100 characters'
+  })
+}).unknown(true); // Allow unknown fields like 'id' during updates
+
 const INITIAL_LEAD_FORM_DATA: any = {
   name: "",
   emailId: "",
@@ -37,17 +69,17 @@ const INITIAL_LEAD_FORM_DATA: any = {
 };
 
 //helper to parse date strings safely
-const parseDate = (dateStr: string): number => {
-  const map: { [key: string]: Date } = {
-    "Just now": new Date(),
-    "A minute ago": new Date(Date.now() - 60 * 1000),
-    "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
-    Yesterday: new Date(Date.now() - 24 * 60 * 60 * 1000),
-  };
-  if (map[dateStr]) return map[dateStr].getTime();
-  const parsed: Date = new Date(dateStr);
-  return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
-};
+// const parseDate = (dateStr: string): number => {
+//   const map: { [key: string]: Date } = {
+//     "Just now": new Date(),
+//     "A minute ago": new Date(Date.now() - 60 * 1000),
+//     "1 hour ago": new Date(Date.now() - 60 * 60 * 1000),
+//     Yesterday: new Date(Date.now() - 24 * 60 * 60 * 1000),
+//   };
+//   if (map[dateStr]) return map[dateStr].getTime();
+//   const parsed: Date = new Date(dateStr);
+//   return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+// };
 
 //helper to format ISO date to DD-MM-YYYY
 const formatDateToDDMMYYYY = (isoDateString: string): string => {
@@ -69,42 +101,39 @@ const formatDateToDDMMYYYY = (isoDateString: string): string => {
 };
 
 //sorting function
-const sortData = (
-  data: Lead[],
-  field: keyof Lead,
-  ascending: boolean
-): Lead[] => {
-  return [...data].sort((a, b) => {
-    const aValue = a[field];
-    const bValue = b[field];
-    if (field === "updatedAt") {
-      const aDate = parseDate(aValue as string);
-      const bDate = parseDate(bValue as string);
-      if (aDate < bDate) return ascending ? -1 : 1;
-      if (aDate > bDate) return ascending ? 1 : -1;
-      return 0;
-    } else {
-      const aStr = String(aValue).toLowerCase();
-      const bStr = String(bValue).toLowerCase();
-      if (aStr < bStr) return ascending ? -1 : 1;
-      if (aStr > bStr) return ascending ? 1 : -1;
-      return 0;
-    }
-  });
-};
+// const sortData = (
+//   data: Lead[],
+//   field: keyof Lead,
+//   ascending: boolean
+// ): Lead[] => {
+//   return [...data].sort((a, b) => {
+//     const aValue = a[field];
+//     const bValue = b[field];
+//     if (field === "updatedAt") {
+//       const aDate = parseDate(aValue as string);
+//       const bDate = parseDate(bValue as string);
+//       if (aDate < bDate) return ascending ? -1 : 1;
+//       if (aDate > bDate) return ascending ? 1 : -1;
+//       return 0;
+//     } else {
+//       const aStr = String(aValue).toLowerCase();
+//       const bStr = String(bValue).toLowerCase();
+//       if (aStr < bStr) return ascending ? -1 : 1;
+//       if (aStr > bStr) return ascending ? 1 : -1;
+//       return 0;
+//     }
+//   });
+// };
 
 const Leads = () => {
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
+  const[mobileFilterOpen,setMobileFilterOpen]=useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenAction, setIsOpenAction] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [sortField, setSortField] = useState<keyof Lead>("name");
-  const [ascending, setAscending] = useState<boolean>(true);
-
   const [leadsData, setLeadsData] = useState<Lead[]>([]);
-  const [sortedLeads, setSortedLeads] = useState<Lead[]>([]);
-  // const [error, setError] = useState<string | null>(null);
+    // const [error, setError] = useState<string | null>(null);
   // const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<any>(INITIAL_LEAD_FORM_DATA);
   const [searchTerm, setSearchTerm] = useState("");
@@ -114,6 +143,9 @@ const Leads = () => {
   const [leadTypeFilter, setLeadTypeFilter] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
   const [currentAction, setCurrentAction] = useState("save");
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   // Temporary filter states (not applied until Apply Filters is clicked)
   // const [tempSearchTerm, setTempSearchTerm] = useState("");
@@ -125,8 +157,7 @@ const Leads = () => {
 
   // Delete confirmation states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteType, setDeleteType] = useState<"single" | "bulk">("single");
-  const [leadToDelete, setLeadToDelete] = useState<Lead | any | null>([]);
+    const [leadToDelete, setLeadToDelete] = useState<Lead | any | null>([]);
 
   // Get filtered leads based on all filter criteria (using applied filters, not temp ones)
   const getFilteredLeads = () => {
@@ -216,6 +247,7 @@ const Leads = () => {
     setTempEndDate("");
     setTempLeadTypeFilter("");
     setTempSortOrder("newest");
+    setMobileFilterOpen(false);
   };
 
   // Apply filters (apply temp states to actual filter states)
@@ -227,6 +259,7 @@ const Leads = () => {
     setLeadTypeFilter(tempLeadTypeFilter);
     setSortOrder(tempSortOrder);
     setIsOpen(false);
+    setMobileFilterOpen(false);
     setCurrentPage(1);
   };
 
@@ -263,16 +296,47 @@ const Leads = () => {
       const data = await GetAllLeadsByIdData();
       const leads = data?.getLeads || []; // adjust to your API shape
       setLeadsData(leads);
-      setSortedLeads(sortData(leads, sortField, ascending));
     } catch (err: any) {
       // setError("Failed to fetch leads");
       toast.error("Failed to fetch leads");
       console.error(err);
-    } 
+    }
+  };
+
+  const handleDownloadLeads = () => {
+    if (isEmpty(filteredLeads)) return;
+    const success = downloadLeadsAsXLSX(filteredLeads);
+    if (success) {
+      toast.success('Leads data downloaded successfully!');
+    } else {
+      toast.error('Failed to download leads data');
+    }
   };
 
   const handleLeadDataSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate form data before saving
+    const { error } = leadValidationSchema.validate(formData, { abortEarly: false });
+
+    if (error) {
+      // Create validation errors object
+      const errors: { [key: string]: string } = {};
+      error.details.forEach((detail) => {
+        if (detail.path[0]) {
+          errors[detail.path[0] as string] = detail.message;
+        }
+      });
+      setValidationErrors(errors);
+
+      // Show first validation error as toast
+      toast.error(error.details[0]?.message || "Please fix validation errors");
+      return;
+    }
+
+    // Clear validation errors if validation passes
+    setValidationErrors({});
+
     try {
       if (currentAction === "save") {
         const response: any = await CreateLeadApi(formData);
@@ -304,15 +368,17 @@ const Leads = () => {
 
   // const { width } = useWindowSize();
 
-  const handleSort = (field: keyof Lead) => {
-    const isAscending = field === sortField ? !ascending : true;
-    setSortField(field);
-    setAscending(isAscending);
-    setSortedLeads(sortData(sortedLeads, field, isAscending));
-  };
+  // const handleSort = (field: keyof Lead) => {
+  //   const isAscending = field === sortField ? !ascending : true;
+  //   setSortField(field);
+  //   setAscending(isAscending);
+  //   setSortedLeads(sortData(sortedLeads, field, isAscending));
+  // };
 
   const popoverRef = useRef<HTMLDivElement | null>(null);
-  const leadsPerPage = 8;
+  const mobileFilterPopoverRef = useRef<HTMLDivElement | null>(null);
+
+  const leadsPerPage = 7;
   const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
 
   const paginatedLeads = filteredLeads.slice(
@@ -355,7 +421,24 @@ const Leads = () => {
       return updated;
     });
   };
-
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileFilterPopoverRef.current &&
+        ! mobileFilterPopoverRef.current.contains(event.target as Node)
+      ) {
+        setTimeout(() => {
+          setMobileFilterOpen(false);
+        }, 500);
+      }
+    };
+    if (mobileFilterOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileFilterOpen]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -364,7 +447,7 @@ const Leads = () => {
       ) {
         setTimeout(() => {
           setIsOpenAction(null);
-        }, 300);
+        }, 500);
       }
     };
     if (isOpenAction !== null) {
@@ -426,23 +509,23 @@ const Leads = () => {
         tempEndDate={tempEndDate}
         tempDateFilter={tempDateFilter}
         tempLeadTypeFilter={tempLeadTypeFilter}
-        tempSortOrder={tempSortOrder}
+        // tempSortOrder={tempSortOrder}
         handleDateRangeChange={handleDateRangeChange}
         handleDateFilter={handleDateFilter}
         setTempLeadTypeFilter={setTempLeadTypeFilter}
-        setTempSortOrder={setTempSortOrder}
+        // setTempSortOrder={setTempSortOrder}
         resetFilters={resetFilters}
         applyFilters={applyFilters}
-        handleSort={handleSort}
+        // handleSort={handleSort}
         setIsDrawerOpen={setIsDrawerOpen}
         setCurrentAction={setCurrentAction}
+        onDownload={handleDownloadLeads}
       />
       <LeadsTable
         toggleCheckbox={toggleCheckbox}
         setLeadToDelete={setLeadToDelete}
         leadToDelete={leadToDelete}
         setShowDeleteConfirm={setShowDeleteConfirm}
-        setDeleteType={deleteType}
         paginatedLeads={paginatedLeads}
         selectedLeads={selectedLeads}
         formatDateToDDMMYYYY={formatDateToDDMMYYYY}
@@ -479,6 +562,7 @@ const Leads = () => {
             currentAction={currentAction}
             handleLeadDataSave={handleLeadDataSave}
             setIsDrawerOpen={setIsDrawerOpen}
+            validationErrors={validationErrors}
           />
         </div>
       </Drawer>
@@ -505,7 +589,7 @@ const Leads = () => {
             />
           </div>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setMobileFilterOpen(true)}
             className="p-1 hover:bg-[#2E2E2E] rounded-xl  "
           >
             <FilterIcon />
@@ -579,7 +663,6 @@ const Leads = () => {
                     <button
                       onClick={() => {
                         setShowDeleteConfirm(true);
-                        setDeleteType("single");
                         setLeadToDelete((prev: any) => [...prev, lead?.id]);
                       }}
                       className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700"
@@ -593,11 +676,11 @@ const Leads = () => {
           ))}
         </div>
       </div>
-
-      <div
-        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-y-0" : "translate-y-full"
-        }`}
+       <div
+       ref={mobileFilterPopoverRef}
+        className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out 
+          ${mobileFilterOpen ? "translate-y-15" : "translate-y-full"
+          }`}
       >
         <div className="bg-[#1f1f1f] text-white rounded-t-2xl p-4">
           <div className="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-4 sticky top-0" />
@@ -605,30 +688,45 @@ const Leads = () => {
             <p className="text-[12px] text-gray-300 mb-4  fixed">Filter by:</p>
             <p className="text-sm font-medium mt-[30px]">Date Range</p>
           </div>
-          <div className="grid grid-cols-2 gap-6 mt-3">
-            <button
-              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
-              onClick={() => handleDateFilter("today")}
-            >
-              Today
-            </button>
-            <button
-              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
-              onClick={() => handleDateFilter("week")}
-            >
-              This Week
-            </button>
-            <button
-              className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm"
-              onClick={() => handleDateFilter("month")}
-            >
-              This Month
-            </button>
-            <button className="bg-[#2a2a2a] px-3 py-[12px] rounded-lg text-sm">
-              Custom
-            </button>
-          </div>
+          <div className="space-y-3">
+            <div className="flex items-center gap-4">
+              <div className="relative w-full">
+                <input
+                  type="date"
+                  value={tempStartDate}
+                  className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
+                  onChange={(e) =>
+                    handleDateRangeChange("start", e.target.value)
+                  }
+                />
+              </div>
+              <div className="relative w-full">
+                <input
+                  type="date"
+                  value={tempEndDate}
+                  className="w-full bg-[#2A2A2A] text-sm px-4 py-2 rounded-md pr-10"
+                  onChange={(e) =>
+                    handleDateRangeChange("end", e.target.value)
+                  }
+                />
+              </div>
+            </div>
 
+            <div className="flex justify-between gap-3">
+              {["Today", "This Week", "This Month"].map((label) => (
+                <button
+                  key={label}
+                  onClick={() => handleDateFilter(label.toLowerCase())}
+                  className={`w-full bg-[#2A2A2A] text-sm py-2 rounded-md hover:bg-[#3A3A3A] ${tempDateFilter === label.toLowerCase()
+                    ? "bg-[#9747FF]"
+                    : ""
+                    }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="mt-4">
             <div className="text-sm font-medium mt-2">Lead Type</div>
             <div className="relative mt-3 w-full">
@@ -659,42 +757,6 @@ const Leads = () => {
               </div>
             </div>
           </div>
-
-          <div className="mb-4">
-            <div className="text-sm font-medium mt-3">Amount</div>
-            {/* <select className="bg-[#2a2a2a] text-white p-3 rounded w-full text-sm mt-3">
-              <option className="">Newest - oldest</option>
-              <option>Oldest - newest</option>
-            </select> */}
-            <div className="relative mt-3 w-full">
-              <select
-                className="bg-[#2a2a2a] text-white p-3 pr-10 rounded-lg w-full text-sm border border-gray-600 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={tempSortOrder}
-                onChange={(e) => setTempSortOrder(e.target.value)}
-              >
-                <option className="bg-[#9747FF] text-white hover:bg-[#9e76d2]">
-                  Newest - oldest
-                </option>
-                <option>Oldest - newest</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 9l-7 7-7-7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
           <div className="flex justify-between items-center text-sm  ">
             <button className="text-purple-400" onClick={resetFilters}>
               Reset All
@@ -707,7 +769,9 @@ const Leads = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> 
+
+
       {showDeleteConfirm && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[#282828] rounded-md p-6  w-[350px] text-start">

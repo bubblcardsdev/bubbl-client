@@ -342,3 +342,16 @@ export const DeletePbrandinglogoImage = async (id: string | number) => {
     console.error(error);
   }
 };
+
+export const createTap = async(clickAction:number,deviceId:string) => {
+
+  try{
+    const response =await axiosInstance.post("/analytics/tapDetails",{deviceId,clickAction})
+    return response;
+  }
+  catch(err){
+console.log(err);
+
+  }
+
+}

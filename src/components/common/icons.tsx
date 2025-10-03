@@ -2573,7 +2573,7 @@ export const OpalWhatsappIcon = (props: iconProps) => {
   );
 };
 //Quartz Template Icons
-export const QuartzWhatsappIcon = (props: iconProps) => {
+export const QuartzWhatsappIcon = () => {
   return (
     <svg
       width="24"

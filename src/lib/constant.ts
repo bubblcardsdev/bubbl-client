@@ -486,18 +486,20 @@ export const SIGNUP_STEPS: StepConfig[] = [
   },
 ];
 
-export const SocialIconsObj: any = {
-  "1": Instagram_icon,
-  "2": Facebook_icon_thin,
-  "3": Twitter_icon_thin,
-  "4": OpalYoutubeIcon,
-  "5": Linkedin_icon_thin,
-  "6": OpalWhatsappIcon,
-};
+
 export const DigitalIconsObj: any = {
   "1": Googlepay_icon,
   "2": Phonepay_icon,
   "3": Paytm_icon,
+};
+
+export const SocialIconsObj: any = {
+  "1": Instagram_icon,      // Instagram
+  "2": Facebook_icon_thin,  // Facebook
+  "3": OpalYoutubeIcon,     // Youtube
+  "4": Twitter_icon_thin,   // Twitter
+  "5": OpalWhatsappIcon,    // WhatsApp
+  "6": Linkedin_icon_thin,  // LinkedIn
 };
 
 //   const colorTemplateMap = {
@@ -547,3 +549,57 @@ export const DigitalIconsObj: any = {
 //     "#b5e872",
 //   ],
 // };
+
+export const SOCIAL_MEDIA_IDS: Record<number, string> = {
+  1: "instagram",
+  2: "facebook",
+  3: "twitter",
+  4: "youtube",
+  5: "linkedin",
+  6: "whatsApp",
+};
+export const actions = {
+  tap: 1,
+  leads: 2,
+  contact: 3,
+  phone: 4,
+  email: 5,
+  website: 6,
+  location: 7,
+  instagram: 8,
+  linkedin: 9,
+  twitter: 10,
+  facebook: 11,
+  youtube: 12,
+  gpay: 13,
+  phonepe: 14,
+  paytm: 15,
+  qr: 16,
+};
+
+export const CONTACT_LINKS_ID: Record<number, string> = {
+  3: "contact",
+  4: "phone",
+  5:"email",
+  6: "website",
+  7:"location"
+
+};
+
+export const DIGITAL_MEDIA_IDS: Record<number, string> = {
+  1: "gpay",
+  2: "phonepe",
+  3: "paytm",
+
+};
+
+export type ActionKeys = keyof typeof actions;
+
+export const socialLinkRules: Record<number, (input: string) => string> = {
+  1: (val) => `https://www.instagram.com/${val}`, // Instagram
+  2: (val) => `https://www.facebook.com/${val}`,  // Facebook
+  3: (val) => `https://www.youtube.com/${val}`,   // YouTube
+  4: (val) => `https://twitter.com/${val}`,       // Twitter
+  5: (val) => `https://wa.me/${val}`,             // WhatsApp
+  6: (val) => `https://www.linkedin.com/in/${val}` // LinkedIn
+};

@@ -11,8 +11,10 @@ interface Props {
 }
 
 const QrGenerator = (props: Props) => {
-  const { color,deviceIdQR, qrBubbl, qrImageUrl } = props;
-  
+  // const { color,deviceIdQR, qrBubbl, qrImageUrl } = props;
+  const { color, deviceIdQR } = props;
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -23,7 +25,7 @@ const QrGenerator = (props: Props) => {
         className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0"
         style={{ backgroundColor: color }}
       >
-        <QrCode  color={"#ffffff"}/>
+        <QrCode color={"#ffffff"} />
       </button>
       {/* Popup Modal */}
       {isOpen && (
@@ -39,7 +41,7 @@ const QrGenerator = (props: Props) => {
               </button>
             </div>
             <div className="flex flex-col items-center py-[40px]">
-               <QrCodeImage qrImageUrl="" qrBubbl="" deviceIdQR={deviceIdQR}/>
+              <QrCodeImage qrImageUrl="" qrBubbl="" deviceIdQR={deviceIdQR} />
             </div>
           </div>
         </div>
