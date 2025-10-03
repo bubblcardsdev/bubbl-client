@@ -6,6 +6,7 @@ import { theme } from "@/src/utils/profileThemecolor";
 import { Plus, Trash2, Check } from "lucide-react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+
 const ProfileForm = ({
   formData,
   setFormData,
@@ -61,6 +62,7 @@ const ProfileForm = ({
   setMode: any;
   handleRemoveImage: any;
 }) => {
+  
   const router = useRouter()
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
@@ -267,7 +269,7 @@ const ProfileForm = ({
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-0 bg-[#2a2a2a] px-0 py-0 rounded-lg mt-1"
+                  className="flex items-center gap-5 bg-[#2a2a2a] px-0 py-0 rounded-lg mt-1"
                 >
                   {/* Dropdown */}
                   <select
@@ -288,10 +290,10 @@ const ProfileForm = ({
                   >
                     <option value="home">Home</option>
                     <option value="work">Work</option>
-                    <option value="custom">Custom</option>
+                    {/* <option value="custom">Custom</option> */}
                     {/* If user already saved custom, show it */}
                     {mobile.phoneNumberType &&
-                      !["home", "work", "custom"].includes(
+                      !["home", "work"].includes(
                         mobile?.phoneNumberType
                       ) && (
                         <option value={mobile?.phoneNumberType}>
@@ -516,7 +518,8 @@ const ProfileForm = ({
           }
         })}
 
-        {formData?.websites?.length < 1 && (
+        {formData?.websites?.filter((value: any) => value?.activeStatus)
+            ?.length < 1 && (
           <button
             onClick={() => addToArray("websites")}
             className="mt-2  flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white text-sm placeholder:text-sm"
@@ -653,7 +656,7 @@ const ProfileForm = ({
             ))}
           </div>
           {/* Mode Toggle */}
-          <div className="flex gap-4 bg-[#2c2c2c] p-[10px] rounded-lg">
+          {/* <div className="flex gap-4 bg-[#2c2c2c] p-[10px] rounded-lg">
             <button
               onClick={() => setMode("light")}
               className={clsx(
@@ -676,7 +679,7 @@ const ProfileForm = ({
             >
               Dark
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* Social Links */}
@@ -697,7 +700,7 @@ const ProfileForm = ({
                 type="text"
                 value={socialItem?.socialMediaName || ""}
                 placeholder={item.placeholder}
-                onChange={(e) => {
+                onChange={(e) => {  
                   const updated = formData.socialMediaNames.map((s: any) =>
                     s.profileSocialMediaId === item.id
                       ? { ...s, socialMediaName: e.target.value }
@@ -707,6 +710,7 @@ const ProfileForm = ({
                     ...prev,
                     socialMediaNames: updated,
                   }));
+                    console.log(updated,"social/");
                 }}
                 className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white text-sm placeholder:text-sm"
               />
@@ -729,13 +733,16 @@ const ProfileForm = ({
               value={
                 formData.digitalPaymentLinks[idx]?.digitalPaymentLink || ""
               }
-              onChange={(e) =>
+              onChange={(e) =>{
+                console.log(item,"?");
+                
                 handleNestedArrayChange(
                   "digitalPaymentLinks",
                   idx,
                   "digitalPaymentLink",
                   e.target.value
                 )
+              }
               }
               className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
             />

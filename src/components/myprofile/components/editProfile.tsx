@@ -28,6 +28,7 @@ import {
 } from "../../../services/profileApi";
 import { toast } from "react-toastify";
 import ProfileForm from "./profileForm";
+import { normalizeSocialLink } from "@/src/utils/commonLogics";
 // import { EditProfileSchema } from "../../../validators/profile";
 const socialLinks = [
   {
@@ -72,6 +73,7 @@ const socialLinks = [
     placeholder: "Enter LinkedIn URL",
   },
 ];
+
 
 const Digitalpay = [
   {
@@ -291,18 +293,28 @@ const EditProfile: React.FC = () => {
     setFormData((prev: any) => ({ ...prev, [key]: value }));
   };
 
-  const handleNestedArrayChange = (
-    arrayKey: string,
-    index: number,
-    field: string,
-    value: any
-  ) => {
-    const updatedArray = [...(formData[arrayKey] || [])];
+const handleNestedArrayChange = (
+  arrayKey: string,
+  index: number,
+  field: string,
+  value: any
+) => {
+  const updatedArray = [...(formData[arrayKey] || [])];
+  const existing = updatedArray[index] || {};
 
-    updatedArray[index] = { ...(updatedArray[index] || {}), [field]: value };
-
-    setFormData((prev: any) => ({ ...prev, [arrayKey]: updatedArray }));
+  updatedArray[index] = {
+    ...existing,
+    [field]: value,
+    ...(arrayKey === "digitalPaymentLinks" && {
+      profileDigitalPaymentsId: Digitalpay[index].id,
+      enableStatus: existing.enableStatus ?? true,
+      activeStatus: existing.activeStatus ?? true,
+    }),
   };
+
+  setFormData((prev: any) => ({ ...prev, [arrayKey]: updatedArray }));
+};
+
 
   const addToArray = (key: string) => {
     if (key === "phoneNumbers") {
@@ -451,119 +463,104 @@ const EditProfile: React.FC = () => {
     }
   };
 
-  const handleSave = async () => {
-    try {
+const handleSave = async () => {
+  const isCreate = router.asPath.slice(1) === "createNewProfile";
+
+  // Map social media: mark empty ones as inactive
+  const updatedSocialMediaNames = (formData?.socialMediaNames || []).map((item: any) => {
+  const normalizedLink = normalizeSocialLink(item.profileSocialMediaId, item.socialMediaName);
+
+  return {
+    profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
+    profileSocialMediaId: item.profileSocialMediaId || undefined,
+    socialMediaName: normalizedLink,
+    activeStatus: normalizedLink?.trim().length > 0, // false if empty
+  };
+});
+
+  // Map digital payment links: mark empty ones as inactive
+  const updatedDigitalMediaNames = (formData?.digitalPaymentLinks || []).map((item: any) => ({
+    profileDigitalPaymentLinkId: item.profileDigitalPaymentLinkId || undefined,
+    profileDigitalPaymentsId: item.profileDigitalPaymentsId || undefined,
+    digitalPaymentLink: item.digitalPaymentLink || "",
+    enableStatus: item.enableStatus ?? true,
+    activeStatus: item.digitalPaymentLink?.trim().length > 0, // false if empty
+  }));
+
+  try {
+    const payload = {
+      ...formData,
+      socialMediaNames: updatedSocialMediaNames,
+      digitalPaymentLinks: updatedDigitalMediaNames,
+      emailIds: (formData?.emailIds || []).map((v: any) => ({
+        ...v,
+        activeStatus: v.emailId?.trim().length > 0,
+      })),
+      phoneNumbers: (formData?.phoneNumbers || []).map((v: any) => ({
+        ...v,
+        activeStatus: v.phoneNumber?.toString()?.trim()?.length > 0,
+      })),
+      websites: (formData?.websites || []).map((v: any) => ({
+        ...v,
+        activeStatus: v.website?.trim()?.length > 0,
+      })),
+    };
+
+    // Remove image URLs before sending
+    delete payload?.profileImageUrl;
+    delete payload?.companyLogoUrl;
+
+    console.log("Payload:", payload);
+
+    if (id) {
+      // Update existing profile
+      const response = await UpdateProfile(id, payload);
+
+      if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
+      if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
+      if (profileImg) await UploadProfileImage(profileImg, id);
+      if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id);
+
+      fetchProfiles();
+      toast.success("Profile updated successfully!");
+      console.log("Update response:", response);
+    } else {
       // Create new profile
-      const payload = {
-        ...formData,
-        socialMediaNames: formData?.socialMediaNames?.filter(
-          (value: any) => value?.socialMediaName?.length > 0
-        ),
-        digitalPaymentLinks: formData?.digitalPaymentLinks?.filter(
-          (value: any) => value?.digitalPaymentLink?.length > 0
-        ),
-        emailIds: formData?.emailIds?.filter(
-          (value: any) => value?.emailId?.length > 0
-        ),
-        phoneNumbers: formData?.phoneNumbers?.filter(
-          (value: any) => value?.phoneNumber?.toString()?.length > 0
-        ),
-        websites: formData?.websites?.filter(
-          (value: any) => value?.website?.length > 0
-        ),
-      };
+      const response: any = await CreateMyProfileApi(payload);
 
-      // Remove image URLs before sending to API
-      delete payload?.profileImageUrl;
-      delete payload?.companyLogoUrl;
-      console.log("Form Data (payload):", formData);
+      if (profileImg && response?.data?.profile?.id)
+        await UploadProfileImage(profileImg, response.data.profile.id);
+      if (companyLogoImg && response?.data?.profile?.id)
+        await UploadbrandinglogoImage(companyLogoImg, response.data.profile.id);
 
-      if (id) {
-        // Update existing profile
-        try {
-          const response = await UpdateProfile(id, payload);
-
-          if (formData?.profileImageUrl?.length <= 0) {
-            await DeleteProfileImageApi(id);
-          }
-          if (formData?.companyLogoUrl?.length <= 0) {
-            await DeletePbrandinglogoImage(id);
-          }
-          if (profileImg) {
-            await UploadProfileImage(profileImg, id);
-          }
-          if (companyLogoImg) {
-            await UploadbrandinglogoImage(companyLogoImg, id);
-          }
-          fetchProfiles();
-          toast.success("Profile updated successfully!");
-          console.log("Update response:", response);
-        } catch (error) {
-          toast.error("Failed to update profile");
-          console.error("Update error:", error);
-        }
-      } else {
-        try {
-          const response: any = await CreateMyProfileApi(payload);
-          if (profileImg && response?.data?.profile?.id) {
-            await UploadProfileImage(profileImg, response.data.profile.id);
-          }
-          if (companyLogoImg && response?.data?.profile?.id) {
-            await UploadbrandinglogoImage(
-              companyLogoImg,
-              response?.data?.profile?.id
-            );
-          }
-          // const { error } = EditProfileSchema.validate(formData, {
-          //   abortEarly: false,
-          // });
-          // if (error) {
-          //   const newErrors: Record<string, string> = {};
-          //   error.details.forEach((err: any) => {
-          //     // toast.error(err.message); // keep toast
-          //     if (err.path?.[0]) {
-          //       newErrors[err.path[0]] = err.message; // save error for that field
-          //     }
-          //   });
-          //   setErrors(newErrors);
-          //   return;
-          // }
-          // setErrors({});
-          // ✅ Add condition for duplicate profile name
-          if (response?.data?.message === "This profile name already exists") {
-            setErrors((prev: any) => ({
-              ...prev,
-              profileName: "This profile name already exists",
-            }));
-            toast.error("This profile name already exists");
-            return; // stop here so success toast doesn’t run
-          }
-
-          // Upload image after profile creation
-
-          if (response || response?.data?.success) {
-            toast.success("Profile created successfully!");
-          }
-          console.log("Create response:", response);
-        } catch (error) {
-          // toast.error("Failed to create profile");
-          console.error("Create error:", error);
-        }
-      }
-    } catch (err: any) {
-      // console.error("Save failed:", err);
-      const backendMessage = err.response?.data?.message;
-      if (backendMessage === "This profile name already exists") {
+      if (response?.data?.message === "This profile name already exists") {
         setErrors((prev: any) => ({
           ...prev,
           profileName: "This profile name already exists",
         }));
         toast.error("This profile name already exists");
-      } else {
-        toast.error(backendMessage || "Save failed!");
+        return;
       }
+
+      toast.success("Profile created successfully!");
+      console.log("Create response:", response);
     }
-  };
+  } catch (err: any) {
+    const backendMessage = err.response?.data?.message;
+    if (backendMessage === "This profile name already exists") {
+      setErrors((prev: any) => ({
+        ...prev,
+        profileName: "This profile name already exists",
+      }));
+      toast.error("This profile name already exists");
+    } else {
+      toast.error(backendMessage || "Save failed!");
+    }
+    console.error("Save error:", err);
+  }
+};
+
+
   return (
     <div className="lg:p-4 md:p-4 sm:p-0 xs:p-0">
       {openCropModal && cropSrc && selectedImageType && (
@@ -572,58 +569,58 @@ const EditProfile: React.FC = () => {
           onClose={() => setOpenCropModal(false)}
           onCropComplete={handleCroppedImage}
         />
-      )}
-
+      )} 
+     <div>
+  <div className="flex flex-col xl:flex-row gap-6">
+    {/* Left Section: Profile Edit + Form */}
+    <div className="w-full max-w-[600px]">
       <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
-      <div className="flex flex-col lg:flex-col xl:flex-row gap-6">
-        {/* Left Form Section */}
-        <div className="w-full max-w-[600px]">
-          <ProfileForm
+      <ProfileForm
+        formData={formData}
+        setFormData={setFormData}
+        handleInputChange={handleInputChange}
+        errors={errors}
+        setErrors={setErrors}
+        templates={templates}
+        currentIndex={currentIndex}
+        onTemplateSelect={onTemplateSelect}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        handleColorSelect={handleColorSelect}
+        selected={selected}
+        handleImageChange={handleImageChange}
+        isCustomModalOpen={isCustomModalOpen}
+        customName={customName}
+        handleSave={handleSave}
+        addToArray={addToArray}
+        setCustomName={setCustomName}
+        setIsCustomModalOpen={setIsCustomModalOpen}
+        handleCustomSave={handleCustomSave}
+        handleNestedArrayChange={handleNestedArrayChange}
+        socialLinks={socialLinks}
+        Digitalpay={Digitalpay}
+        handleRemoveImage={handleRemoveImage}
+        setMode={setMode}
+        mode={mode}
+      />
+    </div>
+
+    {/* Right Section: Live Preview */}
+    <div className="w-full max-w-[400px] xl:block lg:hidden md:hidden sm:hidden xs:hidden">
+      <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
+        <p className="text-sm text-gray-400 mb-6">Live Preview</p>
+        <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF] text-left">
+          <LivePreview
+            currentTemplate={templates?.[currentIndex]}
             formData={formData}
-            setFormData={setFormData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-            setErrors={setErrors}
-            templates={templates}
-            currentIndex={currentIndex}
-            onTemplateSelect={onTemplateSelect}
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            handleColorSelect={handleColorSelect}
-            selected={selected}
-            handleImageChange={handleImageChange}
-            isCustomModalOpen={isCustomModalOpen}
-            customName={customName}
-            handleSave={handleSave}
-            addToArray={addToArray}
-            setCustomName={setCustomName}
-            setIsCustomModalOpen={setIsCustomModalOpen}
-            handleCustomSave={handleCustomSave}
-            handleNestedArrayChange={handleNestedArrayChange}
-            socialLinks={socialLinks}
-            Digitalpay={Digitalpay}
-            handleRemoveImage={handleRemoveImage}
-            setMode={setMode}
-            mode={mode}
-            // setActiveIndex={setActiveIndex}
-            // removeFromArray={removeFromArray}
+            selectedTheme={selected}
           />
         </div>
-        {/* Right Preview Section */}
-        <div className="w-full max-w-[400px]  xl:block lg:hidden  md:hidden sm:hidden xs:hidden ">
-          <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
-            <p className="text-sm text-gray-400 my-6">Live Preview</p>
-            {/* Sticky Live Preview Heading */}
-            <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF] text-left">
-              <LivePreview
-                currentTemplate={templates?.[currentIndex]}
-                formData={formData}
-                selectedTheme={selected}
-              />
-            </div>
-          </div>
-        </div>
       </div>
+    </div>
+  </div>
+</div>
+     
     </div>
   );
 };

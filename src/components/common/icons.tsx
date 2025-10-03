@@ -462,7 +462,7 @@ export const ScannerQr_icon = (props: iconProps) => {
     </svg>
   );
 };
-export const Googlepay_icon = () => {
+export const Googlepay_icon = (props: iconProps) => {
   return (
     <svg
       width="24"
