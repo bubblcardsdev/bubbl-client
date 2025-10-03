@@ -35,7 +35,7 @@ function ProductFooterSection() {
               <Link href="/compatibility" className="hover:text-white">
                 Compatability
               </Link>
-              <Link href="/ourstory" className="hover:text-white">
+              <Link href="/about" className="hover:text-white">
                 Our Story
               </Link>
               <Link href="/contact" className="hover:text-white">

@@ -102,7 +102,7 @@ function Profile(props: Props) {
   };
 
   useEffect(() => {
-    if (notFound) router.push("/404");
+    if (notFound) router.replace("/404",`${router.asPath}`, {shallow:true});
     getProfileData();
   }, [notFound]);
   const getThemeNameByColor = (color: string) => {

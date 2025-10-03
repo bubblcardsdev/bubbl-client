@@ -42,19 +42,8 @@ const AboutcardSection = [
 const About = () => {
   const [active, setActive] = useState(1);
   return (
-    <div className="bg-black text-white flex flex-col items-center p-8 w-full max-w-[1200px] mx-auto mb-10">
+    <div className="bg-black text-white flex flex-col items-center p-8 w-full max-w-[1200px] mx-auto mb-10 gap-[100px]">
       <h1 className="text-5xl font-bold mb-0 mt-10">About Us</h1>
-      <div className="relative top-10 -left-[550px] z-40">
-        <div className=" font-bold py-2 px-4 rounded-lg  text-white">
-          <Image
-            src="/company_logo.png"
-            alt="company logo"
-            width={1000}
-            height={1000}
-            className="w-[150px] h-[80px]"
-          />
-        </div>
-      </div>
       <div className="flex flex-col md:flex-row items-center gap-8 ">
         <div className="w-full md:w-1/2  relative">
           <Image
@@ -63,6 +52,13 @@ const About = () => {
             width={500}
             height={500}
             className="rounded-lg object-cover w-full max-w-[1200px]"
+          />
+          <Image
+            src="/company_logo.png"
+            alt="company logo"
+            width={1000}
+            height={1000}
+            className="w-[150px] max-w-[35%] absolute top-0 left-0"
           />
         </div>
         <div className="w-full md:w-1/2 space-y-4">
@@ -94,7 +90,7 @@ const About = () => {
           </Link>
         </div>
       </div>
-      <section className=" text-white px-0 py-24">
+      <section className=" text-white ">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-purple-500">
             Our Mission and Values
@@ -127,7 +123,8 @@ const About = () => {
           ))}
         </div>
       </section>
-      <section className="bg-black text-white px-0 py-8">
+      <section className="bg-black text-white ">
+        <h1 className="text-[20px] font-bold text-purple-500 text-center mb-3">Why choose us</h1>
         <div className=" text-center">
           <p className="text-gray-300 mb-6 px-[50px]">
             Bubbl cards stands out with advanced NFC technology and fully
@@ -137,20 +134,18 @@ const About = () => {
             professionals, we deliver superior quality and seamless networking
             experiences.
           </p>
-          <div className="text-left text-lg font-medium text-gray-500 mb-4 mt-10 flex gap-4">
+          {/* <div className="text-left text-lg font-medium text-gray-500 mb-4 mt-10 flex gap-4">
             <span className="animate-slow-spin">
               <AboutWhyChooseIcon color={"#9747FF"} />
             </span>
-            <span>Why choose us</span>
-          </div>
-          <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] ">
-            {WHY_CHOOSE_US.map((sec:WhyChooseUsTypes) => (
+          </div> */}
+          <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] mt-10">
+            {WHY_CHOOSE_US.map((sec: WhyChooseUsTypes) => (
               <div
                 key={sec.id}
                 onClick={() => setActive(sec.id)}
-                className={`cursor-pointer transition-all duration-300  ${
-                  active === sec.id ? "flex-[3] p-8" : "flex-1 p-4"
-                } border-r border-[#272727] last:border-none hover:bg-[#121414]`}
+                className={`cursor-pointer transition-all duration-300  ${active === sec.id ? "flex-[3] p-8" : "flex-1 p-4"
+                  } border-r border-[#272727] last:border-none hover:bg-[#121414]`}
               >
                 <div className="text-3xl font-semibold mb-2 text-white text-start">
                   {sec.id < 10 ? `0${sec.id}.` : `${sec.id}.`}
@@ -168,7 +163,9 @@ const About = () => {
           </div>
         </div>
       </section>
-      <BubblCommunity />
+      <div className="w-full">
+        <BubblCommunity />
+      </div>
     </div>
   );
 };
