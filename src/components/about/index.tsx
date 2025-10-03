@@ -143,7 +143,7 @@ const About = () => {
             </span>
             <span>Why choose us</span>
           </div>
-          <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] h-[400px]">
+          <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] ">
             {WHY_CHOOSE_US.map((sec:WhyChooseUsTypes) => (
               <div
                 key={sec.id}

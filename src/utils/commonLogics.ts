@@ -1,9 +1,3 @@
-// export const openInNewTab = (url: string) => {
-//     if (!url.startsWith("http")) {
-//       url = `https://${url}`;
-//     }
-//     window.open(url, "_blank", "noopener,noreferrer");
-//   };
 
 import { toast } from "react-toastify";
 
@@ -41,7 +35,7 @@ export const copyText = async (links: string) => {
   try {
     await navigator.clipboard.writeText(links);
     toast.success(`Copied to clipboard: ${links}`);
-  } catch (err) {
+  } catch (err:any) {
     console.error("Clipboard copy failed:", err);
     toast.error("Failed to copy. Please try manually.");
   }
