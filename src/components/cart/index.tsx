@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { getAccessToken, getCart, setCart } from "../../helpers/localStorage";
-import { isEmpty } from "lodash";
+import { add, isEmpty } from "lodash";
 import { CartItem } from "@/src/lib/interface";
 import { fetchAllDevices } from "@/src/services/alldevicesApi";
+import { addToCart } from "@/src/services/cart";
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
@@ -23,7 +24,7 @@ const Cart = () => {
     const storedCart = JSON.parse(cartData);
     
     if (token) {
-      const getCart
+      return;
       
     } else {
       const devices = await fetchAllDevices();
