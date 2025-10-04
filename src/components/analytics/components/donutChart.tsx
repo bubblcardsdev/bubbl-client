@@ -34,9 +34,9 @@ const CHART_OPTIONS = {
 };
 
 function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
-  const isNoData =
-    !data ||
-    data?.datasets?.[0]?.data?.reduce((a: number, b: number) => a + b, 0) == 0;
+  // const isNoData =
+  //   !data ||
+  //   data?.datasets?.[0]?.data?.reduce((a: number, b: number) => a + b, 0) == 0;
   return (
     <div className="text-white p-4 rounded-xl shadow-md flex-1 bg-[#282829]">
       <div className="flex justify-between items-center mb-3">

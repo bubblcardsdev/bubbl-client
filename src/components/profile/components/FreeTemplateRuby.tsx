@@ -93,13 +93,22 @@ const FreeTemplateRuby = ({
                 {formData?.shortDescription || "Description"}
               </p>
             </div>
-            <div className="bg-gray-100 p-1 rounded-xl  text-sm font-semibold text-gray-800">
+            {/* <div className="  text-sm font-semibold border border-red-500 w-24 h-24">
+              <Image
+                src={formData?.companyLogoUrl || "/logo.png"}
+                alt="logo"
+                width={100}
+                height={100}
+                className="object-contain rounded-lg"
+              />
+            </div> */}
+            <div className=" p-1 rounded-xl text-sm font-semibold w-[80px] h-[80px] flex items-center justify-center">
               <Image
                 src={formData?.companyLogoUrl || "/logo.png"}
                 alt="logo"
                 width={80}
                 height={80}
-                className="object-contain rounded-lg"
+                className="object-fill rounded-lg w-[80px] h-[80px]"
               />
             </div>
           </div>
@@ -120,7 +129,10 @@ const FreeTemplateRuby = ({
                   <Share_icon color={color} />
                 </span>
               </button>
-              <button className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]">
+              <button
+                className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]"
+                style={{ color: color }}
+              >
                 <span className="flex items-center align-middle justify-center">
                   <QrGenerator
                     color={color}

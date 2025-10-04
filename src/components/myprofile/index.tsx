@@ -9,7 +9,6 @@ import {
 import Image from "next/image";
 import { MoreVertical, Edit3, Share2 } from "lucide-react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 export default function MyprofilePage() {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
