@@ -466,54 +466,70 @@ const handleNestedArrayChange = (
 const handleSave = async () => {
   const isCreate = router.asPath.slice(1) === "createNewProfile";
 
-  // Map social media: mark empty ones as inactive
+  // Map social media
   const updatedSocialMediaNames = (formData?.socialMediaNames || []).map((item: any) => {
-  const normalizedLink = normalizeSocialLink(item.profileSocialMediaId, item.socialMediaName);
+    const normalizedLink = normalizeSocialLink(item.profileSocialMediaId, item.socialMediaName);
+    return {
+      profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
+      profileSocialMediaId: item.profileSocialMediaId || undefined,
+      socialMediaName: normalizedLink,
+      activeStatus: normalizedLink?.trim().length > 0,
+    };
+  });
 
-  return {
-    profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
-    profileSocialMediaId: item.profileSocialMediaId || undefined,
-    socialMediaName: normalizedLink,
-    activeStatus: normalizedLink?.trim().length > 0, // false if empty
-  };
-});
-
-  // Map digital payment links: mark empty ones as inactive
+  // Map digital payments
   const updatedDigitalMediaNames = (formData?.digitalPaymentLinks || []).map((item: any) => ({
     profileDigitalPaymentLinkId: item.profileDigitalPaymentLinkId || undefined,
     profileDigitalPaymentsId: item.profileDigitalPaymentsId || undefined,
     digitalPaymentLink: item.digitalPaymentLink || "",
     enableStatus: item.enableStatus ?? true,
-    activeStatus: item.digitalPaymentLink?.trim().length > 0, // false if empty
+    activeStatus: item.digitalPaymentLink?.trim().length > 0,
   }));
 
+  // Build base payload
+  let payload: any = {
+    ...formData,
+    socialMediaNames: isCreate
+      ? (formData?.socialMediaNames || []).filter((s: any) => s.socialMediaName?.trim())
+      : updatedSocialMediaNames,
+    digitalPaymentLinks: isCreate
+      ? (formData?.digitalPaymentLinks || []).filter((d: any) => d.digitalPaymentLink?.trim())
+      : updatedDigitalMediaNames,
+    emailIds: (formData?.emailIds || []).map((v: any) => ({
+      ...v,
+      activeStatus: v.emailId?.trim().length > 0,
+    })),
+    phoneNumbers: (formData?.phoneNumbers || []).map((v: any) => ({
+      ...v,
+      activeStatus: v.phoneNumber?.toString()?.trim()?.length > 0,
+    })),
+    websites: (formData?.websites || []).map((v: any) => ({
+      ...v,
+      activeStatus: v.website?.trim()?.length > 0,
+    })),
+  };
+
+  // Special rule for create: strip empty strings from top-level keys
+  if (isCreate) {
+    Object.keys(payload).forEach((key) => {
+      if (typeof payload[key] === "string" && payload[key].trim() === "") {
+        delete payload[key]; // remove empty string keys
+      }
+      if (Array.isArray(payload[key]) && payload[key].length === 0) {
+        // keep as [] for arrays (important for API consistency)
+      }
+    });
+  }
+
+  // Remove image URLs before sending
+  delete payload?.profileImageUrl;
+  delete payload?.companyLogoUrl;
+
+  console.log("Final Payload:", payload);
+
   try {
-    const payload = {
-      ...formData,
-      socialMediaNames: updatedSocialMediaNames,
-      digitalPaymentLinks: updatedDigitalMediaNames,
-      emailIds: (formData?.emailIds || []).map((v: any) => ({
-        ...v,
-        activeStatus: v.emailId?.trim().length > 0,
-      })),
-      phoneNumbers: (formData?.phoneNumbers || []).map((v: any) => ({
-        ...v,
-        activeStatus: v.phoneNumber?.toString()?.trim()?.length > 0,
-      })),
-      websites: (formData?.websites || []).map((v: any) => ({
-        ...v,
-        activeStatus: v.website?.trim()?.length > 0,
-      })),
-    };
-
-    // Remove image URLs before sending
-    delete payload?.profileImageUrl;
-    delete payload?.companyLogoUrl;
-
-    console.log("Payload:", payload);
-
     if (id) {
-      // Update existing profile
+      // ---- Update ----
       const response = await UpdateProfile(id, payload);
 
       if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
@@ -525,8 +541,9 @@ const handleSave = async () => {
       toast.success("Profile updated successfully!");
       console.log("Update response:", response);
     } else {
-      // Create new profile
+      // ---- Create ----
       const response: any = await CreateMyProfileApi(payload);
+      if (!response) return;
 
       if (profileImg && response?.data?.profile?.id)
         await UploadProfileImage(profileImg, response.data.profile.id);
@@ -559,6 +576,7 @@ const handleSave = async () => {
     console.error("Save error:", err);
   }
 };
+
 
 
   return (

@@ -59,16 +59,17 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
           <option value="Yearly">Yearly </option>
         </select>
       </div>
-      {isNoData && (
+      {/* {isNoData && (
         <div className="h-52 w-full flex items-center justify-center ">
           <p className="text-center">No Data !</p>
         </div>
-      )}
-      {!isNoData && (
+      )} */}
+      {/* {!isNoData && ( */}
         <div className="w-full h-52 flex items-center justify-center">
+          
           <Doughnut data={data} options={CHART_OPTIONS} />
         </div>
-      )}
+      {/* )} */}
     </div>
   );
 }

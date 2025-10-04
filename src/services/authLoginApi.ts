@@ -1,5 +1,5 @@
 // src/services/authLoginApi.ts
-/* eslint-disable  */
+
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 import axios, { AxiosError } from "axios";

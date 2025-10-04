@@ -1,4 +1,5 @@
 "use client";
+/*eslint-disable*/
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -24,29 +25,36 @@ const Analytics = () => {
   const [totalTaps, setTotalTaps] = useState(0);
   const [range, setRange] = useState("Weekly"); // default filter
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "#1f2937",
-        titleColor: "#fff",
-        bodyColor: "#fff",
-      },
+ const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      enabled: true,
+      backgroundColor: "#1f2937",
+      titleColor: "#fff",
+      bodyColor: "#fff",
     },
-    scales: {
-      x: {
-        ticks: { color: "#aaa", font: { size: 10 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
-      y: {
-        ticks: { color: "#aaa", font: { size: 10 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
+  },
+  scales: {
+    x: {
+      ticks: { color: "#aaa", font: { size: 10 } },
+      grid: { color: "rgba(255,255,255,0.1)" },
     },
-  };
+    y: {
+      beginAtZero: true,         // ✅ start from 0
+      ticks: {
+        color: "#aaa",
+        font: { size: 10 },
+        stepSize: 1,             // ✅ force whole numbers
+        callback: (value:any) => Math.floor(Number(value)), // ensure integers
+      },
+      grid: { color: "rgba(255,255,255,0.1)" },
+    },
+  },
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
