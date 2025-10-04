@@ -230,6 +230,19 @@ const Settings: React.FC = () => {
               <p className="text-xs text-red-400">{errors.username}</p>
             )}
           </div>
+          <div>
+            <label className="text-sm">Last Name</label>
+            <input
+              name="lastName"
+              value={formData?.lastName}
+              onChange={handleChange}
+              placeholder="Enter Your First Name"
+              className="w-full mt-2 p-3 rounded-lg bg-[#282828] text-white placeholder:text-gray-500 placeholder:text-sm"
+            />
+            {errors.username && (
+              <p className="text-xs text-red-400">{errors.username}</p>
+            )}
+          </div>
 
           <div>
             <label className="text-sm">Phone number</label>
@@ -301,12 +314,12 @@ const Settings: React.FC = () => {
 
           {/*  Buttons */}
           <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3 col-span-1 md:col-span-2">
-            <button
+            {/* <button
               type="button"
               className="px-4 py-2 bg-[#282828] text-white rounded-lg hover:bg-[#3a3a3a] w-full sm:w-auto"
             >
               Cancel
-            </button>
+            </button> */}
             <button
               type="submit"
               className="px-4 py-2 bg-[#a855f7] text-white rounded-lg hover:bg-[#9333ea] w-full sm:w-auto"
