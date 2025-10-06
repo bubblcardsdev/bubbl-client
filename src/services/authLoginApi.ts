@@ -182,7 +182,27 @@ export const responseFacebook = async (response: any, router: NextRouter) => {
 };
 
 
+export const changePassword = async (
+  forgotPasswordId: string,
+  newPassword: string
+) => {
+  try {
+    const response = await axiosInstance.post("/changepassword", {
+      forgotPasswordId,
+      newPassword,
+    });
 
+    toast.success(
+      response?.data?.data?.message || "Password changed successfully"
+    );
+    return response?.data;
+  } catch (err: any) {
+    console.error(err);
+    toast.error(
+      err?.response?.data?.message || "Something went wrong, please try again"
+    );
+  }
+};
 
 
 
