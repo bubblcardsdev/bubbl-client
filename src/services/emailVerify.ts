@@ -65,3 +65,19 @@ export const ResendMail = async (email: string) => {
     console.error(error);
   }
 };
+
+
+export const RequestResetLink = async (email: string) => {
+  try {
+    const response = await axiosInstance.post("/forgotpassword", { email });
+    if (response?.data?.success) {
+      toast.success(response.data.data.message || "Reset link sent!");
+    } else {
+      toast.error("Failed to send reset link. Try again.");
+    }
+    return response?.data;
+  } catch (err) {
+    toast.error("Error sending reset link. Please try again later.");
+    console.error("RequestResetLink error:", err);
+  }
+};
