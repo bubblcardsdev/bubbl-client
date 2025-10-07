@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { CheckoutApi } from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
+import CheckoutLogin from "../checkoutLogin";
 interface FormData {
   firstName: string;
   lastName: string;
@@ -36,6 +37,8 @@ const CheckoutPage = () => {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+
   const validate = () => {
     const newErrors: Partial<FormData> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -100,13 +103,13 @@ const CheckoutPage = () => {
       const response = await CheckoutApi(payload);
       if (response) {
         router.push({
-              pathname: "/processPayment",
-              query: {
-                orderId: response,
-                orderType: 2,
-                token: btoa(checkoutFormData?.emailId),
-              },
-            });
+          pathname: "/processPayment",
+          query: {
+            orderId: response,
+            orderType: 2,
+            token: btoa(checkoutFormData?.emailId),
+          },
+        });
       }
     } catch (error) {
       console.error("Checkout failed:", error);
@@ -346,11 +349,13 @@ const CheckoutPage = () => {
           </div>
           <button
             type="submit"
+            onClick={() => setIsOpen(true)}
             className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center"
           >
             Proceed to payment
           </button>
         </form>
+        <CheckoutLogin isOpen={isOpen} onClose={() => setIsOpen(false)} />
       </div>
       <div className="lg:w-[40%] sm:w-full bg-white p-6 xs:p-0 rounded-lg h-fit lg:sticky md:sticky sm:static xs:static top-[125px] ">
         <div className="flex justify-between items-center mb-8">
@@ -427,6 +432,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
+
   );
 };
 export default CheckoutPage;
