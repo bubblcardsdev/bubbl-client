@@ -58,7 +58,7 @@ export default function TestiMonial() {
   ))}
 </div>
       </FadeInSection>
-     {/* <TranslateYwithFadeIn>
+     <TranslateYwithFadeIn>
 <div className="flex justify-center">
          <button
   className="px-4 sm:px-6 md:px-8 py-2 bg-[var(--Gray-5,#E0E0E0)] text-sm sm:text-base rounded-[10px] hover:bg-[#bcbcc2] transition-colors"
@@ -67,7 +67,7 @@ export default function TestiMonial() {
   {viewMore ? 'View Less' : 'View More'} 
 </button>
         </div>
-     </TranslateYwithFadeIn> */}
+     </TranslateYwithFadeIn>
  
        
       </div>

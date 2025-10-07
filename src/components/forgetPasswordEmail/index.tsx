@@ -6,12 +6,12 @@ import Link from "next/link";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { ToastContainer } from "react-toastify";
 import { RequestResetLink } from "@/src/services/emailVerify";
-import { useRouter } from "next/router";
+
+
 
 const EmailVerifyPage = () => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter()
 
   // Basic email validation
   const isValidEmail = (email: string): boolean =>
