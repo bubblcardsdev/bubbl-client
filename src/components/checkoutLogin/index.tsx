@@ -8,13 +8,14 @@ import {
 import { loginUser, responseMessage } from "../../services/authLoginApi";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import Link from 'next/link';
 
 interface CheckoutLoginProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CheckoutLogin: React.FC<CheckoutLoginProps> = ({ onClose, isOpen }) => {
+const CheckoutLogin: React.FC<CheckoutLoginProps> = ({ onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -128,20 +129,19 @@ const CheckoutLogin: React.FC<CheckoutLoginProps> = ({ onClose, isOpen }) => {
             </p>
           )}
 
-          <a
-            href="/forgot-password"
+          <Link
+            href="/forgotPassword"
             className="text-[#9747FF] text-[14px] mb-[20px] block mt-[20px] font-[500]"
           >
             Forgot password?
-          </a>
+          </Link>
 
           <button
             type="submit"
             // disabled={loading}
             className="w-full p-2 bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 disabled:opacity-60"
           >
-            {/* {loading ? "Logging in..." : "Log in"} */}
-            Login in
+            {loading ? "Logging in..." : "Log in"}
           </button>
 
           {/* Social Login Icons */}
@@ -152,19 +152,19 @@ const CheckoutLogin: React.FC<CheckoutLoginProps> = ({ onClose, isOpen }) => {
                 onError={() => console.log("Login Failed")}
               />
             </GoogleOAuthProvider>
-            <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('http://localhost:3000/linkedin-callback')}&scope=profile%20email%20openid`} className="p-2 bg-[#F1F1F1] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+            <Link href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('http://localhost:3000/linkedin-callback')}&scope=profile%20email%20openid`} className="p-2 bg-[#F1F1F1] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
               <LinkedinColorIcon />
-            </a>
+            </Link>
           </div>
 
           <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
             Don’t have an account?{" "}
-            <a
+            <Link
               href="/signup"
               className="text-[#9747FF] font-[500] cursor-pointer"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </form>
       </div >
