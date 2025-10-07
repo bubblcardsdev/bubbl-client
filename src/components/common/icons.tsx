@@ -1809,7 +1809,7 @@ export const NottifycationIcon = (props: iconProps) => {
     </svg>
   );
 };
-export const ProfileIcon = () => {
+export const ProfileIcon = (props: any) => {
   return (
     <svg
       width="25"
@@ -1817,6 +1817,7 @@ export const ProfileIcon = () => {
       viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <g clipPath="url(#clip0_10526_9301)">
         <circle cx="50" cy="50" r="50" fill="#333333" />

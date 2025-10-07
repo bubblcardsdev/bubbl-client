@@ -9,6 +9,8 @@ import {
 import Image from "next/image";
 import { MoreVertical, Edit3, Share2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { ProfileIcon } from "../common/icons";
+
 export default function MyprofilePage() {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,23 +63,17 @@ export default function MyprofilePage() {
   };
 
   //  duplicate profile
-  const handleDuplicate = (id: string | number) => {
-    DuplicateProfileApi(id)
-      .then((res) => {
+  const handleDuplicate = async (id: string | number) => {
+    try {
+      const res = await DuplicateProfileApi(id);
+      if (res?.data) {
+        setProfiles((prev) => [res.data, ...prev]);
         toast.success("Profile duplicated successfully");
-        if (res?.data) {
-          // if backend returns duplicated profile object
-          setProfiles((prev) => [res.data, ...prev]);
-        } else {
-          // fallback to refetch
-          fetchProfiles();
-        }
-      })
-      .catch((err: any) => {
-        console.error("Failed to duplicate profile", err);
-        toast.error("Failed to duplicate profile");
-      })
-      .finally(() => setOpenMenu(null));
+      }
+    } catch (err) {
+      console.error("Duplicate failed", err);
+      toast.error("Failed to duplicate profile");
+    }
   };
 
   if (loading) return <p className="text-gray-400">Loading...</p>;
@@ -89,24 +85,28 @@ export default function MyprofilePage() {
         Customize your profile to reflect your professional identity
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Profile Cards */}
         {profiles?.map((profile, i) => (
           <div
             key={i}
-            className=" bg-[#282828] rounded-xl p-4 h-[180px] flex flex-col justify-between relative"
+            className=" bg-[#282828] rounded-xl p-6 flex flex-col gap-6"
           >
-            <div className="flex items-start justify-between relative">
-              <div className="flex items-center gap-6">
+            <div className="flex items-start justify-between ">
+              <div className="flex items-center gap-7">
                 {/* Avatar */}
-                <Image
-                  src={profile?.profileImages?.[0]?.image || "/default-avatar.png"}
-                  alt={profile.profileName || profile.firstName || "User"}
-                  width={40}
-                  height={40}
-                  className="w-14 h-14 rounded-full border"
-                />
-                <div>
+                {profile?.profileImages?.[0]?.image ? (
+                  <Image
+                    src={profile?.profileImages?.[0]?.image || "/profile.png"}
+                    alt={profile.profileName || profile.firstName || "User"}
+                    width={100}
+                    height={100}
+                    className="w-[60px] h-[60px] rounded-full"
+                  />
+                ) : (
+                  <ProfileIcon className="w-[60px] h-[60px] rounded-full" />
+                )}
+                <div className="flex flex-col gap-2">
                   <h3 className="text-base font-semibold">
                     {profile.profileName || "Client"}
                   </h3>
@@ -141,20 +141,20 @@ export default function MyprofilePage() {
                 )}
               </div>
             </div>
-
+            <div className="border-t border-[#828282]" />
             {/* Bottom - Actions */}
-            <div className="flex justify-between border-t border-[#828282] pt-3 text-sm">
+            <div className="flex justify-between text-sm px-4 sm:px-0 md:px-4 gap-4">
               <button
                 onClick={() =>
                   router.push(`profile?profileId=${profile.profileUid}`)
                 }
-                className="flex items-center gap-1 text-gray-300 hover:text-white"
+                className="flex items-center gap-3 text-gray-300 hover:text-white"
               >
                 <Share2 size={14} /> Preview
               </button>
               <button
                 onClick={() => handleClick(`/editProfile/${profile.id}`)}
-                className="flex items-center gap-1 text-gray-300 hover:text-white"
+                className="flex items-center gap-3 text-gray-300 hover:text-white"
               >
                 <Edit3 size={14} /> Edit profile
               </button>
@@ -165,7 +165,7 @@ export default function MyprofilePage() {
         {/* Create New Profile Card */}
         <div
           onClick={() => handleClick("/createNewProfile")}
-          className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[180px] flex flex-col items-center justify-center cursor-pointer transition"
+          className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition"
         >
           <div className="flex flex-col items-center">
             <div className="text-2xl">＋</div>

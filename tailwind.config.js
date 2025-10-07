@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors:{
+        dark_primary: "#FFFFFF",
+        dark_secondary: "#828282",
+      },
       screens: {
         xs: "0px",
         // => @media (min-width: 0px) { ... }
