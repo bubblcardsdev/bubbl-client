@@ -6,9 +6,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { LOGIN_IMAGES } from "@/src/lib/constant";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { toast } from "react-toastify";
+import { changePassword } from "@/src/services/authLoginApi";
 
 const ForgetPassword = () => {
   const router = useRouter();
+  const { token } = router.query;
 
   const [forgetPasswordForm, setForgetPasswordForm] = useState({
     password: "",
@@ -25,6 +28,7 @@ const ForgetPassword = () => {
 
   const passwordRegex =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^])[A-Za-z\d@$!%*#?&^]{8,}$/;
+
   const RightImageRender = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * LOGIN_IMAGES.length);
     return (
@@ -40,20 +44,17 @@ const ForgetPassword = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
 
-    setForgetPasswordForm((prevState) => ({
-      ...prevState,
-      password,
-    }));
+    setForgetPasswordForm((prev) => ({ ...prev, password }));
 
-    setErrors((prevState) => ({
-      ...prevState,
+    setErrors((prev) => ({
+      ...prev,
       passwordError: passwordRegex.test(password)
         ? ""
-        : "Password must be at least 8 characters long and include both letters and numbers",
+        : "Password must be at least 8 characters long, include letters, numbers, and symbols",
       confirmPasswordError:
         forgetPasswordForm.confirmPassword === password
           ? ""
-          : prevState.confirmPasswordError,
+          : prev.confirmPasswordError,
     }));
   };
 
@@ -62,13 +63,10 @@ const ForgetPassword = () => {
   ) => {
     const confirmPassword = e.target.value;
 
-    setForgetPasswordForm((prevState) => ({
-      ...prevState,
-      confirmPassword,
-    }));
+    setForgetPasswordForm((prev) => ({ ...prev, confirmPassword }));
 
-    setErrors((prevState) => ({
-      ...prevState,
+    setErrors((prev) => ({
+      ...prev,
       confirmPasswordError:
         confirmPassword === forgetPasswordForm.password
           ? ""
@@ -76,10 +74,26 @@ const ForgetPassword = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ Enable button only if password is valid & matches confirmPassword
+  const isFormValid =
+    passwordRegex.test(forgetPasswordForm.password) &&
+    forgetPasswordForm.password === forgetPasswordForm.confirmPassword;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!errors.passwordError && !errors.confirmPasswordError) {
-      router.push("/");
+
+    if (!token) {
+      toast.error("Invalid or missing reset token");
+      return;
+    }
+
+    const response = await changePassword(
+      token as string,
+      forgetPasswordForm.password
+    );
+
+    if (response) {
+      router.push("/login");
     }
   };
 
@@ -97,8 +111,7 @@ const ForgetPassword = () => {
               Create New Password
             </h1>
             <p className="mb-4 text-[#606060] md:text-[16px] font-semibold">
-              Your new password must be different from previously used
-              passwords.
+              Your new password must be different from previously used passwords.
             </p>
 
             <form className="w-full" onSubmit={handleSubmit}>
@@ -164,9 +177,15 @@ const ForgetPassword = () => {
                 </p>
               )}
 
+              {/* ✅ Disabled button when form invalid */}
               <button
                 type="submit"
-                className="w-full p-2 mt-[50px] bg-[#9747FF] text-white text-[14px] rounded-[8px] hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                disabled={!isFormValid}
+                className={`w-full p-2 mt-[50px] text-[14px] rounded-[8px] focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors ${
+                  isFormValid
+                    ? "bg-[#9747FF] hover:bg-purple-500 text-white"
+                    : "bg-gray-600 cursor-not-allowed text-gray-300"
+                }`}
               >
                 Reset Password
               </button>
@@ -180,6 +199,7 @@ const ForgetPassword = () => {
             </Link>
           </div>
         </div>
+
         {/* Right Side Image */}
         <div className="hidden md:flex w-1/2 items-center justify-center bg-white h-screen relative">
           {RightImageRender}
@@ -190,3 +210,6 @@ const ForgetPassword = () => {
 };
 
 export default ForgetPassword;
+
+
+

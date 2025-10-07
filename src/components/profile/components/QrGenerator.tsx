@@ -22,10 +22,9 @@ const QrGenerator = (props: Props) => {
       {/* Button to open popup */}
       <button
         onClick={() => setIsOpen(true)}
-        className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0"
-        style={{ backgroundColor: color }}
+        className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0 "
       >
-        <QrCode color={"#ffffff"} />
+        <QrCode color={color} />
       </button>
       {/* Popup Modal */}
       {isOpen && (

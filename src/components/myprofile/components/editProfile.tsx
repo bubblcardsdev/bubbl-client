@@ -465,6 +465,8 @@ const handleNestedArrayChange = (
 
 const handleSave = async () => {
   const isCreate = router.asPath.slice(1) === "createNewProfile";
+  console.log(formData, "//formdata");
+  
 
   // Map social media
   const updatedSocialMediaNames = (formData?.socialMediaNames || []).map((item: any) => {
@@ -495,18 +497,9 @@ const handleSave = async () => {
     digitalPaymentLinks: isCreate
       ? (formData?.digitalPaymentLinks || []).filter((d: any) => d.digitalPaymentLink?.trim())
       : updatedDigitalMediaNames,
-    emailIds: (formData?.emailIds || []).map((v: any) => ({
-      ...v,
-      activeStatus: v.emailId?.trim().length > 0,
-    })),
-    phoneNumbers: (formData?.phoneNumbers || []).map((v: any) => ({
-      ...v,
-      activeStatus: v.phoneNumber?.toString()?.trim()?.length > 0,
-    })),
-    websites: (formData?.websites || []).map((v: any) => ({
-      ...v,
-      activeStatus: v.website?.trim()?.length > 0,
-    })),
+    emailIds: (formData?.emailIds || []),
+    phoneNumbers: (formData?.phoneNumbers || []),
+    websites: (formData?.websites || []),
   };
 
   // Special rule for create: strip empty strings from top-level keys
@@ -534,10 +527,10 @@ const handleSave = async () => {
 
       if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
       if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
-      if (profileImg) await UploadProfileImage(profileImg, id);
-      if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id);
+      if (profileImg) await UploadProfileImage(profileImg, id); // need to call
+      if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id);// need to call seperately
 
-      fetchProfiles();
+      await fetchProfiles();
       toast.success("Profile updated successfully!");
       console.log("Update response:", response);
     } else {

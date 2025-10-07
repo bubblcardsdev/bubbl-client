@@ -127,23 +127,18 @@ axiosInstance.interceptors.response.use(
         }
 
         // 🔄 Try refreshing the access token
-        const response = await axios.get(
-          `${BASE_URL}/authService/auth/GetAccessToken`,
-          {
-            headers: {
-              authorization: `Bearer ${refreshToken}`,
-            },
-          }
+        const response = await axios.post(
+          `${BASE_URL}/authService/auth/refresh/token`,{refreshToken}
         );
 
         if (response.status === 200) {
-          const newAccessToken = response?.headers["x-access-token"];
+          const newAccessToken = response?.data?.token?.accessToken;
           if (newAccessToken) {
             setAccessToken(newAccessToken);
             // Retry original request with new token
             originalRequest.headers[
               "x-access-token"
-            ] = `Bearer ${newAccessToken}`;
+            ] = newAccessToken;
             return axiosInstance(originalRequest);
           }
         }

@@ -9,7 +9,7 @@ export default function TestiMonial() {
   const [viewMore,setViewMore] = useState(false)
   
   return (
-    <div className="w-full px-8 py-12 min-h-[100vh] bg-[#ffffff] flex overflow-hidden">
+    <div className="w-full px-8 py-12  bg-[#ffffff] flex overflow-hidden">
       <div className="w-full max-w-[1300px] m-auto">
         <TranslateYwithFadeIn>
  <h4 className=" text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight mb-[2%] sm:mb-5">
