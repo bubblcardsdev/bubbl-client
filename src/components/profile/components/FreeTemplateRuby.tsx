@@ -68,7 +68,7 @@ const FreeTemplateRuby = ({
   };
   const router = useRouter();
   return (
-    <div className="flex items-center align-middle justify-center  overflow-hidden bg-gray-400 ">
+    <div className="flex items-center align-middle justify-center  overflow-hidden bg-white ">
       <ToastContainer />
 
       <div className="relative w-full max-w-[400px]">
@@ -78,7 +78,7 @@ const FreeTemplateRuby = ({
             alt="profile"
             width={400}
             height={400}
-            className="blur-sm object-cover w-full h-full overflow-hidden"
+            className="object-cover w-full h-full overflow-hidden"
           />
         </div>
         <div className="bg-white rounded-2xl  pt-20 pb-6 px-6 -mt-20 relative z-10  ">
@@ -216,9 +216,9 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-3">
+                    <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
                       <MailIconbackgroundFill />
-                      <span className="ml-1 flex-grow">
+                      <span className="ml-1 flex-grow truncate" title={formData.emailIds[0].emailId}>
                         {formData.emailIds[0].emailId}
                       </span>
                     </div>
