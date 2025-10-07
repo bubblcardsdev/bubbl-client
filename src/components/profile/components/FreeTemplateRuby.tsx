@@ -11,6 +11,13 @@ import {
   Googlepay_icon,
   Paytm_icon,
   Phonepay_icon,
+  InstagramBackgroundFill,
+  FacebookIconbackgroundFill,
+  LinkedinIconbackgroundFill,
+  YoutubeIconbackgroundFill,
+  TwitterIconbackgroundFill,
+  WhatsappIconbackgroundFill,
+  ShareIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
@@ -24,7 +31,6 @@ import {
   actions,
   DIGITAL_MEDIA_IDS,
   SOCIAL_MEDIA_IDS,
-  SocialIconsObj,
 } from "@/src/lib/constant";
 import { createTap } from "@/src/services/profileApi";
 import { useRouter } from "next/router";
@@ -46,6 +52,15 @@ const FreeTemplateRuby = ({
     console.log(selected, "theme");
   }, [selectedTheme]);
 
+  const SocialIconsObj: any = {
+    "1": InstagramBackgroundFill, // Instagram
+    "2": FacebookIconbackgroundFill, // Facebook
+    "3": TwitterIconbackgroundFill, // Twitter
+    "4": YoutubeIconbackgroundFill, // Youtube
+    "5": LinkedinIconbackgroundFill, // LinkedIn
+    "6": WhatsappIconbackgroundFill, // WhatsApp
+
+  }
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
     "2": Phonepay_icon,
@@ -57,7 +72,7 @@ const FreeTemplateRuby = ({
       <ToastContainer />
 
       <div className="relative w-full max-w-[400px]">
-        <div className=" bg-yellow-500  rounded-t-2xl ">
+        <div className=" bg-yellow-500  rounded-t-2xl max-h-[250px]">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
             alt="profile"
@@ -83,15 +98,15 @@ const FreeTemplateRuby = ({
               <p className="text-black text-xl font-bold">
                 {formData?.firstName + "" + formData.lastName || "Name"}
               </p>
-              <p className="text-black text-md">
+              <div className="flex flex-col "> <h3 className="text-black text-md">
                 {formData?.position || "Designation"}
-              </p>
-              <p className="text-black text-md">
-                {formData?.companyName || "company name"}
-              </p>
-              <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
-                {formData?.shortDescription || "Description"}
-              </p>
+              </h3>
+                <h3 className="text-black text-md">
+                  {formData?.companyName || "company name"}
+                </h3>
+
+              </div>
+
             </div>
             {/* <div className="  text-sm font-semibold border border-red-500 w-24 h-24">
               <Image
@@ -126,7 +141,7 @@ const FreeTemplateRuby = ({
                 className="bg-gray-100  p-[3px] rounded-[10px] w-[15%] "
               >
                 <span className="flex items-center align-middle justify-center">
-                  <Share_icon color={color} />
+                  <ShareIcon color={color} />
                 </span>
               </button>
               <button
@@ -145,6 +160,9 @@ const FreeTemplateRuby = ({
             </div>
           )}
           <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
+            {formData?.shortDescription || "Description"}
+          </p>
+          <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
             {formData?.bio}
           </p>
           <div className="py-4">
@@ -152,28 +170,26 @@ const FreeTemplateRuby = ({
               formData?.emailIds?.[0]?.emailId?.length > 0 ||
               formData?.websites?.[0]?.website?.length > 0 ||
               (formData?.state && formData?.country)) && (
-              <h2 className="text-xl font-bold mb-3 text-left text-black">
-                Contact Information
-              </h2>
-            )}
+                <h2 className="text-xl font-bold mb-3 text-left text-black">
+                  Contact Information
+                </h2>
+              )}
             <div className="flex flex-col gap-4">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
                 <a
-                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${
-                    formData?.phoneNumbers?.[0]?.phoneNumber || ""
-                  }`}
+                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
+                    }`}
                   onClick={async (e) => {
                     e.preventDefault();
                     if (formData?.deviceUid)
                       await createTap(4, formData.deviceUid);
-                    window.location.href = `tel:${
-                      formData?.phoneNumbers?.[0]?.countryCode || ""
-                    }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
+                      }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-4">
+                    <div className="flex-1 flex items-center gap-3 p-3">
                       <PhoneColorIcon />
                       <span className="ml-1 flex-grow text-left">
                         {formData.phoneNumbers[0].countryCode}{" "}
@@ -195,13 +211,12 @@ const FreeTemplateRuby = ({
                     e.preventDefault();
                     if (formData?.deviceUid)
                       await createTap(5, formData.deviceUid);
-                    window.location.href = `mailto:${
-                      formData?.emailIds?.[0]?.emailId || ""
-                    }`;
+                    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
+                      }`;
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-4">
+                    <div className="flex-1 flex items-center gap-3 p-3">
                       <MailIconbackgroundFill />
                       <span className="ml-1 flex-grow">
                         {formData.emailIds[0].emailId}
@@ -232,7 +247,7 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-4">
+                    <div className="flex-1 flex items-center gap-3 p-3">
                       <WebIconBackgroundFill />
                       <span className="ml-1 flex-grow">
                         {formData.websites[0].website}
@@ -249,8 +264,7 @@ const FreeTemplateRuby = ({
               {formData?.state && formData?.country && (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address || ""}, ${formData?.city || ""}, ${
-                      formData?.state || ""
+                    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                     }, ${formData?.country || ""}`
                   )}`}
                   target="_blank"
@@ -261,8 +275,7 @@ const FreeTemplateRuby = ({
                       await createTap(7, formData.deviceUid);
                     window.open(
                       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        `${formData?.address || ""}, ${formData?.city || ""}, ${
-                          formData?.state || ""
+                        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                         }, ${formData?.country || ""}`
                       )}`,
                       "_blank",
@@ -271,7 +284,7 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-4">
+                    <div className="flex-1 flex items-center gap-3 p-3">
                       <MapIconBackgroundFill />
                       <span className="ml-1 flex-grow">
                         {formData.state}, {formData.country}
@@ -289,10 +302,10 @@ const FreeTemplateRuby = ({
             {formData?.socialMediaNames
               ?.map((value: any) => value?.socialMediaName?.length > 0)
               ?.includes(true) && (
-              <h2 className="text-xl font-bold mb-4 text-left text-black">
-                Social Media
-              </h2>
-            )}
+                <h2 className="text-xl font-bold mb-4 text-left text-black">
+                  Social Media
+                </h2>
+              )}
 
             <div className="space-y-4  text-left">
               {formData?.socialMediaNames &&
@@ -322,9 +335,9 @@ const FreeTemplateRuby = ({
                             if (formData.deviceUid) {
                               createTap(
                                 actions[
-                                  SOCIAL_MEDIA_IDS[
-                                    value.profileSocialMediaId
-                                  ] as ActionKeys
+                                SOCIAL_MEDIA_IDS[
+                                value.profileSocialMediaId
+                                ] as ActionKeys
                                 ],
                                 formData.deviceUid
                               );
@@ -376,9 +389,9 @@ const FreeTemplateRuby = ({
                             if (formData.deviceUid) {
                               await createTap(
                                 actions[
-                                  DIGITAL_MEDIA_IDS[
-                                    value.profileDigitalPaymentsId
-                                  ] as ActionKeys
+                                DIGITAL_MEDIA_IDS[
+                                value.profileDigitalPaymentsId
+                                ] as ActionKeys
                                 ],
                                 formData.deviceUid
                               );

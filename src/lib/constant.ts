@@ -1,15 +1,4 @@
 import { FAQItem, StepConfig, WhyChooseUsTypes } from "./interface";
-import {
-  Twitter_icon_thin,
-  Paytm_icon,
-  Phonepay_icon,
-  Googlepay_icon,
-  Facebook_icon_thin,
-  Linkedin_icon_thin,
-  Instagram_icon,
-  OpalWhatsappIcon,
-  OpalYoutubeIcon,
-} from "../../src/components/common/icons";
 
 export const themeObject: { [key: string]: string } = {
   "/home": "linear-gradient(to right, #4A4A4A, #000000)",
@@ -487,20 +476,6 @@ export const SIGNUP_STEPS: StepConfig[] = [
 ];
 
 
-export const DigitalIconsObj: any = {
-  "1": Googlepay_icon,
-  "2": Phonepay_icon,
-  "3": Paytm_icon,
-};
-
-export const SocialIconsObj: any = {
-  "1": Instagram_icon,      // Instagram
-  "2": Facebook_icon_thin,  // Facebook
-  "3": OpalYoutubeIcon,     // Youtube
-  "4": Twitter_icon_thin,   // Twitter
-  "5": OpalWhatsappIcon,    // WhatsApp
-  "6": Linkedin_icon_thin,  // LinkedIn
-};
 
 //   const colorTemplateMap = {
 //   1: [
