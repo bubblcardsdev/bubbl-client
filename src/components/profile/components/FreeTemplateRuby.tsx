@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  Share_icon,
   PhoneColorIcon,
   Arrow_icon,
   MapIconBackgroundFill,

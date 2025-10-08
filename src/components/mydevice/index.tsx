@@ -5,7 +5,6 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import {
   getLinkedDevices,
-  switchMode,
   switchProfile,
 } from "@/src/services/devices";
 import { isEmpty } from "lodash";

@@ -17,7 +17,6 @@ import {
   Twitter_icon_thin,
   OpalWhatsappIcon,
   Linkedin_icon_thin,
-  LinkedinIcon,
 } from "../../common/icons";
 import {
  
