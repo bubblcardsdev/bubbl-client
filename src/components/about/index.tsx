@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
+// import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   AboutHandIcon,
   AboutLightIcon,
@@ -9,8 +8,7 @@ import {
   AboutSustainabilityIcon,
 } from "../common/icons";
 import BubblCommunity from "../common/BubblCommunity";
-import { WHY_CHOOSE_US } from "@/src/lib/constant";
-import { WhyChooseUsTypes } from "@/src/lib/interface";
+
 const AboutcardSection = [
   {
     title: "Simplicity",
@@ -39,9 +37,9 @@ const AboutcardSection = [
 ];
 
 const About = () => {
-  const [active, setActive] = useState(1);
+  // const [active, setActive] = useState(1);
   return (
-    <div className="bg-black text-white flex flex-col items-center p-8 w-full max-w-[1200px] mx-auto mb-10 gap-[100px]">
+    <div className="bg-black text-white flex flex-col items-center p-8 w-full max-w-[1300px] mx-auto mb-10 gap-[100px]">
       <h1 className="text-5xl font-bold mb-0 mt-10">About Us</h1>
       <div className="flex flex-col md:flex-row items-center gap-8 ">
         <div className="w-full md:w-1/2  relative">
@@ -61,32 +59,33 @@ const About = () => {
           />
         </div>
         <div className="w-full md:w-1/2 space-y-4">
+          <h2 className=" font-bold text-2xl">Mission</h2>
           <p className="text-md text-gray-300">
-            At Xpulsar Technologies, we stand on a foundation of innovation and
-            digital excellence. From cutting-edge software to smart physical
-            products, Xpulsar powers future-ready solutions that help
-            individuals and brands thrive in a fast-moving world.
+            We’re simplifying human connections. Bubbl was born from the
+            frustration of outdated networking tools. We believe first
+            impressions shouldn’t be forgotten in piles of paper cards.
           </p>
-          <h2 className="text-xl font-semibold">
-            Powered by Xpulsar Technologies
-          </h2>
+          <h2 className="font-bold text-2xl">Founder's Note</h2>
+
+          <p className="text-lg font-semibold">
+            “We created Bubbl because we wanted networking to be effortless,
+            trackable, and fun.” — Sahil, Co-Founder
+          </p>
+          <h2 className="text-2xl font-bold">Vision</h2>
           <p className="text-md  text-gray-300">
-            At Bubbl cards, we’re redefining how people connect with tap-and-go
-            smart cards that blend technology, design, and sustainability.
-            Whether you’re a professional, creator, or business, our NFC-enabled
-            solutions make it effortless to share your identity in
-            seconds—memorable, modern, and eco-friendly.
+            To build a contactless, friction-free networking ecosystem for the
+            modern world.
           </p>
           <ul className="list-disc list-inside space-y-2  text-gray-300">
-            <li>Instant Tap & Connect Cards</li>
-            <li>Reusable, Sustainable, Smart</li>
-            <li>Custom Features, Personalized Experiences</li>
+            <li>Trusted by 3,000+ professionals</li>
+            <li>Used by top HR teams across India</li>
+            <li>98% positive user feedback</li>
           </ul>
-          <Link href="/contact">
+          {/* <Link href="/contact">
             <button className="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg flex items-center">
               Connect with Us <span>icon</span>
             </button>
-          </Link>
+          </Link> */}
         </div>
       </div>
       <section className=" text-white ">
@@ -122,8 +121,10 @@ const About = () => {
           ))}
         </div>
       </section>
-      <section className="bg-black text-white ">
-        <h1 className="text-[20px] font-bold text-purple-500 text-center mb-3">Why choose us</h1>
+      {/* <section className="bg-black text-white ">
+        <h1 className="text-[20px] font-bold text-purple-500 text-center mb-3">
+          Why choose us
+        </h1>
         <div className=" text-center">
           <p className="text-gray-300 mb-6 px-[50px]">
             Bubbl cards stands out with advanced NFC technology and fully
@@ -133,18 +134,14 @@ const About = () => {
             professionals, we deliver superior quality and seamless networking
             experiences.
           </p>
-          {/* <div className="text-left text-lg font-medium text-gray-500 mb-4 mt-10 flex gap-4">
-            <span className="animate-slow-spin">
-              <AboutWhyChooseIcon color={"#9747FF"} />
-            </span>
-          </div> */}
           <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden  border-[#272727] bg-gradient-to-br from-[#4e4c4c] to-[#121414] mt-10">
             {WHY_CHOOSE_US.map((sec: WhyChooseUsTypes) => (
               <div
                 key={sec.id}
                 onClick={() => setActive(sec.id)}
-                className={`cursor-pointer transition-all duration-300  ${active === sec.id ? "flex-[3] p-8" : "flex-1 p-4"
-                  } border-r border-[#272727] last:border-none hover:bg-[#121414]`}
+                className={`cursor-pointer transition-all duration-300  ${
+                  active === sec.id ? "flex-[3] p-8" : "flex-1 p-4"
+                } border-r border-[#272727] last:border-none hover:bg-[#121414]`}
               >
                 <div className="text-3xl font-semibold mb-2 text-white text-start">
                   {sec.id < 10 ? `0${sec.id}.` : `${sec.id}.`}
@@ -161,7 +158,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       <div className="w-full">
         <BubblCommunity />
       </div>

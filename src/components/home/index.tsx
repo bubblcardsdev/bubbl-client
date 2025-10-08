@@ -21,7 +21,7 @@ const Home = () => {
       <StickyPortion />
       <ProfileCard />
       <Networking />
-      <FutureNetworking />
+      {/* <FutureNetworking /> */}
       <TestiMonial />
       <FAQsection />
       <PivotSection />

@@ -47,7 +47,7 @@ export const STEPS = [
   {
     number: 1,
     icon: "/HomePageIcons/icon1.png",
-    title: "Choose bubbl card",
+    title: "Pick your card",
     description:
       "Choose from our Bubbl Basics or design a custom card. It's your choice.",
     img: "/HomePageIcons/step1.png",
@@ -58,7 +58,7 @@ export const STEPS = [
   {
     number: 2,
     icon: "/HomePageIcons/icon2.png",
-    title: "Set up your profile",
+    title: "Customize your profile",
     description:
       "Tap your device to your phone to activate the link, follow the instructions to create your profile",
     img: "/HomePageIcons/step2.png",
@@ -69,7 +69,7 @@ export const STEPS = [
   {
     number: 3,
     icon: "/HomePageIcons/icon3.png",
-    title: "Network like a pro",
+    title: "Tap to share",
     description:
       "You can now tap and share your contact info, social media handles and so much more with your own Bubbl.",
     img: "/HomePageIcons/step3.png",
@@ -283,36 +283,36 @@ export const testimonial = [
     username: "emmaDawn",
     name: "Emma",
   },
-  {
-    id: 7,
-    src: "/HomePageIcons/Aroma.png",
-    alt: "Boom Cards",
-    description:
-      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-    profile: "/HomePageIcons/treeImg.png",
-    username: "emmaDawn",
-    name: "Emma",
-  },
-  {
-    id: 8,
-    src: "/HomePageIcons/Aroma.png",
-    alt: "Boom Cards",
-    description:
-      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-    profile: "/HomePageIcons/treeImg.png",
-    username: "emmaDawn",
-    name: "Emma",
-  },
-  {
-    id: 9,
-    src: "/HomePageIcons/Aroma.png",
-    alt: "Boom Cards",
-    description:
-      "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-    profile: "/HomePageIcons/treeImg.png",
-    username: "emmaDawn",
-    name: "Emma",
-  },
+  // {
+  //   id: 7,
+  //   src: "/HomePageIcons/Aroma.png",
+  //   alt: "Boom Cards",
+  //   description:
+  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+  //   profile: "/HomePageIcons/treeImg.png",
+  //   username: "emmaDawn",
+  //   name: "Emma",
+  // },
+  // {
+  //   id: 8,
+  //   src: "/HomePageIcons/Aroma.png",
+  //   alt: "Boom Cards",
+  //   description:
+  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+  //   profile: "/HomePageIcons/treeImg.png",
+  //   username: "emmaDawn",
+  //   name: "Emma",
+  // },
+  // {
+  //   id: 9,
+  //   src: "/HomePageIcons/Aroma.png",
+  //   alt: "Boom Cards",
+  //   description:
+  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
+  //   profile: "/HomePageIcons/treeImg.png",
+  //   username: "emmaDawn",
+  //   name: "Emma",
+  // },
 ];
 
 export const PRODUCTS = [

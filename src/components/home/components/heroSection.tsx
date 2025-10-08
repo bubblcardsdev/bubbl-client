@@ -49,6 +49,15 @@ const HeroSection = () => {
   `}
       </style>
       <div className="relative w-full h-[calc(100vh-60px)] ">
+        {progress === 100 && (
+          <TranslateYwithFadeIn key="header">
+            <div className="flex justify-center">
+              <h1 className="text-white text-4xl absolute top-16 font-bold">
+                Network Smarter. Instantly.
+              </h1>
+            </div>
+          </TranslateYwithFadeIn>
+        )}
         <video
           autoPlay
           muted
