@@ -15,7 +15,6 @@ import { isEmpty } from "lodash";
 export default function MyprofilePage() {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const router = useRouter();
 
@@ -30,9 +29,6 @@ export default function MyprofilePage() {
 
       setProfiles(data?.data?.profiles || []);
     } catch (err: any) {
-      setError("Failed to fetch profiles");
-      toast.error("Failed to fetch profiles");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -40,9 +36,7 @@ export default function MyprofilePage() {
 
   useEffect(() => {
     fetchProfiles();
-    console.log("Profiles fetched:", profiles);
   }, []);
-
 
   //  delete profile
   const deleteProfile = async (id: string | number) => {
@@ -75,13 +69,15 @@ export default function MyprofilePage() {
   };
 
   if (loading) return <p className="text-gray-400">Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
   return (
     <div className="text-white mt-4">
       <div className="flex gap-3 justify-between mb-2 sm:pr-8">
         <h2 className="text-xl font-medium">Profiles</h2>
-        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs" onClick={() => handleClick("/createNewProfile")}>
-         <span className="text-sm">+</span>&nbsp;New Profile
+        <button
+          className="bg-[#9747FF] px-2 py-1 rounded-md text-xs"
+          onClick={() => handleClick("/createNewProfile")}
+        >
+          <span className="text-sm">+</span>&nbsp;New Profile
         </button>
       </div>
       <p className="text-sm text-[#828282] mb-6">
@@ -97,7 +93,6 @@ export default function MyprofilePage() {
           >
             <div className="flex items-start justify-between w-full">
               <div className="flex items-center gap-6 min-w-0">
-          
                 <div className="shrink-0">
                   {profile?.profileImages?.[0]?.image ? (
                     <Image
@@ -130,7 +125,7 @@ export default function MyprofilePage() {
                   size={18}
                   className="text-gray-400 cursor-pointer focus:outline-none"
                   onClick={() => setOpenMenu(openMenu === i ? null : i)}
-                  onBlur={()=>setOpenMenu(null)}
+                  onBlur={() => setOpenMenu(null)}
                   tabIndex={0}
                 />
                 {openMenu === i && (
@@ -174,15 +169,17 @@ export default function MyprofilePage() {
         ))}
 
         {/* Create New Profile Card */}
-        {isEmpty(profiles) && <div
-          onClick={() => handleClick("/createNewProfile")}
-          className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition"
-        >
-          <div className="flex flex-col items-center">
-            <div className="text-2xl">＋</div>
-            <p className="text-sm text-gray-300 mt-1">Create New Profile</p>
+        {isEmpty(profiles) && (
+          <div
+            onClick={() => handleClick("/createNewProfile")}
+            className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition"
+          >
+            <div className="flex flex-col items-center">
+              <div className="text-2xl">＋</div>
+              <p className="text-sm text-gray-300 mt-1">Create New Profile</p>
+            </div>
           </div>
-        </div>}
+        )}
       </div>
     </div>
   );
