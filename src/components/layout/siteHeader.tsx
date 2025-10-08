@@ -1,26 +1,32 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../../lib/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
 import Link from "next/link";
+import { UserContext } from "@/src/context/userContext";
 import { getCart } from "@/src/helpers/localStorage";
+import { CART } from "@/src/context/action";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = useRouter();
-  const [cards, setCards] = useState([]);
+  const { state, dispatch }: any = useContext(UserContext);
+  console.log(state, "state in header");
+  const { cart:cards } = state;
   const theme = themeObject[pathname.pathname] || "white";
   const isDarkTheme =
     theme === "black" ||
     theme === "linear-gradient(to right, #4A4A4A, #000000)";
+
   useEffect(() => {
     const storedCart = getCart();
     if (storedCart) {
-      setCards(JSON.parse(storedCart));
+      dispatch({ type: CART, payload: JSON.parse(storedCart) });
     }
   }, []);
+
   return (
     <nav
       className={`flex items-center justify-between px-6 py-2 md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
@@ -68,9 +74,11 @@ const SiteHeader = () => {
           >
             <CartIcon />
           </span>
-          <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-            {cards.length}
-          </span>
+          {Array.isArray(cards) && cards.length > 0 && (
+            <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+              {cards.length > 9 ? "9+" : cards.length}
+            </span>
+          )}
         </button>
         {/* Login Button */}
         <button

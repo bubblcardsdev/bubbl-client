@@ -42,7 +42,7 @@ const ProductInfo = (props: BubblCardProps) => {
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
 
-  const { name, shortDescription, sellingPrice, color, material, pattern,deviceDescription,productDetails } =
+  const { name, shortDescription, sellingPrice, color, material, pattern,deviceDescription,productDetails,availability } =
     ProductDetailMapper(details?.productDetail);
 
   function tabChanger(tab: string): void {
@@ -193,7 +193,7 @@ const ProductInfo = (props: BubblCardProps) => {
           </div>
         </div>
       )}
-      <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
+      {availability ? <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
         <button
           onClick={addToCart}
           className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
@@ -203,7 +203,7 @@ const ProductInfo = (props: BubblCardProps) => {
         <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
           Buy now
         </button>
-      </div>
+      </div> : <p className="text-red-600 xs:block md:hidden font-semibold text-sm mt-6">Currently Unavailable</p>}
       {/* Description */}
       <div className="mt-10 border-t pt-4">
         <div className="flex flex-row gap-8">
