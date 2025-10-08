@@ -7,9 +7,10 @@ import {
   DuplicateProfileApi,
 } from "../../../src/services/profileApi";
 import Image from "next/image";
-import { MoreVertical, Edit3, Share2 } from "lucide-react";
+import { MoreVertical, EyeIcon } from "lucide-react";
 import { toast } from "react-toastify";
-import { ProfileIcon } from "../common/icons";
+import { EditFilled, ProfileIcon } from "../common/icons";
+import { isEmpty } from "lodash";
 
 export default function MyprofilePage() {
   const [profiles, setProfiles] = useState<any[]>([]);
@@ -42,12 +43,7 @@ export default function MyprofilePage() {
     console.log("Profiles fetched:", profiles);
   }, []);
 
-  // ✅ click outside handler to close menu
-  useEffect(() => {
-    const handleClickOutside = () => setOpenMenu(null);
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+
   //  delete profile
   const deleteProfile = async (id: string | number) => {
     await DeleteProfileApi(id)
@@ -66,8 +62,10 @@ export default function MyprofilePage() {
   const handleDuplicate = async (id: string | number) => {
     try {
       const res = await DuplicateProfileApi(id);
-      if (res?.data) {
-        setProfiles((prev) => [res.data, ...prev]);
+      console.log(res);
+      if (res?.profile) {
+        // setProfiles((prev) => [res.data, ...prev]);
+        fetchProfiles();
         toast.success("Profile duplicated successfully");
       }
     } catch (err) {
@@ -80,51 +78,63 @@ export default function MyprofilePage() {
   if (error) return <p className="text-red-500">{error}</p>;
   return (
     <div className="text-white mt-4">
-      <h2 className="text-xl font-semibold mb-1">Profiles</h2>
-      <p className="text-sm text-gray-400 mb-6">
+      <div className="flex gap-3 justify-between mb-2 sm:pr-8">
+        <h2 className="text-xl font-medium">Profiles</h2>
+        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs" onClick={() => handleClick("/createNewProfile")}>
+         <span className="text-sm">+</span>&nbsp;New Profile
+        </button>
+      </div>
+      <p className="text-sm text-[#828282] mb-6">
         Customize your profile to reflect your professional identity
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
         {/* Profile Cards */}
         {profiles?.map((profile, i) => (
           <div
             key={i}
-            className=" bg-[#282828] rounded-xl p-6 flex flex-col gap-6"
+            className=" bg-[#282828] rounded-xl p-6 flex flex-col gap-6 w-full"
           >
-            <div className="flex items-start justify-between ">
-              <div className="flex items-center gap-7">
-                {/* Avatar */}
-                {profile?.profileImages?.[0]?.image ? (
-                  <Image
-                    src={profile?.profileImages?.[0]?.image || "/profile.png"}
-                    alt={profile.profileName || profile.firstName || "User"}
-                    width={100}
-                    height={100}
-                    className="w-[60px] h-[60px] rounded-full"
-                  />
-                ) : (
-                  <ProfileIcon className="w-[60px] h-[60px] rounded-full" />
-                )}
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-base font-semibold">
+            <div className="flex items-start justify-between w-full">
+              <div className="flex items-center gap-6 min-w-0">
+          
+                <div className="shrink-0">
+                  {profile?.profileImages?.[0]?.image ? (
+                    <Image
+                      src={profile?.profileImages?.[0]?.image || "/profile.png"}
+                      alt={profile.profileName || profile.firstName || "User"}
+                      width={100}
+                      height={100}
+                      className="w-[60px] h-[60px] rounded-full"
+                    />
+                  ) : (
+                    <ProfileIcon className="w-[60px] h-[60px] rounded-full" />
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 flex-1 min-w-0 overflow-hidden">
+                  <h3 className="text-base font-semibold truncate max-w-full">
                     {profile.profileName || "Client"}
                   </h3>
-                  <p className="text-sm text-gray-400">
-                    {profile.firstName || "Unnamed"}
+                  <p className="text-sm text-gray-400 truncate max-w-full">
+                    {profile.firstName || "Unknown"}
                   </p>
                 </div>
               </div>
 
-              {/* Three dot menu */}
-              <div className="relative" onClick={(e) => e.stopPropagation()}>
+              {/* Three dot menu (fixed at the right) */}
+              <div
+                className="relative shrink-0 ml-3 mt-1"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <MoreVertical
                   size={18}
-                  className="text-gray-400 cursor-pointer"
+                  className="text-gray-400 cursor-pointer focus:outline-none"
                   onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                  onBlur={()=>setOpenMenu(null)}
+                  tabIndex={0}
                 />
                 {openMenu === i && (
-                  <div className="absolute right-0 mt-2 w-32 bg-[#2a2a2a] rounded-lg shadow-lg border border-[#828282] z-10">
+                  <div className="absolute right-0 mt-2 w-32 bg-[#1D1D1D] rounded-lg shadow-lg z-10">
                     <button
                       onClick={() => deleteProfile(profile.id)}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-[#3a3a3a] w-full"
@@ -141,6 +151,7 @@ export default function MyprofilePage() {
                 )}
               </div>
             </div>
+
             <div className="border-t border-[#828282]" />
             {/* Bottom - Actions */}
             <div className="flex justify-between text-sm px-4 sm:px-0 md:px-4 gap-4">
@@ -148,22 +159,22 @@ export default function MyprofilePage() {
                 onClick={() =>
                   router.push(`profile?profileId=${profile.profileUid}`)
                 }
-                className="flex items-center gap-3 text-gray-300 hover:text-white"
+                className="flex items-center gap-2 text-gray-300 hover:text-white"
               >
-                <Share2 size={14} /> Preview
+                <EyeIcon size={17} /> Preview
               </button>
               <button
                 onClick={() => handleClick(`/editProfile/${profile.id}`)}
-                className="flex items-center gap-3 text-gray-300 hover:text-white"
+                className="flex items-center gap-2 text-gray-300 hover:text-white"
               >
-                <Edit3 size={14} /> Edit profile
+                <EditFilled className="w-[14px]" /> Edit profile
               </button>
             </div>
           </div>
         ))}
 
         {/* Create New Profile Card */}
-        <div
+        {isEmpty(profiles) && <div
           onClick={() => handleClick("/createNewProfile")}
           className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition"
         >
@@ -171,7 +182,7 @@ export default function MyprofilePage() {
             <div className="text-2xl">＋</div>
             <p className="text-sm text-gray-300 mt-1">Create New Profile</p>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

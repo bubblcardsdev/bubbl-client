@@ -1,4 +1,3 @@
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,9 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors:{
-        dark_primary: "#FFFFFF",
-        dark_secondary: "#828282",
+      colors: {
+        dark_primary_text: "#FFFFFF",
+        dark_secondary_text: "#828282",
       },
       screens: {
         xs: "0px",

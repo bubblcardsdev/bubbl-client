@@ -1,36 +1,41 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { getAccessToken, getCart, setCart } from "../../helpers/localStorage";
-import { add, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { CartItem } from "@/src/lib/interface";
 import { fetchAllDevices } from "@/src/services/alldevicesApi";
-import { addToCart } from "@/src/services/cart";
+import { UserContext } from "@/src/context/userContext";
+import { CART } from "@/src/context/action";
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
-  const [cards, setCards] = useState<CartItem[]>([]);
   const router = useRouter();
 
+  const { state, dispatch }: any = useContext(UserContext);
+
+  const { cart: cards } = state;
+
   const handleBuyNow = () => {
-    if (cards.length > 0) {
+    if (isEmpty(cards)) {
       router.push("/checkout");
     }
   };
 
-  const getUpdatedCart = async(cartData:string) => {
+  const getUpdatedCart = async (cartData: string) => {
     const token = getAccessToken();
     const storedCart = JSON.parse(cartData);
-    
+
     if (token) {
       return;
-      
     } else {
       const devices = await fetchAllDevices();
       const combined = [...devices.custom, ...devices.basic, ...devices.others];
       const updatedCart = storedCart.map((item: CartItem) => {
-        const product = combined.find((prod) => prod.productId === item.productId);
+        const product = combined.find(
+          (prod) => prod.productId === item.productId
+        );
         if (product) {
           return {
             ...item,
@@ -42,11 +47,11 @@ const Cart = () => {
             availability: product.availability,
           };
         }
-        return item; 
+        return item;
       });
-      setCards(updatedCart);
+      dispatch({ type: CART, payload: updatedCart });
     }
-  }
+  };
   useEffect(() => {
     const storedCart = getCart();
     if (storedCart) {
@@ -55,51 +60,66 @@ const Cart = () => {
   }, []);
 
   const handleIncrease = (productId: string) => {
-    const updatedCards = cards.map((card) => {
-      if (card.productId === productId) {
-        return { ...card, quantity: card.quantity < 10 ? card.quantity + 1 : 10 };
-      }
-      return card;
-    });
-    setCards(updatedCards);
+    const updatedCards = isEmpty(cards)
+      ? cards.map((card: any) => {
+          if (card.productId === productId) {
+            return {
+              ...card,
+              quantity: card.quantity < 10 ? card.quantity + 1 : 10,
+            };
+          }
+          return card;
+        })
+      : [];
+    dispatch({ type: CART, payload: updatedCards });
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
     }
   };
 
   const handleDecrease = (productId: string) => {
-    const updatedCards = cards
-      .map((card) => {
-        if (card.productId === productId) {
-          const newQuantity = card.quantity - 1;
-          return newQuantity > 0 ? { ...card, quantity: newQuantity } : card;
-        }
-        return card;
-      })
-      .filter((card): card is CartItem => card !== null); // Remove null entries
+    const updatedCards = !isEmpty(cards)
+      ? cards
+          .map((card: any) => {
+            if (card.productId === productId) {
+              const newQuantity = card.quantity - 1;
+              return newQuantity > 0
+                ? { ...card, quantity: newQuantity }
+                : card;
+            }
+            return card;
+          })
+          .filter((card: any): card is CartItem => card !== null)
+      : []; // Remove null entries
 
-    setCards(updatedCards);
+    dispatch({ type: CART, payload: updatedCards });
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
     }
   };
 
   const handleRemove = (productId: string) => {
-    const updatedCards = cards.filter((card) => card.productId !== productId);
-    setCards(updatedCards);
+    const updatedCards = !isEmpty(cards)
+      ? cards.filter((card: any) => card.productId !== productId)
+      : [];
+    dispatch({ type: CART, payload: updatedCards });
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
     }
   };
 
-  const subTotal = cards.reduce(
-    (acc, item) => acc + item.sellingPrice * item.quantity,
-    0
-  );
-  const orginalPriceTotal = cards.reduce(
-    (acc, item) => acc + item.originalPrice * item.quantity,
-    0
-  );
+  const subTotal = !isEmpty(cards)
+    ? cards.reduce(
+        (acc: number, item: any) => acc + item.sellingPrice * item.quantity,
+        0
+      )
+    : 0;
+  const orginalPriceTotal = !isEmpty(cards)
+    ? cards.reduce(
+        (acc: number, item: any) => acc + item.originalPrice * item.quantity,
+        0
+      )
+    : 0;
   const shipping = 0; // Example fixed shipping cost
   const discount = orginalPriceTotal - subTotal; // Example: 0% discount
   const total = subTotal + shipping;
@@ -110,12 +130,12 @@ const Cart = () => {
         <div className="w-full md:w-[60%] flex flex-col gap-1">
           {/* Shopping Cart */}
           <h2 className="text-xl sm:text-2xl font-bold  text-[#333333]">
-            Shopping cart ({cards.length})
+            Shopping cart ({cards && cards.length})
           </h2>
           <p className="text-[#7F7F7F] text-sm sm:text-base  font-bold py-0">
             Cart it, Love it, Own it.
           </p>
-          <div className="flex flex-col gap-6 p-6 bg-[#F5F5F5] rounded-xl mt-[20px]">
+          <div className="flex flex-col gap-6 p-4 md:p-6 bg-[#F5F5F5] rounded-xl mt-[20px]">
             {!isEmpty(cards) ? (
               cards.map((value: CartItem) => {
                 const {
@@ -128,8 +148,11 @@ const Cart = () => {
                   deviceType,
                 } = value;
                 return (
-                  <div key={productId} className="flex w-full gap-6">
-                    <button onClick={() => router.push(`/product/${productId}`)} className="rounded-[8px] w-[90px] h-[90px] flex items-center justify-center  box-border bg-[#E5E5E5]">
+                  <div key={productId} className="flex w-full items-center gap-6">
+                    <button
+                      onClick={() => router.push(`/product/${productId}`)}
+                      className="rounded-[8px] w-[90px] h-[90px] flex items-center justify-center  box-border bg-[#E5E5E5]"
+                    >
                       <Image
                         src={imageUrl}
                         alt="card"
@@ -140,19 +163,21 @@ const Cart = () => {
                     </button>
                     <div className="flex flex-col gap-1">
                       <p className="text-xs text-[#7F7F7F]">{deviceType}</p>
-                      <p className="text-black font-bold text-nowrap">
-                        {name}
-                      </p>
+                      <p className="text-black font-bold text-nowrap">{name}</p>
                       <div className="flex items-center gap-3">
-                        {Number(discount) > 0 && <p className="text-[#7F7F7F] text-sm line-through">
-                          ₹{quantity * originalPrice}
-                        </p>}
+                        {Number(discount) > 0 && (
+                          <p className="text-[#7F7F7F] text-sm line-through">
+                            ₹{quantity * originalPrice}
+                          </p>
+                        )}
                         <p className="font-bold text-nowrap leading-[20px]">
                           ₹{quantity * sellingPrice}/-
                         </p>
-                        {Number(discount) > 0 && <p className="text-[#9747FF] text-sm">
-                          {Number(discount)}% off
-                        </p>}
+                        {Number(discount) > 0 && (
+                          <p className="text-[#9747FF] text-sm">
+                            {Number(discount)}% off
+                          </p>
+                        )}
                       </div>
                       <div className="flex gap-6 mt-2">
                         <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2 text-sm">
@@ -240,7 +265,7 @@ const Cart = () => {
             <div className="space-y-4">
               <div className="flex justify-between text-sm sm:text-base">
                 <p className=" text-[#7F7F7F]">
-                  SubTotal ({cards.length} items)
+                  SubTotal ({(cards && cards.length) || 0} items)
                 </p>
                 <p>₹{subTotal.toFixed(2)}</p>
               </div>
@@ -265,7 +290,7 @@ const Cart = () => {
             <button
               className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-300 ease-in-out"
               onClick={handleBuyNow}
-              disabled={cards.length === 0}
+              disabled={isEmpty(cards)}
             >
               Buy Now
             </button>

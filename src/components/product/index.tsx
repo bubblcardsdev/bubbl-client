@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import ProductInfo from "./components/productInfo";
 import { setCart, getCart } from "../../helpers/localStorage";
@@ -7,6 +7,8 @@ import BreadCrumbs from "../common/BreadCrumbs";
 import { toast } from "react-toastify";
 import { ProductDetailMapper } from "@/src/lib/mapper";
 import { fetchProductDetails } from "@/src/services/productDetailsApi";
+import { UserContext } from "@/src/context/userContext";
+import { CART } from "@/src/context/action";
 
 interface ColorType {
   name: string;
@@ -65,6 +67,8 @@ const ProductList: React.FC = () => {
   // const [loading, setLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
 
+  const { dispatch }:any = useContext(UserContext);
+
 
   const getProductDetail = async () => {
     // setLoading(true);
@@ -106,7 +110,8 @@ const ProductList: React.FC = () => {
   };
 
   const addToCart = () => {
-    const cartItems: CartItemType[] = JSON.parse(getCart() ?? "[]");
+    const cart = getCart() || "[]"
+    const cartItems: CartItemType[] = JSON.parse(cart);
 
     const isAlreadyInCart = cartItems.some((item) => item.productId === id);
 
@@ -134,6 +139,7 @@ const ProductList: React.FC = () => {
       ];
 
     setCart(JSON.stringify(updatedCart));
+    dispatch({ type: CART, payload: updatedCart });
     toast.success("Item added to cart!");
   };
 

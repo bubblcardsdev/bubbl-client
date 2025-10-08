@@ -128,7 +128,7 @@ axiosInstance.interceptors.response.use(
 
         // 🔄 Try refreshing the access token
         const response = await axios.post(
-          `${BASE_URL}/authService/auth/refresh/token`,{refreshToken}
+          `${BASE_URL}/auth/refresh/token`,{refreshToken}
         );
 
         if (response.status === 200) {

@@ -1,7 +1,6 @@
 import axiosInstance from "../helpers/axios";
-import { Id, toast } from "react-toastify";
-import { getAccessToken } from "../helpers/localStorage";
-import { getApiErrorMessage } from "../utils/utils";
+import { toast } from "react-toastify";
+import { authHeader, getApiErrorMessage } from "../utils/utils";
 
 export type PhoneNumber = {
   countryCode: string;
@@ -36,7 +35,7 @@ export type DigitalPaymentLink = {
 };
 
 export interface ProfileFormData {
-  profileId: Id;
+  profileId: number;
   profileUid?: string;
   userId?: number;
   profileName: string;
@@ -71,37 +70,38 @@ export interface ProfileFormData {
 
 /* -------------------------- error helpers (central) -------------------------- */
 
+// function formatValidationErrors(errors: any[]): string {
+//   return errors
+//     .map((err) => {
+//       let msg = err?.message ?? "";
+
+//       // Remove quotes
+//       msg = msg.replace(/\"/g, "");
+
+//       // Clean specific array indices (avoid leaking internals)
+//       msg = msg.replace(/\[\d+\]/g, "");
+
+//       // Replace technical field names with user-friendly labels
+//       msg = msg
+//         .replace(/(^|\.)profileName/g, "Profile Title")
+//         .replace(/(^|\.)phoneNumbers\.phoneNumber/g, "Phone Number")
+//         .replace(/(^|\.)emailIds\.emailId/g, "Email")
+//         .replace(
+//           /(^|\.)socialMedia(Name|Names)\.socialMediaName/g,
+//           "Social Media Link"
+//         )
+//         .replace(
+//           /(^|\.)digitalPaymentLinks\.digitalPaymentLink/g,
+//           "Payment Link"
+//         );
+
+//       return msg.trim();
+//     })
+//     .filter(Boolean)
+//     .join("\n");
+// }
 
 
-function formatValidationErrors(errors: any[]): string {
-  return errors
-    .map((err) => {
-      let msg = err?.message ?? "";
-
-      // Remove quotes
-      msg = msg.replace(/\"/g, "");
-
-      // Clean specific array indices (avoid leaking internals)
-      msg = msg.replace(/\[\d+\]/g, "");
-
-      // Replace technical field names with user-friendly labels
-      msg = msg
-        .replace(/(^|\.)profileName/g, "Profile Title")
-        .replace(/(^|\.)phoneNumbers\.phoneNumber/g, "Phone Number")
-        .replace(/(^|\.)emailIds\.emailId/g, "Email")
-        .replace(/(^|\.)socialMedia(Name|Names)\.socialMediaName/g, "Social Media Link")
-        .replace(/(^|\.)digitalPaymentLinks\.digitalPaymentLink/g, "Payment Link");
-
-      return msg.trim();
-    })
-    .filter(Boolean)
-    .join("\n");
-}
-
-function authHeader() {
-  const token = getAccessToken();
-  return { Authorization: token };
-}
 
 /* ---------------------------------- APIs ---------------------------------- */
 
@@ -118,7 +118,9 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
 
 export const GetProfileByUniqueName = async (uniqueName: string) => {
   try {
-    const response = await axiosInstance.get(`profile?uniqueName=${uniqueName}`);
+    const response = await axiosInstance.get(
+      `profile?uniqueName=${uniqueName}`
+    );
     if (response?.data?.success) return response.data;
     return null;
   } catch (error) {
@@ -130,23 +132,16 @@ export const GetProfileByUniqueName = async (uniqueName: string) => {
 
 export const CreateMyProfileApi = async (formData: ProfileFormData) => {
   try {
-    const response = await axiosInstance.post(`/profile/create-profile`, formData, {
-      headers: authHeader(),
-    });
-    return response; // original returns the full axios response
+    const response = await axiosInstance.post(
+      `/profile/create-profile`,
+      formData,
+      { headers: authHeader() }
+    );
+    return response?.data ?? null;
   } catch (error: any) {
     console.error("CreateMyProfileApi error:", error);
-    let message = "Failed to create profile.";
-
-    const errors = error?.response?.data?.data?.error;
-    if (Array.isArray(errors) && errors.length > 0) {
-      message = formatValidationErrors(errors);
-    } else {
-      message = getApiErrorMessage(error, message);
-    }
-
-    toast.error(message);
-    return false; // original contract
+    toast.error(getApiErrorMessage(error));
+    return null;
   }
 };
 
@@ -195,7 +190,9 @@ export const GetOneProfileApi = async (id: number) => {
 
 export const GetProfileByUuid = async (id: string) => {
   try {
-    const response = await axiosInstance.post(`profile/getProfileByUid`, { profileUid: id });
+    const response = await axiosInstance.post(`profile/getProfileByUid`, {
+      profileUid: id,
+    });
     return response?.data ?? null;
   } catch (error) {
     console.error("Error getting profile by UID:", error);
@@ -206,9 +203,12 @@ export const GetProfileByUuid = async (id: string) => {
 
 export const DeleteProfileApi = async (id: string | number) => {
   try {
-    const response = await axiosInstance.delete(`profile/delete-profile?profileId=${id}`, {
-      headers: authHeader(),
-    });
+    const response = await axiosInstance.delete(
+      `profile/delete-profile?profileId=${id}`,
+      {
+        headers: authHeader(),
+      }
+    );
     return response?.data ?? null;
   } catch (error) {
     console.error("Error deleting profile:", error);
@@ -217,18 +217,28 @@ export const DeleteProfileApi = async (id: string | number) => {
   }
 };
 
-export const UpdateProfile = async (id: string | number, payload: ProfileFormData) => {
+export const UpdateProfile = async (
+  id: string | number,
+  payload: ProfileFormData
+) => {
   try {
     // maintain original behavior (delete transient keys)
     delete (payload as any)?.profileUid;
     delete (payload as any)?.userId;
 
-    const response = await axiosInstance.put(`/profile/update-profile`, payload, {
-      headers: authHeader(),
-    });
+    const response = await axiosInstance.put(
+      `/profile/update-profile`,
+      payload,
+      {
+        headers: authHeader(),
+      }
+    );
     return response?.data ?? null;
   } catch (error) {
-    console.error("Update Profile API Error:", (error as any)?.response || error);
+    console.error(
+      "Update Profile API Error:",
+      (error as any)?.response || error
+    );
     // keep original logic: this function threw the error
     // (callers likely rely on try/catch at call site)
     const msg = getApiErrorMessage(error, "Failed to update profile.");
@@ -246,7 +256,10 @@ export const DuplicateProfileApi = async (id: string | number) => {
     );
     return response?.data ?? null;
   } catch (error) {
-    console.error("Error duplicating profile:", (error as any)?.response?.data || error);
+    console.error(
+      "Error duplicating profile:",
+      (error as any)?.response?.data || error
+    );
     // keep original logic: this function threw the error
     const msg = getApiErrorMessage(error, "Failed to duplicate profile.");
     toast.error(msg);
@@ -254,7 +267,10 @@ export const DuplicateProfileApi = async (id: string | number) => {
   }
 };
 
-export const UploadProfileImage = async (file: File | any, id: number | string) => {
+export const UploadProfileImage = async (
+  file: File | any,
+  id: number | string
+) => {
   try {
     const formData: any = new FormData();
     formData.append("squareImage", file);
@@ -275,7 +291,10 @@ export const UploadProfileImage = async (file: File | any, id: number | string) 
   }
 };
 
-export const UploadbrandinglogoImage = async (file: File | any, id: number | string) => {
+export const UploadbrandinglogoImage = async (
+  file: File | any,
+  id: number | string
+) => {
   try {
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
@@ -326,7 +345,10 @@ export const DeletePbrandinglogoImage = async (id: string | number) => {
 
 export const createTap = async (clickAction: number, deviceId: string) => {
   try {
-    const response = await axiosInstance.post("/analytics/tapDetails", { deviceId, clickAction });
+    const response = await axiosInstance.post("/analytics/tapDetails", {
+      deviceId,
+      clickAction,
+    });
     return response ?? null; // original returned full axios response
   } catch (error) {
     console.log("createTap error:", error);

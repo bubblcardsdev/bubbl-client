@@ -1,12 +1,11 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
-import { FormDataType } from "./contactApi";
 
 
 
 
-export const addToCart = async (formData: FormDataType) => {
+export const addToCart = async () => {
 
   try {
     const response = await axiosInstance.put(`/cart/addtocart`, {

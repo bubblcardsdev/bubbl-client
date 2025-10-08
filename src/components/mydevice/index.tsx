@@ -1,199 +1,339 @@
-
-
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { BsThreeDotsVertical, BsChevronDown, BsPlus } from "react-icons/bs";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import {
+  getLinkedDevices,
+  switchMode,
+  switchProfile,
+} from "@/src/services/devices";
+import { isEmpty } from "lodash";
+import { Circle, MoreVertical } from "lucide-react";
+import { BsChevronDown } from "react-icons/bs";
+import { MODES } from "@/src/lib/constant";
+
+interface ProfileList {
+  id: number;
+  profileName: string;
+}
+
+interface DropDowns {
+  profile: boolean;
+  mode: boolean;
+}
+
+interface MyDevice {
+  profileName: string;
+  accountDeviceLinkId: number;
+  deviceId: number;
+  deviceUid: string;
+  linkedAt: string;
+  deviceNickName: string | null;
+  deviceType: string;
+  deviceLinkId: number | null;
+  linkedProfileId: number | null;
+  linkedModeId: number | null;
+  deviceStatus: boolean | null;
+  uniqueName: string | null;
+  profileId: number | null;
+  modeId: number | null;
+  mode: string | null;
+  modeUrl: string | null;
+}
+
+// interface Selected {
+//   profile: number | null;
+//   mode: number | null;
+// }
 
 export default function DeviceCards() {
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [modeOpen, setModeOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
 
-  const [profile, setProfile] = useState("Personal");
-  const [mode, setMode] = useState("Bubbl profile");
+  const initial = {
+    profile: false,
+    mode: false,
+  };
+  const [dropDown, setDropDown] = useState<DropDowns>(initial);
+  const { profile: profileOpen, mode: modeOpen } = dropDown;
+  const [myDevices, setMyDevices] = useState<MyDevice[]>([]);
+  const [profiles, setProfiles] = useState<ProfileList[]>([]);
 
-  const profiles = ["Personal", "Business Deal", "Portfolio", "Client", "Office"];
-  const modes = ["Bubbl profile", "Direct URL", "Lead Form", "Contact Card"];
-
-  const rootRef = useRef<HTMLDivElement | null>(null);
-
-  // click outside to close any menu
-  useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (!rootRef.current?.contains(e.target as Node)) {
-        setProfileOpen(false);
-        setModeOpen(false);
-        setMenuOpen(false);
+  const getMydevices = async () => {
+    try {
+      const response = await getLinkedDevices();
+      if (response) {
+        setMyDevices(response?.linkedDevices || []);
+        setProfiles(response?.profiles || []);
       }
+    } catch (e: any) {
+      toast.error(e?.message || "Something went wrong");
     }
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
+  };
+
+  const handleSwitchProfiles = async (
+    profile: ProfileList,
+    device: MyDevice
+  ) => {
+    try {
+      const response = await switchProfile({
+        accountDeviceLinkId: device?.accountDeviceLinkId || null,
+        profileId: device?.profileId || null,
+      });
+      if (response) {
+        setMyDevices((prev) =>
+          !isEmpty(prev)
+            ? prev.map((record: MyDevice) => {
+                if (record.deviceId === device?.deviceId) {
+                  return {
+                    ...record,
+                    profileId: profile.id,
+                    profileName: profile.profileName,
+                  };
+                }
+                return record;
+              })
+            : []
+        );
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Something went wrong");
+    } finally {
+      setDropDown({ ...dropDown, profile: false });
+    }
+  };
+
+  // const handleSwitchModes = async (
+  //   device: MyDevice,
+  //   mode: { id: number; name: string },
+  //   modeUrl: string
+  // ) => {
+  //   try {
+  //     const response = await switchMode({
+  //       deviceLinkId: device?.deviceLinkId || null,
+  //       accountDeviceLinkId: device?.accountDeviceLinkId,
+  //       modeId: device?.modeId,
+  //       modeUrl: modeUrl,
+  //     });
+  //     if (response) {
+  //       setMyDevices((prev) =>
+  //         !isEmpty(prev)
+  //           ? prev.map((record: MyDevice) => {
+  //               if (record.deviceId === device?.deviceId) {
+  //                 return {
+  //                   ...record,
+  //                   modeId: mode.id,
+  //                   mode: mode.name,
+  //                   modeUrl: modeUrl,
+  //                 };
+  //               }
+  //               return record;
+  //             })
+  //           : []
+  //       );
+  //     }
+  //   } catch (e: any) {
+  //     toast.error(e?.message || "Something went wrong");
+  //   } finally {
+  //     setDropDown({ ...dropDown, profile: false });
+  //   }
+  // };
+  useEffect(() => {
+    getMydevices();
   }, []);
 
   return (
-    <div className=" text-white p-3 sm:p-4 md:p-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto C" ref={rootRef} >
-        {/* Device Card */}
-        <div className="bg-[#1F1F1F] rounded-2xl p-4 sm:p-5 md:p-6 w-full mx-auto relative border border-[#2A2A2A] ">
-          {/* Three dots menu at top-right */}
-          <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
-            <button
-              onClick={() => {
-                setMenuOpen((v) => !v);
-                setProfileOpen(false);
-                setModeOpen(false);
-              }}
-              className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-[#2A2A2A]"
-              aria-haspopup="menu"
-              aria-expanded={menuOpen}
-            >
-              <BsThreeDotsVertical size={16} />
-            </button>
+    <div className="text-white mt-4">
+      <div className="flex gap-3 justify-between mb-2 sm:pr-8">
+        <h2 className="text-xl font-medium">My Device</h2>
+        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs">
+          <span className="text-sm">+</span>&nbsp;New Device
+        </button>
+      </div>
+      <p className="text-sm text-gray-400 mb-6">
+        Personalize your device to showcase your professional brand and make
+        every connection count.
+      </p>
 
-            {menuOpen && (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+        {!isEmpty(myDevices) ? (
+          myDevices.map((device: MyDevice, i: number) => {
+            const activationDate = device?.linkedAt
+              ? new Date(device?.linkedAt).toLocaleDateString()
+              : "";
+            return (
               <div
-                role="menu"
-                className="absolute right-0 mt-2 w-32 bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-20 overflow-hidden"
+                className="bg-[#282828] rounded-xl p-6 flex flex-col gap-3 w-full"
+                key={i}
               >
-                <div className="flex flex-row">
-                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-[#3A3A3A] transition-colors border-r border-[#3A3A3A]">
-                    Edit
-                  </button>
-                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-[#3A3A3A] transition-colors border-r border-[#3A3A3A]">
-                    Duplicate
-                  </button>
-                  <button className="flex-1 text-center px-2 py-2 text-xs hover:bg-red-600 hover:text-white transition-colors">
-                    Delete
-                  </button>
+                {/* Device Id and Menu */}
+                <div className="flex justify-between gap-3 text-xs">
+                  <span className="text-[#828282]">
+                    ID:&nbsp;&nbsp;{device.deviceUid}
+                  </span>
+                  <div
+                    className="relative shrink-0"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <MoreVertical
+                      size={18}
+                      className="text-gray-400 cursor-pointer focus:outline-none"
+                      onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                      onBlur={() => setOpenMenu(null)}
+                      tabIndex={0}
+                    />
+                    {openMenu === i && (
+                      <div className="absolute right-0 mt-2 w-36 bg-[#1D1D1D] rounded-lg shadow-lg z-10">
+                        <button
+                          // onClick={() => deleteProfile(profile.id)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
+                        >
+                          Rename Device
+                        </button>
+                        <button
+                          // onClick={() => handleDuplicate(profile.id)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
+                        >
+                          Claim Name
+                        </button>
+                        <button
+                          // onClick={() => handleDuplicate(profile.id)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
+                        >
+                          Deactivate Device
+                        </button>
+                        <button
+                          // onClick={() => handleDuplicate(profile.id)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-[#3a3a3a] w-full"
+                        >
+                          Remove Device
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {/* Device Image and details */}
+                <div className="flex gap-3 items-center">
+                  <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                    <h2 className="text-lg mb-1 font-medium truncate max-w-full">
+                      {device?.deviceNickName || device?.deviceType}
+                    </h2>
+                    <p className="text-sm mb-1 font-extralight max-w-full">
+                      Activation date: {activationDate}
+                    </p>
+                    <p className="flex items-center gap-2 text-sm mb-1 truncate font-extralight max-w-full">
+                      {device?.deviceStatus ? "Active" : "Deactivated"}{" "}
+                      <Circle fill="#00D729" size={12} color="#00D729" />
+                    </p>
+                  </div>
+                  <Image
+                    src="/purple.png"
+                    alt="purple"
+                    height={110}
+                    width={110}
+                  />
+                </div>
+                {/* Switch Profiles and Modes */}
+                <div className="grid grid-cols-2 gap-3 items-center">
+                  <div>
+                    <p className="text-xs text-[#888888] mb-2 ">
+                      Switch profile
+                    </p>
+                    <div className="relative">
+                      <button
+                        onClick={() => {
+                          setDropDown({ ...dropDown, profile: true });
+                        }}
+                        className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
+                        onBlur={() => {
+                          setDropDown({ ...dropDown, profile: false });
+                        }}
+                      >
+                        <span className="text-white w-full truncate">
+                          {device.profileName}
+                        </span>
+                        <BsChevronDown
+                          size={14}
+                          className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${
+                            profileOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {profileOpen && (
+                        <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                          <div className="flex flex-col">
+                            {profiles.map((p, i) => (
+                              <div
+                                key={i}
+                                onClick={() => {
+                                  handleSwitchProfiles(p, device);
+                                }}
+                                className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
+                              >
+                                {p.profileName}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Modes */}
+                  <div>
+                    <p className="text-xs text-[#888888] mb-2">Modes</p>
+                    <div className="relative">
+                      <button
+                        onClick={() => {
+                          setDropDown({ ...dropDown, mode: true });
+                        }}
+                        className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
+                        aria-haspopup="listbox"
+                        aria-expanded={modeOpen}
+                      >
+                        <span className="text-white truncate">
+                          {device.mode}
+                        </span>
+                        <BsChevronDown
+                          size={14}
+                          className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${
+                            modeOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {modeOpen && (
+                        <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                          <div className="flex flex-col">
+                            {MODES.map((m, i) => (
+                              <div
+                                key={i}
+                                onClick={() => {
+                                  setDropDown({ ...dropDown, mode: false });
+                                }}
+                                className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
+                              >
+                                {m.name}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* ID */}
-          <p className="text-xs text-[#666666] mb-3 pr-8">ID : kjbasdfdoashbfads</p>
-
-          {/* Device info and image */}
-          <div className="flex justify-between items-start mb-4 sm:mb-6">
-            <div className="flex-1 pr-2">
-              <h2 className="text-lg sm:text-xl font-semibold text-white mb-1">Bubbl Blue</h2>
-              <p className="text-xs sm:text-sm text-[#888888] mb-2">Activation date: 19/10/2025</p>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                <span className="text-xs sm:text-sm text-white">Active</span>
-              </div>
-            </div>
-            
-            {/* Device image placeholder */}
-            <div className=" rounded-lg w-[60px] sm:w-[80px] h-[40px] sm:h-[50px] flex items-center justify-center  flex-shrink-0">
-              {/* <span className="text-white text-xs font-medium">bubbl</span> */}
-              <Image src="/purple.png" alt="purple" height={150} width={150}/>
+            );
+          })
+        ) : (
+          <div className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl">＋</div>
+              <p className="text-sm text-gray-300 mt-1">Add New Device</p>
             </div>
           </div>
-
-          {/* Switch profile and Modes sections - Side by Side Layout */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Switch profile */}
-            <div>
-              <p className="text-xs text-[#888888] mb-2 ">Switch profile</p>
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setProfileOpen((v) => !v);
-                    setModeOpen(false);
-                    setMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
-                  aria-haspopup="listbox"
-                  aria-expanded={profileOpen}
-                >
-                  <span className="text-white w-full truncate">{profile}</span>
-                  <BsChevronDown
-                    size={14}
-                    className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${profileOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {profileOpen && (
-                  <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
-                    <div className="flex flex-col">
-                      {profiles.map((p) => (
-                        <div
-                          key={p}
-                          role="option"
-                          aria-selected={p === profile}
-                          onClick={() => {
-                            setProfile(p);
-                            setProfileOpen(false);
-                          }}
-                          className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
-                        >
-                          {p}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Modes */}
-            <div>
-              <p className="text-xs text-[#888888] mb-2">Modes</p>
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setModeOpen((v) => !v);
-                    setProfileOpen(false);
-                    setMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
-                  aria-haspopup="listbox"
-                  aria-expanded={modeOpen}
-                >
-                  <span className="text-white truncate">{mode}</span>
-                  <BsChevronDown
-                    size={14}
-                    className={`text-gray-400 transition-transform flex-shrink-0 ml-1 ${modeOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {modeOpen && (
-                  <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
-                    <div className="flex flex-col">
-                      {modes.map((m) => (
-                        <div
-                          key={m}
-                          role="option"
-                          aria-selected={m === mode}
-                          onClick={() => {
-                            setMode(m);
-                            setModeOpen(false);
-                          }}
-                          className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
-                        >
-                          {m}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Add New Device Card */}
-        <div className="bg-[#1F1F1F] rounded-2xl w-full max-w-[350px] mx-auto h-[250px] sm:h-[280px] flex items-center justify-center cursor-pointer hover:bg-[#252525] transition-colors">
-          <div className="flex flex-col items-center justify-center text-center p-4 ">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#2A2A2A] rounded-[10px] flex items-center justify-center mb-3 border border-[#3A3A3A] border-dashed">
-              <BsPlus size={18} className="text-gray-400 sm:w-5 sm:h-5" />
-            </div>
-            <p className="text-gray-300 text-xs sm:text-sm font-medium">Add New Device</p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

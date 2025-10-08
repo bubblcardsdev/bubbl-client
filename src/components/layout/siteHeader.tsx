@@ -1,34 +1,41 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../../lib/constant";
 import { BubblLogo, CartIcon } from "../common/icons";
 import Link from "next/link";
+import { UserContext } from "@/src/context/userContext";
 import { getCart } from "@/src/helpers/localStorage";
+import { CART } from "@/src/context/action";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = useRouter();
-  const [cards, setCards] = useState([]);
+  const { state, dispatch }: any = useContext(UserContext);
+  console.log(state, "state in header");
+  const { cart:cards } = state;
   const theme = themeObject[pathname.pathname] || "white";
   const isDarkTheme =
     theme === "black" ||
     theme === "linear-gradient(to right, #4A4A4A, #000000)";
+
   useEffect(() => {
     const storedCart = getCart();
     if (storedCart) {
-      setCards(JSON.parse(storedCart));
+      dispatch({ type: CART, payload: JSON.parse(storedCart) });
     }
   }, []);
+
   return (
     <nav
       className={`flex items-center justify-between px-6 py-2 md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
       style={{
         background: theme,
         color: isDarkTheme ? "white" : "black",
-        borderBottom: `1px solid ${isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
-          }`,
+        borderBottom: `1px solid ${
+          isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
+        }`,
       }}
     >
       {/* Logo */}
@@ -43,8 +50,9 @@ const SiteHeader = () => {
         {["Shop", "Plans", "About"].map((item) => (
           <div
             key={item}
-            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-              }`}
+            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${
+              isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+            }`}
             onClick={() => pathname.push(`/${item.toLowerCase()}`)}
           >
             <span className="font-bold">{item}</span>
@@ -66,9 +74,11 @@ const SiteHeader = () => {
           >
             <CartIcon />
           </span>
-          {(Array.isArray(cards) && cards.length > 0) && <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-            {cards.length > 9 ? "9+" : cards.length}
-          </span>}
+          {Array.isArray(cards) && cards.length > 0 && (
+            <span className="absolute top-[-5px] right-[-5px] text-white bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+              {cards.length > 9 ? "9+" : cards.length}
+            </span>
+          )}
         </button>
         {/* Login Button */}
         <button
@@ -111,16 +121,18 @@ const SiteHeader = () => {
 
       {/* Mobile Menu Drawer */}
       <div
-        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-96" : "max-h-0"
-          }`}
+        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen ? "max-h-96" : "max-h-0"
+        }`}
         style={{ backgroundColor: isDarkTheme ? "black" : "white" }}
       >
         <div className="flex flex-col items-center space-y-2 py-[20px]">
           {["Shop", "Plans", "About", "Cart", "Login"].map((item) => (
             <div
               key={item}
-              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-                }`}
+              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${
+                isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+              }`}
               onClick={() => pathname.push(`/${item.toLowerCase()}`)}
             >
               <span className="font-bold">{item}</span>
