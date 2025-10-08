@@ -11,7 +11,6 @@ import {
   DeleteLead,
 } from "../../services/leadsApi";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import LeadsForm from "./components/leadsForm";
 import LeadsTable from "./components/LeadsTable";
 import LeadsTableHeader from "./components/leadsTableHeader";

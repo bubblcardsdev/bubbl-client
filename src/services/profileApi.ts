@@ -1,9 +1,8 @@
 import axiosInstance from "../helpers/axios";
-import { Id, toast } from "react-toastify";
-import { getAccessToken } from "../helpers/localStorage";
-import axios from "axios";
+import { toast } from "react-toastify";
+import { authHeader, getApiErrorMessage } from "../utils/utils";
+
 export type PhoneNumber = {
-  // phoneNumberId?: number;
   countryCode: string;
   phoneNumber: string;
   phoneNumberType: string;
@@ -11,37 +10,33 @@ export type PhoneNumber = {
   activeStatus: boolean;
 };
 export type EmailId = {
-  // emailIdNumber?: number;
   emailId: string;
   emailType: string;
   checkBoxStatus: boolean;
   activeStatus: boolean;
 };
 export type Website = {
-  // websiteId?: number;
   website: string;
   websiteType: string;
   checkBoxStatus: boolean;
   activeStatus: boolean;
 };
 export type SocialMediaName = {
-  // profileSocialMediaLinkId?: number;
   profileSocialMediaId: number;
   socialMediaName: string;
   enableStatus: boolean;
   activeStatus: boolean;
 };
 export type DigitalPaymentLink = {
-  // profileDigitalPaymentLinkId?: number;
   profileDigitalPaymentsId: number;
   digitalPaymentLink: string;
   enableStatus: boolean;
   activeStatus: boolean;
 };
+
 export interface ProfileFormData {
-  profileId: Id;
+  profileId: number;
   profileUid?: string;
-  // deviceUid?: string;
   userId?: number;
   profileName: string;
   templateId: number;
@@ -72,315 +67,293 @@ export interface ProfileFormData {
   socialMediaName: SocialMediaName[];
   digitalPaymentLinks: DigitalPaymentLink[];
 }
+
+/* -------------------------- error helpers (central) -------------------------- */
+
+// function formatValidationErrors(errors: any[]): string {
+//   return errors
+//     .map((err) => {
+//       let msg = err?.message ?? "";
+
+//       // Remove quotes
+//       msg = msg.replace(/\"/g, "");
+
+//       // Clean specific array indices (avoid leaking internals)
+//       msg = msg.replace(/\[\d+\]/g, "");
+
+//       // Replace technical field names with user-friendly labels
+//       msg = msg
+//         .replace(/(^|\.)profileName/g, "Profile Title")
+//         .replace(/(^|\.)phoneNumbers\.phoneNumber/g, "Phone Number")
+//         .replace(/(^|\.)emailIds\.emailId/g, "Email")
+//         .replace(
+//           /(^|\.)socialMedia(Name|Names)\.socialMediaName/g,
+//           "Social Media Link"
+//         )
+//         .replace(
+//           /(^|\.)digitalPaymentLinks\.digitalPaymentLink/g,
+//           "Payment Link"
+//         );
+
+//       return msg.trim();
+//     })
+//     .filter(Boolean)
+//     .join("\n");
+// }
+
+
+
+/* ---------------------------------- APIs ---------------------------------- */
+
 export const GetDeviceByUuid = async (deviceUid: string) => {
   try {
     const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
-    console.log(response?.data?.deviceUid, "res");
-    return response.data;
-  } catch (error: any) {
+    return response?.data ?? null;
+  } catch (error) {
     console.error("Error fetching profile:", error);
-    const errMsg = axios.isAxiosError(error)
-      ? error.response?.data?.data?.message ||
-        error.response?.data?.message ||
-        error.message
-      : "Something went wrong";
-    toast.error(errMsg);
+    toast.error(getApiErrorMessage(error));
     return null;
   }
 };
+
 export const GetProfileByUniqueName = async (uniqueName: string) => {
   try {
     const response = await axiosInstance.get(
       `profile?uniqueName=${uniqueName}`
     );
-    if (response?.data?.success) {
-      return response?.data;
-    }
+    if (response?.data?.success) return response.data;
     return null;
-  } catch (error: any) {
-    console.error(error);
-    const errMsg = axios.isAxiosError(error)
-      ? error.response?.data?.data?.message ||
-        error.response?.data?.message ||
-        error.message
-      : "Something went wrong";
-    toast.error(errMsg);
+  } catch (error) {
+    console.error("GetProfileByUniqueName error:", error);
+    toast.error(getApiErrorMessage(error));
     return null;
   }
 };
+
 export const CreateMyProfileApi = async (formData: ProfileFormData) => {
   try {
-    const token = getAccessToken();
     const response = await axiosInstance.post(
       `/profile/create-profile`,
       formData,
-      {
-        headers: { Authorization: token },
-      }
+      { headers: authHeader() }
     );
-    return response;
+    return response?.data ?? null;
   } catch (error: any) {
-    let message = "Failed to create profile.";
-
-    const errors = error.response?.data?.data?.error;
-    if (Array.isArray(errors) && errors.length > 0) {
-      message = formatValidationErrors(errors);
-    } else if (error.response?.data?.message) {
-      message = error.response.data.message;
-    }
-
-    toast.error(message);
-    return false;
+    console.error("CreateMyProfileApi error:", error);
+    toast.error(getApiErrorMessage(error));
+    return null;
   }
 };
 
-
-function formatValidationErrors(errors: any[]): string {
-  return errors
-    .map((err) => {
-      let msg = err.message;
-
-      // Remove quotes
-      msg = msg.replace(/\"/g, "");
-
-      // Clean array indices: phoneNumbers[0].phoneNumber → Phone Number
-      msg = msg.replace(/\[0\]/g, ""); 
-
-      // Replace technical field names with user-friendly labels
-      msg = msg
-        .replace("profileName", "Profile Title")
-        .replace("phoneNumbers.phoneNumber", "Phone Number")
-        .replace("emailIds.emailId", "Email")
-        .replace("socialMediaNames.socialMediaName", "Social Media Link")
-        .replace("digitalPaymentLinks.digitalPaymentLink", "Payment Link");
-
-      return msg;
-    })
-    .join("\n");
-}
 export const GetAllProfile = async () => {
   try {
-    const token = getAccessToken(); // get token from localStorage or your helper
-
     const response = await axiosInstance.get("profile/all", {
-      headers: {
-        Authorization: token,
-      },
+      headers: authHeader(),
     });
-
-    return response.data;
-  } catch (error: any) {
+    return response?.data ?? null;
+  } catch (error) {
     console.error("Error fetching profiles:", error);
+    toast.error(getApiErrorMessage(error));
+    return null;
   }
 };
+
 export const GetOneEditProfile = async (id: string | number) => {
   try {
-    const token = getAccessToken();
-
     const response = await axiosInstance.post(
       "profile/find",
       { profileId: id },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      { headers: authHeader() }
     );
-
-    return response.data;
-  } catch (error: any) {
+    return response?.data ?? null;
+  } catch (error) {
     console.error("Error fetching profile:", error);
+    toast.error(getApiErrorMessage(error));
+    return null;
   }
 };
 
 export const GetOneProfileApi = async (id: number) => {
   try {
-    const token = getAccessToken();
-
     const response = await axiosInstance.post(
       `profile/findOne`,
-      { profileId: id }, // ✅ send profileId in body
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      { profileId: id },
+      { headers: authHeader() }
     );
-
-    return response.data;
-  } catch (error: any) {
-    console.error("Error duplicating profile:", error?.response?.data || error);
-    return null;
+    return response?.data ?? null;
+  } catch (error) {
+    console.error("Error fetching single profile:", error);
+    toast.error(getApiErrorMessage(error));
+    return null; // original returned null in error path
   }
 };
+
 export const GetProfileByUuid = async (id: string) => {
   try {
-    const response = await axiosInstance.post(
-      `profile/getProfileByUid`,
-      { profileUid: id } // ✅ send profileId in body
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error("Error duplicating profile:", error?.response?.data || error);
+    const response = await axiosInstance.post(`profile/getProfileByUid`, {
+      profileUid: id,
+    });
+    return response?.data ?? null;
+  } catch (error) {
+    console.error("Error getting profile by UID:", error);
+    toast.error(getApiErrorMessage(error));
     return null;
   }
 };
+
 export const DeleteProfileApi = async (id: string | number) => {
   try {
-    const token = getAccessToken();
     const response = await axiosInstance.delete(
       `profile/delete-profile?profileId=${id}`,
       {
-        headers: {
-          Authorization: token,
-        },
+        headers: authHeader(),
       }
     );
-    return response.data;
-  } catch (error: any) {
+    return response?.data ?? null;
+  } catch (error) {
     console.error("Error deleting profile:", error);
+    toast.error(getApiErrorMessage(error));
+    return null;
   }
 };
+
 export const UpdateProfile = async (
   id: string | number,
   payload: ProfileFormData
 ) => {
   try {
-    console.log(payload, "pay");
-    const token = getAccessToken();
-    delete payload?.profileUid;
-    delete payload?.userId;
+    // maintain original behavior (delete transient keys)
+    delete (payload as any)?.profileUid;
+    delete (payload as any)?.userId;
+
     const response = await axiosInstance.put(
       `/profile/update-profile`,
       payload,
       {
-        headers: {
-          Authorization: token,
-        },
+        headers: authHeader(),
       }
     );
-    return response.data;
-  } catch (error: any) {
-    console.error("Update Profile API Error:", error?.response || error);
-    throw error;
+    return response?.data ?? null;
+  } catch (error) {
+    console.error(
+      "Update Profile API Error:",
+      (error as any)?.response || error
+    );
+    // keep original logic: this function threw the error
+    // (callers likely rely on try/catch at call site)
+    const msg = getApiErrorMessage(error, "Failed to update profile.");
+    toast.error(msg);
+    return null;
   }
 };
+
 export const DuplicateProfileApi = async (id: string | number) => {
   try {
-    const token = getAccessToken();
     const response = await axiosInstance.post(
       `profile/duplicate-profile`,
-      { profileId: id }, // send profileId in body
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      { profileId: id },
+      { headers: authHeader() }
     );
-    return response.data;
-  } catch (error: any) {
-    console.error("Error duplicating profile:", error?.response?.data || error);
-    throw error;
+    return response?.data ?? null;
+  } catch (error) {
+    console.error(
+      "Error duplicating profile:",
+      (error as any)?.response?.data || error
+    );
+    // keep original logic: this function threw the error
+    const msg = getApiErrorMessage(error, "Failed to duplicate profile.");
+    toast.error(msg);
+    return null;
   }
 };
+
 export const UploadProfileImage = async (
   file: File | any,
   id: number | string
 ) => {
   try {
-    const token = getAccessToken();
-    // Prepare form data
     const formData: any = new FormData();
     formData.append("squareImage", file);
     formData.append("rectangleImage", file);
     formData.append("profileId", id);
-    const response = await axiosInstance.post(
-      "upload/profileImage", // <-- relative path since axiosInstance has baseURL
-      formData,
-      {
-        headers: {
-          Authorization: token, // use Bearer token
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
+
+    const response = await axiosInstance.post("upload/profileImage", formData, {
+      headers: {
+        ...authHeader(),
+        // Let Axios set correct multipart boundary automatically
+      },
+    });
+    return response?.data ?? null;
+  } catch (error) {
     console.error("Error uploading Profile Image:", error);
+    toast.error(getApiErrorMessage(error, "Failed to upload profile image."));
+    return null;
   }
 };
+
 export const UploadbrandinglogoImage = async (
   file: File | any,
   id: number | string
 ) => {
   try {
-    const token = getAccessToken();
-
-    // Prepare form data
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
     formData.append("profileId", id);
-    const response = await axiosInstance.post(
-      "upload/brandinglogo", // <-- relative path since axiosInstance has baseURL
-      formData,
-      {
-        headers: {
-          Authorization: token, // use Bearer token
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error("Error uploading Profile Image:", error);
+
+    const response = await axiosInstance.post("upload/brandinglogo", formData, {
+      headers: {
+        ...authHeader(),
+      },
+    });
+    return response?.data ?? null;
+  } catch (error) {
+    console.error("Error uploading branding logo:", error);
+    toast.error(getApiErrorMessage(error, "Failed to upload branding logo."));
+    return null;
   }
 };
+
 export const DeleteProfileImageApi = async (id: string | number) => {
   try {
-    const token = getAccessToken();
     const response = await axiosInstance.put(
       "profile/deleteprofileimage",
       { profileId: id },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      { headers: authHeader() }
     );
-    return response.data;
+    return response?.data ?? null;
   } catch (error) {
-    console.error(error, "ProfileImage not delete");
+    console.error("Profile image not deleted:", error);
+    toast.error(getApiErrorMessage(error, "Failed to delete profile image."));
+    return null;
   }
 };
+
 export const DeletePbrandinglogoImage = async (id: string | number) => {
   try {
-    const token = getAccessToken();
-
     const response = await axiosInstance.put(
       "profile/deletebradingimage",
       { profileId: id },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
+      { headers: authHeader() }
     );
-
-    return response.data;
+    return response?.data ?? null;
   } catch (error) {
-    console.error(error);
+    console.error("Branding logo not deleted:", error);
+    toast.error(getApiErrorMessage(error, "Failed to delete branding logo."));
+    return null;
   }
 };
 
-export const createTap = async(clickAction:number,deviceId:string) => {
-
-  try{
-    const response =await axiosInstance.post("/analytics/tapDetails",{deviceId,clickAction})
-    return response;
+export const createTap = async (clickAction: number, deviceId: string) => {
+  try {
+    const response = await axiosInstance.post("/analytics/tapDetails", {
+      deviceId,
+      clickAction,
+    });
+    return response ?? null; // original returned full axios response
+  } catch (error) {
+    console.log("createTap error:", error);
+    // analytics call: avoid noisy toasts; only log. If you want toast, uncomment:
+    // toast.error(getApiErrorMessage(error, "Failed to log tap."));
+    return null;
   }
-  catch(err){
-console.log(err);
-
-  }
-
-}
+};

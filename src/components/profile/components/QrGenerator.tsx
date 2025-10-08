@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { X, QrCode } from "lucide-react"; //  QR code + close icon
+import { X } from "lucide-react"; //  QR code + close icon
 import QrCodeImage from "../../common/QrCode";
+import { QrIcon } from "../../common/icons";
 
 interface Props {
   color: string;
@@ -24,7 +25,7 @@ const QrGenerator = (props: Props) => {
         onClick={() => setIsOpen(true)}
         className="p-1.5 xs:p-2 sm:p-3 rounded-md flex-shrink-0 "
       >
-        <QrCode color={color} />
+        <QrIcon color={color} />
       </button>
       {/* Popup Modal */}
       {isOpen && (

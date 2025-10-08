@@ -74,7 +74,6 @@ const socialLinks = [
   },
 ];
 
-
 const Digitalpay = [
   {
     id: 1,
@@ -293,28 +292,27 @@ const EditProfile: React.FC = () => {
     setFormData((prev: any) => ({ ...prev, [key]: value }));
   };
 
-const handleNestedArrayChange = (
-  arrayKey: string,
-  index: number,
-  field: string,
-  value: any
-) => {
-  const updatedArray = [...(formData[arrayKey] || [])];
-  const existing = updatedArray[index] || {};
+  const handleNestedArrayChange = (
+    arrayKey: string,
+    index: number,
+    field: string,
+    value: any
+  ) => {
+    const updatedArray = [...(formData[arrayKey] || [])];
+    const existing = updatedArray[index] || {};
 
-  updatedArray[index] = {
-    ...existing,
-    [field]: value,
-    ...(arrayKey === "digitalPaymentLinks" && {
-      profileDigitalPaymentsId: Digitalpay[index].id,
-      enableStatus: existing.enableStatus ?? true,
-      activeStatus: existing.activeStatus ?? true,
-    }),
+    updatedArray[index] = {
+      ...existing,
+      [field]: value,
+      ...(arrayKey === "digitalPaymentLinks" && {
+        profileDigitalPaymentsId: Digitalpay[index].id,
+        enableStatus: existing.enableStatus ?? true,
+        activeStatus: existing.activeStatus ?? true,
+      }),
+    };
+
+    setFormData((prev: any) => ({ ...prev, [arrayKey]: updatedArray }));
   };
-
-  setFormData((prev: any) => ({ ...prev, [arrayKey]: updatedArray }));
-};
-
 
   const addToArray = (key: string) => {
     if (key === "phoneNumbers") {
@@ -463,114 +461,116 @@ const handleNestedArrayChange = (
     }
   };
 
-const handleSave = async () => {
-  const isCreate = router.asPath.slice(1) === "createNewProfile";
-  console.log(formData, "//formdata");
-  
+  const handleSave = async () => {
+    try {
+          const isCreate = router.asPath.slice(1) === "createNewProfile";
+    console.log(formData, "//formdata");
 
-  // Map social media
-  const updatedSocialMediaNames = (formData?.socialMediaNames || []).map((item: any) => {
-    const normalizedLink = normalizeSocialLink(item.profileSocialMediaId, item.socialMediaName);
-    return {
-      profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
-      profileSocialMediaId: item.profileSocialMediaId || undefined,
-      socialMediaName: normalizedLink,
-      activeStatus: normalizedLink?.trim().length > 0,
+    // Map social media
+    const updatedSocialMediaNames = (formData?.socialMediaNames || []).map(
+      (item: any) => {
+        const normalizedLink = normalizeSocialLink(
+          item.profileSocialMediaId,
+          item.socialMediaName
+        );
+        return {
+          profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
+          profileSocialMediaId: item.profileSocialMediaId || undefined,
+          socialMediaName: normalizedLink,
+          activeStatus: normalizedLink?.trim().length > 0,
+        };
+      }
+    );
+
+    // Map digital payments
+    const updatedDigitalMediaNames = (formData?.digitalPaymentLinks || []).map(
+      (item: any) => ({
+        profileDigitalPaymentLinkId:
+          item.profileDigitalPaymentLinkId || undefined,
+        profileDigitalPaymentsId: item.profileDigitalPaymentsId || undefined,
+        digitalPaymentLink: item.digitalPaymentLink || "",
+        enableStatus: item.enableStatus ?? true,
+        activeStatus: item.digitalPaymentLink?.trim().length > 0,
+      })
+    );
+
+    // Build base payload
+    let payload: any = {
+      ...formData,
+      socialMediaNames: isCreate
+        ? (formData?.socialMediaNames || []).filter((s: any) =>
+            s.socialMediaName?.trim()
+          )
+        : updatedSocialMediaNames,
+      digitalPaymentLinks: isCreate
+        ? (formData?.digitalPaymentLinks || []).filter((d: any) =>
+            d.digitalPaymentLink?.trim()
+          )
+        : updatedDigitalMediaNames,
+      emailIds: formData?.emailIds || [],
+      phoneNumbers: formData?.phoneNumbers || [],
+      websites: formData?.websites || [],
     };
-  });
 
-  // Map digital payments
-  const updatedDigitalMediaNames = (formData?.digitalPaymentLinks || []).map((item: any) => ({
-    profileDigitalPaymentLinkId: item.profileDigitalPaymentLinkId || undefined,
-    profileDigitalPaymentsId: item.profileDigitalPaymentsId || undefined,
-    digitalPaymentLink: item.digitalPaymentLink || "",
-    enableStatus: item.enableStatus ?? true,
-    activeStatus: item.digitalPaymentLink?.trim().length > 0,
-  }));
+    // Special rule for create: strip empty strings from top-level keys
+    if (isCreate) {
+      Object.keys(payload).forEach((key) => {
+        if (typeof payload[key] === "string" && payload[key].trim() === "") {
+          delete payload[key]; // remove empty string keys
+        }
+        if (Array.isArray(payload[key]) && payload[key].length === 0) {
+          // keep as [] for arrays (important for API consistency)
+        }
+      });
+    }
 
-  // Build base payload
-  let payload: any = {
-    ...formData,
-    socialMediaNames: isCreate
-      ? (formData?.socialMediaNames || []).filter((s: any) => s.socialMediaName?.trim())
-      : updatedSocialMediaNames,
-    digitalPaymentLinks: isCreate
-      ? (formData?.digitalPaymentLinks || []).filter((d: any) => d.digitalPaymentLink?.trim())
-      : updatedDigitalMediaNames,
-    emailIds: (formData?.emailIds || []),
-    phoneNumbers: (formData?.phoneNumbers || []),
-    websites: (formData?.websites || []),
+    // Remove image URLs before sending
+    delete payload?.profileImageUrl;
+    delete payload?.companyLogoUrl;
+
+    console.log("Final Payload:", payload);
+      if (id) {
+        // ---- Update ----
+        const response = await UpdateProfile(id, payload);
+
+        if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
+        if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
+        if (profileImg) await UploadProfileImage(profileImg, id); // need to call
+        if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
+
+        await fetchProfiles();
+        toast.success("Profile updated successfully!");
+        console.log("Update response:", response);
+      } else {
+        // ---- Create ----
+        const response: any = await CreateMyProfileApi(payload);
+        if (!response) return;
+
+        if (profileImg && response?.profile?.id)
+          await UploadProfileImage(profileImg, response?.profile?.id);
+        if (companyLogoImg && response?.profile?.id)
+          await UploadbrandinglogoImage(
+            companyLogoImg,
+            response?.profile.id
+          );
+
+        // if (response?.data?.message === "This profile name already exists") {
+        //   setErrors((prev: any) => ({
+        //     ...prev,
+        //     profileName: "This profile name already exists",
+        //   }));
+        //   toast.error("This profile name already exists");
+        //   return;
+        // }
+        router.push("/myprofile");
+        toast.success("Profile created successfully!");
+        console.log("Create response:", response);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Something went wrong")
+      console.error("Save error:", err);
+    }
   };
-
-  // Special rule for create: strip empty strings from top-level keys
-  if (isCreate) {
-    Object.keys(payload).forEach((key) => {
-      if (typeof payload[key] === "string" && payload[key].trim() === "") {
-        delete payload[key]; // remove empty string keys
-      }
-      if (Array.isArray(payload[key]) && payload[key].length === 0) {
-        // keep as [] for arrays (important for API consistency)
-      }
-    });
-  }
-
-  // Remove image URLs before sending
-  delete payload?.profileImageUrl;
-  delete payload?.companyLogoUrl;
-
-  console.log("Final Payload:", payload);
-
-  try {
-    if (id) {
-      // ---- Update ----
-      const response = await UpdateProfile(id, payload);
-
-      if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
-      if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
-      if (profileImg) await UploadProfileImage(profileImg, id); // need to call
-      if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id);// need to call seperately
-
-      await fetchProfiles();
-      toast.success("Profile updated successfully!");
-      console.log("Update response:", response);
-    } else {
-      // ---- Create ----
-      const response: any = await CreateMyProfileApi(payload);
-      if (!response) return;
-
-      if (profileImg && response?.data?.profile?.id)
-        await UploadProfileImage(profileImg, response.data.profile.id);
-      if (companyLogoImg && response?.data?.profile?.id)
-        await UploadbrandinglogoImage(companyLogoImg, response.data.profile.id);
-
-      if (response?.data?.message === "This profile name already exists") {
-        setErrors((prev: any) => ({
-          ...prev,
-          profileName: "This profile name already exists",
-        }));
-        toast.error("This profile name already exists");
-        return;
-      }
-
-      toast.success("Profile created successfully!");
-      console.log("Create response:", response);
-    }
-  } catch (err: any) {
-    const backendMessage = err.response?.data?.message;
-    if (backendMessage === "This profile name already exists") {
-      setErrors((prev: any) => ({
-        ...prev,
-        profileName: "This profile name already exists",
-      }));
-      toast.error("This profile name already exists");
-    } else {
-      toast.error(backendMessage || "Save failed!");
-    }
-    console.error("Save error:", err);
-  }
-};
-
-
 
   return (
     <div className="lg:p-4 md:p-4 sm:p-0 xs:p-0">
@@ -580,58 +580,57 @@ const handleSave = async () => {
           onClose={() => setOpenCropModal(false)}
           onCropComplete={handleCroppedImage}
         />
-      )} 
-     <div>
-  <div className="flex flex-col xl:flex-row gap-6">
-    {/* Left Section: Profile Edit + Form */}
-    <div className="w-full max-w-[600px]">
-      <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
-      <ProfileForm
-        formData={formData}
-        setFormData={setFormData}
-        handleInputChange={handleInputChange}
-        errors={errors}
-        setErrors={setErrors}
-        templates={templates}
-        currentIndex={currentIndex}
-        onTemplateSelect={onTemplateSelect}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        handleColorSelect={handleColorSelect}
-        selected={selected}
-        handleImageChange={handleImageChange}
-        isCustomModalOpen={isCustomModalOpen}
-        customName={customName}
-        handleSave={handleSave}
-        addToArray={addToArray}
-        setCustomName={setCustomName}
-        setIsCustomModalOpen={setIsCustomModalOpen}
-        handleCustomSave={handleCustomSave}
-        handleNestedArrayChange={handleNestedArrayChange}
-        socialLinks={socialLinks}
-        Digitalpay={Digitalpay}
-        handleRemoveImage={handleRemoveImage}
-        setMode={setMode}
-        mode={mode}
-      />
-    </div>
+      )}
+      <div>
+        <div className="flex flex-col xl:flex-row gap-6">
+          {/* Left Section: Profile Edit + Form */}
+          <div className="w-full max-w-[600px]">
+            <div className="text-sm text-gray-400 mb-4">Profile / Edit</div>
+            <ProfileForm
+              formData={formData}
+              setFormData={setFormData}
+              handleInputChange={handleInputChange}
+              errors={errors}
+              setErrors={setErrors}
+              templates={templates}
+              currentIndex={currentIndex}
+              onTemplateSelect={onTemplateSelect}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              handleColorSelect={handleColorSelect}
+              selected={selected}
+              handleImageChange={handleImageChange}
+              isCustomModalOpen={isCustomModalOpen}
+              customName={customName}
+              handleSave={handleSave}
+              addToArray={addToArray}
+              setCustomName={setCustomName}
+              setIsCustomModalOpen={setIsCustomModalOpen}
+              handleCustomSave={handleCustomSave}
+              handleNestedArrayChange={handleNestedArrayChange}
+              socialLinks={socialLinks}
+              Digitalpay={Digitalpay}
+              handleRemoveImage={handleRemoveImage}
+              setMode={setMode}
+              mode={mode}
+            />
+          </div>
 
-    {/* Right Section: Live Preview */}
-    <div className="w-full max-w-[400px] xl:block lg:hidden md:hidden sm:hidden xs:hidden">
-      <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
-        <p className="text-sm text-gray-400 mb-6">Live Preview</p>
-        <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF] text-left">
-          <LivePreview
-            currentTemplate={templates?.[currentIndex]}
-            formData={formData}
-            selectedTheme={selected}
-          />
+          {/* Right Section: Live Preview */}
+          <div className="w-full max-w-[400px] xl:block lg:hidden md:hidden sm:hidden xs:hidden">
+            <div className="sticky top-2 overflow-y-auto scrollbar-none rounded-2xl pb-5 text-gray-200 text-center">
+              <p className="text-sm text-gray-400 mb-6">Live Preview</p>
+              <div className="flex flex-col items-center justify-center gap-2 mb-4 rounded-2xl max-w-[360px] mx-auto shadow-[0_4px_100px_-30px_#9747FF] text-left">
+                <LivePreview
+                  currentTemplate={templates?.[currentIndex]}
+                  formData={formData}
+                  selectedTheme={selected}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-     
     </div>
   );
 };

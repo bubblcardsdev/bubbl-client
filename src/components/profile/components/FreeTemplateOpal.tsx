@@ -8,10 +8,18 @@ import {
   WebIcon_thin,
   Location_icon,
   Arrow_icon,
+  Googlepay_icon,
+  Paytm_icon,
+  Phonepay_icon,
+  Instagram_icon,
+  Facebook_icon_thin,
+  OpalYoutubeIcon,
+  Twitter_icon_thin,
+  OpalWhatsappIcon,
+  Linkedin_icon_thin,
 } from "../../common/icons";
 import {
-  SocialIconsObj,
-  DigitalIconsObj,
+ 
   actions,
   SOCIAL_MEDIA_IDS,
   ActionKeys,
@@ -50,6 +58,20 @@ const FreeTemplateOpal = ({
   const router = useRouter();
   console.log(router.asPath.slice(1));
 
+ const DigitalIconsObj: any = {
+  "1": Googlepay_icon,
+  "2": Phonepay_icon,
+  "3": Paytm_icon,
+};
+
+ const SocialIconsObj: any = {
+  "1": Instagram_icon,      // Instagram
+  "2": Facebook_icon_thin,  // Facebook
+  "3": OpalYoutubeIcon,     // Youtube
+  "4": Twitter_icon_thin,   // Twitter
+  "5": OpalWhatsappIcon,    // WhatsApp
+  "6": Linkedin_icon_thin,  // LinkedIn
+};
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
