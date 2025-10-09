@@ -283,36 +283,6 @@ export const testimonial = [
     username: "emmaDawn",
     name: "Emma",
   },
-  // {
-  //   id: 7,
-  //   src: "/HomePageIcons/Aroma.png",
-  //   alt: "Boom Cards",
-  //   description:
-  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-  //   profile: "/HomePageIcons/treeImg.png",
-  //   username: "emmaDawn",
-  //   name: "Emma",
-  // },
-  // {
-  //   id: 8,
-  //   src: "/HomePageIcons/Aroma.png",
-  //   alt: "Boom Cards",
-  //   description:
-  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-  //   profile: "/HomePageIcons/treeImg.png",
-  //   username: "emmaDawn",
-  //   name: "Emma",
-  // },
-  // {
-  //   id: 9,
-  //   src: "/HomePageIcons/Aroma.png",
-  //   alt: "Boom Cards",
-  //   description:
-  //     "For a cohesive design, aligning image and text starts uniformly improves flow. The items-start class in Tailwind helps to keep elements visually aligned and neat.",
-  //   profile: "/HomePageIcons/treeImg.png",
-  //   username: "emmaDawn",
-  //   name: "Emma",
-  // },
 ];
 
 export const PRODUCTS = [

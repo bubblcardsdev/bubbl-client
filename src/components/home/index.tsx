@@ -5,7 +5,6 @@ import ValuedPartners from "./components/valuedPartners";
 import OurProducts from "./components/ourProducts";
 
 import Networking from "./components/networking";
-import FutureNetworking from "./components/futureNetworking";
 import TestiMonial from "./components/testimonial";
 import FAQsection from "./components/FAQsection";
 import PivotSection from "./components/pivotSection";
