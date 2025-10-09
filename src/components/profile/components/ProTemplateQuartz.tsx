@@ -16,6 +16,7 @@ import {
   QuartzTwitterIcon,
   QuartzLinkedinIcon,
   QuartzYoutubeIcon,
+  DownArrowIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import { copyText, openInNewTab } from "../../../utils/commonLogics";
@@ -66,7 +67,7 @@ const ProTemplateQuartz = ({
   const router = useRouter();
 
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden">
+    <div className="xs:w-full max-w-[380px] mx-auto overflow-hidden">
       <ToastContainer />
       {/* Profile Image */}
       <div className="bg-[#D9D9D9] h-[400px]">
@@ -140,27 +141,25 @@ const ProTemplateQuartz = ({
           formData?.emailIds?.[0]?.emailId?.length > 0 ||
           formData?.websites?.[0]?.website?.length > 0 ||
           (formData?.state && formData?.country)) && (
-          <h2 className="text-lg font-bold mb-2 text-black text-left">
-            Contact Information
-          </h2>
-        )}
+            <h2 className="text-lg font-bold mb-2 text-black text-left">
+              Contact Information
+            </h2>
+          )}
 
         <div className="flex flex-col gap-4">
           {/* Phone */}
           {formData?.phoneNumbers?.[0]?.phoneNumber && (
             <a
-              href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${
-                formData?.phoneNumbers?.[0]?.phoneNumber || ""
-              }`}
+              href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
+                }`}
               onClick={async (e) => {
                 e.preventDefault(); // stop immediate dial
                 if (formData?.deviceUid) {
                   await createTap(4, formData.deviceUid); // log phone tap
                 }
                 // trigger call after logging
-                window.location.href = `tel:${
-                  formData?.phoneNumbers?.[0]?.countryCode || ""
-                }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
+                  }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
               }}
             >
               <button
@@ -191,9 +190,8 @@ const ProTemplateQuartz = ({
                   await createTap(5, formData.deviceUid); // log email tap
                 }
                 // open email client after logging
-                window.location.href = `mailto:${
-                  formData?.emailIds?.[0]?.emailId || ""
-                }`;
+                window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
+                  }`;
               }}
             >
               <button
@@ -242,8 +240,8 @@ const ProTemplateQuartz = ({
                     {formData?.websites?.[0]?.website}
                   </span>
                 </div>
-                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
-                  <Arrow_icon />
+                <div className="absolute -right-2 flex items-center justify-center w-9 h-9 bg-[#D47DFF] rounded-full shadow-md">
+                  <DownArrowIcon />
                 </div>
               </button>
             </a>
@@ -253,8 +251,7 @@ const ProTemplateQuartz = ({
           {formData?.state && formData?.country && (
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${formData?.address || ""}, ${formData?.city || ""}, ${
-                  formData?.state || ""
+                `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                 }, ${formData?.country || ""}`
               )}`}
               target="_blank"
@@ -267,8 +264,7 @@ const ProTemplateQuartz = ({
                 // open Google Maps after logging
                 window.open(
                   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address || ""}, ${formData?.city || ""}, ${
-                      formData?.state || ""
+                    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                     }, ${formData?.country || ""}`
                   )}`,
                   "_blank",
@@ -298,57 +294,57 @@ const ProTemplateQuartz = ({
         {formData?.socialMediaNames?.some(
           (v: any) => v?.socialMediaName?.length > 0
         ) && (
-          <>
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
-              Social Media
-            </h2>
-            <div className="grid grid-cols-4 gap-4">
-              {[...formData.socialMediaNames]
-                .sort(
-                  (a: any, b: any) =>
-                    (a?.profileSocialMediaId || 0) -
-                    (b?.profileSocialMediaId || 0)
-                )
-                .map((value: any, index: number) => {
-                  const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
-                  if (value?.socialMediaName?.length > 0) {
-                    return (
-                      <div
-                        key={index}
-                        role="button"
-                        onClick={() => {
-                          if (formData.deviceUid) {
-                            createTap(
-                              actions[
+            <>
+              <h2 className="text-lg font-bold text-gray-800 mb-4">
+                Social Media
+              </h2>
+              <div className="grid grid-cols-4 gap-4">
+                {[...formData.socialMediaNames]
+                  .sort(
+                    (a: any, b: any) =>
+                      (a?.profileSocialMediaId || 0) -
+                      (b?.profileSocialMediaId || 0)
+                  )
+                  .map((value: any, index: number) => {
+                    const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
+                    if (value?.socialMediaName?.length > 0) {
+                      return (
+                        <div
+                          key={index}
+                          role="button"
+                          onClick={() => {
+                            if (formData.deviceUid) {
+                              createTap(
+                                actions[
                                 SOCIAL_MEDIA_IDS[
-                                  value.profileSocialMediaId
+                                value.profileSocialMediaId
                                 ] as ActionKeys
-                              ],
-                              formData.deviceUid
-                            );
-                          }
-                          openInNewTab(value?.socialMediaName);
-                        }}
-                        className="flex items-center justify-center w-12 h-12 rounded-lg shadow"
-                        style={{ backgroundColor: color }}
-                      >
-                        <Icon color={color} />
-                      </div>
-                    );
-                  }
-                })}
-            </div>
-          </>
-        )}
+                                ],
+                                formData.deviceUid
+                              );
+                            }
+                            openInNewTab(value?.socialMediaName);
+                          }}
+                          className="flex items-center justify-center w-12 h-12 rounded-lg shadow"
+                          style={{ backgroundColor: color }}
+                        >
+                          <Icon color={color} />
+                        </div>
+                      );
+                    }
+                  })}
+              </div>
+            </>
+          )}
 
         {/* Digital Payments */}
         {formData?.digitalPaymentLinks?.some(
           (v: any) => v?.digitalPaymentLink?.length > 0
         ) && (
-          <h2 className="text-lg font-bold mb-4 mt-4 text-left text-black">
-            Digital Payments
-          </h2>
-        )}
+            <h2 className="text-lg font-bold mb-4 mt-4 text-left text-black">
+              Digital Payments
+            </h2>
+          )}
 
         <div className="grid grid-cols-3 gap-4 mb-4 mt-4">
           {formData?.digitalPaymentLinks?.map((value: any, index: number) => {
@@ -361,9 +357,9 @@ const ProTemplateQuartz = ({
                     if (formData.deviceUid) {
                       await createTap(
                         actions[
-                          DIGITAL_MEDIA_IDS[
-                            value.profileDigitalPaymentsId
-                          ] as ActionKeys
+                        DIGITAL_MEDIA_IDS[
+                        value.profileDigitalPaymentsId
+                        ] as ActionKeys
                         ],
                         formData.deviceUid
                       );
