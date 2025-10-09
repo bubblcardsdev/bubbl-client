@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "@/src/context/userContext";
 import { defaultGlobalState } from "@/src/context/defaultGlobalState";
 import { reducer } from "@/src/context/reducer";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(reducer, defaultGlobalState);
