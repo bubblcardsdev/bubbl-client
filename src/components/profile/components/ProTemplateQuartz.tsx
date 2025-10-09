@@ -121,16 +121,16 @@ const ProTemplateQuartz = ({
         {/* Profile Info */}
         <div className="w-full">
           <div className="relative w-[80%] p-2 text-left">
-            <p className="text-lg font-bold text-black">
+            <p className="text-lg font-bold text-black mb-2">
               {formData?.firstName + " " + formData?.lastName || "Name"}
             </p>
-            <p className="text-md text-black font-semibold">
+            <p className="text-base text-black font-semibold">
               {formData?.position || "Designation"}
             </p>
             <p className="text-sm text-gray-600">
               {formData?.companyName || "Company name"}
             </p>
-            <p className="text-sm text-gray-600 leading-relaxed mt-3">
+            <p className="text-sm text-gray-600 leading-relaxed mt-2">
               {formData?.shortDescription}
             </p>
           </div>
@@ -173,8 +173,8 @@ const ProTemplateQuartz = ({
                     {formData?.phoneNumbers?.[0]?.phoneNumber}
                   </span>
                 </div>
-                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
-                  <Arrow_icon />
+                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
+                  <DownArrowIcon />
                 </div>
               </button>
             </a>
@@ -204,8 +204,8 @@ const ProTemplateQuartz = ({
                     {formData?.emailIds?.[0]?.emailId}
                   </span>
                 </div>
-                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
-                  <Arrow_icon />
+                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
+                  <DownArrowIcon />
                 </div>
               </button>
             </a>
@@ -240,7 +240,7 @@ const ProTemplateQuartz = ({
                     {formData?.websites?.[0]?.website}
                   </span>
                 </div>
-                <div className="absolute -right-2 flex items-center justify-center w-9 h-9 bg-[#D47DFF] rounded-full shadow-md">
+                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
                   <DownArrowIcon />
                 </div>
               </button>
@@ -282,8 +282,8 @@ const ProTemplateQuartz = ({
                     {formData?.state}, {formData?.country}
                   </span>
                 </div>
-                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
-                  <Arrow_icon />
+                <div className="absolute flex-shrink-0 -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
+                  <DownArrowIcon />
                 </div>
               </button>
             </a>

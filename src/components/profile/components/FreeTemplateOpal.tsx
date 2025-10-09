@@ -144,17 +144,17 @@ const FreeTemplateOpal = ({
           </div>
 
           {/* User Information */}
-          <div className="space-y-1 xs:space-y-2">
-            <h1 className="text-lg xs:text-xl sm:text-2xl font-bold text-left text-black leading-tight">
+          <div className="">
+            <h1 className="text-lg  font-bold text-left text-black leading-tight mb-2">
               {formData?.firstName + " " + formData?.lastName || "Your Name"}
             </h1>
-            <p className="text-xs xs:text-sm sm:text-[16px] text-gray-700 text-left">
+            <p className="text-base text-gray-700 text-left ">
               {formData?.designation || "Designation"}
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 text-left">
+            <p className="text-base text-gray-600 text-left mb-2">
               {formData?.companyName || "Company Name"}
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 text-left leading-relaxed">
+            <p className="text-sm text-gray-600 text-left leading-relaxed ">
               {formData?.shortDescription ||
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."}
             </p>
