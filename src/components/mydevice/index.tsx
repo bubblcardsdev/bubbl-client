@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import {
-  getLinkedDevices,
-  switchProfile,
-} from "@/src/services/devices";
+import { getLinkedDevices, switchProfile } from "@/src/services/devices";
 import { isEmpty } from "lodash";
 import { Circle, MoreVertical } from "lucide-react";
 import { BsChevronDown } from "react-icons/bs";
@@ -33,7 +30,7 @@ interface MyDevice {
   deviceLinkId: number | null;
   linkedProfileId: number | null;
   linkedModeId: number | null;
-  deviceStatus: boolean | null;
+  deviceStatus: 1 | 0 | null;
   uniqueName: string | null;
   profileId: number | null;
   modeId: number | null;
@@ -97,8 +94,6 @@ export default function DeviceCards() {
       }
     } catch (e: any) {
       toast.error(e?.message || "Something went wrong");
-    } finally {
-      setDropDown({ ...dropDown, profile: false });
     }
   };
 
@@ -137,6 +132,7 @@ export default function DeviceCards() {
   //     setDropDown({ ...dropDown, profile: false });
   //   }
   // };
+
   useEffect(() => {
     getMydevices();
   }, []);
@@ -160,9 +156,12 @@ export default function DeviceCards() {
             const activationDate = device?.linkedAt
               ? new Date(device?.linkedAt).toLocaleDateString()
               : "";
+
+            const badgeColor =
+              device?.deviceStatus === 1 ? "#00D729" : "#E9292D";
             return (
               <div
-                className="bg-[#282828] rounded-xl p-6 flex flex-col gap-3 w-full"
+                className="bg-[#282828] rounded-xl p-6 flex flex-col gap-2 w-full"
                 key={i}
               >
                 {/* Device Id and Menu */}
@@ -222,7 +221,7 @@ export default function DeviceCards() {
                     </p>
                     <p className="flex items-center gap-2 text-sm mb-1 truncate font-extralight max-w-full">
                       {device?.deviceStatus ? "Active" : "Deactivated"}{" "}
-                      <Circle fill="#00D729" size={12} color="#00D729" />
+                      <Circle fill={badgeColor} size={12} color={badgeColor} />
                     </p>
                   </div>
                   <Image
@@ -233,9 +232,9 @@ export default function DeviceCards() {
                   />
                 </div>
                 {/* Switch Profiles and Modes */}
-                <div className="grid grid-cols-2 gap-3 items-center">
+                <div className="grid grid-cols-2 gap-6 items-center">
                   <div>
-                    <p className="text-xs text-[#888888] mb-2 ">
+                    <p className="text-xs text-[#888888] mb-3">
                       Switch profile
                     </p>
                     <div className="relative">
@@ -243,7 +242,7 @@ export default function DeviceCards() {
                         onClick={() => {
                           setDropDown({ ...dropDown, profile: true });
                         }}
-                        className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
+                        className="w-full relative flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
                         onBlur={() => {
                           setDropDown({ ...dropDown, profile: false });
                         }}
@@ -257,39 +256,41 @@ export default function DeviceCards() {
                             profileOpen ? "rotate-180" : ""
                           }`}
                         />
-                      </button>
-
-                      {profileOpen && (
-                        <div className="absolute left-0 mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
-                          <div className="flex flex-col">
-                            {profiles.map((p, i) => (
-                              <div
-                                key={i}
-                                onClick={() => {
-                                  handleSwitchProfiles(p, device);
-                                }}
-                                className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
-                              >
-                                {p.profileName}
-                              </div>
-                            ))}
+                        {profileOpen && (
+                          <div className="absolute left-0 top-full mt-1 w-full bg-[#2A2A2A] border border-[#3A3A3A] rounded-lg shadow-xl z-10 max-h-48 overflow-y-auto">
+                            <div className="flex flex-col">
+                              {profiles.map((p, i) => (
+                                <div
+                                  key={i}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDropDown({ ...dropDown, profile: false });
+                                    handleSwitchProfiles(p, device);
+                                  }}
+                                  className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
+                                >
+                                  {p.profileName}
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </button>
                     </div>
                   </div>
 
                   {/* Modes */}
                   <div>
-                    <p className="text-xs text-[#888888] mb-2">Modes</p>
+                    <p className="text-xs text-[#888888] mb-3">Modes</p>
                     <div className="relative">
                       <button
                         onClick={() => {
                           setDropDown({ ...dropDown, mode: true });
                         }}
                         className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
-                        aria-haspopup="listbox"
-                        aria-expanded={modeOpen}
+                        onBlur={() => {
+                          setDropDown({ ...dropDown, mode: false });
+                        }}
                       >
                         <span className="text-white truncate">
                           {device.mode}
