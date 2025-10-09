@@ -65,7 +65,7 @@ const About = () => {
             frustration of outdated networking tools. We believe first
             impressions shouldn’t be forgotten in piles of paper cards.
           </p>
-          <h2 className="font-bold text-2xl">Founder's Note</h2>
+          <h2 className="font-bold text-2xl">Founder&apos;s Note</h2>
 
           <p className="text-lg font-semibold">
             “We created Bubbl because we wanted networking to be effortless,

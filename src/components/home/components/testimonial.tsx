@@ -3,10 +3,8 @@ import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 import { CardWrapper } from "../../common/testiMonialCard";
 import { testimonial } from "@/src/lib/constant";
-import { useState } from "react";
 
 export default function TestiMonial() {
-  const [viewMore, setViewMore] = useState(false);
 
   return (
     <div className="w-full px-8 py-12  bg-[#ffffff] flex overflow-hidden">
@@ -27,7 +25,6 @@ export default function TestiMonial() {
         <FadeInSection>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 py-[4%] max-w-[1200px] mx-auto ">
             {testimonial
-              .filter((_, i) => viewMore || i < 6)
               .map((e, i) => (
                 <div
                   key={i}
