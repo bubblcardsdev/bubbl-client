@@ -161,7 +161,7 @@ const CheckoutPage = () => {
         localStorage.removeItem("cartItems");
         dispatch({ type: CART, payload: "" });
         toast.success("Thanks for purchasing the product, your order details will be sent to your mail");
-        router.push("/shop");
+        router.push("/paymentResponse");
       }
     } catch (err) {
       console.error("Error in verifying payment:", err);
