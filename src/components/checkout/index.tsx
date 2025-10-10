@@ -6,7 +6,6 @@ import Link from "next/link";
 import { getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
 import {
-  CheckoutApi,
   createOrder,
   recordPaymentFailure,
   verifyPayment,
@@ -176,7 +175,7 @@ const CheckoutPage = () => {
     const orderId = res?.error?.metadata?.order_id || "";
     const reason = res?.error?.description || res?.error?.reason || "Payment failed";
 
-    const _ = await recordPaymentFailure(paymentId, orderId, reason);
+    await recordPaymentFailure(paymentId, orderId, reason);
   } catch (err) {
     console.error("Error handling payment failure:", err);
 };

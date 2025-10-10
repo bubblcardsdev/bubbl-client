@@ -108,7 +108,7 @@ export const recordPaymentFailure = async (
   const token = getAccessToken();
 
   try {
-    const _ = await axiosInstance.post(
+   await axiosInstance.post(
       "/pay/failurePayment",
       data,
       {
