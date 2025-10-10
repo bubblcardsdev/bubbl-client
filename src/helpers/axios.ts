@@ -93,7 +93,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getAccessToken();
     if (accessToken) {
-      config.headers["x-access-token"] = `Bearer ${accessToken}`;
+      config.headers["x-access-token"] = {accessToken};
     }
     return config;
   },
@@ -128,11 +128,13 @@ axiosInstance.interceptors.response.use(
 
         // 🔄 Try refreshing the access token
         const response = await axios.post(
-          `${BASE_URL}/auth/refresh/token`,{refreshToken}
+          `${BASE_URL}/refresh/token`,{refreshToken}
         );
 
         if (response.status === 200) {
           const newAccessToken = response?.data?.token?.accessToken;
+          console.log(response?.data);
+          
           if (newAccessToken) {
             setAccessToken(newAccessToken);
             // Retry original request with new token

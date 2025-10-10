@@ -8,6 +8,7 @@ import { CartItem } from "@/src/lib/interface";
 import { fetchAllDevices } from "@/src/services/alldevicesApi";
 import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
+import { Minus,Plus } from "lucide-react";
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
@@ -18,7 +19,9 @@ const Cart = () => {
   const { cart: cards } = state;
 
   const handleBuyNow = () => {
-    if (isEmpty(cards)) {
+    console.log(isEmpty(cards),"?",cards);
+    
+    if (!isEmpty(cards)) {
       router.push("/checkout");
     }
   };
@@ -60,22 +63,22 @@ const Cart = () => {
   }, []);
 
   const handleIncrease = (productId: string) => {
-    const updatedCards = isEmpty(cards)
-      ? cards.map((card: any) => {
-          if (card.productId === productId) {
-            return {
-              ...card,
-              quantity: card.quantity < 10 ? card.quantity + 1 : 10,
-            };
-          }
-          return card;
-        })
-      : [];
-    dispatch({ type: CART, payload: updatedCards });
-    if (typeof window !== "undefined") {
-      setCart(JSON.stringify(updatedCards));
-    }
-  };
+  const updatedCards = !isEmpty(cards)
+    ? cards.map((card: any) => {
+        if (card.productId === productId) {
+          return {
+            ...card,
+            quantity: card.quantity < 10 ? card.quantity + 1 : 10,
+          };
+        }
+        return card;
+      })
+    : [];
+  dispatch({ type: CART, payload: updatedCards });
+  if (typeof window !== "undefined") {
+    setCart(JSON.stringify(updatedCards));
+  }
+};
 
   const handleDecrease = (productId: string) => {
     const updatedCards = !isEmpty(cards)
@@ -185,14 +188,14 @@ const Cart = () => {
                             className=" m-0 p-0 cursor-pointer"
                             onClick={() => handleDecrease(productId)}
                           >
-                            -
+                            <Minus size={14} />
                           </button>
                           <p className="m-0 p-0">{quantity}</p>
                           <button
                             className=" m-0 p-0 cursor-pointer"
                             onClick={() => handleIncrease(productId)}
                           >
-                            +
+                            <Plus size={14} />
                           </button>
                         </div>
                         <button
