@@ -371,7 +371,7 @@ const ProTemplateNeno = ({
               </h2>
               <p className="text-sm font-medium text-white/70">
                 {" "}
-                {formData?.position || "Designation"}
+                {formData?.designation || "Designation"}
               </p>
               <p className="text-sm font-medium text-white/70">
                 {formData?.companyName || "Company Name"}

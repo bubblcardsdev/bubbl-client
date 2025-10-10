@@ -121,10 +121,10 @@ const ProTemplateQuartz = ({
         <div className="w-full">
           <div className="relative w-[80%] p-2 text-left">
             <p className="text-lg font-bold text-black">
-              {formData?.firstName + " " + formData?.lastName || "Name"}
+              {formData?.firstName + " " + formData?.lastName || "Your Name"}
             </p>
             <p className="text-md text-black font-semibold">
-              {formData?.position || "Designation"}
+              {formData?.designation || "Designation"}
             </p>
             <p className="text-sm text-gray-600">
               {formData?.companyName || "Company name"}

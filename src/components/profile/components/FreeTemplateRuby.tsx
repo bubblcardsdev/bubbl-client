@@ -95,17 +95,15 @@ const FreeTemplateRuby = ({
           <div className="flex justify-between items-start mt-6 ">
             <div className="text-left flex flex-col gap-1">
               <p className="text-black text-xl font-bold">
-                {formData?.firstName + "" + formData.lastName || "Name"}
+              {formData?.firstName + " " + formData?.lastName || "Your Name"}
               </p>
               <div className="flex flex-col "> <h3 className="text-black text-md">
-                {formData?.position || "Designation"}
+                {formData?.designation || "Designation"}
               </h3>
                 <h3 className="text-black text-md">
                   {formData?.companyName || "company name"}
                 </h3>
-
               </div>
-
             </div>
             {/* <div className="  text-sm font-semibold border border-red-500 w-24 h-24">
               <Image

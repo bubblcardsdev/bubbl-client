@@ -88,7 +88,7 @@ const ProTemplateSpahire = ({
               className="text-black text-xl font-bold "
               style={{ color: color }}
             >
-              {formData?.firstName + " " + formData?.lastName || "Name"}
+              {formData?.firstName + " " + formData?.lastName || "Your Name"}
             </p>
             <p className="text-black text-md">
               {formData?.designation || "Designation"}
