@@ -9,9 +9,9 @@ function BannerSection() {
           <p className="lg:text-[40px] text-center leading-normal md:text-[36px] md:font-semibold md:w-full md:leading-inherit sm:text-[30px] sm:p-[10px] sm:text-center xs:text-[26px] xs:font-bold">
             Upgrade Your Networking <br /> Game Today
           </p>
-          <button className="shadow-md shadow-gray-400 bg-[#A464F7] text-white lg:text-[16px] px-[34px] py-[13px] rounded-[10px] tracking-normal sm:mt-[10px] sm:text-[14px]">
+          {/* <button className="shadow-md shadow-gray-400 bg-[#A464F7] text-white lg:text-[16px] px-[34px] py-[13px] rounded-[10px] tracking-normal sm:mt-[10px] sm:text-[14px]">
             Explore products
-          </button>
+          </button> */}
         </div>
         <div className="w-full bg-cover bg-center bg-no-repeat md:bg-contain flex justify-center ">
           <Image
