@@ -69,7 +69,7 @@ const ProTemplateSpahire = ({
   };
 
   return (
-    <div className="w-full max-w-[400px] mx-auto overflow-hidden ">
+    <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
       <div className=" bg-gray-200">
         <Image
           src={formData?.profileImageUrl || "/profile.png"}
@@ -145,10 +145,10 @@ const ProTemplateSpahire = ({
             formData?.emailIds?.[0]?.emailId?.length > 0 ||
             formData?.websites?.[0]?.website?.length > 0 ||
             (formData?.state && formData?.country)) && (
-            <h2 className="text-lg font-bold mb-4 text-left text-black">
-              Contact Information
-            </h2>
-          )}
+              <h2 className="text-lg font-bold mb-4 text-left text-black">
+                Contact Information
+              </h2>
+            )}
 
           <div className="grid grid-cols-4 gap-4 mb-6">
             {formData?.phoneNumbers?.[0]?.phoneNumber && (
@@ -210,10 +210,10 @@ const ProTemplateSpahire = ({
           {formData?.socialMediaNames?.some(
             (v: any) => v?.socialMediaName?.length > 0
           ) && (
-            <h2 className="text-lg font-bold mb-4 text-left text-black">
-              Social Media
-            </h2>
-          )}
+              <h2 className="text-lg font-bold mb-4 text-left text-black">
+                Social Media
+              </h2>
+            )}
 
           <div className="grid grid-cols-4 gap-4">
             {formData?.socialMediaNames &&
@@ -292,9 +292,9 @@ const ProTemplateSpahire = ({
                             if (formData.deviceUid) {
                               await createTap(
                                 actions[
-                                  DIGITAL_MEDIA_IDS[
-                                    value.profileDigitalPaymentsId
-                                  ] as ActionKeys
+                                DIGITAL_MEDIA_IDS[
+                                value.profileDigitalPaymentsId
+                                ] as ActionKeys
                                 ],
                                 formData.deviceUid
                               );

@@ -70,7 +70,7 @@ const FreeTemplateRuby = ({
     <div className="flex items-center align-middle justify-center  overflow-hidden bg-white ">
       <ToastContainer />
 
-      <div className="relative w-full max-w-[380px]">
+      <div className="relative w-full shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         <div className=" bg-yellow-500  rounded-t-2xl max-h-[250px]">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
@@ -95,11 +95,11 @@ const FreeTemplateRuby = ({
           <div className="flex justify-between items-start mt-6 ">
             <div className="text-left flex flex-col gap-1">
               <p className="text-black text-lg font-bold">
-                {formData?.firstName + "" + formData.lastName || "Name"}
+                {formData?.firstName + " " + formData.lastName || "Name"}
               </p>
               <div className="flex flex-col ">
                 <h3 className="text-black text-md">
-                  {formData?.position || "Designation"}
+                  {formData?.designation || "Designation"}
                 </h3>
                 <h3 className="text-black text-sm">
                   {formData?.companyName || "company name"}

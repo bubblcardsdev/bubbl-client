@@ -75,7 +75,7 @@ const FreeTemplateOpal = ({
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
-      <div className="w-full max-w-[380px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
+      <div className="w-full bg-[#EDEDED]  relative overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         {/* Header curved background */}
         <div
           className="absolute top-0 left-0 w-full h-[100px] xs:h-[120px] sm:h-[140px] md:h-[165px] rounded-br-[250px] xs:rounded-br-[300px] sm:rounded-br-[400px] md:rounded-br-[550px]"

@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   CallProfileIcon,
   MailProfileIcon,
+  Arrow_icon,
   Paytm_icon,
   Phonepay_icon,
   Googlepay_icon,
@@ -15,7 +16,6 @@ import {
   QuartzTwitterIcon,
   QuartzLinkedinIcon,
   QuartzYoutubeIcon,
-  DownArrowIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
 import { copyText, openInNewTab } from "../../../utils/commonLogics";
@@ -66,7 +66,7 @@ const ProTemplateQuartz = ({
   const router = useRouter();
 
   return (
-    <div className="xs:w-full max-w-[380px] mx-auto overflow-hidden">
+    <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
       <ToastContainer />
       {/* Profile Image */}
       <div className="bg-[#D9D9D9] h-[400px]">
@@ -120,16 +120,16 @@ const ProTemplateQuartz = ({
         {/* Profile Info */}
         <div className="w-full">
           <div className="relative w-[80%] p-2 text-left">
-            <p className="text-lg font-bold text-black mb-2">
+            <p className="text-lg font-bold text-black">
               {formData?.firstName + " " + formData?.lastName || "Name"}
             </p>
-            <p className="text-base text-black font-semibold">
-              {formData?.position || "Designation"}
+            <p className="text-md text-black font-semibold">
+              {formData?.designation || "Designation"}
             </p>
             <p className="text-sm text-gray-600">
               {formData?.companyName || "Company name"}
             </p>
-            <p className="text-sm text-gray-600 leading-relaxed mt-2">
+            <p className="text-sm text-gray-600 leading-relaxed mt-3">
               {formData?.shortDescription}
             </p>
           </div>
@@ -172,8 +172,8 @@ const ProTemplateQuartz = ({
                     {formData?.phoneNumbers?.[0]?.phoneNumber}
                   </span>
                 </div>
-                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
-                  <DownArrowIcon />
+                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
+                  <Arrow_icon />
                 </div>
               </button>
             </a>
@@ -203,8 +203,8 @@ const ProTemplateQuartz = ({
                     {formData?.emailIds?.[0]?.emailId}
                   </span>
                 </div>
-                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
-                  <DownArrowIcon />
+                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
+                  <Arrow_icon />
                 </div>
               </button>
             </a>
@@ -239,8 +239,8 @@ const ProTemplateQuartz = ({
                     {formData?.websites?.[0]?.website}
                   </span>
                 </div>
-                <div className="absolute -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
-                  <DownArrowIcon />
+                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
+                  <Arrow_icon />
                 </div>
               </button>
             </a>
@@ -281,8 +281,8 @@ const ProTemplateQuartz = ({
                     {formData?.state}, {formData?.country}
                   </span>
                 </div>
-                <div className="absolute flex-shrink-0 -right-3 flex items-center justify-center w-10 h-10 bg-[#D47DFF] rounded-full shadow-md">
-                  <DownArrowIcon />
+                <div className="absolute bg-[#D47DFF] p-3 rounded-full shadow-md -right-2">
+                  <Arrow_icon />
                 </div>
               </button>
             </a>
