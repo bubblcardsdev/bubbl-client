@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   CallProfileIcon,
   MailProfileIcon,
-  Arrow_icon,
   Paytm_icon,
   Phonepay_icon,
   Googlepay_icon,
