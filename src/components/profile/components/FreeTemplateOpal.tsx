@@ -19,7 +19,7 @@ import {
   Linkedin_icon_thin,
 } from "../../common/icons";
 import {
- 
+
   actions,
   SOCIAL_MEDIA_IDS,
   ActionKeys,
@@ -58,24 +58,24 @@ const FreeTemplateOpal = ({
   const router = useRouter();
   console.log(router.asPath.slice(1));
 
- const DigitalIconsObj: any = {
-  "1": Googlepay_icon,
-  "2": Phonepay_icon,
-  "3": Paytm_icon,
-};
+  const DigitalIconsObj: any = {
+    "1": Googlepay_icon,
+    "2": Phonepay_icon,
+    "3": Paytm_icon,
+  };
 
- const SocialIconsObj: any = {
-  "1": Instagram_icon,      // Instagram
-  "2": Facebook_icon_thin,  // Facebook
-  "3": OpalYoutubeIcon,     // Youtube
-  "4": Twitter_icon_thin,   // Twitter
-  "5": OpalWhatsappIcon,    // WhatsApp
-  "6": Linkedin_icon_thin,  // LinkedIn
-};
+  const SocialIconsObj: any = {
+    "1": Instagram_icon,      // Instagram
+    "2": Facebook_icon_thin,  // Facebook
+    "3": OpalYoutubeIcon,     // Youtube
+    "4": Twitter_icon_thin,   // Twitter
+    "5": OpalWhatsappIcon,    // WhatsApp
+    "6": Linkedin_icon_thin,  // LinkedIn
+  };
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
-      <div className="w-full max-w-[400px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
+      <div className="w-full max-w-[380px] bg-[#EDEDED]  relative overflow-hidden shadow-lg">
         {/* Header curved background */}
         <div
           className="absolute top-0 left-0 w-full h-[100px] xs:h-[120px] sm:h-[140px] md:h-[165px] rounded-br-[250px] xs:rounded-br-[300px] sm:rounded-br-[400px] md:rounded-br-[550px]"
@@ -114,7 +114,7 @@ const FreeTemplateOpal = ({
                   >
                     <Share_icon />
                   </button>
-                
+
                   <button
                     className=" rounded-md flex-shrink-0 "
                     style={{ backgroundColor: color }}
@@ -144,17 +144,17 @@ const FreeTemplateOpal = ({
           </div>
 
           {/* User Information */}
-          <div className="space-y-1 xs:space-y-2">
-            <h1 className="text-lg xs:text-xl sm:text-2xl font-bold text-left text-black leading-tight">
+          <div className="">
+            <h1 className="text-lg  font-bold text-left text-black leading-tight mb-2">
               {formData?.firstName + " " + formData?.lastName || "Your Name"}
             </h1>
-            <p className="text-xs xs:text-sm sm:text-[16px] text-gray-700 text-left">
+            <p className="text-base text-gray-700 text-left ">
               {formData?.designation || "Designation"}
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 text-left">
+            <p className="text-base text-gray-600 text-left mb-2">
               {formData?.companyName || "Company Name"}
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 text-left leading-relaxed">
+            <p className="text-sm text-gray-600 text-left leading-relaxed ">
               {formData?.shortDescription ||
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."}
             </p>
@@ -166,27 +166,25 @@ const FreeTemplateOpal = ({
               formData?.emailIds?.[0]?.emailId?.length > 0 ||
               formData?.websites?.[0]?.website?.length > 0 ||
               (formData?.state && formData?.country)) && (
-              <h2 className="text-base xs:text-lg sm:text-xl font-bold text-black text-left">
-                Contact Information
-              </h2>
-            )}
+                <h2 className="text-base xs:text-lg sm:text-xl font-bold text-black text-left">
+                  Contact Information
+                </h2>
+              )}
 
             <div className="space-y-2 xs:space-y-3 sm:space-y-4 flex flex-col ">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
                 <a
-                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${
-                    formData?.phoneNumbers?.[0]?.phoneNumber || ""
-                  }`}
+                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
+                    }`}
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate dial
                     if (formData?.deviceUid) {
                       await createTap(4, formData.deviceUid);
                     }
                     // manually trigger call after logging
-                    window.location.href = `tel:${
-                      formData?.phoneNumbers?.[0]?.countryCode || ""
-                    }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
+                      }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -217,9 +215,8 @@ const FreeTemplateOpal = ({
                       await createTap(5, formData.deviceUid); // log email tap
                     }
                     // manually trigger email client after logging
-                    window.location.href = `mailto:${
-                      formData?.emailIds?.[0]?.emailId || ""
-                    }`;
+                    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
+                      }`;
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -279,8 +276,7 @@ const FreeTemplateOpal = ({
               {formData?.state && formData?.country && (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address || ""}, ${formData?.city || ""}, ${
-                      formData?.state || ""
+                    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                     }, ${formData?.country || ""}`
                   )}`}
                   target="_blank"
@@ -293,8 +289,7 @@ const FreeTemplateOpal = ({
                     // open Google Maps after logging
                     window.open(
                       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        `${formData?.address || ""}, ${formData?.city || ""}, ${
-                          formData?.state || ""
+                        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
                         }, ${formData?.country || ""}`
                       )}`,
                       "_blank",
@@ -302,7 +297,7 @@ const FreeTemplateOpal = ({
                     );
                   }}
                 >
-                  <div className="w-full bg-[#F4F4F4] rou   nded-md flex items-stretch overflow-hidden text-black text-left">
+                  <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <Location_icon color={color} />
                       <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
@@ -326,10 +321,10 @@ const FreeTemplateOpal = ({
             {formData?.socialMediaNames
               ?.map((value: any) => value?.socialMediaName?.length > 0)
               ?.includes(true) && (
-              <h2 className="text-base xs:text-lg sm:text-xl font-bold text-left text-black">
-                Social Media
-              </h2>
-            )}
+                <h2 className="text-base xs:text-lg sm:text-xl font-bold text-left text-black">
+                  Social Media
+                </h2>
+              )}
             <div className="space-y-2 xs:space-y-3 sm:space-y-4 text-left">
               {formData?.socialMediaNames &&
                 [...formData.socialMediaNames]
@@ -358,9 +353,9 @@ const FreeTemplateOpal = ({
                             if (formData.deviceUid) {
                               createTap(
                                 actions[
-                                  SOCIAL_MEDIA_IDS[
-                                    value.profileSocialMediaId
-                                  ] as ActionKeys
+                                SOCIAL_MEDIA_IDS[
+                                value.profileSocialMediaId
+                                ] as ActionKeys
                                 ],
                                 formData.deviceUid
                               );
@@ -369,7 +364,7 @@ const FreeTemplateOpal = ({
                             openInNewTab(value?.socialMediaName);
                           }}
                         >
-                          <div className="flex-1 flex items-center gap-2 xs:gap-3 px-2.5 xs:px-3 sm:px-4 py-2.5 xs:py-3 min-w-0">
+                          <div className="flex-1 flex items-center gap-2  xs:gap-3 p-2.5 xs:p-3 sm:p-4  min-w-0">
                             {Icon && <Icon color={color} />}
                             <div className="flex-grow min-w-0">
                               <h1 className="text-black font-semibold text-xs xs:text-sm sm:text-[16px] truncate">
@@ -421,9 +416,9 @@ const FreeTemplateOpal = ({
                             if (formData.deviceUid) {
                               await createTap(
                                 actions[
-                                  DIGITAL_MEDIA_IDS[
-                                    value.profileDigitalPaymentsId
-                                  ] as ActionKeys
+                                DIGITAL_MEDIA_IDS[
+                                value.profileDigitalPaymentsId
+                                ] as ActionKeys
                                 ],
                                 formData.deviceUid
                               );

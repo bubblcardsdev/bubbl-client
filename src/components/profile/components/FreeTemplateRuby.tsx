@@ -70,7 +70,7 @@ const FreeTemplateRuby = ({
     <div className="flex items-center align-middle justify-center  overflow-hidden bg-white ">
       <ToastContainer />
 
-      <div className="relative w-full max-w-[400px]">
+      <div className="relative w-full max-w-[380px]">
         <div className=" bg-yellow-500  rounded-t-2xl max-h-[250px]">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
@@ -94,13 +94,14 @@ const FreeTemplateRuby = ({
           </div>
           <div className="flex justify-between items-start mt-6 ">
             <div className="text-left flex flex-col gap-1">
-              <p className="text-black text-xl font-bold">
+              <p className="text-black text-lg font-bold">
                 {formData?.firstName + "" + formData.lastName || "Name"}
               </p>
-              <div className="flex flex-col "> <h3 className="text-black text-md">
-                {formData?.position || "Designation"}
-              </h3>
+              <div className="flex flex-col ">
                 <h3 className="text-black text-md">
+                  {formData?.position || "Designation"}
+                </h3>
+                <h3 className="text-black text-sm">
                   {formData?.companyName || "company name"}
                 </h3>
 
@@ -188,14 +189,16 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-3">
-                      <PhoneColorIcon />
-                      <span className="ml-1 flex-grow text-left">
+                    <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
+                      <div className="flex-shrink-0">
+                        <PhoneColorIcon />
+                      </div>
+                      <span className="ml-1 flex-grow truncate" title={formData.phoneNumbers[0].phoneNumber}>
                         {formData.phoneNumbers[0].countryCode}{" "}
                         {formData.phoneNumbers[0].phoneNumber}
                       </span>
                     </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                    <div className="bg-[#E5E5E5] flex items-center px-3 flex-shrink-0">
                       <Arrow_icon color={color} />
                     </div>
                   </div>
@@ -214,17 +217,21 @@ const FreeTemplateRuby = ({
                       }`;
                   }}
                 >
+
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                     <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
-                      <MailIconbackgroundFill />
+                      <div className="flex-shrink-0">
+                        <MailIconbackgroundFill />
+                      </div>
                       <span className="ml-1 flex-grow truncate" title={formData.emailIds[0].emailId}>
                         {formData.emailIds[0].emailId}
                       </span>
                     </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                    <div className="bg-[#E5E5E5] flex items-center px-3 flex-shrink-0">
                       <Arrow_icon color={color} />
                     </div>
                   </div>
+
                 </a>
               )}
 
@@ -246,13 +253,15 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-3">
-                      <WebIconBackgroundFill />
-                      <span className="ml-1 flex-grow">
+                    <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
+                      <div className="flex-shrink-0">
+                        <WebIconBackgroundFill />
+                      </div>
+                      <span className="ml-1 flex-grow truncate" title={formData.websites[0].website}>
                         {formData.websites[0].website}
                       </span>
                     </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                    <div className="bg-[#E5E5E5] flex items-center px-3 flex-shrink-0">
                       <Arrow_icon color={color} />
                     </div>
                   </div>
@@ -283,13 +292,15 @@ const FreeTemplateRuby = ({
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
-                    <div className="flex-1 flex items-center gap-3 p-3">
-                      <MapIconBackgroundFill />
-                      <span className="ml-1 flex-grow">
+                    <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
+                      <div className="flex-shrink-0">
+                        <MapIconBackgroundFill />
+                      </div>
+                      <span className="ml-1 flex-grow truncate" title={`${formData.state}, ${formData.country}`}>
                         {formData.state}, {formData.country}
                       </span>
                     </div>
-                    <div className="bg-[#E5E5E5] flex items-center px-3">
+                    <div className="bg-[#E5E5E5] flex items-center px-3 flex-shrink-0">
                       <Arrow_icon color={color} />
                     </div>
                   </div>
