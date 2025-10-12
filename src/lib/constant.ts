@@ -573,11 +573,11 @@ export const socialLinkRules: Record<number, (input: string) => string> = {
 
 export const MODES = [
   {
-    id: 1,
-    name: "Bubbl profile",
+    value: 2,
+    label: "Bubbl profile",
   },
   {
-    id: 2,
-    name: "Direct URL",
+    value: 3,
+    label: "Direct URL",
   },
 ];

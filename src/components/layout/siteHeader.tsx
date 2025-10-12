@@ -3,33 +3,72 @@ import { useContext, useEffect, useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { themeObject } from "../../lib/constant";
-import { BubblLogo, CartIcon } from "../common/icons";
+import {
+  BubblLogo,
+  CartIcon,
+  ProfileIcon,
+} from "../common/icons";
 import Link from "next/link";
 import { UserContext } from "@/src/context/userContext";
 import { getCart } from "@/src/helpers/localStorage";
 import { CART } from "@/src/context/action";
+import Button from "../common/Button";
+import { getToken } from "@/src/utils/utils";
+import ThreeDotMenu from "../common/threeDotMenu";
+import { ThreeDotMenuOption } from "@/src/lib/interface";
+import { LayoutDashboardIcon, LogOut } from "lucide-react";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = useRouter();
+  const router = useRouter();
   const { state, dispatch }: any = useContext(UserContext);
-  console.log(state, "state in header");
-  const { cart:cards } = state;
-  const theme = themeObject[pathname.pathname] || "white";
+
+  const [tokenString, setTokenString] = useState<string>("");
+
+  const { cart: cards } = state;
+  const theme = themeObject[router.pathname] || "white";
   const isDarkTheme =
     theme === "black" ||
     theme === "linear-gradient(to right, #4A4A4A, #000000)";
-
+  const fetchToken = async () => {
+    const token = await getToken();
+    setTokenString(token || "");
+  };
   useEffect(() => {
-    const storedCart = getCart();
-    if (storedCart) {
-      dispatch({ type: CART, payload: JSON.parse(storedCart) });
+    if (typeof window !== "undefined") {
+      const storedCart = getCart();
+      fetchToken();
+      if (storedCart) {
+        dispatch({ type: CART, payload: JSON.parse(storedCart) });
+      }
     }
   }, []);
 
+  const logout = () => {
+    localStorage.clear();
+    router.push("/login");
+  };
+
+  const menuOptions: ThreeDotMenuOption[] = [
+    {
+      label: "Dashboard",
+      onClick: () => router.push("/overview"),
+      className: isDarkTheme ? "" : "hover:bg-[#F3F3F3] text-gray-900",
+      icon: <LayoutDashboardIcon size={18} />,
+    },
+    {
+      label: "Logout",
+      onClick: () => logout(),
+      className: isDarkTheme
+        ? "text-red-400"
+        : "hover:bg-[#F3F3F3] text-red-400",
+      icon: <LogOut size={18} />,
+    },
+  ];
+
   return (
     <nav
-      className={`flex items-center justify-between px-6 py-2 md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
+      className={`flex items-center justify-between px-6 py-2 h-[60px] md:px-10 lg:px-16 relative transition-all duration-300 border-b`}
       style={{
         background: theme,
         color: isDarkTheme ? "white" : "black",
@@ -53,7 +92,7 @@ const SiteHeader = () => {
             className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${
               isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
             }`}
-            onClick={() => pathname.push(`/${item.toLowerCase()}`)}
+            onClick={() => router.push(`/${item.toLowerCase()}`)}
           >
             <span className="font-bold">{item}</span>
           </div>
@@ -70,7 +109,7 @@ const SiteHeader = () => {
         >
           <span
             className={`${theme === "white" ? "invert" : ""}`}
-            onClick={() => pathname.push("/cart")}
+            onClick={() => router.push("/cart")}
           >
             <CartIcon />
           </span>
@@ -81,12 +120,17 @@ const SiteHeader = () => {
           )}
         </button>
         {/* Login Button */}
-        <button
-          className="px-8 py-2 bg-[#9747FF] text-white  rounded-[10px] hover:bg-purple-500"
-          onClick={() => pathname.push("/login")}
-        >
-          Login
-        </button>
+        {tokenString ? (
+          <ThreeDotMenu
+            options={menuOptions}
+            menuClassName={isDarkTheme ? "" : "bg-white text-black"}
+            icon={
+              <ProfileIcon stroke={"black"} strokeWidth={1} color={"white"} />
+            }
+          />
+        ) : (
+          <Button onClick={() => router.push("/login")}>Login</Button>
+        )}
       </div>
 
       {/* <div
@@ -133,7 +177,7 @@ const SiteHeader = () => {
               className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${
                 isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
               }`}
-              onClick={() => pathname.push(`/${item.toLowerCase()}`)}
+              onClick={() => router.push(`/${item.toLowerCase()}`)}
             >
               <span className="font-bold">{item}</span>
             </div>

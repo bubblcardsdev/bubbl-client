@@ -52,7 +52,7 @@ const HeroSection = () => {
         {progress === 100 && (
           <TranslateYwithFadeIn key="header">
             <div className="flex justify-center">
-              <h1 className="text-white text-4xl absolute top-16 font-bold">
+              <h1 className="text-white text-4xl text-center absolute top-16 font-semibold px-6">
                 Network Smarter. Instantly.
               </h1>
             </div>
@@ -68,27 +68,27 @@ const HeroSection = () => {
           <source src="/HomePageIcons/Hero3D.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {progress < 100 ? (
-          <TranslateYwithFadeIn key="bar">
-            <div className="flex justify-center ">
+        <div className="absolute top-[89%] left-[50%] translate-x-[-50%]">
+          {progress < 100 ? (
+            <TranslateYwithFadeIn key="bar">
               <progress
-                className="w-[200px] h-[6px] rounded-full overflow-hidden  absolute translate-y-[-300%]"
+                className="w-[200px] h-[6px] rounded-full overflow-hidden "
                 value={progress}
                 max={100}
               ></progress>
-            </div>{" "}
-          </TranslateYwithFadeIn>
-        ) : (
-          <TranslateYwithFadeIn key="button">
-            {" "}
-            <button
-              className="absolute md:bottom-[5%] bottom-[10%] left-[50%] translate-x-[-50%] xs:translate-y-[-50%] md:translate-y-[-15%] px-6 py-2 bg-[#9747FF] text-white text-base rounded-[10px] hover:bg-purple-500 transition-colors"
-              onClick={() => router.push("/shop")}
-            >
-              Shop now
-            </button>{" "}
-          </TranslateYwithFadeIn>
-        )}
+            </TranslateYwithFadeIn>
+          ) : (
+            <TranslateYwithFadeIn key="button">
+              {" "}
+              <button
+                className=" px-6 py-2 bg-[#9747FF] text-white text-base rounded-[10px] hover:bg-purple-500 transition-colors"
+                onClick={() => router.push("/shop")}
+              >
+                Shop now
+              </button>{" "}
+            </TranslateYwithFadeIn>
+          )}
+        </div>
       </div>
     </>
   );

@@ -117,7 +117,7 @@ export interface MyDevice {
 }
 
 export type ThreeDotMenuOption = {
-  label: string;
+  label: string | React.ReactNode;
   onClick: () => void;
   className?: string;
   icon?: React.ReactNode;
@@ -183,3 +183,18 @@ export type TableProps<T> = {
   /** Optional row click */
   onRowClick?: (item: T, index: number) => void;
 };
+
+export interface DropdownOption {
+  label: string;
+  value: string | number;
+}
+
+export interface Props {
+  options: DropdownOption[];
+  onShow: () => void;
+  onHide: () => void;
+  label: string;
+  visible: boolean;
+  onSelect: (option?: DropdownOption) => void;
+  value: string;
+}

@@ -18,9 +18,9 @@ interface Props{
 }
 
 export default function MonoColorLoader({
-  size = 140,
-  color = "#38bdf8",
-  message = "Processing NFC...",
+  size = 100,
+  color = "#b97cff",
+  message = "Loading...",
   icon: Icon = DefaultNFCIcon,
   className = "",
   containerClassName = "",

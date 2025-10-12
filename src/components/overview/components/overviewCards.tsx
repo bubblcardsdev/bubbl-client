@@ -26,8 +26,7 @@ const OverviewCard = memo(function OverviewCard({ card }: { card: Card }) {
   return (
     <article
       className="bg-gradient-to-r from-[#1f1f1f] to-[#3b2d4d] rounded-2xl px-6 overflow-hidden
-                 flex flex-row justify-between min-h-[140px] sm:min-h-[150px] relative
-                 group hover:border border-[#B97CFF]/20"
+                 flex flex-row justify-between min-h-[140px] sm:min-h-[150px] relative"
     >
       {/* Text */}
       <div className="pt-6 flex flex-col justify-between max-w-[50%]">

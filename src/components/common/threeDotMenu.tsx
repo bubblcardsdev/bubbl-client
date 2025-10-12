@@ -197,7 +197,7 @@ export default function ThreeDotMenu({
               type="button"
               disabled={opt.disabled}
               onClick={() => handleSelect(opt)}
-              className={`flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#3a3a3a] w-full text-gray-300 ${
+              className={`flex items-center text-gray-300 rounded-lg gap-2 px-3 py-2 text-sm hover:bg-[#3a3a3a] w-full  ${
                 opt.className || ""
               } ${opt.disabled ? "opacity-50 cursor-not-allowed" : ""}`}
             >
@@ -205,9 +205,11 @@ export default function ThreeDotMenu({
                 <span className="inline-flex items-center">{opt.icon}</span>
               ) : null}
               <span className="truncate">
-                <abbr title={opt.label} className="no-underline">
-                  {opt.label}
-                </abbr>
+                {typeof opt.label === "string" && (
+                  <abbr title={opt.label} className="no-underline">
+                    {opt.label}
+                  </abbr>
+                )}
               </span>
               {opt.isPro && (
                 <span

@@ -642,6 +642,29 @@ export const InstagramIcon = (props: iconProps) => {
     </svg>
   );
 };
+
+export const InstagramOutlined = (props: any) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-instagram-icon lucide-instagram"
+      {...props}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+};
+
 export const Youtube_icon = (props: iconProps) => {
   return (
     <svg
@@ -1522,7 +1545,7 @@ export const WebIconBackgroundFill = () => {
     </svg>
   );
 };
-export const InstagramBackgroundFill = () => {
+export const InstagramBackgroundFill = (props: any) => {
   return (
     <svg
       width="36"
@@ -1530,6 +1553,7 @@ export const InstagramBackgroundFill = () => {
       viewBox="0 0 32 33"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...props}
     >
       <g clipPath="url(#clip0_1769_1306)">
         <rect
@@ -1934,6 +1958,7 @@ export const NottifycationIcon = (props: iconProps) => {
   );
 };
 export const ProfileIcon = (props: any) => {
+  const { color="#333333" } = props;
   return (
     <svg
       width="25"
@@ -1944,7 +1969,7 @@ export const ProfileIcon = (props: any) => {
       {...props}
     >
       <g clipPath="url(#clip0_10526_9301)">
-        <circle cx="50" cy="50" r="50" fill="#333333" />
+        <circle cx="50" cy="50" r="50" fill={color} />
         <path
           d="M50.0217 112.998C39.4596 112.998 28.8967 112.998 18.333 112.998C14.2281 112.998 12.1147 110.826 12.1858 106.703C12.5668 85.2867 31.0897 68.3463 52.4831 69.8272C72.1618 71.1989 87.4892 87.1766 87.8499 106.698C87.9261 110.823 85.8178 112.995 81.7078 112.998C71.1457 113.001 60.5837 113.001 50.0217 112.998Z"
           fill="#828282"
@@ -2139,10 +2164,20 @@ export const SmallDownArrowIcon = () => {
 };
 export const DownArrowIcon = () => {
   return (
-    <svg width="17" height="9" viewBox="0 0 17 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 1L7.13537 6.72634C7.90378 7.44353 9.09622 7.44353 9.86464 6.72634L16 1" stroke="white" stroke-width="2" stroke-linecap="round" />
+    <svg
+      width="17"
+      height="9"
+      viewBox="0 0 17 9"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 1L7.13537 6.72634C7.90378 7.44353 9.09622 7.44353 9.86464 6.72634L16 1"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
-
   );
 };
 export const AboutHandIcon = () => {

@@ -11,13 +11,13 @@ interface Props {
 }
 
 const PopupConfirm = (props: Props) => {
-  const { visible, onCancel, onConfirm, message, cancelText, confirmText } =
+  const { visible, onCancel, onConfirm, message, cancelText, confirmText, } =
     props;
   return (
     <Modal
       visible={visible}
       onClose={onCancel}
-      className="lg:max-w-xl xl:max-w-xl"
+      className="lg:max-w-sm xl:max-w-sm"
     >
       <div className="flex flex-col gap-2 py-3 lg:py-5">
         <h1 className="text-base text-center mb-4 max-w-xs mx-auto leading-[1.6]">{message}</h1>

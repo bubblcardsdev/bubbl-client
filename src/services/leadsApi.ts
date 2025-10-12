@@ -1,6 +1,7 @@
 import { getAccessToken } from "../helpers/localStorage";
 import axiosInstance from "../helpers/axios";
 import { toast } from "react-toastify";
+import { getApiErrorMessage, safeToast } from "../utils/utils";
 
 export interface LeadFormData {
   id: number;
@@ -79,7 +80,6 @@ export const UpdateLead = async (payload: LeadFormData) => {
   }
 };
 
-
 export const DeleteLead = async (id: string | number) => {
   try {
     const token = getAccessToken();
@@ -93,10 +93,19 @@ export const DeleteLead = async (id: string | number) => {
       }
     );
 
-    return response.data;
+    if (response.data.success) {
+      safeToast.success("Lead deleted successfully");
+      return response.data;
+    }
+    safeToast.error(response?.data?.message || "Failed to delete lead");
+    return null;
   } catch (error: any) {
-    console.error("Error deleting lead:", error?.response?.data || error);
-    throw error; // rethrow so UI can handle
+    const message = getApiErrorMessage(error);
+
+    // Client-side toast, server-side log
+    safeToast.error(message);
+    console.error("Error deleting lead:", error);
+    return null;
   }
 };
 
@@ -125,4 +134,3 @@ export const GetOverViewData = async () => {
     return null;
   }
 };
-

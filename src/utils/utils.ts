@@ -59,3 +59,11 @@ export const safeToast = {
     }
   },
 };
+
+export const getToken = async() => {
+  try{
+    return await getAccessToken();
+  }catch(err){
+    console.log(err)
+  }
+}

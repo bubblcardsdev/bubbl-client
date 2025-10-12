@@ -12,6 +12,8 @@ import {
   SettingsIcon,
 } from "../common/icons";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
 const menuItems = [
   {
     label: "Overview",
@@ -44,6 +46,12 @@ const menuItems = [
     name: "pricings",
     path: "/pricings",
   },
+    {
+    label: "Shop",
+    icon: <ShoppingBag fill="white" stroke ="#282828"/>,
+    name: "shop",
+    path: "/shop",
+  },
   {
     label: "Support",
     icon: <SupportIcon />,
@@ -75,8 +83,6 @@ export type FunctionProps ={
 }
 const PostLoginSidebar = (props: FunctionProps) => {
   const { currentPage } = props;
-  console.log(currentPage);
-  
   
   const router = useRouter();
   const handleNavigate = (path: string) => {
@@ -84,9 +90,9 @@ const PostLoginSidebar = (props: FunctionProps) => {
   };
   return (
     <div className="flex flex-col px-[10px]  ">
-      <div className="py-5 px-0">
+      <Link href="/" shallow className="py-5 px-0">
         <BubblLogoWhiteIcon />
-      </div>
+      </Link>
       <p className="text-[#7E7E7E] px-5 pb-4">Bubbl board</p>
       <div className="flex flex-col gap-[10px] px-2">
         {menuItems.map((item: MenuItem, index: number) => (

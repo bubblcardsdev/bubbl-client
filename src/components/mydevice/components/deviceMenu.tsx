@@ -28,14 +28,12 @@ const DeviceMenu = (props: Props) => {
     deactivate: false,
     rename: false,
     uniqueName: false,
-    claim:false
+    claim: false,
   };
 
   const { visible, onShow, onHide } = useShowHide(initial);
 
   const [deviceName, setDeviceName] = useState(data.deviceNickName || "");
-
-  console.log(data, "deviceMenu");
 
   const deactivate = async () => {
     try {
@@ -127,11 +125,16 @@ const DeviceMenu = (props: Props) => {
         visible={visible.rename}
         headerClassName="border-b-0"
         bodyClassName="pt-0 pb-6"
-        className="lg:max-w-xl xl:max-w-xl px-3 py-2"
+        className="lg:max-w-md xl:max-w-md px-3 py-2"
         onClose={onHide}
       >
         <p className="text-sm text-[#828282] mb-2">Enter your Device name</p>
-        <Input id={data.deviceUid} className="rounded-lg" value={deviceName} onChange={(e) => setDeviceName(e.target.value)}/>
+        <Input
+          id={data.deviceUid}
+          className="rounded-lg"
+          value={deviceName}
+          onChange={(e) => setDeviceName(e.target.value)}
+        />
         <div className="grid grid-cols-2 items-center gap-6 w-full mt-6">
           <Button onClick={onHide} className="py-3 xs:bg-[#333333]">
             {"Cancel"}
@@ -145,10 +148,12 @@ const DeviceMenu = (props: Props) => {
         visible={visible.claim}
         headerClassName="border-b-0"
         bodyClassName="pt-0 pb-6"
-        className="lg:max-w-xl xl:max-w-xl px-3 py-2"
+        className="lg:max-w-md xl:max-w-md px-3 py-2"
         onClose={onHide}
       >
-        <p className="text-sm text-[#828282] mb-2">Enter your Device Claim name</p>
+        <p className="text-sm text-[#828282] mb-2">
+          Enter your Device Claim name
+        </p>
         <Input id={data.deviceUid} className="rounded-lg" />
         <div className="grid grid-cols-2 items-center gap-6 w-full mt-6">
           <Button onClick={onHide} className="py-3 xs:bg-[#333333]">

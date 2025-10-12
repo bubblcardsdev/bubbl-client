@@ -13,7 +13,6 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
-
 const LoginPage = () => {
   const router = useRouter();
 
@@ -28,8 +27,6 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-console.log("comes here");
-
     try {
       if (!loginForm.email || !loginForm.password) {
         toast.error("Email or password is empty");
@@ -40,7 +37,7 @@ console.log("comes here");
 
       if (success) {
         toast.success("Logged in successfully!");
-        router.push("/myprofile");
+        router.push("/overview");
       }
     } catch (err) {
       console.error("Unexpected error in handleSubmit:", err);
@@ -49,10 +46,6 @@ console.log("comes here");
       setLoading(false);
     }
   };
-
- 
-
-
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -156,11 +149,11 @@ console.log("comes here");
               {/* Social Login Icons */}
               <div className="flex justify-around mt-[16px] space-x-4">
                 <GoogleOAuthProvider clientId="381109639208-5a8i0egsdut082f395brann2n340lbpe.apps.googleusercontent.com">
-                <GoogleLogin 
-    onSuccess={(response) => responseMessage(response, router)} 
-    onError={() => console.log("Login Failed")} 
-    useOneTap 
-  />
+                  <GoogleLogin
+                    onSuccess={(response) => responseMessage(response, router)}
+                    onError={() => console.log("Login Failed")}
+                    useOneTap
+                  />
                 </GoogleOAuthProvider>
                 {/* <button 
                 // onClick={handleGoogleLogin}
@@ -175,7 +168,7 @@ console.log("comes here");
                 {/* <button  type="button" className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
                   <FacebookColorIcon />
                 </button> */}
-           {/* <FacebookLogin
+                {/* <FacebookLogin
   appId="1173697296846078"
   fields="id,name,email"
   scope="public_profile,email"
@@ -192,7 +185,12 @@ console.log("comes here");
   )}
 /> */}
 
-                <a href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent('http://localhost:3000/linkedin-callback')}&scope=profile%20email%20openid`} className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center">
+                <a
+                  href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent(
+                    "http://localhost:3000/linkedin-callback"
+                  )}&scope=profile%20email%20openid`}
+                  className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center"
+                >
                   <LinkedinColorIcon />
                 </a>
               </div>

@@ -6,7 +6,7 @@ import axios, { AxiosError } from "axios";
 import { setAccessToken, setRefreshToken } from "../helpers/localStorage";
 import { FormDataType } from "../lib/interface";
 import { NextRouter } from "next/router";
-
+import { safeToast } from "../utils/utils";
 
 export const loginUser = async (
   email: string,
@@ -25,12 +25,11 @@ export const loginUser = async (
     toast.error("Login failed. Please try again.");
     return false;
   } catch (error: any) {
-    const errMsg =
-      axios.isAxiosError(error)
-        ? error.response?.data?.data?.message ||
-          error.response?.data?.message ||
-          error.message
-        : "Something went wrong";
+    const errMsg = axios.isAxiosError(error)
+      ? error.response?.data?.data?.message ||
+        error.response?.data?.message ||
+        error.message
+      : "Something went wrong";
 
     toast.error(errMsg);
     return false;
@@ -53,9 +52,9 @@ export const RegisterApi = async (formData: FormDataType) => {
       profileName: "Personal",
       google: false,
       apple: false,
-    linkedin:false,
-     local: true,
-     facebook: false
+      linkedin: false,
+      local: true,
+      facebook: false,
     });
     if (!response?.data?.success) return false;
 
@@ -74,8 +73,10 @@ export const RegisterApi = async (formData: FormDataType) => {
   }
 };
 
-
-export const OauthRegisterApi = async (formData: FormDataType, oAuthType: string) => {
+export const OauthRegisterApi = async (
+  formData: FormDataType,
+  oAuthType: string
+) => {
   const [firstName, ...rest] = formData?.name?.trim().split(/\s+/);
   const lastName = rest.join(" ");
 
@@ -122,7 +123,6 @@ export const OauthRegisterApi = async (formData: FormDataType, oAuthType: string
   }
 };
 
-
 export const responseMessage = async (response: any, router: NextRouter) => {
   try {
     const googleResp = await axiosInstance.post("/verifygoogleuserlatest", {
@@ -130,9 +130,9 @@ export const responseMessage = async (response: any, router: NextRouter) => {
     });
 
     console.log("Backend response:", googleResp.data);
-       localStorage.setItem("accessToken",googleResp.data?.token?.accessToken)
-    localStorage.setItem("refreshToken",googleResp.data?.token?.refreshToken)
-    router.push("/myprofile"); // success redirect
+    localStorage.setItem("accessToken", googleResp.data?.token?.accessToken);
+    localStorage.setItem("refreshToken", googleResp.data?.token?.refreshToken);
+    router.push("/overview"); // success redirect
     return true;
   } catch (err: any) {
     console.error("Google login error:", err);
@@ -140,9 +140,10 @@ export const responseMessage = async (response: any, router: NextRouter) => {
     // AxiosError has response object
     const axiosError = err as AxiosError;
     if (axiosError.response?.status === 404) {
+      safeToast.error("User not found.Please sign up.");
       // user not found, navigate to signup
-      localStorage.setItem("oauth","true")
-      localStorage.setItem("type","google")
+      localStorage.setItem("oauth", "true");
+      localStorage.setItem("type", "google");
 
       router.push("/signup");
     }
@@ -151,20 +152,19 @@ export const responseMessage = async (response: any, router: NextRouter) => {
   }
 };
 
-
 export const responseFacebook = async (response: any, router: NextRouter) => {
-  console.log(response,"/");
-  
+  console.log(response, "/");
+
   try {
     const googleResp = await axiosInstance.post("/verifyFacebookUserLatest", {
       accesstoken: response?.credential,
     });
 
     console.log("Backend response:", googleResp.data);
-    localStorage.setItem("accessToken",googleResp.data?.token?.accessToken)
-    localStorage.setItem("refreshToken",googleResp.data?.token?.refreshToken)
+    localStorage.setItem("accessToken", googleResp.data?.token?.accessToken);
+    localStorage.setItem("refreshToken", googleResp.data?.token?.refreshToken);
 
-    router.push("/myprofile"); // success redirect
+    router.push("/overview"); // success redirect
     return true;
   } catch (err: any) {
     console.error("Google login error:", err);
@@ -173,14 +173,14 @@ export const responseFacebook = async (response: any, router: NextRouter) => {
     const axiosError = err as AxiosError;
     if (axiosError.response?.status === 404) {
       // user not found, navigate to signup
-      localStorage.setItem("oauth","true")
+      localStorage.setItem("oauth", "true");
+      localStorage.setItem("type", "facebook");
       router.push("/signup");
     }
 
     return false;
   }
 };
-
 
 export const changePassword = async (
   forgotPasswordId: string,
@@ -203,8 +203,6 @@ export const changePassword = async (
     );
   }
 };
-
-
 
 export const GoogleLoginApi = async (id: string) => {
   try {
