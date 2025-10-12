@@ -6,35 +6,127 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Common Components
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+1.  Modal
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Props:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- visible?: boolean (default: false)
+- onClose?: () => void
+- title?: React.ReactNode
+- headerContent?: React.ReactNode (custom header area; shown beside/under title)
+- footerContent?: React.ReactNode
+- showHeader?: boolean (default: true)
+- showFooter?: boolean (default: true)
+- stickyHeader?: boolean (default: true)
+- stickyFooter?: boolean (default: true)
+- closeOnBackdrop?: boolean (default: true)
+- className?: string (extra classes for the modal panel)
+- headerClassName?: string;
+- footerClassName?: string;
+- backdropClassName?: string (extra classes for the backdrop)
 
-## Learn More
+Accessibility:
 
-To learn more about Next.js, take a look at the following resources:
+- ARIA roles, ESC to close, focus handled on open.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Example usage (drop into a client component)
 
-## Deploy on Vercel
+"use client";
+import React from "react";
+import Modal from "./Modal";
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+export default function Demo() {
+const [open, setOpen] = React.useState(false);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+return (
+
+<div className="min-h-screen grid place-items-center p-6">
+<button
+onClick={() => setOpen(true)}
+className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700" >
+Open Modal
+</button>
+
+      <Modal
+        visible={open}
+        onClose={() => setOpen(false)}
+        title="Dynamic Pop-up"
+        headerContent={<span className="text-xs sm:text-sm">Optional subtext goes here</span>}
+        showHeader={true}
+        showFooter={true}
+        stickyHeader={true}
+        stickyFooter={true}
+        closeOnBackdrop={true}
+      >
+        <p className="text-sm md:text-base">
+          This modal is responsive across mobile, tablet, and desktop breakpoints.
+          Use the props to toggle sticky header/footer and visibility.
+        </p>
+      </Modal>
+    </div>
+
+);
+}
+
+     ---------------------------------------------
+
+2. Three Dot Menu
+
+   Props
+
+   - options: Array<{ label: string; onClick: () => void; className?: string; icon?: React.ReactNode; disabled?: boolean }>
+   - visible?: boolean // controlled open state
+   - onOpenChange?: (open: boolean) => void
+   - icon?: React.ReactNode // trigger icon
+   - triggerClassName?: string
+   - iconClassName?: string
+   - menuClassName?: string // popup panel container classes
+   - closeOnSelect?: boolean // default true
+
+   Features
+
+- Custom options with per-item onClick + styles
+- Custom trigger icon
+- Custom classnames for trigger, icon, popup container, and items
+- Controlled or uncontrolled open state
+- Click outside to close
+- ESC to close, Arrow key navigation, ARIA roles
+- Keeps original visual style (no UI changes)
+
+Example Usage (drop into a client component)
+
+---
+
+import ThreeDotMenu, { ThreeDotMenuOption } from "./ThreeDotMenu";
+import { MoreVertical, Edit3, Hash, Power, Trash2 } from "lucide-react";
+
+export default function DemoMenu() {
+const menuOptions: ThreeDotMenuOption[] = [
+{ label: "Rename Device", onClick: () => alert("Rename clicked"), icon: <Edit3 className="h-4 w-4"/> },
+{ label: "Claim Name", onClick: () => alert("Claim clicked"), icon: <Hash className="h-4 w-4"/> },
+{ label: "Deactivate Device", onClick: () => alert("Deactivate clicked"), className: "text-yellow-400", icon: <Power className="h-4 w-4"/> },
+{ label: "Remove Device", onClick: () => alert("Remove clicked"), className: "text-red-400", icon: <Trash2 className="h-4 w-4"/> },
+];
+
+return (
+
+<div className="p-8">
+<ThreeDotMenu
+options={menuOptions}
+icon={<MoreVertical size={18} />}
+triggerClassName="relative shrink-0"
+iconClassName="text-gray-400 cursor-pointer focus:outline-none"
+menuClassName="bg-[#1D1D1D] rounded-lg shadow-lg z-10 w-40"
+/>
+</div>
+);
+}

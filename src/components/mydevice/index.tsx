@@ -3,59 +3,39 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { getLinkedDevices, switchProfile } from "@/src/services/devices";
+import {
+  getLinkedDevices,
+  switchProfile,
+} from "@/src/services/devices";
 import { isEmpty } from "lodash";
-import { Circle, MoreVertical } from "lucide-react";
+import { Circle } from "lucide-react";
 import { BsChevronDown } from "react-icons/bs";
 import { MODES } from "@/src/lib/constant";
+import { useShowHide } from "@/src/hooks/useShowHide";
+import { MyDevice } from "@/src/lib/interface";
+import DeviceMenu from "./components/deviceMenu";
 
 interface ProfileList {
   id: number;
   profileName: string;
 }
 
-interface DropDowns {
-  profile: boolean;
-  mode: boolean;
-}
-
-interface MyDevice {
-  profileName: string;
-  accountDeviceLinkId: number;
-  deviceId: number;
-  deviceUid: string;
-  linkedAt: string;
-  deviceNickName: string | null;
-  deviceType: string;
-  deviceLinkId: number | null;
-  linkedProfileId: number | null;
-  linkedModeId: number | null;
-  deviceStatus: 1 | 0 | null;
-  uniqueName: string | null;
-  profileId: number | null;
-  modeId: number | null;
-  mode: string | null;
-  modeUrl: string | null;
-}
-
-// interface Selected {
-//   profile: number | null;
-//   mode: number | null;
-// }
-
 export default function DeviceCards() {
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
 
   const initial = {
     profile: false,
     mode: false,
+    modeUrl: false,
   };
-  const [dropDown, setDropDown] = useState<DropDowns>(initial);
-  const { profile: profileOpen, mode: modeOpen } = dropDown;
+  // const [dropDown, setDropDown] = useState<DropDowns>(initial);
+  const { visible, onShow, onHide } = useShowHide(initial);
+  const { profile: profileOpen, mode: modeOpen } = visible;
   const [myDevices, setMyDevices] = useState<MyDevice[]>([]);
   const [profiles, setProfiles] = useState<ProfileList[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const getMydevices = async () => {
+    setLoading(true);
     try {
       const response = await getLinkedDevices();
       if (response) {
@@ -64,6 +44,8 @@ export default function DeviceCards() {
       }
     } catch (e: any) {
       toast.error(e?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,7 +56,7 @@ export default function DeviceCards() {
     try {
       const response = await switchProfile({
         accountDeviceLinkId: device?.accountDeviceLinkId || null,
-        profileId: device?.profileId || null,
+        profileId: profile.id || null,
       });
       if (response) {
         setMyDevices((prev) =>
@@ -100,7 +82,7 @@ export default function DeviceCards() {
   // const handleSwitchModes = async (
   //   device: MyDevice,
   //   mode: { id: number; name: string },
-  //   modeUrl: string
+  //   modeUrl: string | null
   // ) => {
   //   try {
   //     const response = await switchMode({
@@ -128,14 +110,14 @@ export default function DeviceCards() {
   //     }
   //   } catch (e: any) {
   //     toast.error(e?.message || "Something went wrong");
-  //   } finally {
-  //     setDropDown({ ...dropDown, profile: false });
   //   }
   // };
 
   useEffect(() => {
     getMydevices();
   }, []);
+
+  if (loading) return <p className="text-gray-400">Loading...</p>;
 
   return (
     <div className="text-white mt-4">
@@ -158,7 +140,7 @@ export default function DeviceCards() {
               : "";
 
             const badgeColor =
-              device?.deviceStatus === 1 ? "#00D729" : "#E9292D";
+              device?.deviceStatus === 0 ? "#E9292D" : "#00D729";
             return (
               <div
                 className="bg-[#282828] rounded-xl p-6 flex flex-col gap-2 w-full"
@@ -169,46 +151,11 @@ export default function DeviceCards() {
                   <span className="text-[#828282]">
                     ID:&nbsp;&nbsp;{device.deviceUid}
                   </span>
-                  <div
-                    className="relative shrink-0"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <MoreVertical
-                      size={18}
-                      className="text-gray-400 cursor-pointer focus:outline-none"
-                      onClick={() => setOpenMenu(openMenu === i ? null : i)}
-                      onBlur={() => setOpenMenu(null)}
-                      tabIndex={0}
-                    />
-                    {openMenu === i && (
-                      <div className="absolute right-0 mt-2 w-36 bg-[#1D1D1D] rounded-lg shadow-lg z-10">
-                        <button
-                          // onClick={() => deleteProfile(profile.id)}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
-                        >
-                          Rename Device
-                        </button>
-                        <button
-                          // onClick={() => handleDuplicate(profile.id)}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
-                        >
-                          Claim Name
-                        </button>
-                        <button
-                          // onClick={() => handleDuplicate(profile.id)}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-[#3a3a3a] w-full"
-                        >
-                          Deactivate Device
-                        </button>
-                        <button
-                          // onClick={() => handleDuplicate(profile.id)}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-[#3a3a3a] w-full"
-                        >
-                          Remove Device
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <DeviceMenu
+                    data={device}
+                    refetch={getMydevices}
+                    inActive={device?.deviceStatus === 0}
+                  />
                 </div>
                 {/* Device Image and details */}
                 <div className="flex gap-3 items-center">
@@ -216,11 +163,12 @@ export default function DeviceCards() {
                     <h2 className="text-lg mb-1 font-medium truncate max-w-full">
                       {device?.deviceNickName || device?.deviceType}
                     </h2>
-                    <p className="text-sm mb-1 font-extralight max-w-full">
-                      Activation date: {activationDate}
+                    <p className="text-sm mb-1 max-w-full">
+                      Activation date:{" "}
+                      <span className="font-extralight">{activationDate}</span>
                     </p>
-                    <p className="flex items-center gap-2 text-sm mb-1 truncate font-extralight max-w-full">
-                      {device?.deviceStatus ? "Active" : "Deactivated"}{" "}
+                    <p className="flex items-center gap-2 text-sm mb-1 truncate font-light max-w-full">
+                      {device?.deviceStatus === 0 ? "Deactivated" : "Active"}{" "}
                       <Circle fill={badgeColor} size={12} color={badgeColor} />
                     </p>
                   </div>
@@ -240,14 +188,14 @@ export default function DeviceCards() {
                     <div className="relative">
                       <button
                         onClick={() => {
-                          setDropDown({ ...dropDown, profile: true });
+                          onShow("profile");
                         }}
                         className="w-full relative flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
                         onBlur={() => {
-                          setDropDown({ ...dropDown, profile: false });
+                          onHide();
                         }}
                       >
-                        <span className="text-white w-full truncate">
+                        <span className="text-white w-full truncate text-left">
                           {device.profileName}
                         </span>
                         <BsChevronDown
@@ -264,7 +212,7 @@ export default function DeviceCards() {
                                   key={i}
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setDropDown({ ...dropDown, profile: false });
+                                    onHide();
                                     handleSwitchProfiles(p, device);
                                   }}
                                   className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
@@ -285,14 +233,14 @@ export default function DeviceCards() {
                     <div className="relative">
                       <button
                         onClick={() => {
-                          setDropDown({ ...dropDown, mode: true });
+                          onShow("mode");
                         }}
                         className="w-full flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
                         onBlur={() => {
-                          setDropDown({ ...dropDown, mode: false });
+                          onHide();
                         }}
                       >
-                        <span className="text-white truncate">
+                        <span className="text-white truncate text-left">
                           {device.mode}
                         </span>
                         <BsChevronDown
@@ -310,7 +258,7 @@ export default function DeviceCards() {
                               <div
                                 key={i}
                                 onClick={() => {
-                                  setDropDown({ ...dropDown, mode: false });
+                                  onHide();
                                 }}
                                 className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
                               >

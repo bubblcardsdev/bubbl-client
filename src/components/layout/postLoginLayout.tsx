@@ -17,7 +17,7 @@ const PostLoginLayoutPage = (props: FunctionProps) => {
   };
   return (
     <ProtectedAuth>
-      <div className="bg-[#1C1C1C] w-full h-screen overflow-y-auto overflow-x-hidden flex relative">
+      <div className="bg-[#1C1C1C] w-full h-screen overflow-y-auto overflow-x-hidden flex">
         <div className="bg-[#282828] px-4 w-[240px] fixed h-screen xs:hidden lg:block">
           <PostLoginSidebar currentPage={currentPage} />
         </div>

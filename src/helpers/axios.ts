@@ -128,7 +128,7 @@ axiosInstance.interceptors.response.use(
 
         // 🔄 Try refreshing the access token
         const response = await axios.post(
-          `${BASE_URL}/auth/refresh/token`,{refreshToken}
+          `${BASE_URL}/refresh/token`,{refreshToken}
         );
 
         if (response.status === 200) {
@@ -137,7 +137,7 @@ axiosInstance.interceptors.response.use(
             setAccessToken(newAccessToken);
             // Retry original request with new token
             originalRequest.headers[
-              "x-access-token"
+              "authorization"
             ] = newAccessToken;
             return axiosInstance(originalRequest);
           }

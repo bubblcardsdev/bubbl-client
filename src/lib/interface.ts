@@ -96,3 +96,90 @@ export type StepConfig = {
   title: string;
   subtitle: string;
 };
+
+export interface MyDevice {
+  profileName: string;
+  accountDeviceLinkId: number;
+  deviceId: number;
+  deviceUid: string;
+  linkedAt: string;
+  deviceNickName: string | null;
+  deviceType: string;
+  deviceLinkId: number | null;
+  linkedProfileId: number | null;
+  linkedModeId: number | null;
+  deviceStatus: 1 | 0 | null;
+  uniqueName: string | null;
+  profileId: number | null;
+  modeId: number | null;
+  mode: string | null;
+  modeUrl: string | null;
+}
+
+export type ThreeDotMenuOption = {
+  label: string;
+  onClick: () => void;
+  className?: string;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+  isPro?:boolean
+};
+
+export type ThreeDotMenuProps = {
+  options: ThreeDotMenuOption[];
+  visible?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  icon?: React.ReactNode;
+  triggerClassName?: string;
+  iconClassName?: string;
+  menuClassName?: string;
+  closeOnSelect?: boolean;
+};
+
+export interface LeadForm{
+  name: string;
+  emailId: string;
+  mobileNumber: string;
+  location: string;
+  where_you_met: string;
+  company: string;
+}
+
+export type TableColumn<T> = {
+  /** Unique key for the column (used for keys) */
+  key: string;
+  /** Header label or custom header node */
+  header: React.ReactNode;
+  /** Accessor function to render a cell (receives the row item and index) */
+  render: (item: T, index: number) => React.ReactNode;
+  /** Optional classes for <th> and <td> */
+  headerClassName?: string;
+  cellClassName?: string;
+};
+
+export type TableProps<T> = {
+  /** Rows */
+  data: T[];
+  /** Column definitions */
+  columns: TableColumn<T>[];
+  /** Extract a stable key per row (defaults to index) */
+  rowKey?: (item: T, index: number) => React.Key;
+  /** Optional row class name (can be a function per-row) */
+  rowClassName?: string;
+  /** Sticky header toggle */
+  stickyHeader?: boolean;
+  /** Fixed height for scrollable body (e.g., 'h-[400px]') */
+  bodyHeightClassName?: string;
+
+  /** Table and wrappers classNames */
+  containerClassName?: string; // outer wrapper
+  tableWrapperClassName?: string;
+  tableClassName?: string; // <table>
+  theadClassName?: string; // <thead>
+  tbodyClassName?: string; // <tbody>
+  /** Empty state slot (rendered when data.length === 0) */
+  emptyIcon?: React.ReactNode;
+  emptyMessage? : string
+  /** Optional row click */
+  onRowClick?: (item: T, index: number) => void;
+};
