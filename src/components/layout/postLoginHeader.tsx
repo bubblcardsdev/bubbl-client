@@ -13,15 +13,17 @@ import { ThreeDotMenuOption } from "@/src/lib/interface";
 import { useRouter } from "next/router";
 import ThreeDotMenu from "../common/threeDotMenu";
 import { LogOut, Settings } from "lucide-react";
+import { CART } from "@/src/context/action";
 const PostLoginHeader = (props: FunctionProps) => {
   const { onSideBarOpen } = props;
-  const { state }: any = useContext(UserContext);
+  const { state,dispatch }: any = useContext(UserContext);
   const router = useRouter();
 
   const { cart: cards } = state;
 
   const logout = () => {
     localStorage.clear();
+    dispatch({ type: CART, payload: [] });
     router.push("/login");
   };
 

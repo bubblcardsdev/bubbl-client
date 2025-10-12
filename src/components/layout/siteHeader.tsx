@@ -46,6 +46,7 @@ const SiteHeader = () => {
 
   const logout = () => {
     localStorage.clear();
+    dispatch({ type: CART, payload: [] });
     router.push("/login");
   };
 
