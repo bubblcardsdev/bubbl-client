@@ -106,7 +106,7 @@ const Networking = () => {
                 <div className="flex items-center gap-2">
                   <div className="shrink-0 px-[6%]">
                     <Image
-                      src="/HomePageIcons/vector.png"
+                      src="/HomePageIcons/Vector.png"
                       height={30}
                       width={30}
                       alt="wallet"
