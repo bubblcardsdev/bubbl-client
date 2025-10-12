@@ -55,7 +55,7 @@ const ProductInfo = (props: BubblCardProps) => {
         {shortDescription}
       </p>
       <p className="text-[34px] font-[700] mt-4 leading- letter-spaceing tracking-wide">
-        ₹ {sellingPrice}
+        ₹ {Number(sellingPrice)?.toFixed(0)}
       </p>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}

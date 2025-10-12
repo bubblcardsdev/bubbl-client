@@ -87,6 +87,8 @@ const ProductList: React.FC = () => {
     // setLoading(false);
   };
 
+
+
   const {
     primaryImage,
     secondaryImage,
@@ -143,6 +145,11 @@ const ProductList: React.FC = () => {
     toast.success("Item added to cart!");
   };
 
+  const handleBuyNow = ()=>{
+    addToCart()
+    router.push("/cart")
+  }
+
 
   const productImage =
     (currentImage === "front"
@@ -190,7 +197,7 @@ const ProductList: React.FC = () => {
             >
               Add to cart
             </button>
-            <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
+            <button onClick={()=>handleBuyNow()} className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
               Buy now
             </button>
           </div> : <p className="text-red-600 xs:hidden md:block font-semibold text-center mt-6">Currently Unavailable</p>}

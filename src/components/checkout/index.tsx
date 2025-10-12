@@ -1,13 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaTruck } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
-import { CheckoutApi } from "../../services/chechout";
+import {
+  createOrder,
+  recordPaymentFailure,
+  verifyPayment,
+} from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
+import ProceedToCheckout from "@/src/helpers/razorPayScript";
+import { toast } from "react-toastify";
+import { CART } from "@/src/context/action";
+import { UserContext } from "@/src/context/userContext";
 interface FormData {
   firstName: string;
   lastName: string;
@@ -21,8 +29,10 @@ interface FormData {
 }
 
 const CheckoutPage = () => {
-  const router = useRouter();
+  const { dispatch }: any = useContext(UserContext);
 
+  const router = useRouter();
+  const [order, setOrder] = useState<any>();
   const [checkoutFormData, setcheckoutFormData] = useState<FormData>({
     emailId: "",
     phoneNumber: "",
@@ -64,11 +74,6 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  //     const { name, value, type, checked } = e.target;
-  //     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-
-  // };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -79,7 +84,46 @@ const CheckoutPage = () => {
       ...prevState,
       [name]: type === "checkbox" ? target.checked : value,
     }));
+
+    // ✅ Clear error for the current field as user types
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: undefined,
+    }));
   };
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   try {
+  //     e.preventDefault();
+  //     if (isEmpty(cart)) return;
+  //     if (!validate()) return;
+
+  //     const payload: {
+  //       productData: { productId: string; quantity: number }[];
+  //       shippingFormData: FormData;
+  //     } = {
+  //       productData: cart.map((item) => ({
+  //         productId: item?.productId,
+  //         quantity: item.quantity,
+  //       })),
+  //       shippingFormData: checkoutFormData,
+  //     };
+  //     const response = await CheckoutApi(payload);
+  //     if (response) {
+  //       router.push({
+  //         pathname: "/processPayment",
+  //         query: {
+  //           orderId: response,
+  //           orderType: 2,
+  //           token: btoa(checkoutFormData?.emailId),
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Checkout failed:", error);
+  //     alert("Checkout failed. Please try again.");
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     try {
@@ -97,22 +141,45 @@ const CheckoutPage = () => {
         })),
         shippingFormData: checkoutFormData,
       };
-      const response = await CheckoutApi(payload);
-      if (response) {
-        router.push({
-              pathname: "/processPayment",
-              query: {
-                orderId: response,
-                orderType: 2,
-                token: btoa(checkoutFormData?.emailId),
-              },
-            });
-      }
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      alert("Checkout failed. Please try again.");
+      const response = await createOrder(payload);
+      console.log(response, "?");
+      setOrder(response);
+    } catch (err) {
+      console.log(err);
     }
   };
+
+  const handleSuccessResponse = async (res: any) => {
+    try {
+      const verified = await verifyPayment(
+        res.razorpay_payment_id,
+        res.razorpay_order_id,
+        res.razorpay_signature
+      );
+
+      if (verified) {
+        localStorage.removeItem("cartItems");
+        dispatch({ type: CART, payload: "" });
+        toast.success("Thanks for purchasing the product, your order details will be sent to your mail");
+        router.push("/paymentResponse");
+      }
+    } catch (err) {
+      console.error("Error in verifying payment:", err);
+    }
+  };
+  const handleFailureResponse = async (res: any) => {
+  console.log(res, "Razorpay payment failed");
+
+  try {
+    const paymentId = res?.error?.metadata?.payment_id || "";
+    const orderId = res?.error?.metadata?.order_id || "";
+    const reason = res?.error?.description || res?.error?.reason || "Payment failed";
+
+    await recordPaymentFailure(paymentId, orderId, reason);
+  } catch (err) {
+    console.error("Error handling payment failure:", err);
+};
+  }
 
   useEffect(() => {
     const storedCart = getCart();
@@ -137,25 +204,27 @@ const CheckoutPage = () => {
   const discount = orginalPriceTotal - subTotal; // Example: 0% discount
   const total = subTotal + shipping;
   return (
-    <div className="max-w-[1300px] mx-auto flex p-6 lg:gap-40 md:gap-14 lg:flex-row md:flex-row sm:flex-col-reverse xs:flex-col-reverse">
+    <div className="max-w-[1300px] mx-auto flex p-6 lg:gap-40 md:gap-14 lg:flex-row md:flex-row sm:flex-col-reverse xs:flex-col-reverse md:mb-20">
       <div className="lg:w-[64%] sm:w-full ">
         <form onSubmit={handleSubmit}>
           <h1 className="text-[26px] font-bold mb-1">
             Checkout <span>{cart.length} items</span>
           </h1>
-          <p className="text-[#7F7F7F] mb-6 font-semibold  text-[15px]">
+          <p className="text-[#7F7F7F] mb-6 font-semibold text-[15px]">
             Your Order, Just a Click Away
           </p>
+
           <div className="mb-8">
-            <h2 className="text-[24px] font-semibold mb-1 ">
+            <h2 className="text-[24px] font-semibold mb-1">
               Contact Information
             </h2>
-            <p className="text-[#7F7F7F] mb-4 font-semibold  text-[14px]">
+            <p className="text-[#7F7F7F] mb-4 font-semibold text-[14px]">
               We’ll Notify You Every Step
             </p>
+
             <div className="space-y-7">
               <div>
-                <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                <label className="block text-[14px] font-medium text-[#7F7F7F]">
                   Email
                 </label>
                 <input
@@ -164,30 +233,15 @@ const CheckoutPage = () => {
                   value={checkoutFormData.emailId}
                   name="emailId"
                   onChange={handleChange}
-                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] "
+                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                 />
                 {errors.emailId && (
                   <p className="text-red-500 text-sm">{errors.emailId}</p>
                 )}
               </div>
-              {/* <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="newsletter"
-                    name="newsletter"
-                    className="mr-4"
-                    checked={checkoutFormData.newsletter}
-                    onChange={handleChange}
-                  />
-                  <label
-                    htmlFor="newsletter"
-                    className="text-sm text-[#7F7F7F]  rounded-lg"
-                  >
-                    Email me with news and offers
-                  </label>
-                </div> */}
+
               <div>
-                <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                <label className="block text-[14px] font-medium text-[#7F7F7F]">
                   Phone number
                 </label>
                 <input
@@ -196,7 +250,7 @@ const CheckoutPage = () => {
                   value={checkoutFormData.phoneNumber}
                   name="phoneNumber"
                   onChange={handleChange}
-                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] "
+                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                 />
                 {errors.phoneNumber && (
                   <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
@@ -204,9 +258,10 @@ const CheckoutPage = () => {
               </div>
             </div>
           </div>
+
           <div className="mb-8 space-y-8">
             <div>
-              <h2 className="text-xl font-semibold mb-2 ">
+              <h2 className="text-xl font-semibold mb-2">
                 Shipment Information
               </h2>
               <p className="text-[#7F7F7F] mb-0 font-semibold text-[14px]">
@@ -217,7 +272,7 @@ const CheckoutPage = () => {
             <div className="space-y-8">
               <div className="grid lg:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                  <label className="block text-[14px] font-medium text-[#7F7F7F]">
                     First name
                   </label>
                   <input
@@ -226,14 +281,15 @@ const CheckoutPage = () => {
                     name="firstName"
                     value={checkoutFormData.firstName}
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   />
                   {errors.firstName && (
                     <p className="text-red-500 text-sm">{errors.firstName}</p>
                   )}
                 </div>
+
                 <div>
-                  <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                  <label className="block text-[14px] font-medium text-[#7F7F7F]">
                     Last name
                   </label>
                   <input
@@ -242,29 +298,31 @@ const CheckoutPage = () => {
                     name="lastName"
                     value={checkoutFormData.lastName}
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px] "
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   />
                   {errors.lastName && (
                     <p className="text-red-500 text-sm">{errors.lastName}</p>
                   )}
                 </div>
               </div>
+
               <div>
-                <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                <label className="block text-[14px] font-medium text-[#7F7F7F]">
                   Address
                 </label>
                 <input
                   type="text"
-                  placeholder="Dear no, street, Locality"
+                  placeholder="Door no, Street, Locality"
                   value={checkoutFormData.address}
                   onChange={handleChange}
                   name="address"
-                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                  className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                 />
                 {errors.address && (
                   <p className="text-red-500 text-sm">{errors.address}</p>
                 )}
               </div>
+
               <div className="grid lg:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#7F7F7F]">
@@ -274,17 +332,18 @@ const CheckoutPage = () => {
                     value={checkoutFormData.country}
                     name="country"
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   >
                     <option value="">Select Country</option>
                     <option value="India">India</option>
                     <option value="Others">Others</option>
                   </select>
-                  {errors.city && (
+                  {errors.country && (
                     <p className="text-red-500 text-sm">{errors.country}</p>
                   )}
                 </div>
-                <div className="relative w-full space-y-1 ">
+
+                <div className="relative w-full space-y-1">
                   <label className="block text-sm font-medium text-[#7F7F7F]">
                     State
                   </label>
@@ -294,16 +353,17 @@ const CheckoutPage = () => {
                     value={checkoutFormData.state}
                     name="state"
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   />
-                  {errors.city && (
+                  {errors.state && (
                     <p className="text-red-500 text-sm">{errors.state}</p>
                   )}
                 </div>
               </div>
+
               <div className="grid lg:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[14px] font-medium text-[#7F7F7F] ">
+                  <label className="block text-[14px] font-medium text-[#7F7F7F]">
                     City
                   </label>
                   <input
@@ -312,44 +372,60 @@ const CheckoutPage = () => {
                     value={checkoutFormData.city}
                     name="city"
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   />
                   {errors.city && (
                     <p className="text-red-500 text-sm">{errors.city}</p>
                   )}
                 </div>
-                <div className="relative w-full space-y-1 ">
-                  <label className="block text-[14px] font-medium text-[#7F7F7F] ">
-                    postalCode
+
+                <div className="relative w-full space-y-1">
+                  <label className="block text-[14px] font-medium text-[#7F7F7F]">
+                    Postal Code
                   </label>
                   <input
                     type="text"
-                    placeholder="pincode"
+                    placeholder="Pincode"
                     value={checkoutFormData.zipcode}
                     name="zipcode"
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#ACACAC] placeholder:text-[14px]"
+                    className="mt-1 block w-full bg-[#F5F5F5] rounded-md p-3 outline-none focus:ring-0 text-[#333333] placeholder:text-[#9E9E9E]"
                   />
-                  {errors.city && (
+                  {errors.zipcode && (
                     <p className="text-red-500 text-sm">{errors.zipcode}</p>
                   )}
                 </div>
               </div>
             </div>
           </div>
+
           <div className="text-sm text-[#7F7F7F] mb-4">
-            <p className=" mb-8">
+            <p className="mb-8">
               Your info will be saved to a Shop account. By continuing, you
-              agree to Shop’s Terms of Service and acknowledge the Privacy
+              agree to Shop’s Terms of Service and acknowledge the Privacy
               Policy.
             </p>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center"
-          >
-            Proceed to payment
-          </button>
+
+          {!order ? (
+            <button
+              type="submit"
+              className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center"
+            >
+              Proceed to payment
+            </button>
+          ) : (
+            <ProceedToCheckout
+              order={order}
+              prefill={{
+                name: `${checkoutFormData.firstName} ${checkoutFormData.lastName}`,
+                email: checkoutFormData.emailId,
+                contact: checkoutFormData.phoneNumber,
+              }}
+              onSuccess={handleSuccessResponse}
+              onFailure={handleFailureResponse}
+            />
+          )}
         </form>
       </div>
       <div className="lg:w-[40%] sm:w-full bg-white p-6 xs:p-0 rounded-lg h-fit lg:sticky md:sticky sm:static xs:static top-[125px] ">
