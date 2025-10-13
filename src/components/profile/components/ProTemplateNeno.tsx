@@ -286,6 +286,8 @@ import {
 } from "@/src/lib/constant";
 import { ToastContainer } from "react-toastify";
 import { createTap } from "@/src/services/profileApi";
+import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 
 const ProTemplateNeno = ({
   formData,
@@ -330,7 +332,11 @@ const ProTemplateNeno = ({
     "3": Paytm_icon,
   };
   const router = useRouter();
-
+  const { object, onShow, onHide } = useShowHideWithRecord({
+    visible: false,
+    title: "",
+    data: "",
+  });
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto ">
       <ToastContainer />
@@ -414,225 +420,167 @@ const ProTemplateNeno = ({
             formData?.emailIds?.[0]?.emailId ||
             formData?.websites?.[0]?.website ||
             (formData?.state && formData?.country)) && (
-            <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
-              <p className="text-lg font-semibold text-left">
-                Contact Information
-              </p>
+              <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
+                <p className="text-lg font-semibold text-left">
+                  Contact Information
+                </p>
 
-              <div className="flex justify-around mt-6">
-                {/* Phone */}
-                {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                  <div className="relative">
-                    <a
-                      href={`tel:${
-                        formData?.phoneNumbers?.[0]?.countryCode || ""
-                      }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`}
-                      onClick={async (e) => {
-                        e.preventDefault(); // stop immediate dial
-                        if (formData?.deviceUid) {
-                          await createTap(4, formData.deviceUid); // log phone tap
-                        }
-                        // trigger call after logging
-                        window.location.href = `tel:${
-                          formData?.phoneNumbers?.[0]?.countryCode || ""
-                        }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
-                      }}
-                    >
-                      <CallProfileIcon />
-                    </a>
-                    {phoneNumbersCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-xs text-white flex items-center justify-center"
+                <div className="flex justify-around mt-6">
+                  {/* Phone */}
+                  {formData?.phoneNumbers?.[0]?.phoneNumber && (
+                    <div className="relative">
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          onCallClick(formData, onShow);
+                        }}
                       >
-                        {phoneNumbersCount}
-                      </span>
-                    )}
-                  </div>
-                )}
+                        <CallProfileIcon />
+                      </button>
+                      {phoneNumbersCount > 0 && (
+                        <span
+                          style={{ background: color }}
+                          className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-xs text-white flex items-center justify-center"
+                        >
+                          {phoneNumbersCount}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
-                {/* Email */}
-                {formData?.emailIds?.[0]?.emailId && (
-                  <div className="relative">
-                    <a
-                      href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
-                      onClick={async (e) => {
-                        e.preventDefault(); // stop immediate navigation
-                        if (formData?.deviceUid) {
-                          await createTap(5, formData.deviceUid); // log email tap
-                        }
-                        // open email client after logging
-                        window.location.href = `mailto:${
-                          formData?.emailIds?.[0]?.emailId || ""
-                        }`;
-                      }}
-                    >
-                      <MailProfileIcon />
-                    </a>
-                    {emailIdsCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-[10px] text-white flex items-center justify-center"
+                  {/* Email */}
+                  {formData?.emailIds?.[0]?.emailId && (
+                    <div className="relative">
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          onEmailClick(formData, onShow);
+                        }}
                       >
-                        {emailIdsCount}
-                      </span>
-                    )}
-                  </div>
-                )}
+                        <MailProfileIcon />
+                      </button>
+                      {emailIdsCount > 0 && (
+                        <span
+                          style={{ background: color }}
+                          className="absolute -top-2 -right-2 w-4 h-4 rounded-full text-[10px] text-white flex items-center justify-center"
+                        >
+                          {emailIdsCount}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
-                {/* Location */}
-                {formData?.state && formData?.country && (
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      `${formData?.address || ""}, ${formData?.city || ""}, ${
-                        formData?.state || ""
-                      }, ${formData?.country || ""}`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={async (e) => {
-                      e.preventDefault(); // stop immediate redirect
-                      if (formData?.deviceUid) {
-                        await createTap(7, formData.deviceUid); // log location tap
-                      }
-                      // open Google Maps after logging
-                      window.open(
-                        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                          `${formData?.address || ""}, ${
-                            formData?.city || ""
-                          }, ${formData?.state || ""}, ${
-                            formData?.country || ""
-                          }`
-                        )}`,
-                        "_blank",
-                        "noopener,noreferrer"
-                      );
-                    }}
-                  >
-                    <LocationFill_icon />
-                  </a>
-                )}
-
-                {/* Website */}
-                {formData?.websites?.[0]?.website && (
-                  <div className="relative">
+                  {/* Location */}
+                  {formData?.state && formData?.country && (
                     <a
-                      href={formData?.websites?.[0]?.website || ""}
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
+                        }, ${formData?.country || ""}`
+                      )}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={async (e) => {
-                        e.preventDefault(); // stop immediate navigation
-                        if (formData?.deviceUid) {
-                          await createTap(6, formData.deviceUid); // log website tap
-                        }
-                        // open website after logging
-                        window.open(
-                          formData?.websites?.[0]?.website || "",
-                          "_blank",
-                          "noopener,noreferrer"
-                        );
+                        e.preventDefault();
+                        onAddressClick(formData);
                       }}
                     >
-                      <WebIcon_thin />
+                      <LocationFill_icon />
                     </a>
-                    {websitesCount > 0 && (
-                      <span
-                        style={{ background: color }}
-                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs text-white flex items-center justify-center"
+                  )}
+
+                  {/* Website */}
+                  {formData?.websites?.[0]?.website && (
+                    <div className="relative">
+                      <a
+                        href={formData?.websites?.[0]?.website || ""}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          onWebsiteClick(formData, onShow);
+                        }}
                       >
-                        {websitesCount}
-                      </span>
-                    )}
-                  </div>
-                )}
+                        <WebIcon_thin />
+                      </a>
+                      {websitesCount > 0 && (
+                        <span
+                          style={{ background: color }}
+                          className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-xs text-white flex items-center justify-center"
+                        >
+                          {websitesCount}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Social Media */}
           {formData?.socialMediaNames?.some(
             (v: any) => v?.socialMediaName?.length > 0
           ) && (
-            <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
-              <p className="text-lg font-semibold text-left">Social Media</p>
-              <div className="grid grid-cols-4 gap-6 sm:gap-8 mt-6">
-                {formData?.socialMediaNames
-                  ?.sort(
-                    (a: any, b: any) =>
-                      (a?.profileSocialMediaId || 0) -
-                      (b?.profileSocialMediaId || 0)
-                  )
-                  .map((value: any, index: number) => {
-                    const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
-                    if (value?.socialMediaName?.length > 0) {
-                      return (
-                        <div
-                          key={index}
-                          className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full cursor-pointer"
-                          onClick={() => {
-                            if (formData.deviceUid) {
-                              createTap(
-                                actions[
-                                  SOCIAL_MEDIA_IDS[
-                                    value.profileSocialMediaId
-                                  ] as ActionKeys
-                                ],
-                                formData.deviceUid
-                              );
-                            }
-                            openInNewTab(value?.socialMediaName);
-                          }}
-                        >
-                          {Icon && <Icon color="#FFFFFF" />}
-                        </div>
-                      );
-                    }
-                  })}
+              <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
+                <p className="text-lg font-semibold text-left">Social Media</p>
+                <div className="grid grid-cols-4 gap-6 sm:gap-8 mt-6">
+                  {formData?.socialMediaNames
+                    ?.sort(
+                      (a: any, b: any) =>
+                        (a?.profileSocialMediaId || 0) -
+                        (b?.profileSocialMediaId || 0)
+                    )
+                    .map((value: any, index: number) => {
+                      const Icon = SocialIconsObj?.[value?.profileSocialMediaId];
+                      if (value?.socialMediaName?.length > 0) {
+                        return (
+                          <div
+                            key={index}
+                            className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full cursor-pointer"
+                            role="button"
+                            onClick={() => {
+                              onSocialMediaClick(value, formData);
+                            }}
+                          >
+                            {Icon && <Icon color="#FFFFFF" />}
+                          </div>
+                        );
+                      }
+                    })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Digital Payments */}
           {formData?.digitalPaymentLinks?.some(
             (v: any) => v?.digitalPaymentLink?.length > 0
           ) && (
-            <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
-              <p className="text-lg font-semibold text-left">
-                Digital Payments
-              </p>
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-6 mt-6">
-                {formData?.digitalPaymentLinks?.map(
-                  (value: any, index: number) => {
-                    const Icon =
-                      DigitalIconsObj?.[value?.profileDigitalPaymentsId];
-                    if (value?.digitalPaymentLink?.length > 0) {
-                      return (
-                        <div
-                          onClick={async () => {
-                            if (formData.deviceUid) {
-                              await createTap(
-                                actions[
-                                  DIGITAL_MEDIA_IDS[
-                                    value.profileDigitalPaymentsId
-                                  ] as ActionKeys
-                                ],
-                                formData.deviceUid
-                              );
-                            }
-                            copyText(value?.digitalPaymentLink);
-                          }}
-                          key={index}
-                          className="flex items-center justify-center w-14 h-14 rounded-full cursor-pointer"
-                        >
-                          {Icon && <Icon color="#8D00D2" />}
-                        </div>
-                      );
+              <div className="rounded-lg p-4 sm:p-5 text-white relative z-10 backdrop-blur-md border border-gray-500">
+                <p className="text-lg font-semibold text-left">
+                  Digital Payments
+                </p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-6 mt-6">
+                  {formData?.digitalPaymentLinks?.map(
+                    (value: any, index: number) => {
+                      const Icon =
+                        DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+                      if (value?.digitalPaymentLink?.length > 0) {
+                        return (
+                          <div
+                            onClick={async () => {
+                              onPaymentClick(value, formData);
+                            }}
+                            key={index}
+                            className="flex items-center justify-center w-14 h-14 rounded-full cursor-pointer"
+                          >
+                            {Icon && <Icon color="#8D00D2" />}
+                          </div>
+                        );
+                      }
                     }
-                  }
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Footer */}
           <div className="flex flex-col justify-center items-center relative z-10 backdrop-blur-md border border-gray-500 p-4 rounded-lg">

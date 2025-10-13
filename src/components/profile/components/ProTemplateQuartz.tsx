@@ -29,6 +29,8 @@ import {
 } from "@/src/lib/constant";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
+import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 
 const ProTemplateQuartz = ({
   formData,
@@ -64,7 +66,11 @@ const ProTemplateQuartz = ({
     "3": Paytm_icon,
   };
   const router = useRouter();
-
+  const { object, onShow, onHide } = useShowHideWithRecord({
+    visible: false,
+    title: "",
+    data: "",
+  });
   return (
     <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
       <ToastContainer />
@@ -148,17 +154,10 @@ const ProTemplateQuartz = ({
         <div className="flex flex-col gap-4">
           {/* Phone */}
           {formData?.phoneNumbers?.[0]?.phoneNumber && (
-            <a
-              href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
-                }`}
+            <button
               onClick={async (e) => {
-                e.preventDefault(); // stop immediate dial
-                if (formData?.deviceUid) {
-                  await createTap(4, formData.deviceUid); // log phone tap
-                }
-                // trigger call after logging
-                window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
-                  }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                e.preventDefault();
+                onCallClick(formData, onShow);
               }}
             >
               <button
@@ -176,21 +175,15 @@ const ProTemplateQuartz = ({
                   <DownArrowIcon />
                 </div>
               </button>
-            </a>
+            </button>
           )}
 
           {/* Email */}
           {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-            <a
-              href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+            <button
               onClick={async (e) => {
-                e.preventDefault(); // stop immediate navigation
-                if (formData?.deviceUid) {
-                  await createTap(5, formData.deviceUid); // log email tap
-                }
-                // open email client after logging
-                window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
-                  }`;
+                e.preventDefault();
+                onEmailClick(formData, onShow);
               }}
             >
               <button
@@ -207,7 +200,7 @@ const ProTemplateQuartz = ({
                   <DownArrowIcon />
                 </div>
               </button>
-            </a>
+            </button>
           )}
 
           {/* Website */}
@@ -217,16 +210,8 @@ const ProTemplateQuartz = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={async (e) => {
-                e.preventDefault(); // stop immediate navigation
-                if (formData?.deviceUid) {
-                  await createTap(6, formData.deviceUid); // log website tap
-                }
-                // open website after logging
-                window.open(
-                  formData?.websites?.[0]?.website || "",
-                  "_blank",
-                  "noopener,noreferrer"
-                );
+                e.preventDefault();
+                onWebsiteClick(formData, onShow);
               }}
             >
               <button
@@ -256,19 +241,8 @@ const ProTemplateQuartz = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={async (e) => {
-                e.preventDefault(); // stop immediate redirect
-                if (formData?.deviceUid) {
-                  await createTap(7, formData.deviceUid); // log location tap
-                }
-                // open Google Maps after logging
-                window.open(
-                  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                    }, ${formData?.country || ""}`
-                  )}`,
-                  "_blank",
-                  "noopener,noreferrer"
-                );
+                e.preventDefault();
+                onAddressClick(formData);
               }}
             >
               <button
@@ -312,17 +286,7 @@ const ProTemplateQuartz = ({
                           key={index}
                           role="button"
                           onClick={() => {
-                            if (formData.deviceUid) {
-                              createTap(
-                                actions[
-                                SOCIAL_MEDIA_IDS[
-                                value.profileSocialMediaId
-                                ] as ActionKeys
-                                ],
-                                formData.deviceUid
-                              );
-                            }
-                            openInNewTab(value?.socialMediaName);
+                            onSocialMediaClick(value, formData);
                           }}
                           className="flex items-center justify-center w-12 h-12 rounded-lg shadow"
                           style={{ backgroundColor: color }}
@@ -353,17 +317,7 @@ const ProTemplateQuartz = ({
                 <div
                   key={index}
                   onClick={async () => {
-                    if (formData.deviceUid) {
-                      await createTap(
-                        actions[
-                        DIGITAL_MEDIA_IDS[
-                        value.profileDigitalPaymentsId
-                        ] as ActionKeys
-                        ],
-                        formData.deviceUid
-                      );
-                    }
-                    copyText(value?.digitalPaymentLink);
+                    onPaymentClick(value, formData);
                   }}
                   className="flex items-center justify-center w-10 h-10 rounded-md shadow-md cursor-pointer"
                   style={{ backgroundColor: color }}

@@ -28,6 +28,8 @@ import {
   DIGITAL_MEDIA_IDS,
 } from "../../../lib/constant";
 import { createTap } from "@/src/services/profileApi";
+import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 
 const ProTemplateSpahire = ({
   formData,
@@ -68,6 +70,11 @@ const ProTemplateSpahire = ({
     "6": saphireLinkedinIcon,
   };
 
+  const { object, onShow, onHide } = useShowHideWithRecord({
+    visible: false,
+    title: "",
+    data: "",
+  });
   return (
     <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
       <Image
@@ -149,57 +156,95 @@ const ProTemplateSpahire = ({
 
         <div className="grid grid-cols-4 gap-4">
           {formData?.phoneNumbers?.[0]?.phoneNumber && (
-            <div className="relative">
-              <div className="relative flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
-                <CallProfileIcon color={color} />
-              </div>
-              {phoneNumbersCount > 0 && (
-                <div
-                  style={{ background: color || "red" }}
-                  className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center "
-                >
-                  <span>{phoneNumbersCount}</span>
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                onCallClick(formData, onShow);
+              }}
+
+            >
+              <div className="relative">
+                <div className="relative flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
+                  <CallProfileIcon color={color} />
                 </div>
-              )}
-            </div>
+                {phoneNumbersCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center "
+                  >
+                    <span>{phoneNumbersCount}</span>
+                  </div>
+                )}
+              </div>
+            </button>
           )}
 
           {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-            <div className="relative">
-              <div className="relative flex items-center justify-center mx-auto  h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
-                <MailProfileIcon color={color} />
-              </div>
-              {emailIdsCount > 0 && (
-                <div
-                  style={{ background: color || "red" }}
-                  className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
-                >
-                  <span>{emailIdsCount}</span>
+            <button
+
+              onClick={async (e) => {
+                e.preventDefault();
+                onEmailClick(formData, onShow);
+              }}>
+              <div className="relative">
+                <div className="relative flex items-center justify-center mx-auto  h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
+                  <MailProfileIcon color={color} />
                 </div>
-              )}
-            </div>
+                {emailIdsCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
+                  >
+                    <span>{emailIdsCount}</span>
+                  </div>
+                )}
+              </div>
+            </button>
           )}
 
           {formData?.state && formData?.country && (
-            <div className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
-              <LocationFill_icon color={color} />
-            </div>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
+                }, ${formData?.country || ""}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={async (e) => {
+                e.preventDefault();
+                onAddressClick(formData);
+              }}
+            >
+              <div className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
+                <LocationFill_icon color={color} />
+              </div>
+            </a>
           )}
 
           {formData?.websites?.[0]?.website?.length > 0 && (
-            <div className="relative">
-              <div className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
-                <WebIcon_thin color={color} />
-              </div>
-              {websitesCount > 0 && (
-                <div
-                  style={{ background: color || "red" }}
-                  className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
-                >
-                  <span>{websitesCount}</span>
+            <a
+              href={formData?.websites?.[0]?.website || ""}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={async (e) => {
+                e.preventDefault();
+                onWebsiteClick(formData, onShow);
+              }}
+            >
+              <div className="relative">
+                <div className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
+                  <WebIcon_thin color={color} />
                 </div>
-              )}
-            </div>
+                {websitesCount > 0 && (
+                  <div
+                    style={{ background: color || "red" }}
+                    className="w-5 h-5 rounded-full absolute -top-2 right-1 z-10 text-xs text-white text-center flex items-center justify-center"
+                  >
+                    <span>{websitesCount}</span>
+                  </div>
+                )}
+              </div>
+            </a>
           )}
         </div>
 
@@ -227,7 +272,9 @@ const ProTemplateSpahire = ({
                     <div
                       key={index}
                       role="button"
-                      onClick={() => openInNewTab(value?.socialMediaName)}
+                      onClick={() => {
+                        onSocialMediaClick(value, formData);
+                      }}
                       className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]"
                     >
                       <Icon color={color} />
@@ -285,17 +332,7 @@ const ProTemplateSpahire = ({
                   return (
                     <div
                       onClick={async () => {
-                        if (formData.deviceUid) {
-                          await createTap(
-                            actions[
-                            DIGITAL_MEDIA_IDS[
-                            value.profileDigitalPaymentsId
-                            ] as ActionKeys
-                            ],
-                            formData.deviceUid
-                          );
-                        }
-                        copyText(value?.digitalPaymentLink);
+                        onPaymentClick(value, formData);
                       }}
                       key={index}
                       className=" cursor-pointer bg-[#F4F4F4]  flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]"
