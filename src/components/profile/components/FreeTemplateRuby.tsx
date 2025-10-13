@@ -183,10 +183,10 @@ const FreeTemplateRuby = ({
             formData?.emailIds?.[0]?.emailId?.length > 0 ||
             formData?.websites?.[0]?.website?.length > 0 ||
             (formData?.state && formData?.country)) && (
-            <h2 className="text-xl font-bold text-left text-black">
-              Contact Information
-            </h2>
-          )}
+              <h2 className="text-xl font-bold text-left text-black">
+                Contact Information
+              </h2>
+            )}
           <div className="flex flex-col gap-4">
             {/* Phone */}
             {formData?.phoneNumbers?.[0]?.phoneNumber && (
@@ -275,14 +275,7 @@ const FreeTemplateRuby = ({
 
             {/* Location */}
             {formData?.state && formData?.country && (
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${formData?.address || ""}, ${formData?.city || ""}, ${
-                    formData?.state || ""
-                  }, ${formData?.country || ""}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 onClick={async (e) => {
                   e.preventDefault();
                   onAddressClick(formData);
@@ -304,7 +297,7 @@ const FreeTemplateRuby = ({
                     <Arrow_icon color={color} />
                   </div>
                 </div>
-              </a>
+              </button>
             )}
           </div>
 
@@ -336,7 +329,7 @@ const FreeTemplateRuby = ({
                     6: "Whatsapp",
                   };
 
-                  
+
 
                   if (value?.socialMediaName?.length > 0) {
                     return (
@@ -344,7 +337,7 @@ const FreeTemplateRuby = ({
                         key={index}
                         role="button"
                         onClick={() => {
-                          onSocialMediaClick(value,formData);
+                          onSocialMediaClick(value, formData);
                         }}
                         className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
                       >
@@ -397,10 +390,10 @@ const FreeTemplateRuby = ({
                         <div className="flex-1 flex items-center gap-3 px-4 py-2">
                           {Icon && <Icon color={"#8D00D2"} />}
                           <div className="px-0">
-                          <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                            <h1 className=" flex-grow text-black font-semibold text-[16px]">
                               {name?.[value?.profileDigitalPaymentsId]}
                             </h1>
-                        </div>
+                          </div>
                         </div>
                         <div className="bg-[#E5E5E5] flex items-center px-3">
                           <Arrow_icon color={color} />
