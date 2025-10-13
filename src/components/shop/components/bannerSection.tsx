@@ -3,7 +3,7 @@ import Image from "next/image";
 
 function BannerSection() {
   return (
-    <section className="w-full bg-[#F3F3F3] h-[calc(100vh-60px)] relative overflow-hidden">
+    <section className="w-full bg-[#F3F3F3] h-[calc(100dvh-60px)] relative overflow-hidden">
       <h1 className="text-center font-bold text-3xl lg:text-4xl px-6 pt-[80px]">
         Upgrade Your Networking <br /> Game Today
       </h1>
