@@ -330,10 +330,10 @@ const FreeTemplateRuby = ({
                   const name: any = {
                     1: "Instagram",
                     2: "Facebook",
-                    3: "Youtube",
-                    4: "Twitter",
-                    5: "WhatsApp",
-                    6: "LinkedIn",
+                    3: "Twitter",
+                    4: "Youtube",
+                    5: "LinkedIn",
+                    6: "Whatsapp",
                   };
 
                   
@@ -380,7 +380,11 @@ const FreeTemplateRuby = ({
                 (value: any, index: number) => {
                   const Icon =
                     DigitalIconsObj?.[value?.profileDigitalPaymentsId];
-
+                  const name: any = {
+                    1: "Gpay",
+                    2: "Phonepe",
+                    3: "Paytm",
+                  };
                   if (value?.digitalPaymentLink?.length > 0) {
                     return (
                       <div
@@ -388,14 +392,15 @@ const FreeTemplateRuby = ({
                           onPaymentClick(value, formData);
                         }}
                         key={index}
-                        className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
+                        className="w-full bg-[#F4F4F4] rounded-md flex items-center overflow-hidden"
                       >
-                        <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                        <div className="flex-1 flex items-center gap-3 px-4 py-2 cursor-pointer">
                           <Icon color={"#8D00D2"} />
-                        </div>
-                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
-                              {name?.[value?.profileSocialMediaId]}
+                          <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                              {name?.[value?.profileDigitalPaymentsId]}
                             </h1>
+                        </div>
+                        
                         <div className="bg-[#E5E5E5] flex items-center px-3 ">
                           <Arrow_icon color={color} />
                         </div>
