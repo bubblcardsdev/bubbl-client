@@ -21,19 +21,22 @@ import {
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
-  copyText,
   navigatorShare,
-  openInNewTab,
 } from "@/src/utils/commonLogics";
-import {
-  ActionKeys,
-  actions,
-  DIGITAL_MEDIA_IDS,
-  SOCIAL_MEDIA_IDS,
-} from "@/src/lib/constant";
-import { createTap } from "@/src/services/profileApi";
+
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
+import { isEmpty } from "lodash";
+import MultiPopup from "./multiPopup";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import {
+  onAddressClick,
+  onCallClick,
+  onEmailClick,
+  onPaymentClick,
+  onSocialMediaClick,
+  onWebsiteClick,
+} from "@/src/helpers/profile";
 const FreeTemplateRuby = ({
   formData,
   selectedTheme,
@@ -44,6 +47,11 @@ const FreeTemplateRuby = ({
   handleSave: () => void;
 }) => {
   const [color, setColor] = useState<string>("");
+  const { object, onShow, onHide } = useShowHideWithRecord({
+    visible: false,
+    title: "",
+    data: "",
+  });
   useEffect(() => {
     const selected =
       theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
@@ -58,20 +66,26 @@ const FreeTemplateRuby = ({
     "4": YoutubeIconbackgroundFill, // Youtube
     "5": LinkedinIconbackgroundFill, // LinkedIn
     "6": WhatsappIconbackgroundFill, // WhatsApp
-
-  }
+  };
   const DigitalIconsObj: any = {
     "1": Googlepay_icon,
     "2": Phonepay_icon,
     "3": Paytm_icon,
   };
   const router = useRouter();
-  return (
-    <div className="flex items-center align-middle justify-center  overflow-hidden ">
-      <ToastContainer />
+  const newProfile = router.asPath.slice(1) === "createNewProfile";
 
+  return (
+    <div className="flex items-center align-middle justify-center  overflow-hidden">
+      <ToastContainer />
+      <MultiPopup
+        visible={object.visible}
+        list={object.data}
+        onClose={onHide}
+        title={object.title}
+      />
       <div className="relative w-full shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
-        <div className=" bg-yellow-500  rounded-t-2xl max-h-[250px]">
+        <div className=" bg-grey-500  rounded-t-2xl max-h-[250px]">
           <Image
             src={formData?.profileImageUrl || "/profile.png"}
             alt="profile"
@@ -80,11 +94,11 @@ const FreeTemplateRuby = ({
             className="object-cover w-full h-full overflow-hidden"
           />
         </div>
-        <div className="bg-white rounded-2xl  pt-20 pb-6 px-6 -mt-20 relative z-10  flex flex-col gap-4">
+        <div className="bg-white rounded-2xl  pt-20 pb-6 px-6 -mt-20 relative z-10  flex flex-col gap-6">
           <div className="absolute -top-[70px] left-1/2 transform -translate-x-1/2 z-20">
             <div className="w-[140px] h-[140px] rounded-[20px] bg-gray-200 flex items-center justify-center">
               <Image
-                src={formData?.profileImageUrl || "/profile.png"}
+                src={formData?.profileImageUrl || "/logo.png"}
                 alt="profile"
                 width={500}
                 height={500}
@@ -104,88 +118,82 @@ const FreeTemplateRuby = ({
                 <h3 className="text-black text-sm">
                   {formData?.companyName || "company name"}
                 </h3>
-
               </div>
-
             </div>
-            {/* <div className="  text-sm font-semibold border border-red-500 w-24 h-24">
+            <div className="rounded-xl  text-sm font-semibold flex items-center justify-center">
               <Image
                 src={formData?.companyLogoUrl || "/logo.png"}
                 alt="logo"
-                width={100}
-                height={100}
-                className="object-contain rounded-lg"
-              />
-            </div> */}
-            <div className=" p-1 rounded-xl text-sm font-semibold w-[80px] h-[80px] flex items-center justify-center">
-              <Image
-                src={formData?.companyLogoUrl || "/logo.png"}
-                alt="logo"
-                width={80}
-                height={80}
-                className="object-fill rounded-lg w-[80px] h-[80px]"
+                width={200}
+                height={200}
+                className="object-cover rounded-lg w-[80px] h-[80px]"
               />
             </div>
           </div>
-          {router.asPath.slice(1) !== "createNewProfile" && (
-            <div className="mt-6 flex gap-3 ">
-              <button
-                onClick={handleSave}
-                className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"
-                style={{ color: color }}
-              >
-                Save Contact
-              </button>
-              <button
-                onClick={() => navigatorShare(window.location.href)}
-                className="bg-gray-100  p-[3px] rounded-[10px] w-[15%] "
-              >
-                <span className="flex items-center align-middle justify-center">
-                  <ShareIcon color={color} />
-                </span>
-              </button>
-              <button
-                className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]"
-                style={{ color: color }}
-              >
-                <span className="flex items-center align-middle justify-center">
-                  <QrGenerator
-                    color={color}
-                    deviceIdQR={formData?.profileUid}
-                    qrBubbl={""}
-                    qrImageUrl={""}
-                  />
-                </span>
-              </button>
-            </div>
+
+          <div className="flex gap-3 ">
+            <button
+              onClick={handleSave}
+              className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"
+              style={{ color: color }}
+              disabled={newProfile}
+            >
+              Save Contact
+            </button>
+            <button
+              onClick={() => navigatorShare(window.location.href)}
+              className="bg-gray-100 flex items-center justify-center p-[3px] rounded-[10px] w-[15%] "
+              disabled={newProfile}
+            >
+              <ShareIcon color={color} />
+            </button>
+            <button
+              className="bg-gray-100  p-[3px] rounded-[10px] w-[15%]"
+              style={{ color: color }}
+            >
+              <span className="flex items-center justify-center">
+                <QrGenerator
+                  color={color}
+                  deviceIdQR={formData?.profileUid}
+                  qrBubbl={""}
+                  qrImageUrl={""}
+                />
+              </span>
+            </button>
+          </div>
+
+          {formData?.shortDescription && (
+            <p
+              className="text-black text-sm border-l-2 border-purple-500 pl-3 w-full text-left"
+              style={{ borderColor: color }}
+            >
+              {formData?.shortDescription || "Description"}
+            </p>
           )}
-          <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
-            {formData?.shortDescription || "Description"}
-          </p>
-          <p className="text-black text-sm mt-6 border-l-2 border-purple-500 pl-3 w-full text-left">
-            {formData?.bio}
-          </p>
+          {formData?.bio && (
+            <p
+              className="text-black text-sm border-l-2 border-purple-500 pl-3 w-full text-left"
+              style={{ borderColor: color }}
+            >
+              {formData?.bio}
+            </p>
+          )}
 
           {(formData?.phoneNumbers?.[0]?.phoneNumber ||
             formData?.emailIds?.[0]?.emailId?.length > 0 ||
             formData?.websites?.[0]?.website?.length > 0 ||
             (formData?.state && formData?.country)) && (
-              <h2 className="text-xl font-bold text-left text-black">
-                Contact Information
-              </h2>
-            )}
+            <h2 className="text-xl font-bold text-left text-black">
+              Contact Information
+            </h2>
+          )}
           <div className="flex flex-col gap-4">
             {/* Phone */}
             {formData?.phoneNumbers?.[0]?.phoneNumber && (
-              <a
-                href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
-                  }`}
+              <button
                 onClick={async (e) => {
                   e.preventDefault();
-                  if (formData?.deviceUid)
-                    await createTap(4, formData.deviceUid);
-                  window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
-                    }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                  onCallClick(formData, onShow);
                 }}
               >
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -193,7 +201,10 @@ const FreeTemplateRuby = ({
                     <div className="flex-shrink-0">
                       <PhoneColorIcon />
                     </div>
-                    <span className="ml-1 flex-grow truncate" title={formData.phoneNumbers[0].phoneNumber}>
+                    <span
+                      className="ml-1 flex-grow truncate"
+                      title={formData.phoneNumbers[0].phoneNumber}
+                    >
                       {formData.phoneNumbers[0].countryCode}{" "}
                       {formData.phoneNumbers[0].phoneNumber}
                     </span>
@@ -202,28 +213,26 @@ const FreeTemplateRuby = ({
                     <Arrow_icon color={color} />
                   </div>
                 </div>
-              </a>
+              </button>
             )}
 
             {/* Email */}
             {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-              <a
-                href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+              <button
                 onClick={async (e) => {
                   e.preventDefault();
-                  if (formData?.deviceUid)
-                    await createTap(5, formData.deviceUid);
-                  window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
-                    }`;
+                  onEmailClick(formData, onShow);
                 }}
               >
-
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
                   <div className="flex-1 flex items-center gap-3 p-3 min-w-0">
                     <div className="flex-shrink-0">
                       <MailIconbackgroundFill />
                     </div>
-                    <span className="ml-1 flex-grow truncate" title={formData.emailIds[0].emailId}>
+                    <span
+                      className="ml-1 flex-grow truncate"
+                      title={formData.emailIds[0].emailId}
+                    >
                       {formData.emailIds[0].emailId}
                     </span>
                   </div>
@@ -231,8 +240,7 @@ const FreeTemplateRuby = ({
                     <Arrow_icon color={color} />
                   </div>
                 </div>
-
-              </a>
+              </button>
             )}
 
             {/* Website */}
@@ -243,13 +251,7 @@ const FreeTemplateRuby = ({
                 rel="noopener noreferrer"
                 onClick={async (e) => {
                   e.preventDefault();
-                  if (formData?.deviceUid)
-                    await createTap(6, formData.deviceUid);
-                  window.open(
-                    formData?.websites?.[0]?.website || "",
-                    "_blank",
-                    "noopener,noreferrer"
-                  );
+                  onWebsiteClick(formData, onShow);
                 }}
               >
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -257,7 +259,10 @@ const FreeTemplateRuby = ({
                     <div className="flex-shrink-0">
                       <WebIconBackgroundFill />
                     </div>
-                    <span className="ml-1 flex-grow truncate" title={formData.websites[0].website}>
+                    <span
+                      className="ml-1 flex-grow truncate"
+                      title={formData.websites[0].website}
+                    >
                       {formData.websites[0].website}
                     </span>
                   </div>
@@ -272,23 +277,15 @@ const FreeTemplateRuby = ({
             {formData?.state && formData?.country && (
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
+                  `${formData?.address || ""}, ${formData?.city || ""}, ${
+                    formData?.state || ""
                   }, ${formData?.country || ""}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={async (e) => {
                   e.preventDefault();
-                  if (formData?.deviceUid)
-                    await createTap(7, formData.deviceUid);
-                  window.open(
-                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                      }, ${formData?.country || ""}`
-                    )}`,
-                    "_blank",
-                    "noopener,noreferrer"
-                  );
+                  onAddressClick(formData);
                 }}
               >
                 <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -296,7 +293,10 @@ const FreeTemplateRuby = ({
                     <div className="flex-shrink-0">
                       <MapIconBackgroundFill />
                     </div>
-                    <span className="ml-1 flex-grow truncate" title={`${formData.state}, ${formData.country}`}>
+                    <span
+                      className="ml-1 flex-grow truncate"
+                      title={`${formData.state}, ${formData.country}`}
+                    >
                       {formData.state}, {formData.country}
                     </span>
                   </div>
@@ -308,18 +308,18 @@ const FreeTemplateRuby = ({
             )}
           </div>
 
-
-          {formData?.socialMediaNames
-            ?.map((value: any) => value?.socialMediaName?.length > 0)
-            ?.includes(true) && (
+          {!isEmpty(formData?.socialMediaNames) &&
+            formData?.socialMediaNames
+              ?.map((value: any) => value?.socialMediaName?.length > 0)
+              ?.includes(true) && (
               <h2 className="text-xl font-bold text-left text-black">
                 Social Media
               </h2>
             )}
 
-          <div className="space-y-4  text-left">
-            {formData?.socialMediaNames &&
-              [...formData.socialMediaNames] // clone array so original isn't mutated
+          {!isEmpty(formData?.socialMediaNames) && (
+            <div className="space-y-4  text-left">
+              {[...formData.socialMediaNames] // clone array so original isn't mutated
                 .sort(
                   (a: any, b: any) =>
                     (a?.profileSocialMediaId || 0) -
@@ -336,24 +336,15 @@ const FreeTemplateRuby = ({
                     6: "LinkedIn",
                   };
 
+                  
+
                   if (value?.socialMediaName?.length > 0) {
                     return (
                       <div
                         key={index}
                         role="button"
                         onClick={() => {
-                          if (formData.deviceUid) {
-                            createTap(
-                              actions[
-                              SOCIAL_MEDIA_IDS[
-                              value.profileSocialMediaId
-                              ] as ActionKeys
-                              ],
-                              formData.deviceUid
-                            );
-                          }
-                          // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
-                          openInNewTab(value?.socialMediaName);
+                          onSocialMediaClick(value,formData);
                         }}
                         className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden"
                       >
@@ -375,10 +366,10 @@ const FreeTemplateRuby = ({
                     );
                   }
                 })}
-          </div>
+            </div>
+          )}
 
-
-          {formData?.digitalPaymentLinks?.map &&
+          {!isEmpty(formData?.digitalPaymentLinks) &&
             formData?.digitalPaymentLinks
               ?.map((value: any) => value?.digitalPaymentLink?.length > 0)
               ?.includes(true) && (
@@ -386,30 +377,21 @@ const FreeTemplateRuby = ({
                 Digital Payments
               </h2>
             )}
-          <div className="space-y-4 ">
-            {formData?.digitalPaymentLinks &&
-              formData?.digitalPaymentLinks?.map(
+          {!isEmpty(formData?.digitalPaymentLinks) && (
+            <div className="space-y-4 ">
+              {formData?.digitalPaymentLinks?.map(
                 (value: any, index: number) => {
                   const Icon =
                     DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+
                   if (value?.digitalPaymentLink?.length > 0) {
                     return (
                       <div
                         onClick={async () => {
-                          if (formData.deviceUid) {
-                            await createTap(
-                              actions[
-                              DIGITAL_MEDIA_IDS[
-                              value.profileDigitalPaymentsId
-                              ] as ActionKeys
-                              ],
-                              formData.deviceUid
-                            );
-                          }
-                          copyText(value?.digitalPaymentLink);
+                          onPaymentClick(value, formData);
                         }}
                         key={index}
-                        className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden"
+                        className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden cursor-pointer"
                       >
                         <div className="flex-1 flex items-center gap-3 px-4 py-2">
                           <Icon color={"#8D00D2"} />
@@ -422,11 +404,12 @@ const FreeTemplateRuby = ({
                   }
                 }
               )}
-          </div>
+            </div>
+          )}
 
-          <hr className="border-gray-300 mb-4" />
+          <hr className="border-gray-300" />
           <div className="flex flex-col justify-center items-center">
-            <p className="text-sm font-semibold mb-4 text-black">
+            <p className="text-sm font-semibold text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
             <button

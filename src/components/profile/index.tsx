@@ -14,6 +14,7 @@ import { theme } from "../../utils/profileThemecolor";
 import { downloadVCard } from "../../utils/downloadVcard";
 import { generateVCard } from "../../utils/generateVCard";
 import { useRouter } from "next/router";
+import MonoColorLoader from "../common/monoColorLoader";
 interface Props {
   deviceUid?: string;
   profileId?: string;
@@ -121,8 +122,8 @@ function Profile(props: Props) {
   };
 
   const Component = profileData ? templates[profileData.templateId] : null;
-  console.log(selectedTheme, selectedTheme?.brandingAccentColor, "theme");
-  if (!Component) return <p>Loading or invalid template...</p>;
+  
+  if (!Component) return <MonoColorLoader/>;
 
   const contact = {
     name: profileData?.firstName + " " + profileData?.lastName,

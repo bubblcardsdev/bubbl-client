@@ -18,23 +18,17 @@ import {
   OpalWhatsappIcon,
   Linkedin_icon_thin,
 } from "../../common/icons";
-import {
 
-  actions,
-  SOCIAL_MEDIA_IDS,
-  ActionKeys,
-  DIGITAL_MEDIA_IDS,
-} from "../../../lib/constant";
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
-  copyText,
   navigatorShare,
-  openInNewTab,
 } from "@/src/utils/commonLogics";
-import { createTap } from "@/src/services/profileApi";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
+import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import MultiPopup from "./multiPopup";
 
 const FreeTemplateOpal = ({
   formData,
@@ -48,6 +42,11 @@ const FreeTemplateOpal = ({
   console.log(formData, "?");
 
   const [color, setColor] = useState<string>("");
+    const { object, onShow, onHide } = useShowHideWithRecord({
+      visible: false,
+      title: "",
+      data: "",
+    });
   useEffect(() => {
     const selected =
       theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
@@ -72,9 +71,16 @@ const FreeTemplateOpal = ({
     "5": OpalWhatsappIcon,    // WhatsApp
     "6": Linkedin_icon_thin,  // LinkedIn
   };
+   const newProfile = router.asPath.slice(1) === "createNewProfile";
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
+      <MultiPopup
+        visible={object.visible}
+        list={object.data}
+        onClose={onHide}
+        title={object.title}
+      />
       <div className="w-full bg-[#EDEDED]  relative overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         {/* Header curved background */}
         <div
@@ -105,7 +111,7 @@ const FreeTemplateOpal = ({
               >
                 Save Contact
               </button>
-              {router.asPath.slice(1) !== "createNewProfile" && (
+              { newProfile&& (
                 <div className="flex space-x-2 xs:space-x-3 sm:space-x-4">
                   <button
                     onClick={() => navigatorShare(window.location.href)}
@@ -174,17 +180,10 @@ const FreeTemplateOpal = ({
             <div className="space-y-2 xs:space-y-3 sm:space-y-4 flex flex-col ">
               {/* Phone */}
               {formData?.phoneNumbers?.[0]?.phoneNumber && (
-                <a
-                  href={`tel:${formData?.phoneNumbers?.[0]?.countryCode || ""}${formData?.phoneNumbers?.[0]?.phoneNumber || ""
-                    }`}
+                <button
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate dial
-                    if (formData?.deviceUid) {
-                      await createTap(4, formData.deviceUid);
-                    }
-                    // manually trigger call after logging
-                    window.location.href = `tel:${formData?.phoneNumbers?.[0]?.countryCode || ""
-                      }${formData?.phoneNumbers?.[0]?.phoneNumber || ""}`;
+                    onCallClick(formData, onShow);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -202,7 +201,7 @@ const FreeTemplateOpal = ({
                       <Arrow_icon />
                     </div>
                   </div>
-                </a>
+                </button>
               )}
 
               {/* Email */}
@@ -211,12 +210,7 @@ const FreeTemplateOpal = ({
                   href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate navigation
-                    if (formData?.deviceUid) {
-                      await createTap(5, formData.deviceUid); // log email tap
-                    }
-                    // manually trigger email client after logging
-                    window.location.href = `mailto:${formData?.emailIds?.[0]?.emailId || ""
-                      }`;
+                   onEmailClick(formData, onShow);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -238,21 +232,10 @@ const FreeTemplateOpal = ({
 
               {/* Website */}
               {formData?.websites?.[0]?.website?.length > 0 && (
-                <a
-                  href={formData?.websites?.[0]?.website || ""}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate navigation
-                    if (formData?.deviceUid) {
-                      await createTap(6, formData.deviceUid);
-                    }
-                    // open website after logging
-                    window.open(
-                      formData?.websites?.[0]?.website || "",
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
+                  onWebsiteClick(formData, onShow);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
@@ -269,32 +252,15 @@ const FreeTemplateOpal = ({
                       <Arrow_icon />
                     </div>
                   </div>
-                </a>
+                </button>
               )}
 
               {/* Location */}
               {formData?.state && formData?.country && (
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                    }, ${formData?.country || ""}`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
                   onClick={async (e) => {
                     e.preventDefault(); // prevent immediate redirect
-                    if (formData?.deviceUid) {
-                      await createTap(7, formData.deviceUid); // log tap for location
-                    }
-                    // open Google Maps after logging
-                    window.open(
-                      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                        }, ${formData?.country || ""}`
-                      )}`,
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
+                   onAddressClick(formData);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -311,7 +277,7 @@ const FreeTemplateOpal = ({
                       <Arrow_icon />
                     </div>
                   </div>
-                </a>
+                </button>
               )}
             </div>
           </div>
@@ -350,18 +316,7 @@ const FreeTemplateOpal = ({
                           className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                           key={index}
                           onClick={() => {
-                            if (formData.deviceUid) {
-                              createTap(
-                                actions[
-                                SOCIAL_MEDIA_IDS[
-                                value.profileSocialMediaId
-                                ] as ActionKeys
-                                ],
-                                formData.deviceUid
-                              );
-                            }
-                            // createTap(actions[SOCIAL_MEDIA_IDS[value.profileSocialMediaId]], value)
-                            openInNewTab(value?.socialMediaName);
+                            onSocialMediaClick(value, formData);
                           }}
                         >
                           <div className="flex-1 flex items-center gap-2  xs:gap-3 p-2.5 xs:p-3 sm:p-4  min-w-0">
@@ -413,17 +368,7 @@ const FreeTemplateOpal = ({
                       return (
                         <div
                           onClick={async () => {
-                            if (formData.deviceUid) {
-                              await createTap(
-                                actions[
-                                DIGITAL_MEDIA_IDS[
-                                value.profileDigitalPaymentsId
-                                ] as ActionKeys
-                                ],
-                                formData.deviceUid
-                              );
-                            }
-                            copyText(value?.digitalPaymentLink);
+                            onPaymentClick(value, formData);
                           }}
                           key={index}
                           className=" cursor-pointer bg-[#F4F4F4]  w-[40px] h-[40px] rounded-lg flex items-center justify-center"

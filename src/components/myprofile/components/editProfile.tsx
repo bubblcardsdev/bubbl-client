@@ -463,72 +463,73 @@ const EditProfile: React.FC = () => {
 
   const handleSave = async () => {
     try {
-          const isCreate = router.asPath.slice(1) === "createNewProfile";
-    console.log(formData, "//formdata");
+      const isCreate = router.asPath.slice(1) === "createNewProfile";
+      console.log(formData, "//formdata");
 
-    // Map social media
-    const updatedSocialMediaNames = (formData?.socialMediaNames || []).map(
-      (item: any) => {
-        const normalizedLink = normalizeSocialLink(
-          item.profileSocialMediaId,
-          item.socialMediaName
-        );
-        return {
-          profileSocialMediaLinkId: item.profileSocialMediaLinkId || undefined,
-          profileSocialMediaId: item.profileSocialMediaId || undefined,
-          socialMediaName: normalizedLink,
-          activeStatus: normalizedLink?.trim().length > 0,
-        };
-      }
-    );
+      // Map social media
+      const updatedSocialMediaNames = (formData?.socialMediaNames || []).map(
+        (item: any) => {
+          const normalizedLink = normalizeSocialLink(
+            item.profileSocialMediaId,
+            item.socialMediaName
+          );
+          return {
+            profileSocialMediaLinkId:
+              item.profileSocialMediaLinkId || undefined,
+            profileSocialMediaId: item.profileSocialMediaId || undefined,
+            socialMediaName: normalizedLink,
+            activeStatus: normalizedLink?.trim().length > 0,
+          };
+        }
+      );
 
-    // Map digital payments
-    const updatedDigitalMediaNames = (formData?.digitalPaymentLinks || []).map(
-      (item: any) => ({
+      // Map digital payments
+      const updatedDigitalMediaNames = (
+        formData?.digitalPaymentLinks || []
+      ).map((item: any) => ({
         profileDigitalPaymentLinkId:
           item.profileDigitalPaymentLinkId || undefined,
         profileDigitalPaymentsId: item.profileDigitalPaymentsId || undefined,
         digitalPaymentLink: item.digitalPaymentLink || "",
         enableStatus: item.enableStatus ?? true,
         activeStatus: item.digitalPaymentLink?.trim().length > 0,
-      })
-    );
+      }));
 
-    // Build base payload
-    let payload: any = {
-      ...formData,
-      socialMediaNames: isCreate
-        ? (formData?.socialMediaNames || []).filter((s: any) =>
-            s.socialMediaName?.trim()
-          )
-        : updatedSocialMediaNames,
-      digitalPaymentLinks: isCreate
-        ? (formData?.digitalPaymentLinks || []).filter((d: any) =>
-            d.digitalPaymentLink?.trim()
-          )
-        : updatedDigitalMediaNames,
-      emailIds: formData?.emailIds || [],
-      phoneNumbers: formData?.phoneNumbers || [],
-      websites: formData?.websites || [],
-    };
+      // Build base payload
+      let payload: any = {
+        ...formData,
+        socialMediaNames: isCreate
+          ? (formData?.socialMediaNames || []).filter((s: any) =>
+              s.socialMediaName?.trim()
+            )
+          : updatedSocialMediaNames,
+        digitalPaymentLinks: isCreate
+          ? (formData?.digitalPaymentLinks || []).filter((d: any) =>
+              d.digitalPaymentLink?.trim()
+            )
+          : updatedDigitalMediaNames,
+        emailIds: formData?.emailIds || [],
+        phoneNumbers: formData?.phoneNumbers || [],
+        websites: formData?.websites || [],
+      };
 
-    // Special rule for create: strip empty strings from top-level keys
-    if (isCreate) {
-      Object.keys(payload).forEach((key) => {
-        if (typeof payload[key] === "string" && payload[key].trim() === "") {
-          delete payload[key]; // remove empty string keys
-        }
-        if (Array.isArray(payload[key]) && payload[key].length === 0) {
-          // keep as [] for arrays (important for API consistency)
-        }
-      });
-    }
+      // Special rule for create: strip empty strings from top-level keys
+      if (isCreate) {
+        Object.keys(payload).forEach((key) => {
+          if (typeof payload[key] === "string" && payload[key].trim() === "") {
+            delete payload[key]; // remove empty string keys
+          }
+          if (Array.isArray(payload[key]) && payload[key].length === 0) {
+            // keep as [] for arrays (important for API consistency)
+          }
+        });
+      }
 
-    // Remove image URLs before sending
-    delete payload?.profileImageUrl;
-    delete payload?.companyLogoUrl;
+      // Remove image URLs before sending
+      delete payload?.profileImageUrl;
+      delete payload?.companyLogoUrl;
 
-    console.log("Final Payload:", payload);
+      console.log("Final Payload:", payload);
       if (id) {
         // ---- Update ----
         const response = await UpdateProfile(id, payload);
@@ -549,10 +550,7 @@ const EditProfile: React.FC = () => {
         if (profileImg && response?.profile?.id)
           await UploadProfileImage(profileImg, response?.profile?.id);
         if (companyLogoImg && response?.profile?.id)
-          await UploadbrandinglogoImage(
-            companyLogoImg,
-            response?.profile.id
-          );
+          await UploadbrandinglogoImage(companyLogoImg, response?.profile.id);
 
         // if (response?.data?.message === "This profile name already exists") {
         //   setErrors((prev: any) => ({
@@ -567,7 +565,7 @@ const EditProfile: React.FC = () => {
         console.log("Create response:", response);
       }
     } catch (err: any) {
-      toast.error(err?.message || "Something went wrong")
+      toast.error(err?.message || "Something went wrong");
       console.error("Save error:", err);
     }
   };

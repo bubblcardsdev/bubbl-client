@@ -100,7 +100,7 @@ export default function Modal({
         {/* Header */}
         {showHeader && (
           <div
-            className={`flex items-start gap-3 ${
+            className={`flex items-center gap-3 ${
               stickyHeader ? "sticky top-0" : ""
             } rounded-t-xl bg-[#1D1D1D] backdrop-blur supports-[backdrop-filter]:bg-[#1D1D1D] border-b border-gray-500 px-4 sm:px-6 py-3 ${headerClassName}`}
           >

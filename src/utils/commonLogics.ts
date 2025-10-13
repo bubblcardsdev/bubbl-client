@@ -4,14 +4,28 @@ import { socialLinkRules } from "../lib/constant";
 
 
 // src/utils/commonLogics.ts
-export const openInNewTab = (url?: string) => {
+export const openInNewTab = (url: string,socialMediaId?: number) => {
+  console.log(url,socialMediaId);
   if (!url || typeof url !== "string") {
     console.warn("openInNewTab: Invalid URL", url);
     return;
   }
+  if(url.startsWith("@") && socialMediaId !== undefined){
+    url = socialLinkRules[socialMediaId]?.(url);
+    window.open(url.slice(1), "_blank", "noopener,noreferrer");
+    return;
+  }
+  
   const validUrl = url.startsWith("http") ? url : `https://${url}`;
   window.open(validUrl, "_blank", "noopener,noreferrer");
 };
+
+ export const call = (mobileNumber: string) => {
+    window.open(`tel:${mobileNumber}`,"_self");
+  };
+ export const email = (emailId: string) => {
+    window.open(`mailto:${emailId}`,"_self");
+  };
 
 export const navigatorShare = async (url: string) => {
   try {
