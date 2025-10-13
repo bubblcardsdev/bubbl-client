@@ -18,19 +18,13 @@ import {
   DownArrowIcon,
 } from "../../common/icons";
 import { theme } from "../../../utils/profileThemecolor";
-import { copyText, openInNewTab } from "../../../utils/commonLogics";
 import QrGenerator from "./QrGenerator";
-import { createTap } from "@/src/services/profileApi";
-import {
-  ActionKeys,
-  actions,
-  DIGITAL_MEDIA_IDS,
-  SOCIAL_MEDIA_IDS,
-} from "@/src/lib/constant";
+
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import MultiPopup from "./multiPopup";
 
 const ProTemplateQuartz = ({
   formData,
@@ -74,6 +68,12 @@ const ProTemplateQuartz = ({
   return (
     <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
       <ToastContainer />
+      <MultiPopup
+        visible={object.visible}
+        list={object.data}
+        onClose={onHide}
+        title={object.title}
+      />
       {/* Profile Image */}
       <div className="bg-[#D9D9D9] h-[400px]">
         <Image

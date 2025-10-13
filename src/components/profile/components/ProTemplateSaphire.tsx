@@ -14,22 +14,16 @@ import {
   saphireWhatsappIcon,
   saphireYoutubeIcon,
 } from "../../common/icons";
-import {
-  copyText,
-  // navigatorShare,
-  openInNewTab,
-} from "@/src/utils/commonLogics";
+
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
   DigitalIconsObj,
-  actions,
-  ActionKeys,
-  DIGITAL_MEDIA_IDS,
+
 } from "../../../lib/constant";
-import { createTap } from "@/src/services/profileApi";
 import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import MultiPopup from "./multiPopup";
 
 const ProTemplateSpahire = ({
   formData,
@@ -84,7 +78,12 @@ const ProTemplateSpahire = ({
         height={100}
         className="object-fit w-full"
       />
-
+      <MultiPopup
+        visible={object.visible}
+        list={object.data}
+        onClose={onHide}
+        title={object.title}
+      />
       <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full bg-white flex flex-col gap-6">
         {/* Profile header */}
         <div className="relative rounded-lg w-full h-34 bg-[#ECECEC] flex items-center flex-row border">

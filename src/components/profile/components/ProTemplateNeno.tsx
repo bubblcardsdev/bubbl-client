@@ -273,21 +273,14 @@ import {
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
-  copyText,
   navigatorShare,
-  openInNewTab,
 } from "@/src/utils/commonLogics";
 import { useRouter } from "next/router";
-import {
-  ActionKeys,
-  actions,
-  DIGITAL_MEDIA_IDS,
-  SOCIAL_MEDIA_IDS,
-} from "@/src/lib/constant";
+
 import { ToastContainer } from "react-toastify";
-import { createTap } from "@/src/services/profileApi";
 import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import MultiPopup from "./multiPopup";
 
 const ProTemplateNeno = ({
   formData,
@@ -340,7 +333,12 @@ const ProTemplateNeno = ({
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto ">
       <ToastContainer />
-
+      <MultiPopup
+        visible={object.visible}
+        list={object.data}
+        onClose={onHide}
+        title={object.title}
+      />
       <div className="w-full">
         {/* Profile Image */}
         <div className="w-full h-60 sm:h-72 md:h-80 lg:h-96 bg-gray-500">
