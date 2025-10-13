@@ -73,9 +73,8 @@ const SiteHeader = () => {
       style={{
         background: theme,
         color: isDarkTheme ? "white" : "black",
-        borderBottom: `1px solid ${
-          isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
-        }`,
+        borderBottom: `1px solid ${isDarkTheme ? "rgba(255, 255, 255, 0.2)" : "#E5E7EB"
+          }`,
       }}
     >
       {/* Logo */}
@@ -90,9 +89,8 @@ const SiteHeader = () => {
         {["Shop", "Plans", "About"].map((item) => (
           <div
             key={item}
-            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${
-              isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-            }`}
+            className={`flex items-center justify-center h-9 w-[6rem] rounded-md cursor-pointer transition-all duration-300 ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+              }`}
             onClick={() => router.push(`/${item.toLowerCase()}`)}
           >
             <span className="font-bold">{item}</span>
@@ -166,23 +164,43 @@ const SiteHeader = () => {
 
       {/* Mobile Menu Drawer */}
       <div
-        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? "max-h-96" : "max-h-0"
-        }`}
+        className={`absolute top-full left-0 w-full shadow-lg md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-96" : "max-h-0"
+          }`}
         style={{ backgroundColor: isDarkTheme ? "black" : "white" }}
       >
         <div className="flex flex-col items-center space-y-2 py-[20px]">
-          {["Shop", "Plans", "About", "Cart", "Login"].map((item) => (
+          {["Shop", "Plans", "About", "Cart"].map((item) => (
             <div
               key={item}
-              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${
-                isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
-              }`}
+              className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+                }`}
               onClick={() => router.push(`/${item.toLowerCase()}`)}
             >
               <span className="font-bold">{item}</span>
             </div>
           ))}
+          {
+            !tokenString ?
+              <div
+                className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"
+                  }`}
+                onClick={() => router.push(`/login`)}
+              >
+                <span className="font-bold">Login</span>
+              </div>
+              :
+              <><div
+                className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"}`}
+                onClick={() => router.push(`/settings`)}
+              >
+                <span className="font-bold">Settings</span>
+              </div><div
+                className={`w-[80%] px-6 py-2 text-center cursor-pointer transition-all duration-300 rounded-lg ${isDarkTheme ? "hover:bg-[#333333]" : "hover:bg-[#F3F3F3]"}`}
+                onClick={() => logout()}
+              >
+                  <span className="font-bold">Logout</span>
+                </div></>
+          }
         </div>
       </div>
     </nav>

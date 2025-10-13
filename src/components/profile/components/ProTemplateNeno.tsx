@@ -331,7 +331,7 @@ const ProTemplateNeno = ({
     data: "",
   });
   return (
-    <div className="flex flex-col items-center w-full max-w-md mx-auto ">
+    <div className="flex flex-col items-center w-full sm:max-w-[380px] mx-auto ">
       <ToastContainer />
       <MultiPopup
         visible={object.visible}
@@ -355,7 +355,7 @@ const ProTemplateNeno = ({
         <div className="relative overflow-hidden w-full bg-black box-border p-4 sm:p-5 space-y-5">
           {/* Profile Card */}
           <div className="relative z-10 rounded-xl p-4 sm:p-5 text-white backdrop-blur-md border border-gray-500">
-            <div className="absolute top-0 right-0 bg-gray-600  rounded-[0px_10px_0px_0px] h-[80px] w-[80px] flex items-center justify-center overflow-hidden">
+            <div className="absolute top-5 right-5 rounded-[0px_10px_0px_0px] h-[80px] w-[80px] flex items-center justify-center overflow-hidden">
               <Image
                 src={formData?.companyLogoUrl || "/logo.png"}
                 alt="Company Logo"
@@ -395,11 +395,11 @@ const ProTemplateNeno = ({
                   </button>
                   <button
                     onClick={() => navigatorShare(window.location.href)}
-                    className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md"
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-3 rounded-md"
                   >
                     <Share_icon />
                   </button>
-                  <button className="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-md">
+                  <button className="bg-purple-600 hover:bg-purple-700 text-white rounded-md">
                     {/* <Qr_icon /> */}
                     <QrGenerator
                       color={color}
