@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTruck } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,14 +8,10 @@ import { useRouter } from "next/router";
 import {
   createOrder,
   recordPaymentFailure,
-  verifyPayment,
 } from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
-import { toast } from "react-toastify";
-import { CART } from "@/src/context/action";
-import { UserContext } from "@/src/context/userContext";
 interface FormData {
   firstName: string;
   lastName: string;

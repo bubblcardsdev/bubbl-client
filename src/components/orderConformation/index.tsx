@@ -51,7 +51,7 @@ export default function OrderConfirmationPage() {
     <div className="h-[calc(100vh-60px)] flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow-xl rounded-2xl px-10 py-8 text-center w-[340px]">
         <h1 className="text-xl font-semibold text-gray-800 mb-3">
-          You're Almost Done!
+          You&apos;re Almost Done!
         </h1>
         {loading ? (
           <>
