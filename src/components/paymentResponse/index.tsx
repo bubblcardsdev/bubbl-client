@@ -1,112 +1,232 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
+import { useRouter } from "next/router";
+import { getOrderDetailsService } from "@/src/services/chechout";
+
+interface Product {
+  productId: string;
+  productName: string;
+  productType: string;
+  productColor: string | null;
+  productMaterial: string | null;
+  productSellingPrice: string;
+  quantity: number;
+  productImages: { signedUrl: string }[];
+}
+
+interface PaymentInfo {
+  orderNumber: number;
+  paymentStatus: string;
+  paidAt: string;
+  payMethod: string;
+  totalPaidAmount: string;
+  totalDiscountAmount: string;
+  shippingCost: string;
+}
+
+interface ShippingInfo {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  emailId: string;
+  address: string;
+  city: string;
+  state: string;
+  zipcode: number;
+  country: string;
+}
+
 const PaymentResponse = () => {
+  const router = useRouter();
+  const { order_id } = router.query;
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
+  const [shippingInfo, setShippingInfo] = useState<ShippingInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (order_id) {
+      getOrderDetails();
+    }
+  }, [order_id]);
+
+  const getOrderDetails = async () => {
+    try {
+      const response = await getOrderDetailsService(Number(order_id));
+
+      if (response?.success) {
+        setProducts(response.orderObj || []);
+        setPaymentInfo(response.paymentObj || null);
+        setShippingInfo(response.shippingData || null);
+        setError(null);
+      } else {
+        setError(response?.message || "Order not found");
+      }
+    } catch (err: any) {
+      console.error("Error fetching order details:", err);
+      setError("Order not found");
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center text-gray-600">
+        <p className="text-lg font-medium">{error}</p>
+        <button
+          onClick={() => router.push("/shop")}
+          className="mt-4 bg-black text-white px-5 py-2 rounded-lg text-sm hover:opacity-80 transition-all"
+        >
+          Back to Shop
+        </button>
+      </div>
+    );
+  }
+
+  if (!paymentInfo) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center text-gray-600">
+        <p>Loading your payment details...</p>
+      </div>
+    );
+  }
+
   return (
-      <div className="flex flex-col justify-center items-center  max-w-[1300px] mx-auto mb-12">
-        <div className="bg-white p-0  pt-[80px] sm:px-6 xs:px-6 ">
-          <div className="shadow-2xl lg:w-[380px] md:w-[380px] sm:w-[350px] xs:w-full max-w-md text-center relative  rounded-t-2xl mt-6 ">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg- p-3 rounded-full border border-white shadow-lg bg-white">
-              <CheckCircle className="text-green-400  w-8 h-8" size={24} />
-            </div>
-            <div className=" lg:h-[500px] md:h-[500px] sm:h-[500px] xs:h-[525px] overflow-hidden  relative">
-              <div className=" py-7 px-2">
-                <h2 className="text-lg font-semibold mt-8 inter">
-                  Payment Success!
-                </h2>
-                <p className="text-[#474747] inter">
-                  Your payment has been successfully done.
-                </p>
-                <hr className="my-4" />
-                <p className="text-[16px] text-[#474747] inter">
-                  Payment Success!
-                </p>
-                <h3 className="text-xl font-bold inter">INR 699</h3>
-                <div className="flex items-center bg-[#F9F9F9] rounded-lg p-4 my-4">
-                  <div className="bg-[#F5F5F5] w-20 h-12 flex justify-center items-center rounded-md">
-                    <Image
-                      src='/purple.png'
-                      alt="Card"
-                      width={100}
-                      height={100}
-                      className="rounded object-cover"
-                    />
-                  </div>
-                  <div className="ml-3 text-left w-full text-nowrap">
-                    <p className="inter text-gray-400">card</p>
-                    <p className="lg:text-sm md:text-sm font-semibold inter sm:text-[12px] xs:text-[12px] text-balance">
-                      Bubbl basic card x1
-                    </p>
-                  </div>
-                  <p className="text-black font-[600] lg:text-sm md:text-sm sm:text-[14px] xs:text-[14px]">
-                    ₹699/-
+    <div className="flex flex-col items-center justify-center max-w-[1300px] mx-auto mb-12 px-4">
+      <div className="bg-white shadow-2xl rounded-2xl w-full max-w-md mt-20 relative z-0">
+        {/* Success Icon */}
+        <div className="absolute -top-9 left-1/2 transform -translate-x-1/2 bg-white border-4 border-white shadow-lg rounded-full p-3 z-10">
+          <CheckCircle className="text-green-500 w-12 h-12" />
+        </div>
+
+        <div className="pt-16 pb-8 px-6 text-center">
+          {/* Header */}
+          <h2 className="text-2xl font-semibold inter text-gray-800">
+            Payment Successful!
+          </h2>
+          <p className="text-gray-600 mt-2 inter text-sm">
+            Thank you,{" "}
+            <span className="font-medium">{shippingInfo?.firstName}</span>! Your
+            payment has been processed successfully.
+          </p>
+
+          <hr className="my-5 border-gray-200" />
+
+          {/* Amount */}
+          <h3 className="text-3xl font-bold text-gray-900 mb-2 inter">
+            ₹{Number(paymentInfo.totalPaidAmount).toFixed(2)}
+          </h3>
+          <p className="text-sm text-gray-500 mb-6 inter">
+            Order No: #{paymentInfo.orderNumber}
+          </p>
+
+          {/* Product List */}
+          <div className="space-y-3">
+            {products.map((product, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-gray-50 hover:bg-gray-100 transition-all rounded-lg p-3"
+              >
+                <div className="w-16 h-16 flex justify-center items-center bg-white border rounded-md overflow-hidden">
+                  <Image
+                    src={
+                      product.productImages?.[0]?.signedUrl ||
+                      "/placeholder.png"
+                    }
+                    alt={product.productName}
+                    width={64}
+                    height={64}
+                    className="object-cover rounded"
+                  />
+                </div>
+                <div className="ml-4 flex-1 text-left">
+                  <p className="font-semibold text-gray-800 text-sm inter">
+                    {product.productName}
+                  </p>
+                  <p className="text-gray-500 text-xs inter mt-1">
+                    Qty: {product.quantity}
                   </p>
                 </div>
-                {/* Product Details */}
-                <div className="space-y-2 text-[12px] ">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 inter">Ref Number</span>
-                    <span className="inter text-[#121212] font-[600]">
-                      000085752257
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 inter">Payment Time</span>
-                    <span className="text-[#121212] font-[600] text-wrap">
-                      25-02-2023, 13:22:16
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 inter">Payment Method</span>
-                    <span className="inter text-[#121212]  font-[600]">
-                      Bank Transfer
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 inter">Sender Name</span>
-                    <span className="inter text-[#121212]  font-[600]">
-                      Antonio Roberto
-                    </span>
-                  </div>
-                  <p className="border b"></p>
-                  <div className="flex justify-between ">
-                    <span className="text-gray-600 inter">Amount</span>
-                    <span className="inter text-[#121212]  font-[600]">
-                      INR 699
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 inter">GST</span>
-                    <span className="inter text-[#121212]  font-[600]">
-                      INR xx.00
-                    </span>
-                  </div>
-                </div>
+                <p className="text-gray-800 font-semibold text-sm inter">
+                  ₹{Number(product.productSellingPrice).toFixed(2)}
+                </p>
               </div>
-              <div className="w-full  mt-0 absolute bottom-[-10px]">
-                <div className="flex justify-evenly ">
-                  {[...Array(19)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-4 h-4 bg-[#E6E6E6] rounded-full opacity-3"
-                    />
-                  ))}
-                </div>
-              </div>
+            ))}
+          </div>
+
+          {/* Payment Info */}
+          <div className="space-y-3 text-[13px] mt-8">
+            <div className="flex justify-between">
+              <span className="text-gray-500 inter">Payment Status</span>
+              <span className="font-semibold text-green-600 inter">
+                {paymentInfo.paymentStatus}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500 inter">Payment Method</span>
+              <span className="font-semibold text-gray-800 inter">
+                {paymentInfo.payMethod}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500 inter">Paid At</span>
+              <span className="font-semibold text-gray-800 inter">
+                {new Date(paymentInfo.paidAt).toLocaleString()}
+              </span>
+            </div>
+            <hr className="border-gray-200" />
+            <div className="flex justify-between">
+              <span className="text-gray-500 inter">Total Paid</span>
+              <span className="font-semibold text-gray-900 inter">
+                ₹{Number(paymentInfo.totalPaidAmount).toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500 inter">Shipping Cost</span>
+              <span className="font-semibold text-gray-900 inter">
+                ₹{Number(paymentInfo.shippingCost).toFixed(2)}
+              </span>
             </div>
           </div>
-          <div className="flex justify-between mt-6 sm:px-4 xs:px-4 text-[14px]">
-            <button className="w-1/2 border border-black hover:border-hidden text-black py-2 rounded-lg mr-2 inter hover:bg-[#9747FF] hover:text-white">
-              Login
-            </button>
-            <button className="w-1/2 bg-[#292929] text-white py-2 rounded-lg  hover:opacity-80">
-              Back to Shop
-            </button>
-          </div>
+
+          {/* Shipping Info */}
+          {shippingInfo && (
+            <div className="text-left mt-8 bg-gray-50 border border-gray-100 rounded-lg p-4 text-[13px]">
+              <p className="font-semibold mb-2 text-gray-800 inter">
+                Shipping Address
+              </p>
+              <p className="text-gray-700 inter">
+                {shippingInfo.firstName} {shippingInfo.lastName}
+              </p>
+              <p className="text-gray-600 inter">{shippingInfo.address}</p>
+              <p className="text-gray-600 inter">
+                {shippingInfo.city}, {shippingInfo.state} -{" "}
+                {shippingInfo.zipcode}
+              </p>
+              <p className="text-gray-600 inter">{shippingInfo.country}</p>
+              <p className="text-gray-600 inter mt-1">
+                {shippingInfo.phoneNumber}
+              </p>
+              <p className="text-gray-600 inter">{shippingInfo.emailId}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer Button */}
+        <div className="flex justify-center pb-6">
+          <button
+            onClick={() => router.push("/shop")}
+            className="w-[80%] bg-[#121212] text-white py-3 rounded-lg text-sm font-medium hover:opacity-85 transition-all"
+          >
+            Back to Shop
+          </button>
         </div>
       </div>
-
+    </div>
   );
 };
+
+
 
 export default PaymentResponse;

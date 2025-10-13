@@ -29,8 +29,6 @@ interface FormData {
 }
 
 const CheckoutPage = () => {
-  const { dispatch }: any = useContext(UserContext);
-
   const router = useRouter();
   const [order, setOrder] = useState<any>();
   const [checkoutFormData, setcheckoutFormData] = useState<FormData>({
@@ -85,7 +83,7 @@ const CheckoutPage = () => {
       [name]: type === "checkbox" ? target.checked : value,
     }));
 
-    // ✅ Clear error for the current field as user types
+    //  Clear error for the current field as user types
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: undefined,
@@ -150,36 +148,41 @@ const CheckoutPage = () => {
   };
 
   const handleSuccessResponse = async (res: any) => {
-    try {
-      const verified = await verifyPayment(
-        res.razorpay_payment_id,
-        res.razorpay_order_id,
-        res.razorpay_signature
-      );
+    router.push(
+      `/order-confirmation?razorpay_payment_id=${res.razorpay_payment_id}&razorpay_order_id=${res.razorpay_order_id}&razorpay_signature=${res.razorpay_signature}`
+    );
 
-      if (verified) {
-        localStorage.removeItem("cartItems");
-        dispatch({ type: CART, payload: "" });
-        toast.success("Thanks for purchasing the product, your order details will be sent to your mail");
-        router.push("/paymentResponse");
-      }
-    } catch (err) {
-      console.error("Error in verifying payment:", err);
-    }
+    // try {
+    //   const verified = await verifyPayment(
+    //     res.razorpay_payment_id,
+    //     res.razorpay_order_id,
+    //     res.razorpay_signature
+    //   );
+
+    //   if (verified) {
+    //     localStorage.removeItem("cartItems");
+    //     dispatch({ type: CART, payload: "" });
+    //     toast.success("Thanks for purchasing the product, your order details will be sent to your mail");
+    //     router.push("/paymentResponse");
+    //   }
+    // } catch (err) {
+    //   console.error("Error in verifying payment:", err);
+    // }
   };
   const handleFailureResponse = async (res: any) => {
-  console.log(res, "Razorpay payment failed");
+    console.log(res, "Razorpay payment failed");
 
-  try {
-    const paymentId = res?.error?.metadata?.payment_id || "";
-    const orderId = res?.error?.metadata?.order_id || "";
-    const reason = res?.error?.description || res?.error?.reason || "Payment failed";
+    try {
+      const paymentId = res?.error?.metadata?.payment_id || "";
+      const orderId = res?.error?.metadata?.order_id || "";
+      const reason =
+        res?.error?.description || res?.error?.reason || "Payment failed";
 
-    await recordPaymentFailure(paymentId, orderId, reason);
-  } catch (err) {
-    console.error("Error handling payment failure:", err);
-};
-  }
+      await recordPaymentFailure(paymentId, orderId, reason);
+    } catch (err) {
+      console.error("Error handling payment failure:", err);
+    }
+  };
 
   useEffect(() => {
     const storedCart = getCart();

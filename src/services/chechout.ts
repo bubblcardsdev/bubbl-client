@@ -85,7 +85,7 @@ export const verifyPayment = async (
     );
 
     if (responseData?.success) {
-      return true;
+      return { success: true, order_id: responseData?.order_id };
     } else {
       toast.error(responseData?.message || "Payment verification failed");
       return false;
@@ -108,15 +108,33 @@ export const recordPaymentFailure = async (
   const token = getAccessToken();
 
   try {
-   await axiosInstance.post(
-      "/pay/failurePayment",
-      data,
+    await axiosInstance.post("/pay/failurePayment", data, {
+      headers: { Authorization: token },
+    });
+  } catch (err: any) {
+    console.error("Error recording payment failure:", err);
+    return false;
+  }
+};
+
+export const getOrderDetailsService = async (orderId: number) => {
+  const token = getAccessToken();
+
+  try {
+    const response = await axiosInstance.post(
+      "/order/one",
+      { orderId },
       {
-        headers: { Authorization: token },
+        headers: {
+          Authorization: token, // include 'Bearer' if your API expects it
+          "Content-Type": "application/json",
+        },
       }
     );
+
+    return response.data;
   } catch (err: any) {
-   console.error("Error recording payment failure:", err);
-    return false;
+    console.error("Error fetching order details:", err.response?.data || err.message);
+    toast.error(err.response?.data?.message  || "Something went wrong")
   }
 };
