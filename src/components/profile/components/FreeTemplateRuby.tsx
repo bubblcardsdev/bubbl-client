@@ -318,7 +318,7 @@ const FreeTemplateRuby = ({
             )}
 
           {!isEmpty(formData?.socialMediaNames) && (
-            <div className="space-y-4  text-left">
+            <div className="text-left flex flex-col gap-4">
               {[...formData.socialMediaNames] // clone array so original isn't mutated
                 .sort(
                   (a: any, b: any) =>
@@ -354,9 +354,6 @@ const FreeTemplateRuby = ({
                             <h1 className=" flex-grow text-black font-semibold text-[16px]">
                               {name?.[value?.profileSocialMediaId]}
                             </h1>
-                            <p className="text-[12px]">
-                              {formData?.socialLinks?.[0]}
-                            </p>
                           </div>
                         </div>
                         <div className="bg-[#E5E5E5] flex items-center px-3 ">
@@ -378,7 +375,7 @@ const FreeTemplateRuby = ({
               </h2>
             )}
           {!isEmpty(formData?.digitalPaymentLinks) && (
-            <div className="space-y-4 ">
+            <div className="flex flex-col gap-4">
               {formData?.digitalPaymentLinks?.map(
                 (value: any, index: number) => {
                   const Icon =
@@ -391,11 +388,14 @@ const FreeTemplateRuby = ({
                           onPaymentClick(value, formData);
                         }}
                         key={index}
-                        className="w-full bg-[#F4F4F4] rounded-md mb-4 flex items-stretch overflow-hidden cursor-pointer"
+                        className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                       >
                         <div className="flex-1 flex items-center gap-3 px-4 py-2">
                           <Icon color={"#8D00D2"} />
                         </div>
+                        <h1 className=" flex-grow text-black font-semibold text-[16px]">
+                              {name?.[value?.profileSocialMediaId]}
+                            </h1>
                         <div className="bg-[#E5E5E5] flex items-center px-3 ">
                           <Arrow_icon color={color} />
                         </div>
@@ -408,7 +408,7 @@ const FreeTemplateRuby = ({
           )}
 
           <hr className="border-gray-300" />
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center gap-3">
             <p className="text-sm font-semibold text-black">
               Go Digital - Save Paper, Trees & Our Earth.
             </p>
@@ -418,7 +418,7 @@ const FreeTemplateRuby = ({
             >
               Join Now
             </button>
-            <p className="text-xs text-gray-500 mt-4">
+            <p className="text-xs text-gray-500">
               Powered by bubbl.cards ®
             </p>
           </div>

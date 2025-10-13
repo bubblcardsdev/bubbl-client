@@ -84,7 +84,7 @@ const onWebsiteClick = (formData: any, onShow?: any) => {
     return;
   }
 
-  onClick(6, formData.websites[0].websiteLink, formData.deviceUid);
+  onClick(6, formData.websites[0].website, formData.deviceUid);
 };
 
 
