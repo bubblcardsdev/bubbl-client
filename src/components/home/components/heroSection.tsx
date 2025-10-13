@@ -48,7 +48,7 @@ const HeroSection = () => {
     }
   `}
       </style>
-      <div className="relative w-full h-[calc(100vh-60px)]">
+      <div className="relative w-full h-[calc(100dvh-60px)]">
         {progress === 100 && (
           <TranslateYwithFadeIn key="header">
             <div className="flex justify-center">

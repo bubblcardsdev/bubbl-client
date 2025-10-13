@@ -392,16 +392,17 @@ const FreeTemplateRuby = ({
                           onPaymentClick(value, formData);
                         }}
                         key={index}
-                        className="w-full bg-[#F4F4F4] rounded-md flex items-center overflow-hidden"
+                        className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden cursor-pointer"
                       >
-                        <div className="flex-1 flex items-center gap-3 px-4 py-2 cursor-pointer">
-                          <Icon color={"#8D00D2"} />
+                        <div className="flex-1 flex items-center gap-3 px-4 py-2">
+                          {Icon && <Icon color={"#8D00D2"} />}
+                          <div className="px-0">
                           <h1 className=" flex-grow text-black font-semibold text-[16px]">
                               {name?.[value?.profileDigitalPaymentsId]}
                             </h1>
                         </div>
-                        
-                        <div className="bg-[#E5E5E5] flex items-center px-3 ">
+                        </div>
+                        <div className="bg-[#E5E5E5] flex items-center px-3">
                           <Arrow_icon color={color} />
                         </div>
                       </div>
