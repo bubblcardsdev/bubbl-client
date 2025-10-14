@@ -245,10 +245,7 @@ const FreeTemplateRuby = ({
 
             {/* Website */}
             {formData?.websites?.[0]?.website?.length > 0 && (
-              <a
-                href={formData?.websites?.[0]?.website || ""}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
                 onClick={async (e) => {
                   e.preventDefault();
                   onWebsiteClick(formData, onShow);
@@ -270,7 +267,7 @@ const FreeTemplateRuby = ({
                     <Arrow_icon color={color} />
                   </div>
                 </div>
-              </a>
+              </button>
             )}
 
             {/* Location */}

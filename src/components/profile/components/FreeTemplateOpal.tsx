@@ -206,8 +206,7 @@ const FreeTemplateOpal = ({
 
               {/* Email */}
               {formData?.emailIds?.[0]?.emailId?.length > 0 && (
-                <a
-                  href={`mailto:${formData?.emailIds?.[0]?.emailId || ""}`}
+                <button
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate navigation
                    onEmailClick(formData, onShow);
@@ -227,7 +226,7 @@ const FreeTemplateOpal = ({
                       <Arrow_icon />
                     </div>
                   </div>
-                </a>
+                </button>
               )}
 
               {/* Website */}

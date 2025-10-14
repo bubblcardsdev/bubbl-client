@@ -205,10 +205,7 @@ const ProTemplateQuartz = ({
 
           {/* Website */}
           {formData?.websites?.[0]?.website?.length > 0 && (
-            <a
-              href={formData?.websites?.[0]?.website || ""}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
               onClick={async (e) => {
                 e.preventDefault();
                 onWebsiteClick(formData, onShow);
@@ -228,18 +225,12 @@ const ProTemplateQuartz = ({
                   <DownArrowIcon />
                 </div>
               </button>
-            </a>
+            </button>
           )}
 
           {/* Location */}
           {formData?.state && formData?.country && (
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                }, ${formData?.country || ""}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
               onClick={async (e) => {
                 e.preventDefault();
                 onAddressClick(formData);
@@ -259,7 +250,7 @@ const ProTemplateQuartz = ({
                   <DownArrowIcon />
                 </div>
               </button>
-            </a>
+            </button>
           )}
         </div>
 

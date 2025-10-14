@@ -17,11 +17,15 @@ import {
 
 import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
+import { DigitalIconsObj } from "../../../lib/constant";
 import {
-  DigitalIconsObj,
-
-} from "../../../lib/constant";
-import { onAddressClick, onCallClick, onEmailClick, onPaymentClick, onSocialMediaClick, onWebsiteClick } from "@/src/helpers/profile";
+  onAddressClick,
+  onCallClick,
+  onEmailClick,
+  onPaymentClick,
+  onSocialMediaClick,
+  onWebsiteClick,
+} from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 import MultiPopup from "./multiPopup";
 
@@ -134,7 +138,10 @@ const ProTemplateSpahire = ({
             </div>
           </div>
 
-          <button className=" rounded-lg" style={{ border: "2px solid " + color }}>
+          <button
+            className=" rounded-lg"
+            style={{ border: "2px solid " + color }}
+          >
             <QrGenerator
               color={color}
               deviceIdQR={formData?.profileUid}
@@ -148,10 +155,10 @@ const ProTemplateSpahire = ({
           formData?.emailIds?.[0]?.emailId?.length > 0 ||
           formData?.websites?.[0]?.website?.length > 0 ||
           (formData?.state && formData?.country)) && (
-            <h2 className="text-lg font-bold mb-4 text-left text-black">
-              Contact Information
-            </h2>
-          )}
+          <h2 className="text-lg font-bold mb-4 text-left text-black">
+            Contact Information
+          </h2>
+        )}
 
         <div className="grid grid-cols-4 gap-4">
           {formData?.phoneNumbers?.[0]?.phoneNumber && (
@@ -160,7 +167,6 @@ const ProTemplateSpahire = ({
                 e.preventDefault();
                 onCallClick(formData, onShow);
               }}
-
             >
               <div className="relative">
                 <div className="relative flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
@@ -180,11 +186,11 @@ const ProTemplateSpahire = ({
 
           {formData?.emailIds?.[0]?.emailId?.length > 0 && (
             <button
-
               onClick={async (e) => {
                 e.preventDefault();
                 onEmailClick(formData, onShow);
-              }}>
+              }}
+            >
               <div className="relative">
                 <div className="relative flex items-center justify-center mx-auto  h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
                   <MailProfileIcon color={color} />
@@ -202,13 +208,7 @@ const ProTemplateSpahire = ({
           )}
 
           {formData?.state && formData?.country && (
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `${formData?.address || ""}, ${formData?.city || ""}, ${formData?.state || ""
-                }, ${formData?.country || ""}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
               onClick={async (e) => {
                 e.preventDefault();
                 onAddressClick(formData);
@@ -217,14 +217,11 @@ const ProTemplateSpahire = ({
               <div className="flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]">
                 <LocationFill_icon color={color} />
               </div>
-            </a>
+            </button>
           )}
 
           {formData?.websites?.[0]?.website?.length > 0 && (
-            <a
-              href={formData?.websites?.[0]?.website || ""}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
               onClick={async (e) => {
                 e.preventDefault();
                 onWebsiteClick(formData, onShow);
@@ -243,7 +240,7 @@ const ProTemplateSpahire = ({
                   </div>
                 )}
               </div>
-            </a>
+            </button>
           )}
         </div>
 
@@ -251,10 +248,10 @@ const ProTemplateSpahire = ({
         {formData?.socialMediaNames?.some(
           (v: any) => v?.socialMediaName?.length > 0
         ) && (
-            <h2 className="text-lg font-bold mb-4 text-left text-black">
-              Social Media
-            </h2>
-          )}
+          <h2 className="text-lg font-bold mb-4 text-left text-black">
+            Social Media
+          </h2>
+        )}
 
         <div className="grid grid-cols-4 gap-4">
           {formData?.socialMediaNames &&
@@ -319,30 +316,27 @@ const ProTemplateSpahire = ({
           )}
         <div className="grid grid-cols-4 gap-2 xs:gap-3 sm:gap-4 md:gap-6">
           {formData?.digitalPaymentLinks &&
-            formData?.digitalPaymentLinks?.map(
-              (value: any, index: number) => {
-                const Icon =
-                  DigitalIconsObj?.[value?.profileDigitalPaymentsId];
+            formData?.digitalPaymentLinks?.map((value: any, index: number) => {
+              const Icon = DigitalIconsObj?.[value?.profileDigitalPaymentsId];
 
-                console.log(value, "?");
+              console.log(value, "?");
 
-                if (value?.digitalPaymentLink?.length > 0 && Icon) {
-                  // Added Icon check
-                  return (
-                    <div
-                      onClick={async () => {
-                        onPaymentClick(value, formData);
-                      }}
-                      key={index}
-                      className=" cursor-pointer bg-[#F4F4F4]  flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]"
-                    >
-                      <Icon color={"#8D00D2"} />
-                    </div>
-                  );
-                }
-                return null; // Explicitly return null for items that don't meet conditions
+              if (value?.digitalPaymentLink?.length > 0 && Icon) {
+                // Added Icon check
+                return (
+                  <div
+                    onClick={async () => {
+                      onPaymentClick(value, formData);
+                    }}
+                    key={index}
+                    className=" cursor-pointer bg-[#F4F4F4]  flex items-center justify-center mx-auto h-[55px] w-[55px] rounded-[10px] bg-[linear-gradient(300deg,#D0D0D0,#F8F8F8)]"
+                  >
+                    <Icon color={"#8D00D2"} />
+                  </div>
+                );
               }
-            )}
+              return null; // Explicitly return null for items that don't meet conditions
+            })}
         </div>
         {/* Footer */}
         <hr className="border-gray-300 mb-1 mt-4 border-1 " />
@@ -353,9 +347,7 @@ const ProTemplateSpahire = ({
           <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">
             Join Now
           </button>
-          <p className="text-xs text-gray-500">
-            Powered by bubbl.cards ®
-          </p>
+          <p className="text-xs text-gray-500">Powered by bubbl.cards ®</p>
         </div>
       </div>
     </div>
