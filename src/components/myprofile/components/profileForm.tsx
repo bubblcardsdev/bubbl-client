@@ -60,7 +60,6 @@ const ProfileForm = ({
   setMode: any;
   handleRemoveImage: any;
 }) => {
-  
   const router = useRouter()
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
@@ -717,36 +716,43 @@ const ProfileForm = ({
         })}
       </div>
 
-      {/* Digital Links */}
-      <div className="flex flex-col gap-4">
-        <h1 className="text-white text-sm font-medium">Digital Link</h1>
-        {Digitalpay.map((item: any, idx: number) => (
-          <div
-            key={idx}
-            className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3"
-          >
-            <p className="text-gray-400">{item.icon}</p>
-            <input
-              type="text"
-              value={
-                formData.digitalPaymentLinks[idx]?.digitalPaymentLink || ""
-              }
-              onChange={(e) =>{
-                console.log(item,"?");
-                
-                handleNestedArrayChange(
-                  "digitalPaymentLinks",
-                  idx,
-                  "digitalPaymentLink",
-                  e.target.value
-                )
-              }
-              }
-              className="w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm"
-            />
-          </div>
-        ))}
+    {/* Digital Links */}
+<div className="flex flex-col gap-4">
+  <h1 className="text-white text-sm font-medium">Digital Link</h1>
+  {Digitalpay.map((item: any, idx: number) => {
+    const link = formData.digitalPaymentLinks[idx]?.digitalPaymentLink || "";
+    const isValid = link === "" || /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link);
+
+    return (
+      <div key={idx} className="flex flex-col gap-1 w-full">
+        <div className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3">
+          <p className="text-gray-400">{item.icon}</p>
+          <input
+            type="text"
+            value={link}
+            onChange={(e) =>
+              handleNestedArrayChange(
+                "digitalPaymentLinks",
+                idx,
+                "digitalPaymentLink",
+                e.target.value
+              )
+            }
+            className={`w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm ${
+              !isValid ? "border border-red-500" : ""
+            }`}
+            placeholder="Enter UPI ID"
+          />
+        </div>
+        {!isValid && (
+          <p className="text-red-500 text-xs ml-3">Invalid UPI ID</p>
+        )}
       </div>
+    );
+  })}
+</div>
+
+
 
       {/* Buttons */}
       <div className="sticky bottom-0 bg-[#1e1e1e] py-4 flex lg:justify-end md:justify-end sm:justify-between  xs:justify-between gap-3 z-10">
@@ -754,11 +760,19 @@ const ProfileForm = ({
           Cancel
         </button>
         <button
-          onClick={handleSave}
-          className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
-        >
-          Save
-        </button>
+  disabled={
+    !formData.digitalPaymentLinks?.every(
+      (link: any) =>
+        !link.digitalPaymentLink ||
+        /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link.digitalPaymentLink)
+    )
+  }
+  onClick={handleSave}
+  className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition 
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#a855f7]"
+>
+  Save
+</button>
       </div>
     </div>
   );
