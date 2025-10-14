@@ -48,6 +48,12 @@ const ProductInfo = (props: BubblCardProps) => {
   function tabChanger(tab: string): void {
     setActiveTab(tab);
   }
+
+    const handleBuyNow = ()=>{
+    addToCart()
+    router.push("/cart")
+  }
+
   return (
     <>
       <h1 className="text-[28px] font-semibold">{name}</h1>
@@ -200,7 +206,7 @@ const ProductInfo = (props: BubblCardProps) => {
         >
           Add to cart
         </button>
-        <button className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
+        <button onClick={()=>handleBuyNow()} className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
           Buy now
         </button>
       </div> : <p className="text-red-600 xs:block md:hidden font-semibold text-sm mt-6">Currently Unavailable</p>}

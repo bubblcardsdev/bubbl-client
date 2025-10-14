@@ -177,6 +177,12 @@ const PaymentResponse = () => {
             </div>
             <hr className="border-gray-200" />
             <div className="flex justify-between">
+              <span className="text-gray-500 inter">Discount Amount</span>
+              <span className="font-semibold text-gray-900 inter">
+                ₹{Number(paymentInfo.totalDiscountAmount).toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-gray-500 inter">Total Paid</span>
               <span className="font-semibold text-gray-900 inter">
                 ₹{Number(paymentInfo.totalPaidAmount).toFixed(2)}
@@ -192,23 +198,25 @@ const PaymentResponse = () => {
 
           {/* Shipping Info */}
           {shippingInfo && (
-            <div className="text-left mt-8 bg-gray-50 border border-gray-100 rounded-lg p-4 text-[13px]">
+            <div className="text-left mt-8 bg-gray-50 border border-gray-100 rounded-lg p-4 text-[13px] break-words">
               <p className="font-semibold mb-2 text-gray-800 inter">
                 Shipping Address
               </p>
-              <p className="text-gray-700 inter">
-                {shippingInfo.firstName} {shippingInfo.lastName}
-              </p>
-              <p className="text-gray-600 inter">{shippingInfo.address}</p>
-              <p className="text-gray-600 inter">
-                {shippingInfo.city}, {shippingInfo.state} -{" "}
-                {shippingInfo.zipcode}
-              </p>
-              <p className="text-gray-600 inter">{shippingInfo.country}</p>
-              <p className="text-gray-600 inter mt-1">
-                {shippingInfo.phoneNumber}
-              </p>
-              <p className="text-gray-600 inter">{shippingInfo.emailId}</p>
+              <div className="space-y-1 text-gray-700 inter break-words">
+                <p>
+                  {shippingInfo.firstName} {shippingInfo.lastName}
+                </p>
+                <p className="whitespace-pre-wrap break-words">
+                  {shippingInfo.address}
+                </p>
+                <p>
+                  {shippingInfo.city}, {shippingInfo.state} -{" "}
+                  {shippingInfo.zipcode}
+                </p>
+                <p>{shippingInfo.country}</p>
+                <p className="mt-1">{shippingInfo.phoneNumber}</p>
+                <p className="break-all">{shippingInfo.emailId}</p>
+              </div>
             </div>
           )}
         </div>
@@ -226,7 +234,5 @@ const PaymentResponse = () => {
     </div>
   );
 };
-
-
 
 export default PaymentResponse;
