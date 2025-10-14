@@ -1,6 +1,6 @@
 import axiosInstance from "../helpers/axios";
 import { toast } from "react-toastify";
-import { authHeader, getApiErrorMessage } from "../utils/utils";
+import { authHeader, getApiErrorMessage, safeToast } from "../utils/utils";
 
 export type PhoneNumber = {
   countryCode: string;
@@ -111,7 +111,7 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
     return response?.data ?? null;
   } catch (error) {
     console.error("Error fetching profile:", error);
-    toast.error(getApiErrorMessage(error));
+    safeToast.error(getApiErrorMessage(error));
     return null;
   }
 };

@@ -73,7 +73,7 @@ const FreeTemplateRuby = ({
     "3": Paytm_icon,
   };
   const router = useRouter();
-  const newProfile = router.asPath.slice(1) === "createNewProfile";
+  const newProfile = router.pathname === "/createNewProfile";
 
   return (
     <div className="flex items-center align-middle justify-center  overflow-hidden">
