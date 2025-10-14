@@ -58,12 +58,12 @@ const menuItems = [
     name: "support",
     path: "/support",
   },
-  {
-    label: "Settings",
-    icon: <SettingsIcon />,
-    name: "settings",
-    path: "/settings",
-  },
+  // {
+  //   label: "Settings",
+  //   icon: <SettingsIcon />,
+  //   name: "settings",
+  //   path: "/settings",
+  // },
 ];
 type MenuItem = {
   label: string;

@@ -131,7 +131,7 @@ const FreeTemplateRuby = ({
             </div>
           </div>
 
-          <div className="flex gap-3 ">
+          <div className="flex gap-3">
             <button
               onClick={handleSave}
               className="bg-gray-100 text-lg  font-semibold p-[3px]  rounded-[10px] w-[70%]"

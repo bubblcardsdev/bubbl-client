@@ -71,7 +71,7 @@ const FreeTemplateOpal = ({
     "5": OpalWhatsappIcon,    // WhatsApp
     "6": Linkedin_icon_thin,  // LinkedIn
   };
-   const newProfile = router.asPath.slice(1) === "createNewProfile";
+   const newProfile = router.pathname !== "/createNewProfile";
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
