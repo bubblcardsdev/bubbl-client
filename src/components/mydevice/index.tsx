@@ -3,18 +3,19 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { getLinkedDevices, switchMode, switchProfile } from "@/src/services/devices";
+import {
+  getLinkedDevices,
+  switchMode,
+  switchProfile,
+} from "@/src/services/devices";
 import { isEmpty } from "lodash";
 import { Circle } from "lucide-react";
 import { DropdownOption, MyDevice } from "@/src/lib/interface";
 import DeviceMenu from "./components/deviceMenu";
 import DropDown from "../common/dropDown";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
-import { MODES } from "@/src/lib/constant";
 import MonoColorLoader from "../common/monoColorLoader";
-import Button from "../common/Button";
-import Input from "../common/Input";
-import Modal from "../common/modal";
+import ModeUrlWindow from "./components/modes";
 
 export default function DeviceCards() {
   const initial = {
@@ -24,9 +25,6 @@ export default function DeviceCards() {
     modeVisible: false,
     modeData: null,
     modeTitle: "",
-    modeUrlVisible: false,
-    modeUrlData: null,
-    modeUrlTitle: "",
   };
 
   const [myDevices, setMyDevices] = useState<MyDevice[]>([]);
@@ -92,7 +90,7 @@ export default function DeviceCards() {
       const response = await switchMode({
         deviceLinkId: device?.deviceLinkId || null,
         accountDeviceLinkId: device?.accountDeviceLinkId,
-        modeId: device?.modeId,
+        modeId: Number(mode.value),
         modeUrl: modeUrl || null,
       });
       if (response) {
@@ -111,6 +109,7 @@ export default function DeviceCards() {
               })
             : []
         );
+        toast.success("Mode changed successfully!");
       }
     } catch (e: any) {
       toast.error(e?.message || "Something went wrong");
@@ -120,7 +119,7 @@ export default function DeviceCards() {
   useEffect(() => {
     getMydevices();
   }, []);
-
+  console.log(object);
   return (
     <div className="text-white mt-4">
       {loading && (
@@ -207,47 +206,7 @@ export default function DeviceCards() {
                     }
                     value={device?.profileId || ""}
                   />
-
-                  <DropDown
-                    options={MODES}
-                    onShow={() =>
-                      onShow("modeVisible", "modeData", device.deviceId, "")
-                    }
-                    onHide={onHide}
-                    label="Switch modes"
-                    visible={
-                      object?.modeVisible &&
-                      object?.modeData === device?.deviceId
-                    }
-                    onSelect={(m: DropdownOption) =>{
-                      if(m.value !== device?.modeId) handleSwitchModes(device,m)
-                    }
-                    }
-                    value={device?.modeId || ""}
-                  />
-                  <Modal
-                    showHeader
-                    title="Direct URL"
-                    visible={
-                      object.modeUrlVisible &&
-                      object.modeUrlData === device?.deviceId
-                    }
-                    headerClassName="border-b-0"
-                    bodyClassName="pt-0 pb-6"
-                    className="lg:max-w-md xl:max-w-md px-3 py-2"
-                    onClose={onHide}
-                  >
-                    <p className="text-sm text-[#828282] mb-2">
-                      Enter your Direct URL
-                    </p>
-                    <Input id={device.deviceUid} className="rounded-lg" />
-                    <div className="grid grid-cols-2 items-center gap-6 w-full mt-6">
-                      <Button onClick={onHide} className="py-3 xs:bg-[#333333]">
-                        {"Cancel"}
-                      </Button>
-                      <Button className="py-3">{"Save"}</Button>
-                    </div>
-                  </Modal>
+                <ModeUrlWindow data={device} onSave={(device,mode,modeUrl)=>handleSwitchModes(device,mode,modeUrl)}/>
                 </div>
               </div>
             );

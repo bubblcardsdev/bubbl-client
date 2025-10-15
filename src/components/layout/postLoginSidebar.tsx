@@ -9,7 +9,6 @@ import {
   AnalyticsIcon,
   PricingsIcon,
   SupportIcon,
-  SettingsIcon,
 } from "../common/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";

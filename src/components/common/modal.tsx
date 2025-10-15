@@ -55,23 +55,23 @@ export default function Modal({
   }, [visible]);
 
   // ESC to close
-  const onKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (!visible) return;
-      if (e.key === "Escape") {
-        onClose?.();
-      }
-    },
-    [visible, onClose]
-  );
+  // const onKeyDown = useCallback(
+  //   (e: KeyboardEvent) => {
+  //     if (!visible) return;
+  //     if (e.key === "Escape") {
+  //       onClose?.();
+  //     }
+  //   },
+  //   [visible, onClose]
+  // );
 
-  useEffect(() => {
-    if (!visible) return;
-    document.addEventListener("keydown", onKeyDown);
-    // Focus the close button (simple focus management)
-    closeBtnRef.current?.focus();
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [visible, onKeyDown]);
+  // useEffect(() => {
+  //   if (!visible) return;
+  //   document.addEventListener("keydown", onKeyDown);
+  //   // Focus the close button (simple focus management)
+  //   closeBtnRef.current?.focus();
+  //   return () => document.removeEventListener("keydown", onKeyDown);
+  // }, [visible, onKeyDown]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!closeOnBackdrop) return;

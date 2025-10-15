@@ -9,6 +9,8 @@ import {
   deactivateDevice,
   reactivateDevice,
   removeDevice,
+  reNameDevice,
+  updateUniqueNameDevice,
 } from "@/src/services/devices";
 import Input from "../../common/Input";
 import Button from "../../common/Button";
@@ -34,6 +36,7 @@ const DeviceMenu = (props: Props) => {
   const { visible, onShow, onHide } = useShowHide(initial);
 
   const [deviceName, setDeviceName] = useState(data.deviceNickName || "");
+  const [uniqueName, setUniqueName] = useState(data.uniqueName || "");
 
   const deactivate = async () => {
     try {
@@ -68,6 +71,38 @@ const DeviceMenu = (props: Props) => {
       const response = await removeDevice(
         data.accountDeviceLinkId,
         data.deviceUid
+      );
+      if (response) {
+        refetch();
+        onHide();
+      }
+    } catch (e) {
+      console.error("removeDevice error - ", e);
+      toast.error("Something went wrong");
+    }
+  };
+
+  const rename = async () => {
+    try {
+      if (!deviceName) return toast.error("Please enter device name");
+      const response = await reNameDevice(data.accountDeviceLinkId, deviceName);
+      if (response) {
+        refetch();
+        onHide();
+      }
+    } catch (e) {
+      console.error("removeDevice error - ", e);
+      toast.error("Something went wrong");
+    }
+  };
+
+  const updateUniqueName = async () => {
+    try {
+      if (!uniqueName) return toast.error("Please enter device name");
+      if(data.deviceLinkId === null) return toast.error("Device is not Linked");
+      const response = await updateUniqueNameDevice(
+        data.deviceLinkId,
+        uniqueName
       );
       if (response) {
         refetch();
@@ -139,7 +174,9 @@ const DeviceMenu = (props: Props) => {
           <Button onClick={onHide} className="py-3 xs:bg-[#333333]">
             {"Cancel"}
           </Button>
-          <Button className="py-3">{"Save"}</Button>
+          <Button className="py-3" onClick={() => rename()}>
+            {"Save"}
+          </Button>
         </div>
       </Modal>
       <Modal
@@ -154,12 +191,19 @@ const DeviceMenu = (props: Props) => {
         <p className="text-sm text-[#828282] mb-2">
           Enter your Device Claim name
         </p>
-        <Input id={data.deviceUid} className="rounded-lg" />
+        <Input
+          id={data.deviceUid}
+          className="rounded-lg"
+          value={uniqueName}
+          onChange={(e) => setUniqueName(e.target.value)}
+        />
         <div className="grid grid-cols-2 items-center gap-6 w-full mt-6">
           <Button onClick={onHide} className="py-3 xs:bg-[#333333]">
             {"Cancel"}
           </Button>
-          <Button className="py-3">{"Save"}</Button>
+          <Button className="py-3" onClick={() => updateUniqueName()}>
+            {"Save"}
+          </Button>
         </div>
       </Modal>
     </>
