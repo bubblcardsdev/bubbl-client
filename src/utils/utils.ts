@@ -2,24 +2,41 @@ import axios from "axios";
 import { getAccessToken } from "../helpers/localStorage";
 import { toast } from "react-toastify";
 
+
+const friendlyFieldNames: Record<string, string> = {
+  phoneNumber: "Phone number",
+  emailId: "Email address",
+  profileName: "Profile name",
+  firstName: "First name",
+  lastName: "Last name",
+  // add more as needed
+};
+
 export function getApiErrorMessage(error: unknown, fallback = "Something went wrong") {
+  console.log(error, "err");
+
+  let message = fallback;
+
   if (axios.isAxiosError(error)) {
     const res = error.response as any;
-    // Try the common shapes first, then fall back
-    return (
-      res?.data?.data?.message ||
-      res?.data?.message ||
-      res?.data?.error?.message ||
-      error.message ||
-      fallback
-    );
+    let rawMessage: string = res?.data?.message || error.message || fallback;
+
+    // Regex to find something like "phoneNumbers[0].phoneNumber"
+    const regex = /"([a-zA-Z0-9\[\]\.]+)"/g;
+
+    message = rawMessage.replace(regex, (match, p1) => {
+      // Get the last part after the dot
+      const parts = p1.split(".");
+      const key = parts[parts.length - 1];
+      return friendlyFieldNames[key] || key;
+    });
+  } else if (error && typeof error === "object" && "message" in (error as any)) {
+    message = (error as any).message || fallback;
   }
-  // Non-axios errors
-  if (error && typeof error === "object" && "message" in (error as any)) {
-    return (error as any).message || fallback;
-  }
-  return fallback;
+
+  return message;
 }
+
 
 export function authHeader() {
   const token = getAccessToken();

@@ -29,7 +29,7 @@ import {
 import { toast } from "react-toastify";
 import ProfileForm from "./profileForm";
 import { normalizeSocialLink } from "@/src/utils/commonLogics";
-// import { EditProfileSchema } from "../../../validators/profile";
+import { EditProfileSchema } from "../../../validators/profile";
 const socialLinks = [
   {
     id: 1,
@@ -292,6 +292,29 @@ const EditProfile: React.FC = () => {
     setFormData((prev: any) => ({ ...prev, [key]: value }));
   };
 
+
+  const validateForm = (): boolean => {
+  const { error } = EditProfileSchema.validate(formData, {
+    abortEarly: false, // capture all errors
+  });
+
+  if (!error) {
+    setErrors({});
+    return true;
+  }
+
+  const newErrors: Record<string, string> = {};
+
+  error.details.forEach((detail) => {
+    const path = detail.path.join("."); // e.g., phoneNumbers.0.phoneNumber
+    newErrors[path] = detail.message;
+  });
+console.log(newErrors,"?");
+
+  setErrors(newErrors);
+  return false;
+};
+
   const handleNestedArrayChange = (
     arrayKey: string,
     index: number,
@@ -463,7 +486,12 @@ const EditProfile: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const isCreate = router.asPath.slice(1) === "createNewProfile";
+      const isValid = validateForm();
+    if (!isValid) {
+      // toast.error("Please fix the validation errors before saving!");
+      return;
+    }
+      const isCreate = router.pathname === "/createNewProfile";
       console.log(formData, "//formdata");
 
       // Map social media

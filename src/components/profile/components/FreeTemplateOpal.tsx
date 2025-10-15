@@ -240,7 +240,7 @@ const FreeTemplateOpal = ({
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
                     <div className="flex-1 flex items-center gap-2 xs:gap-3 p-2.5 xs:p-3 sm:p-4 min-w-0">
                       <WebIcon_thin color={color} />
-                      <span className="flex-grow text-xs xs:text-sm sm:text-base truncate">
+                      <span className="text-xs xs:text-sm sm:text-base truncate">
                         {formData?.websites?.[0]?.website}
                       </span>
                     </div>
