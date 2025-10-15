@@ -16,6 +16,8 @@ import DropDown from "../common/dropDown";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 import MonoColorLoader from "../common/monoColorLoader";
 import ModeUrlWindow from "./components/modes";
+import { useRouter } from "next/router";
+import CreateNewDevice from "./components/createNewDevice";
 
 export default function DeviceCards() {
   const initial = {
@@ -26,6 +28,11 @@ export default function DeviceCards() {
     modeData: null,
     modeTitle: "",
   };
+
+  const router = useRouter();
+
+  const initialState = router?.query?.deviceUid ? true : false;
+  const [show, setShow] = useState(initialState);
 
   const [myDevices, setMyDevices] = useState<MyDevice[]>([]);
   const [profiles, setProfiles] = useState<DropdownOption[]>([]);
@@ -125,9 +132,14 @@ export default function DeviceCards() {
       {loading && (
         <MonoColorLoader message="Loading ..." size={100} color="#b97cff" />
       )}
+      {
+        show && (
+          <CreateNewDevice visible={show} onHide={() => setShow(false)} profiles={profiles}/>
+        )
+      }
       <div className="flex gap-3 justify-between mb-2 sm:pr-8">
         <h2 className="text-xl font-medium">My Device</h2>
-        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs">
+        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs" onClick={()=>setShow(true)}>
           <span className="text-sm">+</span>&nbsp;New Device
         </button>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 
 export type ModalProps = {
   visible?: boolean;
@@ -140,7 +140,7 @@ export default function Modal({
           <div
             className={`${
               stickyFooter ? "sticky bottom-0" : ""
-            } rounded-b-xl bg-[#1D1D1D] backdrop-blur supports-[backdrop-filter]:bg-[#1D1D1D] border-b border-gray-500 px-4 sm:px-6 py-3 ${footerClassName}`}
+            } rounded-b-xl bg-[#1D1D1D] backdrop-blur supports-[backdrop-filter]:bg-[#1D1D1D]  px-4 sm:px-6 py-3 ${footerClassName}`}
           >
             {footerContent ?? (
               <div className="flex items-center justify-end gap-3">

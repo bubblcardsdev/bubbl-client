@@ -233,3 +233,33 @@ export const updateUniqueNameDevice = async (deviceLinkId: number, uniqueName: s
     return false; // Always return a safe fallback
   }
 };
+
+
+export const linkDevice = async (deviceUid:string, profileId: number | null, uniqueName: string | null,deviceNickName: string) => {
+  try {
+    const response = await axiosInstance.post(
+      "/device/add",
+      { deviceUid, profileId, uniqueName,deviceNickName },
+      {
+        headers: authHeader(),
+      }
+    );
+
+    if (!response?.data?.success) {
+      // Backend responded but not successful
+      safeToast.warning("Something went wrong");
+      console.warn("[removeDevice] Something went wrong");
+      return false;
+    }
+
+    return response?.data?.success || false;
+  } catch (error: any) {
+    const message = getApiErrorMessage(error);
+
+    // Client-side toast, server-side log
+    safeToast.error(message);
+    console.error("[removeDevice] Server error:", message);
+
+    return false; // Always return a safe fallback
+  }
+};
