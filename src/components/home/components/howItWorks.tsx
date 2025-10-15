@@ -5,7 +5,7 @@ import TranslateYwithFadeIn from "../../common/translate";
 
 const HowItWorks = () => {
   return (
-    <section className="bg-black text-white w-full px-8 py-12 min-h-[100vh] flex">
+    <section className="bg-black text-white w-full px-8 py-12 min-h-[100vh]">
       <div className="w-full max-w-[1300px] m-auto">
         <TranslateYwithFadeIn>
           <h4 className="text-white text-center text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight mb-3">

@@ -68,7 +68,7 @@ const HeroSection = () => {
           <source src="/HomePageIcons/Hero3D.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="absolute top-[89%] left-[50%] translate-x-[-50%]">
+        <div className="absolute bottom-[10%] left-[50%] translate-x-[-50%]">
           {progress < 100 ? (
             <TranslateYwithFadeIn key="bar">
               <progress
