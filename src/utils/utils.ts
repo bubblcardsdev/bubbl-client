@@ -19,7 +19,7 @@ export function getApiErrorMessage(error: unknown, fallback = "Something went wr
 
   if (axios.isAxiosError(error)) {
     const res = error.response as any;
-    let rawMessage: string = res?.data?.message || error.message || fallback;
+    const rawMessage: string = res?.data?.message || error.message || fallback;
 
     // Regex to find something like "phoneNumbers[0].phoneNumber"
     const regex = /"([a-zA-Z0-9\[\]\.]+)"/g;

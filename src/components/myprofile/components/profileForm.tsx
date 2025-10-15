@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ProfileTemplateModal from "./profileTemplatemodal";
 import Image from "next/image";
 import { countryCodesData } from "@/src/lib/constant";
