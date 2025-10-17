@@ -62,7 +62,7 @@ const HeroSection = () => {
           autoPlay
           muted
           playsInline
-          className="w-full h-[calc(100vh-60px)] object-cover"
+          className="w-full h-[calc(100dvh-60px)] object-cover"
           ref={videoRef}
         >
           <source src="/HomePageIcons/Hero3D.mp4" type="video/mp4" />
