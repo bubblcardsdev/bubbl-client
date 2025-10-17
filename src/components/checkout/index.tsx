@@ -5,10 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
-import {
-  createOrder,
-  recordPaymentFailure,
-} from "../../services/chechout";
+import { createOrder, recordPaymentFailure } from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
@@ -124,7 +121,6 @@ const CheckoutPage = () => {
       e.preventDefault();
       if (isEmpty(cart)) return;
       if (!validate()) return;
-
       const payload: {
         productData: { productId: string; quantity: number }[];
         shippingFormData: FormData;
@@ -181,19 +177,25 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    const storedCart = getCart();
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
+    if (typeof window !== "undefined") {
+      const storedCart = getCart();
+      console.log(storedCart,"stored");
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
     }
   }, []);
-  const subTotal = cart.reduce(
+
+  const subTotal = !isEmpty(cart) ? cart.reduce(
     (acc, item) => acc + item.sellingPrice * item.quantity,
     0
-  );
-  const orginalPriceTotal = cart.reduce(
+  ) : 0;
+
+  const orginalPriceTotal = !isEmpty(cart) ? cart.reduce(
     (acc, item) => acc + item.originalPrice * item.quantity,
     0
-  );
+  ) : 0;
+
   const shipping = checkoutFormData?.country
     ? checkoutFormData?.country.trim() === "India"
       ? 0
@@ -491,7 +493,7 @@ const CheckoutPage = () => {
 
           <p className="text-sm text-[#7F7F7F] ">(Incl of all taxes)</p>
         </div>
-        <div className="mt-6 mb-6 bg-[#F5F5F5] p-3 rounded-lg flex items-center gap-2 ">
+        {/* <div className="mt-6 mb-6 bg-[#F5F5F5] p-3 rounded-lg flex items-center gap-2 ">
           <FaTruck className="text-lg" />
           <span className=" text-[#7F7F7F]">
             Deliver by :
@@ -499,7 +501,7 @@ const CheckoutPage = () => {
               12 June 2024
             </span>
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

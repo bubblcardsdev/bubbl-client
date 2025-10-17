@@ -47,10 +47,10 @@ axiosInstance.interceptors.response.use(
 
         if (!refreshToken) {
           // No refresh token → force logout
-          const cartItems = getCart();
+          // const cartItems = getCart();
           localStorage.clear();
-          localStorage.setItem("cartItems", JSON.stringify(cartItems));
-          localStorage.setItem("reqUrl", Router.asPath);
+          // localStorage.setItem("cartItems", JSON.stringify(cartItems));
+          // localStorage.setItem("reqUrl", Router.asPath);
           Router.push("/login?expired=1", "_self");
           return Promise.reject(error);
         }
@@ -73,10 +73,10 @@ axiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("Refresh token failed:", refreshError);
-        const cartItems = getCart();
+        // const cartItems = getCart();
         localStorage.clear();
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        localStorage.setItem("reqUrl", Router.asPath);
+        // localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        // localStorage.setItem("reqUrl", Router.asPath);
         Router.push("/login?expired=1", "_self"); // 👈 redirect if refresh fails
         return Promise.reject(refreshError);
       }
@@ -85,10 +85,10 @@ axiosInstance.interceptors.response.use(
     // 🔴 If still 401 or 404 → logout & redirect
     if (error.response && error.response.status === 401) {
       console.warn("API Error:", error.response.status, error.response.data);
-      const cartItems = getCart();
+      // const cartItems = getCart();
       localStorage.clear();
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-      localStorage.setItem("reqUrl", Router.asPath);
+      // localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      // localStorage.setItem("reqUrl", Router.asPath);
       Router.push("/login?expired=1", "_self");
     }
 

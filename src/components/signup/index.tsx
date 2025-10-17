@@ -24,34 +24,34 @@ const Signup = () => {
   const [errors, setErrors] = useState<any>({});
   type FormData = Record<string, string>;
 
-const [isOauth, setIsOauth] = useState<boolean>(false);
-const [oAuthType, setOauthType] = useState<string>("local");
+  const [isOauth, setIsOauth] = useState<boolean>(false);
+  const [oAuthType, setOauthType] = useState<string>("local");
 
-useEffect(() => {
-  console.log(oAuthType);
-  
-  const oauth = localStorage.getItem("oauth");
-  const oauthType = localStorage.getItem("type");
+  useEffect(() => {
+    console.log(oAuthType);
 
-  if (oauth === "true" && typeof oauthType === "string") {
-    setIsOauth(true);
-    setOauthType(oauthType);
-  }
+    const oauth = localStorage.getItem("oauth");
+    const oauthType = localStorage.getItem("type");
 
-  return () => {
-    // Clear only what you set
-    localStorage.removeItem("oauth");
-    localStorage.removeItem("type");
+    if (oauth === "true" && typeof oauthType === "string") {
+      setIsOauth(true);
+      setOauthType(oauthType);
+    }
+
+    return () => {
+      // Clear only what you set
+      localStorage.removeItem("oauth");
+      localStorage.removeItem("type");
+    };
+  }, []);
+  // const [isOauth,setIsOauth] = useState<boolean>(false)
+
+  const stepFields: Record<number, (keyof FormData)[]> = {
+    1: ["name"],
+    2: ["role", "companyName"],
+    3: ["email"],
+    4: ["password", "confirmPassword"],
   };
-}, []);
-// const [isOauth,setIsOauth] = useState<boolean>(false)
-
-const stepFields: Record<number, (keyof FormData)[]> = {
-  1: ["name"],
-  2: ["role", "companyName"],
-  3: ["email"],
-  4: ["password", "confirmPassword"],
-};
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     role: "",
@@ -62,26 +62,24 @@ const stepFields: Record<number, (keyof FormData)[]> = {
     password: "",
   });
 
-const getStepFormData = (
-  step: number,
-): Partial<FormDataType> => {
-  const fields = stepFields[step] as (keyof FormDataType)[];
-  return fields.reduce((acc, key) => {
-    acc[key] = formData[key];
-    return acc;
-  }, {} as Partial<FormDataType>);
-};
+  const getStepFormData = (step: number): Partial<FormDataType> => {
+    const fields = stepFields[step] as (keyof FormDataType)[];
+    return fields.reduce((acc, key) => {
+      acc[key] = formData[key];
+      return acc;
+    }, {} as Partial<FormDataType>);
+  };
 
   const validateFields = (step: number): boolean => {
     const stepForm = getStepFormData(step);
     const schema = stepSchemas[step];
 
     const { error } = schema.validate(stepForm, { abortEarly: false });
-    console.log(error)
+    console.log(error);
     if (!error) return true;
-    
+
     const newErrors: Record<string, string> = {};
-    error.details.forEach((item:any) => {
+    error.details.forEach((item: any) => {
       newErrors[item.path[0]] = item.message;
     });
     setErrors(newErrors);
@@ -97,26 +95,23 @@ const getStepFormData = (
     e.preventDefault();
     if (validateFields(step)) {
       try {
-        if(!isOauth){
-        const response = await RegisterApi(formData);
-  if (response) {
-          // const isOtpSent = await ResendMail(formData.email);
-          router.push({
-            pathname: "/emailVerify",
-            query: { email: formData.email, otpStatus: true },
-          });
-        }
-        }
-        else{
-           const response = await OauthRegisterApi(formData,oAuthType);
-           if(response) {
+        if (!isOauth) {
+          const response = await RegisterApi(formData);
+          if (response) {
+            // const isOtpSent = await ResendMail(formData.email);
+            router.push({
+              pathname: "/emailVerify",
+              query: { email: formData.email, otpStatus: true },
+            });
+          }
+        } else {
+          const response = await OauthRegisterApi(formData, oAuthType);
+          if (response) {
             toast.success("User created successfully");
             router.push("/login");
-           }
+          }
         }
         //  await RegisterCreateProfile(formData);
-
-      
       } catch (err) {
         console.error(err);
         toast.error("Something went wrong.");
@@ -143,8 +138,8 @@ const getStepFormData = (
             {[1, 2, 3, 4].map((item, key: number) => (
               <div
                 onClick={() => {
-                  if(item <= step){
-                    setStep(item)
+                  if (item <= step) {
+                    setStep(item);
                   }
                 }}
                 key={key}
@@ -162,12 +157,16 @@ const getStepFormData = (
             ))}
           </div>
           <div className="text-start mb-2">
-            {<>
-                <h1 className="text-2xl font-bold  ">{SIGNUP_STEPS[step - 1]?.title}</h1>
+            {
+              <>
+                <h1 className="text-2xl font-bold  ">
+                  {SIGNUP_STEPS[step - 1]?.title}
+                </h1>
                 <p className="text-[#606060] text-sm font-[500]  mt-[10px] leading-[1.3]">
                   {SIGNUP_STEPS[step - 1].subtitle}
                 </p>
-              </>}
+              </>
+            }
           </div>
           <form className="w-full max-w-xs">
             {step === 1 && (
@@ -191,9 +190,7 @@ const getStepFormData = (
                   placeholder="Enter your name"
                 />
                 {errors?.name && (
-                  <p className="text-red-500 text-sm  mt-1">
-                    {errors?.name}
-                  </p>
+                  <p className="text-red-500 text-sm  mt-1">{errors?.name}</p>
                 )}
               </div>
             )}
@@ -377,21 +374,21 @@ const getStepFormData = (
                 </div>
               </>
             )}
-  
-<button
-  onClick={(e) => {
-    if (step === 4) {
-      handleSubmit(e);
-    } else if (step === 3 && isOauth) {
-      handleSubmit(e);
-    } else {
-      handleStep(e);
-    }
-  }}
-  className="w-full p-[10px] bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
->
-  {step === 4 && !isOauth ? "Verify account" : "Continue"}
-</button>
+
+            <button
+              onClick={(e) => {
+                if (step === 4) {
+                  handleSubmit(e);
+                } else if (step === 3 && isOauth) {
+                  handleSubmit(e);
+                } else {
+                  handleStep(e);
+                }
+              }}
+              className="w-full p-[10px] bg-[#7939CC] text-white text-[14px] rounded-[10px] hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              {step === 4 && !isOauth ? "Verify account" : "Continue"}
+            </button>
             {/* )} */}
 
             {/* Social Icons */}
@@ -435,7 +432,7 @@ const getStepFormData = (
         <div className="w-[300px] p-4 bg-black rounded-lg shadow-lg  bordr">
           <div className="flex items-center  bg-blue justify-center w-full ">
             <p className="text-xs text-center text-white mt-1 truncate max-w-[190px]">
-             &#x1F44B; Welcome {formData.name}
+              &#x1F44B; Welcome {formData.name}
             </p>
           </div>
           <div className=" mt-[14px] relative w-50 p-2 rounded-lg shadow-lg  overflow-hidden bg-[#141414]">

@@ -69,8 +69,6 @@ function CardSection() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  console.log(data, "data");
-
   const handleSubscribe = async () => {
     if (!email.trim()) {
       toast.error("Please enter your email");
