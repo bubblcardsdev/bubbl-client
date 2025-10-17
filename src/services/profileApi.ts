@@ -1,6 +1,7 @@
 import axiosInstance from "../helpers/axios";
 import { toast } from "react-toastify";
 import { authHeader, getApiErrorMessage, safeToast } from "../utils/utils";
+import Router from "next/router";
 
 export type PhoneNumber = {
   countryCode: string;
@@ -101,13 +102,17 @@ export interface ProfileFormData {
 //     .join("\n");
 // }
 
-
-
 /* ---------------------------------- APIs ---------------------------------- */
 
 export const GetDeviceByUuid = async (deviceUid: string) => {
   try {
     const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+    if (response?.status === 201) {
+      // setReqPath(Router.asPath);
+      toast.success(response?.data?.message);
+      Router.push(`/myDevices?deviceUid=${deviceUid}`);
+      return null;
+    }
     return response?.data ?? null;
   } catch (error) {
     console.error("Error fetching profile:", error);
@@ -180,6 +185,7 @@ export const GetOneProfileApi = async (id: number) => {
       { profileId: id },
       { headers: authHeader() }
     );
+
     return response?.data ?? null;
   } catch (error) {
     console.error("Error fetching single profile:", error);
@@ -193,6 +199,7 @@ export const GetProfileByUuid = async (id: string) => {
     const response = await axiosInstance.post(`profile/getProfileByUid`, {
       profileUid: id,
     });
+
     return response?.data ?? null;
   } catch (error) {
     console.error("Error getting profile by UID:", error);

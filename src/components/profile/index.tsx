@@ -103,8 +103,10 @@ function Profile(props: Props) {
   };
 
   useEffect(() => {
-    if (notFound) router.replace("/404",`${router.asPath}`, {shallow:true});
+    if(typeof window !== "undefined"){
+      if (notFound) router.replace("/404",`${router.asPath}`, {shallow:true});
     getProfileData();
+    }
   }, [notFound]);
   const getThemeNameByColor = (color: string) => {
     const found = theme.find(

@@ -3,10 +3,11 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 import axios, { AxiosError } from "axios";
-import { setAccessToken, setRefreshToken } from "../helpers/localStorage";
+import { getReqPath, removeReqPath, setAccessToken, setRefreshToken } from "../helpers/localStorage";
 import { FormDataType } from "../lib/interface";
-import { NextRouter } from "next/router";
-import { safeToast } from "../utils/utils";
+import router, { NextRouter } from "next/router";
+import Router from "next/router";
+import { getApiErrorMessage, safeToast } from "../utils/utils";
 
 export const loginUser = async (
   email: string,
@@ -123,31 +124,36 @@ export const OauthRegisterApi = async (
   }
 };
 
-export const responseMessage = async (response: any, router: NextRouter) => {
+export const responseMessage = async (response: any) => {
   try {
     const googleResp = await axiosInstance.post("/verifygoogleuserlatest", {
       credential: response?.credential,
     });
+    if (!googleResp?.data?.success) {
+      safeToast.error(
+        googleResp?.data?.data?.message || "Something went wrong"
+      );
+      return false;
+    }
 
     console.log("Backend response:", googleResp.data);
     localStorage.setItem("accessToken", googleResp.data?.token?.accessToken);
     localStorage.setItem("refreshToken", googleResp.data?.token?.refreshToken);
-    router.push("/overview"); // success redirect
+    toast.success("Logged in successfully!");
+    const reqPath = getReqPath();
+    removeReqPath();
+    Router.push(reqPath || "/overview"); // success redirect Router.push(reqPath || "/overview");
     return true;
   } catch (err: any) {
     console.error("Google login error:", err);
-
-    // AxiosError has response object
-    const axiosError = err as AxiosError;
-    if (axiosError.response?.status === 404) {
-      safeToast.error("User not found.Please sign up.");
-      // user not found, navigate to signup
-      localStorage.setItem("oauth", "true");
-      localStorage.setItem("type", "google");
-
-      router.push("/signup");
+    if (axios.isAxiosError(err)) {
+      toast.error(getApiErrorMessage(err, "Something went wrong"));
+      if (err?.response?.status === 404) {
+        localStorage.setItem("oauth", "true");
+        localStorage.setItem("type", "google");
+        Router.push("/signup");
+      }
     }
-
     return false;
   }
 };

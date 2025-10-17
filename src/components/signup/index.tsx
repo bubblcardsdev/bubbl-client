@@ -109,7 +109,10 @@ const getStepFormData = (
         }
         else{
            const response = await OauthRegisterApi(formData,oAuthType);
-           if(response) router.push("/login")
+           if(response) {
+            toast.success("User created successfully");
+            router.push("/login");
+           }
         }
         //  await RegisterCreateProfile(formData);
 

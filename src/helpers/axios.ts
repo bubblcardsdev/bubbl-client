@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import {
   getAccessToken,
@@ -6,8 +5,10 @@ import {
   setAccessToken,
   removeAccessToken,
   removeRefreshToken,
+  getCart,
 } from "./localStorage";
 import { BACKEND_URI } from "../lib/constant";
+import Router from "next/router";
 
 const BASE_URL = `${BACKEND_URI}/api`; // 👈 adjust this if your backend has no /api
 
@@ -19,7 +20,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getAccessToken();
     if (accessToken) {
-      config.headers["x-access-token"] = {accessToken};
+      config.headers["x-access-token"] = { accessToken };
     }
     return config;
   },
@@ -42,52 +43,53 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshToken = getRefreshToken();
-        console.log(refreshToken,"...vg");
-        
+        console.log(refreshToken, "...vg");
+
         if (!refreshToken) {
           // No refresh token → force logout
-          removeAccessToken();
-          removeRefreshToken();
-          window.open("/login?expired=1","_self")
+          const cartItems = getCart();
+          localStorage.clear();
+          localStorage.setItem("cartItems", JSON.stringify(cartItems));
+          localStorage.setItem("reqUrl", Router.asPath);
+          Router.push("/login?expired=1", "_self");
           return Promise.reject(error);
         }
 
         // 🔄 Try refreshing the access token
-        const response = await axios.post(
-          `${BASE_URL}/refresh/token`,{refreshToken}
-        );
+        const response = await axios.post(`${BASE_URL}/refresh/token`, {
+          refreshToken,
+        });
 
         if (response.status === 200) {
           const newAccessToken = response?.data?.token?.accessToken;
           console.log(response?.data);
-          
+
           if (newAccessToken) {
             setAccessToken(newAccessToken);
             // Retry original request with new token
-            originalRequest.headers[
-              "authorization"
-            ] = newAccessToken;
+            originalRequest.headers["authorization"] = newAccessToken;
             return axiosInstance(originalRequest);
           }
         }
       } catch (refreshError) {
         console.error("Refresh token failed:", refreshError);
-        removeAccessToken();
-        removeRefreshToken();
-        window.open("/login?expired=1","_self") // 👈 redirect if refresh fails
+        const cartItems = getCart();
+        localStorage.clear();
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        localStorage.setItem("reqUrl", Router.asPath);
+        Router.push("/login?expired=1", "_self"); // 👈 redirect if refresh fails
         return Promise.reject(refreshError);
       }
     }
 
     // 🔴 If still 401 or 404 → logout & redirect
-    if (
-      error.response &&
-      (error.response.status === 401)
-    ) {
+    if (error.response && error.response.status === 401) {
       console.warn("API Error:", error.response.status, error.response.data);
-      removeAccessToken();
-      removeRefreshToken();
-      window.open("/login?expired=1","_self")
+      const cartItems = getCart();
+      localStorage.clear();
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      localStorage.setItem("reqUrl", Router.asPath);
+      Router.push("/login?expired=1", "_self");
     }
 
     return Promise.reject(error);

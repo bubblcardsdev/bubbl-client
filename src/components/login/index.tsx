@@ -12,6 +12,7 @@ import { loginUser, responseMessage } from "../../services/authLoginApi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { getReqPath, removeReqPath } from "@/src/helpers/localStorage";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -37,7 +38,9 @@ const LoginPage = () => {
 
       if (success) {
         toast.success("Logged in successfully!");
-        router.push("/overview");
+        const reqPath = getReqPath();
+        removeReqPath()
+        router.push(reqPath || "/overview");
       }
     } catch (err) {
       console.error("Unexpected error in handleSubmit:", err);
@@ -150,7 +153,7 @@ const LoginPage = () => {
               <div className="flex justify-around mt-[16px] space-x-4">
                 <GoogleOAuthProvider clientId="381109639208-5a8i0egsdut082f395brann2n340lbpe.apps.googleusercontent.com">
                   <GoogleLogin
-                    onSuccess={(response) => responseMessage(response, router)}
+                    onSuccess={(response) => responseMessage(response)}
                     onError={() => console.log("Login Failed")}
                     useOneTap
                   />
@@ -185,14 +188,14 @@ const LoginPage = () => {
   )}
 /> */}
 
-                <a
+                {/* <a
                   href={`https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78oczkl0lo3jqj&redirect_uri=${encodeURIComponent(
                     "http://localhost:3000/linkedin-callback"
                   )}&scope=profile%20email%20openid`}
                   className="p-2 bg-[#262626] rounded-[5px] h-[40px] w-[110px] flex items-center justify-center"
                 >
                   <LinkedinColorIcon />
-                </a>
+                </a> */}
               </div>
 
               <p className="text-center text-sm font-[500] mt-4 text-[#606060]">
