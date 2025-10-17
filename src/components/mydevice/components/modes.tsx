@@ -55,6 +55,7 @@ const ModeUrlWindow = (props: Props) => {
         onHide={hidePopup}
         label="Switch modes"
         visible={visible}
+        disabled={!device?.deviceLinkId}
         onSelect={(m: DropdownOption) => {
           if (m.value === 2) {
             onSave(device, m);

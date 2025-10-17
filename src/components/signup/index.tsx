@@ -28,7 +28,6 @@ const Signup = () => {
   const [oAuthType, setOauthType] = useState<string>("local");
 
   useEffect(() => {
-    console.log(oAuthType);
 
     const oauth = localStorage.getItem("oauth");
     const oauthType = localStorage.getItem("type");
@@ -108,7 +107,7 @@ const Signup = () => {
           const response = await OauthRegisterApi(formData, oAuthType);
           if (response) {
             toast.success("User created successfully");
-            router.push("/login");
+            
           }
         }
         //  await RegisterCreateProfile(formData);
@@ -131,7 +130,7 @@ const Signup = () => {
       <ToastContainer />
       <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
         <div className="w-full flex justify-start sticky top-0 p-2 mb-8">
-          <BubblLogo color="white" />
+          <BubblLogo color="white" onClick={() => router.push("/")} className="cursor-pointer" />
         </div>
         <div className="w-full max-w-xs md:w-[400px] flex-grow mt-[50px] flex-col justify-center px-4">
           <div className="flex justify-start space-x-2 mb-8">

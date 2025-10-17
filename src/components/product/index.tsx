@@ -9,6 +9,7 @@ import { ProductDetailMapper } from "@/src/lib/mapper";
 import { fetchProductDetails } from "@/src/services/productDetailsApi";
 import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
+import MonoColorLoader from "../common/monoColorLoader";
 
 interface ColorType {
   name: string;
@@ -64,14 +65,14 @@ const ProductList: React.FC = () => {
   const { id } = router.query;
 
   const [data, setData] = useState<any>(null);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [currentImage, setCurrentImage] = useState<"front" | "back">("front");
 
   const { dispatch }:any = useContext(UserContext);
 
 
   const getProductDetail = async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await fetchProductDetails(id as string);
       setData(response);
@@ -84,7 +85,7 @@ const ProductList: React.FC = () => {
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
-    // setLoading(false);
+    setLoading(false);
   };
 
 
@@ -155,10 +156,9 @@ const ProductList: React.FC = () => {
     (currentImage === "front"
       ? primaryImage
       : secondaryImage || primaryImage)
-  return !data ? (
-    <div className="flex justify-center items-center h-screen"></div>
-  ) : (
+  return(
     <div className="max-w-[1300px] mx-auto pt-12 p-6 mb-4">
+      {loading && <MonoColorLoader containerClassName="bg-white/90"/>}
       <div className="flex flex-col md:flex-row items-center md:items-start lg:gap-20 md:gap-[60px]">
         {/* Left Section - Image */}
         <div className="w-full md:w-[45%] md:sticky top-[85px] flex flex-col gap-3">
@@ -234,51 +234,6 @@ const ProductList: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Similar items section */}
-      {/* <div className="w-full mt-10 pl-2">
-        <h2 className="text-xl sm:text-2xl font-bold text-[#333333] py-6">
-          Similar Items You Might Also Like
-        </h2>
-        <div className="grid grid-flow-col auto-cols-[80%] sm:auto-cols-[45%] md:grid-cols-3 gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide pb-4">
-          {Products.map((product) => (
-            <div
-              key={product.id}
-              className="snap-start rounded-lg transition duration-300 ease-in-out"
-            >
-              <div className="relative mt-4 bg-[#F3F3F3] rounded-[10px] flex flex-col gap-2 pb-2">
-                <div className="flex justify-center items-center px-2 py-2">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={400}
-                    height={400}
-                  />
-                </div>
-                <div className="px-2 flex justify-between items-center">
-                  <div className="border rounded-lg bg-white px-2 py-[4px]">
-                    <p className="text-[#8C8C8C] text-sm">{product.name}</p>
-                  </div>
-                  {product.colors.length > 0 && (
-                    <CircleContainer colors={product.colors} />
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-between items-center pt-4 px-2">
-                <div>
-                  <h3 className="text-sm text-[#9F9F9F]">{product.title}</h3>
-                  <p className="text-black font-semibold text-lg">
-                    {product.price}
-                  </p>
-                </div>
-                <p className="bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
-                  {product.discount}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };

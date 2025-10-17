@@ -125,7 +125,7 @@ function Profile(props: Props) {
 
   const Component = profileData ? templates[profileData.templateId] : null;
   
-  if (!Component) return <MonoColorLoader/>;
+  if (!Component) return <MonoColorLoader containerClassName="bg-white/90"/>;
 
   const contact = {
     name: profileData?.firstName + " " + profileData?.lastName,

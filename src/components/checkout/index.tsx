@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { FaTruck } from "react-icons/fa";
+import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getCart } from "../../helpers/localStorage";
 import { useRouter } from "next/router";
 import { createOrder, recordPaymentFailure } from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
+import { UserContext } from "@/src/context/userContext";
+import { getToken } from "@/src/utils/utils";
 interface FormData {
   firstName: string;
   lastName: string;
@@ -36,7 +36,11 @@ const CheckoutPage = () => {
     country: "",
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    state: { cart },
+  }: any = useContext(UserContext);
   const validate = () => {
     const newErrors: Partial<FormData> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,49 +87,22 @@ const CheckoutPage = () => {
     }));
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   try {
-  //     e.preventDefault();
-  //     if (isEmpty(cart)) return;
-  //     if (!validate()) return;
-
-  //     const payload: {
-  //       productData: { productId: string; quantity: number }[];
-  //       shippingFormData: FormData;
-  //     } = {
-  //       productData: cart.map((item) => ({
-  //         productId: item?.productId,
-  //         quantity: item.quantity,
-  //       })),
-  //       shippingFormData: checkoutFormData,
-  //     };
-  //     const response = await CheckoutApi(payload);
-  //     if (response) {
-  //       router.push({
-  //         pathname: "/processPayment",
-  //         query: {
-  //           orderId: response,
-  //           orderType: 2,
-  //           token: btoa(checkoutFormData?.emailId),
-  //         },
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Checkout failed:", error);
-  //     alert("Checkout failed. Please try again.");
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     try {
       e.preventDefault();
-      if (isEmpty(cart)) return;
+      if (loading) return;
       if (!validate()) return;
+      const token = getToken();
+      if (!token) {
+        router.push("/login");
+        return;
+      }
       const payload: {
         productData: { productId: string; quantity: number }[];
         shippingFormData: FormData;
       } = {
-        productData: cart.map((item) => ({
+        productData: cart.map((item: CartItem) => ({
           productId: item?.productId,
           quantity: item.quantity,
         })),
@@ -136,6 +113,8 @@ const CheckoutPage = () => {
       setOrder(response);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,27 +122,8 @@ const CheckoutPage = () => {
     router.push(
       `/order-confirmation?razorpay_payment_id=${res.razorpay_payment_id}&razorpay_order_id=${res.razorpay_order_id}&razorpay_signature=${res.razorpay_signature}`
     );
-
-    // try {
-    //   const verified = await verifyPayment(
-    //     res.razorpay_payment_id,
-    //     res.razorpay_order_id,
-    //     res.razorpay_signature
-    //   );
-
-    //   if (verified) {
-    //     localStorage.removeItem("cartItems");
-    //     dispatch({ type: CART, payload: "" });
-    //     toast.success("Thanks for purchasing the product, your order details will be sent to your mail");
-    //     router.push("/paymentResponse");
-    //   }
-    // } catch (err) {
-    //   console.error("Error in verifying payment:", err);
-    // }
   };
   const handleFailureResponse = async (res: any) => {
-    console.log(res, "Razorpay payment failed");
-
     try {
       const paymentId = res?.error?.metadata?.payment_id || "";
       const orderId = res?.error?.metadata?.order_id || "";
@@ -176,25 +136,21 @@ const CheckoutPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedCart = getCart();
-      console.log(storedCart,"stored");
-      if (storedCart) {
-        setCart(JSON.parse(storedCart));
-      }
-    }
-  }, []);
+  const subTotal = !isEmpty(cart)
+    ? cart.reduce(
+        (acc: number, item: CartItem) =>
+          acc + item.sellingPrice * item.quantity,
+        0
+      )
+    : 0;
 
-  const subTotal = !isEmpty(cart) ? cart.reduce(
-    (acc, item) => acc + item.sellingPrice * item.quantity,
-    0
-  ) : 0;
-
-  const orginalPriceTotal = !isEmpty(cart) ? cart.reduce(
-    (acc, item) => acc + item.originalPrice * item.quantity,
-    0
-  ) : 0;
+  const orginalPriceTotal = !isEmpty(cart)
+    ? cart.reduce(
+        (acc: number, item: CartItem) =>
+          acc + item.originalPrice * item.quantity,
+        0
+      )
+    : 0;
 
   const shipping = checkoutFormData?.country
     ? checkoutFormData?.country.trim() === "India"
@@ -436,7 +392,7 @@ const CheckoutPage = () => {
             Edit
           </Link>
         </div>
-        {cart.map((item, index: number) => {
+        {cart.map((item: CartItem, index: number) => {
           const { quantity, imageUrl, sellingPrice, name, deviceType } = item;
           return (
             <div

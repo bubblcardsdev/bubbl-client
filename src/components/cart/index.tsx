@@ -45,7 +45,7 @@ const Cart = () => {
             name: product.productName,
             imageUrl: product.primaryImage,
             sellingPrice: product.sellingPrice,
-            originalPrice: product.sellingPrice + (product.discount || 0),
+            originalPrice: product.price,
             deviceType: product.productType,
             availability: product.availability,
           };
@@ -68,7 +68,7 @@ const Cart = () => {
         if (card.productId === productId) {
           return {
             ...card,
-            quantity: card.quantity < 10 ? card.quantity + 1 : 10,
+            quantity: card.quantity < 100 ? card.quantity + 1 : 10,
           };
         }
         return card;
@@ -123,8 +123,8 @@ const Cart = () => {
         0
       )
     : 0;
+    const discount = orginalPriceTotal - subTotal;
   const shipping = 0; // Example fixed shipping cost
-  const discount = orginalPriceTotal - subTotal; // Example: 0% discount
   const total = subTotal + shipping;
 
   return (
@@ -149,12 +149,13 @@ const Cart = () => {
                   originalPrice,
                   name,
                   deviceType,
+                  discountPercentage
                 } = value;
                 return (
                   <div key={productId} className="flex w-full items-center gap-6">
                     <button
                       onClick={() => router.push(`/product/${productId}`)}
-                      className="rounded-[8px] w-[90px] h-[90px] flex items-center justify-center  box-border bg-[#E5E5E5]"
+                      className="rounded-[8px] w-[90px] h-[75px] shrink-0 flex items-center justify-center  box-border bg-[#E5E5E5]"
                     >
                       <Image
                         src={imageUrl}
@@ -164,11 +165,11 @@ const Cart = () => {
                         width={100}
                       />
                     </button>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 flex-1">
                       <p className="text-xs text-[#7F7F7F]">{deviceType}</p>
                       <p className="text-black font-bold text-nowrap">{name}</p>
                       <div className="flex items-center gap-3">
-                        {Number(discount) > 0 && (
+                        {Number(discountPercentage) > 0 && (
                           <p className="text-[#7F7F7F] text-sm line-through">
                             ₹{quantity * originalPrice}
                           </p>
@@ -176,9 +177,9 @@ const Cart = () => {
                         <p className="font-bold text-nowrap leading-[20px]">
                           ₹{quantity * sellingPrice}/-
                         </p>
-                        {Number(discount) > 0 && (
+                        {Number(discountPercentage) > 0 && (
                           <p className="text-[#9747FF] text-sm">
-                            {Number(discount)}% off
+                            {Number(discountPercentage)}% off
                           </p>
                         )}
                       </div>
@@ -206,46 +207,6 @@ const Cart = () => {
                         </button>
                       </div>
                     </div>
-                    {/* <div className="flex items-center flex-col sm:flex-row px-2 gap-x-8 gap-y-2 w-full md:justify-between">
-                      <div className="flex justify-between w-full items-center lg:gap-x-10 md:gap-x-10 sm:gap-x-8 xs:gap-x-2">
-                        <div className="space-y-2 sm:space-y-0 xs:space-y-0">
-                          <p className="text-[16px] sm:text-[14px] xs:text-[12px] text-[#7F7F7F] font-semibold">
-                            {deviceType}
-                          </p>
-                          <p className="text-[16px] text-black font-semibold  sm:text-[14px] xs:text-[12px] text-nowrap">
-                            {name}
-                          </p>
-                        </div>
-                        <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2">
-                          <p
-                            className=" m-0 p-0 cursor-pointer bg-[]"
-                            onClick={() => handleDecrease(productId)}
-                          >
-                            -
-                          </p>
-                          <p className=" m-0 p-0 text-[10px] text-center">
-                            {value.quantity}
-                          </p>
-                          <p
-                            className=" m-0 p-0 cursor-pointer"
-                            onClick={() => handleIncrease(productId)}
-                          >
-                            +
-                          </p>
-                        </div>
-                      </div>
-                      <div className=" flex  w-full gap-x-14 lg:px-8 sm:px-0 xs:px-0 lg:justify-around sm:justify-between xs:justify-between">
-                        <p className="font-extrabold text-black lg:text-[20px]  sm:text-right sm:text-[14px] xs:text-[12px]">
-                          ₹{sellingPrice * quantity}/-
-                        </p>
-                        <p
-                          className="underline  text-[16px]sm:text-[14px] xs:text-[12px] cursor-pointer"
-                          onClick={() => handleRemove(productId)}
-                        >
-                          Remove
-                        </p>
-                      </div>
-                    </div> */}
                   </div>
                 );
               })

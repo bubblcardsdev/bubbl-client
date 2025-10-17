@@ -25,23 +25,6 @@ const EmailVerifyPage = () => {
   const [otp, setOtp] = useState<string | null>(null);
 
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const formDataString = sessionStorage.getItem("formData");
-  //     if (formDataString) {
-  //       try {
-  //         const formData = JSON.parse(formDataString);
-  //         if (formData?.email) {
-  //           setEmail(formData.email);
-
-  //         }
-  //       } catch (err) {
-  //         console.error("Error parsing session data", err);
-  //       }
-  //     }
-  //   }
-  // }, []);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setOtp(value);

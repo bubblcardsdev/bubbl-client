@@ -110,7 +110,7 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
     if (response?.status === 201) {
       // setReqPath(Router.asPath);
       toast.success(response?.data?.message);
-      Router.push(`/myDevices?deviceUid=${deviceUid}`);
+      Router.push(`/mydevice?deviceUid=${deviceUid}`);
       return null;
     }
     return response?.data ?? null;

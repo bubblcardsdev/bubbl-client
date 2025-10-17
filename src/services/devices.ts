@@ -146,8 +146,10 @@ export const reactivateDevice = async (accountDeviceLinkId: number) => {
   }
 };
 
-
-export const removeDevice = async (accountDeviceLinkId: number, deviceUid: string) => {
+export const removeDevice = async (
+  accountDeviceLinkId: number,
+  deviceUid: string
+) => {
   try {
     const response = await axiosInstance.post(
       "/device/remove",
@@ -176,7 +178,10 @@ export const removeDevice = async (accountDeviceLinkId: number, deviceUid: strin
   }
 };
 
-export const reNameDevice = async (accountDeviceLinkId: number, deviceNickName: string) => {
+export const reNameDevice = async (
+  accountDeviceLinkId: number,
+  deviceNickName: string
+) => {
   try {
     const response = await axiosInstance.put(
       "/device/update-device-name",
@@ -205,7 +210,10 @@ export const reNameDevice = async (accountDeviceLinkId: number, deviceNickName: 
   }
 };
 
-export const updateUniqueNameDevice = async (deviceLinkId: number, uniqueName: string) => {
+export const updateUniqueNameDevice = async (
+  deviceLinkId: number,
+  uniqueName: string
+) => {
   try {
     const response = await axiosInstance.put(
       "/device/update-unique-name",
@@ -234,12 +242,16 @@ export const updateUniqueNameDevice = async (deviceLinkId: number, uniqueName: s
   }
 };
 
-
-export const linkDevice = async (deviceUid:string, profileId: number | null, uniqueName: string | null,deviceNickName: string) => {
+export const linkDevice = async (
+  deviceUid: string,
+  profileId: number | null,
+  uniqueName: string | null,
+  deviceNickName: string
+) => {
   try {
     const response = await axiosInstance.post(
       "/device/add",
-      { deviceUid, profileId, uniqueName,deviceNickName },
+      { deviceUid, profileId, uniqueName, deviceNickName },
       {
         headers: authHeader(),
       }

@@ -29,7 +29,7 @@ export default function OrderConfirmationPage() {
 
       if (verified && verified?.success && verified?.order_id) {
         localStorage.removeItem("cartItems");
-        dispatch({ type: CART, payload: "" });
+        dispatch({ type: CART, payload: [] });
         router.push(`/paymentResponse?order_id=${verified?.order_id}`);
       } else {
         console.error("Payment verification failed");

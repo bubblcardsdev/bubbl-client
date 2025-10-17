@@ -3,8 +3,6 @@ import {
   getAccessToken,
   getRefreshToken,
   setAccessToken,
-  removeAccessToken,
-  removeRefreshToken,
   getCart,
 } from "./localStorage";
 import { BACKEND_URI } from "../lib/constant";
@@ -46,12 +44,11 @@ axiosInstance.interceptors.response.use(
         console.log(refreshToken, "...vg");
 
         if (!refreshToken) {
-          // No refresh token → force logout
-          // const cartItems = getCart();
+          const cartItems = getCart();
           localStorage.clear();
-          // localStorage.setItem("cartItems", JSON.stringify(cartItems));
-          // localStorage.setItem("reqUrl", Router.asPath);
-          Router.push("/login?expired=1", "_self");
+          if(cartItems) localStorage.setItem("cartItems", cartItems);
+          localStorage.setItem("reqUrl", Router.asPath);
+          Router.push("/login?expired=1");
           return Promise.reject(error);
         }
 
@@ -73,11 +70,11 @@ axiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("Refresh token failed:", refreshError);
-        // const cartItems = getCart();
+        const cartItems = getCart();
         localStorage.clear();
-        // localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        // localStorage.setItem("reqUrl", Router.asPath);
-        Router.push("/login?expired=1", "_self"); // 👈 redirect if refresh fails
+        if(cartItems) localStorage.setItem("cartItems", cartItems);
+        localStorage.setItem("reqUrl", Router.asPath);
+        Router.push("/login?expired=1"); // 👈 redirect if refresh fails
         return Promise.reject(refreshError);
       }
     }
@@ -85,11 +82,11 @@ axiosInstance.interceptors.response.use(
     // 🔴 If still 401 or 404 → logout & redirect
     if (error.response && error.response.status === 401) {
       console.warn("API Error:", error.response.status, error.response.data);
-      // const cartItems = getCart();
+      const cartItems = getCart();
       localStorage.clear();
-      // localStorage.setItem("cartItems", JSON.stringify(cartItems));
-      // localStorage.setItem("reqUrl", Router.asPath);
-      Router.push("/login?expired=1", "_self");
+      if(cartItems) localStorage.setItem("cartItems", cartItems);
+      localStorage.setItem("reqUrl", Router.asPath);
+      Router.push("/login?expired=1");
     }
 
     return Promise.reject(error);

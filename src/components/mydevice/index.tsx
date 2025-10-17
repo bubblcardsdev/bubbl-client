@@ -126,20 +126,25 @@ export default function DeviceCards() {
   useEffect(() => {
     getMydevices();
   }, []);
-  console.log(object);
+
   return (
     <div className="text-white mt-4">
       {loading && (
         <MonoColorLoader message="Loading ..." size={100} color="#b97cff" />
       )}
-      {
-        show && (
-          <CreateNewDevice visible={show} onHide={() => setShow(false)} profiles={profiles}/>
-        )
-      }
+      {show && (
+        <CreateNewDevice
+          visible={show}
+          onHide={() => setShow(false)}
+          profiles={profiles}
+        />
+      )}
       <div className="flex gap-3 justify-between mb-2 sm:pr-8">
         <h2 className="text-xl font-medium">My Device</h2>
-        <button className="bg-[#9747FF] px-2 py-1 rounded-md text-xs" onClick={()=>setShow(true)}>
+        <button
+          className="bg-[#9747FF] px-2 py-1 rounded-md text-xs"
+          onClick={() => setShow(true)}
+        >
           <span className="text-sm">+</span>&nbsp;New Device
         </button>
       </div>
@@ -198,7 +203,7 @@ export default function DeviceCards() {
                 {/* Switch Profiles and Modes */}
                 <div className="grid grid-cols-2 gap-6 items-center">
                   <DropDown
-                    options={profiles}
+                    options={[...profiles, { label: "New Profile", value: 0 }]}
                     onShow={() =>
                       onShow(
                         "profileVisible",
@@ -207,24 +212,37 @@ export default function DeviceCards() {
                         ""
                       )
                     }
+                    
                     onHide={onHide}
                     label="Switch Profiles"
                     visible={
                       object?.profileVisible &&
                       object?.profileData === device?.deviceId
                     }
-                    onSelect={(p: DropdownOption) =>
-                      handleSwitchProfiles(p, device)
-                    }
+                    onSelect={(p: DropdownOption) => {
+                      if (p.value === 0) {
+                        router.push("/createNewProfile");
+                      } else {
+                        handleSwitchProfiles(p, device);
+                      }
+                    }}
                     value={device?.profileId || ""}
                   />
-                <ModeUrlWindow data={device} onSave={(device,mode,modeUrl)=>handleSwitchModes(device,mode,modeUrl)}/>
+                  <ModeUrlWindow
+                    data={device}
+                    onSave={(device, mode, modeUrl) =>
+                      handleSwitchModes(device, mode, modeUrl)
+                    }
+                  />
                 </div>
               </div>
             );
           })
         ) : (
-          <div className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition">
+          <div
+            className="bg-[#282828]  hover:border  hover:border-[#828282] rounded-xl h-[177px] flex flex-col items-center justify-center cursor-pointer transition"
+            onClick={() => setShow(true)}
+          >
             <div className="flex flex-col items-center">
               <div className="text-2xl">＋</div>
               <p className="text-sm text-gray-300 mt-1">Add New Device</p>

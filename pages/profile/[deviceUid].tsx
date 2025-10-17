@@ -11,6 +11,7 @@ export default function ProfilePage(props: Props) {
   // return <h1>Profile {props?.query?.deviceUid}</h1>;
 }
 
+
 ProfilePage.getInitialProps = ({ query }: Props) => {
   return { query };
 };

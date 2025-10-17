@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import {
   // FacebookColorIcon,
-  LinkedinColorIcon,
   BubblLogo,
 } from "../common/icons";
 import Image from "next/image";
@@ -76,7 +75,7 @@ const LoginPage = () => {
       <div className="flex md:flex-row overflow-hidden">
         <div className="flex flex-col justify-between items-center w-full md:w-1/2 bg-black text-white p-4 md:p-8 h-screen">
           <div className="w-full flex justify-start sticky top-0">
-            <BubblLogo color="white" />
+            <BubblLogo color="white" onClick={() => router.push("/")} className="cursor-pointer" />
           </div>
           <div className="w-full max-w-xs md:max-w-[400px] flex-col justify-center lg:px-0">
             <h1 className="text-2xl md:text-3xl mb-[16px] font-bold">

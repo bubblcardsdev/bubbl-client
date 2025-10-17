@@ -4,6 +4,9 @@ import Modal from "../../common/modal";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { linkDevice } from "@/src/services/devices";
+import DropDown from "../../common/dropDown";
+import { DropdownOption } from "@/src/lib/interface";
+import { useRouter } from "next/router";
 
 interface Props {
   visible: boolean;
@@ -13,30 +16,45 @@ interface Props {
 
 const CreateNewDevice = (props: Props) => {
   const { visible, onHide, profiles } = props;
-  const [form, setForm] = useState({
-    deviceUid: "",
+  const router = useRouter();
+  const defaultUID = router?.query?.deviceUid;
+  const [form, setForm] = useState<any>({
+    deviceUid: defaultUID || "",
     deviceNickName: "",
     profileId: null,
     uniqueName: "",
   });
   const { deviceUid, deviceNickName, profileId, uniqueName } = form;
+  const [dropDown, setDropdown] = useState(false);
+  const [loading,setLoading] = useState(false);
   const handleSave = async () => {
+    setLoading(true);
     try {
+      if(loading) return;
       if (!deviceUid) return toast.error("Please enter device UID");
-      if (!profileId) return toast.error("Please select a profile");
+      // if (!profileId) return toast.error("Please select a profile");
       if (!deviceNickName) return toast.error("Please enter device name");
-      await linkDevice(deviceUid, profileId, uniqueName, deviceNickName);
-      onHide();
+      const response = await await linkDevice(deviceUid, profileId, uniqueName, deviceNickName);
+      if (response) {
+        toast.success("Device Linked Successfully");
+        router.push("/mydevice");
+        onHide();
+      }
+      
     } catch (e) {
       console.error("rename error - ", e);
       toast.error("Something went wrong");
     }
+    finally{
+      setLoading(false);
+    }
   };
-  console.log(profiles);
+  
   return (
     <Modal
       visible={visible}
       showHeader
+      closeOnBackdrop={false}
       title="Create New Device"
       headerClassName="border-b-0"
       bodyClassName="pt-0 pb-6"
@@ -61,9 +79,11 @@ const CreateNewDevice = (props: Props) => {
           <p className="text-sm text-[#828282] mb-2">Your Device UID</p>
           <Input
             id="deviceUid"
-            className="rounded-lg"
+            className={`rounded-lg ${defaultUID && "cursor-not-allowed bg-opacity-40"}`}
             value={deviceUid}
             onChange={(e) => setForm({ ...form, deviceUid: e.target.value })}
+            placeholder="Enter Device UID"
+            {...defaultUID && { disabled: true }}
           />
         </div>
         <div className="flex flex-col">
@@ -75,8 +95,26 @@ const CreateNewDevice = (props: Props) => {
             onChange={(e) =>
               setForm({ ...form, deviceNickName: e.target.value })
             }
+            placeholder="Enter Device Name"
           />
         </div>
+        <DropDown
+          options={[...profiles, { label: "Create New Profile", value: 0 }]}
+          onShow={() => setDropdown(true)}
+          onHide={() => setDropdown(false)}
+          label="Select Your Profile"
+          visible={dropDown}
+          labelClassName="xs:text-sm text-[#828282] mb-2"
+          onSelect={(p: DropdownOption) =>{
+            if (p.value === 0) {
+              router.push("/createNewProfile");
+            }
+            setForm({ ...form, profileId: Number(p.value) })
+          }
+          }
+          value={form?.profileId || ""}
+
+        />
         <div className="flex flex-col">
           <p className="text-sm text-[#828282] mb-2">
             Your Unique URL Name{" "}
@@ -91,32 +129,14 @@ const CreateNewDevice = (props: Props) => {
           <Input
             id="deviceName"
             className="rounded-lg"
-            value={deviceNickName}
+            value={uniqueName}
             onChange={(e) =>
-              setForm({ ...form, deviceNickName: e.target.value })
+              setForm({ ...form, uniqueName: e.target.value })
             }
+            placeholder="Enter Unique Name"
           />
         </div>
-        <div className="flex flex-col">
-          <p className="text-sm text-[#828282] mb-2">
-            Your Unique URL Name{" "}
-            <span
-              className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
-               text-transparent bg-clip-text text-[8px] font-bold uppercase 
-               tracking-wider px-1 shrink-0 select-none"
-            >
-              PRO
-            </span>
-          </p>
-          <Input
-            id="deviceName"
-            className="rounded-lg"
-            value={deviceNickName}
-            onChange={(e) =>
-              setForm({ ...form, deviceNickName: e.target.value })
-            }
-          />
-        </div>
+        
       </div>
     </Modal>
   );

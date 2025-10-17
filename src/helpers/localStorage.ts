@@ -3,6 +3,7 @@ const DEVICE_ID = "deviceId";
 const ACCESSTOKEN = "accessToken";
 const REFRESHTOKEN = "refreshToken";
 const UserRequestedPath = "reqUrl";
+const EMAIL_VERIFIED = "emailVerified";
 
 const get = (key: string) => localStorage.getItem(key);
 const set = (key: string, value: string) => localStorage.setItem(key, value);
@@ -26,6 +27,10 @@ const getReqPath = () => get(UserRequestedPath) || "";
 const setReqPath = (url: string) => set(UserRequestedPath, url);
 const removeReqPath = () => remove(UserRequestedPath);
 
+const getEmailVerified = () => get(EMAIL_VERIFIED) || "";
+const setEmailVerified = (token: string) => set(EMAIL_VERIFIED, token);
+const removeEmailVerified = () => remove(EMAIL_VERIFIED);
+
 export {
   getCart,
   setCart,
@@ -40,4 +45,7 @@ export {
   getReqPath,
   setReqPath,
   removeReqPath,
+  getEmailVerified,
+  setEmailVerified,
+  removeEmailVerified,
 };

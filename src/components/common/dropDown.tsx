@@ -12,10 +12,12 @@ interface Props {
   visible: boolean;
   onSelect: (option: DropdownOption) => void;
   value: string | number;
+  labelClassName?: string;
+  disabled?:boolean
 }
 
 const DropDown = (props: Props) => {
-  const { options, onShow, onHide, label, visible, onSelect, value } = props;
+  const { options, onShow, onHide, label, visible, onSelect, value, labelClassName,disabled } = props;
 
   const selectedLabel = !isEmpty(options)
     ? options.find((o) => o.value === value)?.label
@@ -24,12 +26,13 @@ const DropDown = (props: Props) => {
   
   return (
     <div>
-      <p className="text-xs text-[#888888] mb-3">{label}</p>
+      <p className={`text-xs text-[#888888] mb-3 ${labelClassName}`}>{label}</p>
       <div className="relative">
         <button
           onClick={onShow}
           className="w-full relative flex items-center justify-between bg-[#2A2A2A] px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-[#3A3A3A] hover:border-[#4A4A4A] transition-colors"
           onBlur={onHide}
+          disabled={disabled}
         >
           <span className="text-white w-full truncate text-left">
             {selectedLabel || "Select an option"}

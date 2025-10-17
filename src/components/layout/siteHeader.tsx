@@ -10,7 +10,6 @@ import {
 } from "../common/icons";
 import Link from "next/link";
 import { UserContext } from "@/src/context/userContext";
-import { getCart } from "@/src/helpers/localStorage";
 import { CART } from "@/src/context/action";
 import Button from "../common/Button";
 import { getToken } from "@/src/utils/utils";
@@ -36,11 +35,7 @@ const SiteHeader = () => {
   };
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedCart = getCart();
       fetchToken();
-      if (storedCart) {
-        dispatch({ type: CART, payload: JSON.parse(storedCart) });
-      }
     }
   }, []);
 

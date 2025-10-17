@@ -9,8 +9,6 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
   return (
     <div
       className="relative max-w-[300px] z-10"
-      // onMouseEnter={() => setHovered(true)}
-      // onMouseLeave={() => setHovered(false)}
     >
       {colors.length > 0 &&
         colors.map((color, index) => {
@@ -22,10 +20,8 @@ const CircleContainer = ({ colors }: { colors: string[] }) => {
               style={{
                 backgroundColor: color,
                 right: `${10 + index * 3}px`,
-                // transform: hovered ? `translateX(-${15 * index}px)` : "none",
                 transform: `translateX(-${15 * index}px)`,
               }}
-              // onClick={() => setHovered(false)}
             />
           );
         })}
@@ -118,13 +114,11 @@ function Products(props: ProductProps) {
                           <div className=" flex justify-between items-center ">
                             <div className="w-max  border  rounded-lg  bg-white  lex items-center justify-center px-2 py-[4px] ml-2.5 ">
                               <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[14px]">
-                                {/* {card?.cardType} */}
-                                {/* {card?.material} */}
                                 {card?.productName}
                               </p>
                             </div>
                             <div className="flex justify-center items-center relative  ">
-                              {card?.colors && card?.colors?.length > 0 && (
+                              {!isEmpty(card?.colors) && card?.colors?.length > 1 && (
                                 <CircleContainer colors={card?.colors} />
                               )}
                             </div>
@@ -135,15 +129,15 @@ function Products(props: ProductProps) {
                             <h3 className="text-md text-[#9F9F9F] inter">
                               {card?.productName}
                             </h3>
-                            <p className="text-black inter font-[600] text-[18px]  ">
-                              RS. {card.sellingPrice}
+                            <p className="text-black font-bold text-[18px]">
+                              RS. {card?.sellingPrice ? card?.sellingPrice.toFixed(0) : 0}
                             </p>
                           </div>
 
                           {Number(card.discount) > 0 && (
                             <div className="px-2">
-                              <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm inter  ">
-                                {card.discount}%
+                              <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
+                                {card?.discount ? card?.discount.toFixed(0) : 0}%
                               </p>
                             </div>
                           )}

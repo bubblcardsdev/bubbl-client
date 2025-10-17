@@ -69,6 +69,7 @@ export const ProceedToCheckout: React.FC<RazorpayButtonProps> = ({
       toast.error("Invalid order. Please try again.");
       return;
     }
+    if(isLoading) return;
 
     setIsLoading(true);
 

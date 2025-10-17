@@ -3,9 +3,15 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 import axios, { AxiosError } from "axios";
-import { getReqPath, removeReqPath, setAccessToken, setRefreshToken } from "../helpers/localStorage";
+import {
+  getReqPath,
+  removeReqPath,
+  setAccessToken,
+  setEmailVerified,
+  setRefreshToken,
+} from "../helpers/localStorage";
 import { FormDataType } from "../lib/interface";
-import router, { NextRouter } from "next/router";
+import type { NextRouter } from "next/router";
 import Router from "next/router";
 import { getApiErrorMessage, safeToast } from "../utils/utils";
 
@@ -20,7 +26,7 @@ export const loginUser = async (
       const token = response.data?.data?.token;
       setAccessToken(token?.accessToken);
       setRefreshToken(token?.refreshToken);
-
+      setEmailVerified(response.data?.data?.emailVerified);
       return true;
     }
     toast.error("Login failed. Please try again.");
@@ -59,7 +65,6 @@ export const RegisterApi = async (formData: FormDataType) => {
     });
     if (!response?.data?.success) return false;
 
-    toast.success(response?.data?.data?.message || "User created successfully");
     return true;
   } catch (error: any) {
     console.error(error);
@@ -110,6 +115,10 @@ export const OauthRegisterApi = async (
     if (!response?.data?.success) return false;
 
     toast.success(response?.data?.data?.message || "User created successfully");
+    const reqPath = getReqPath();
+    setEmailVerified("true");
+    Router.push(reqPath || "/overview");
+    removeReqPath();
     return true;
   } catch (error: any) {
     console.error(error);
@@ -139,6 +148,7 @@ export const responseMessage = async (response: any) => {
     console.log("Backend response:", googleResp.data);
     localStorage.setItem("accessToken", googleResp.data?.token?.accessToken);
     localStorage.setItem("refreshToken", googleResp.data?.token?.refreshToken);
+    setEmailVerified("true");
     toast.success("Logged in successfully!");
     const reqPath = getReqPath();
     removeReqPath();

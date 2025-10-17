@@ -3,7 +3,7 @@ type iconProps = {
   className?: string;
 };
 
-export const BubblLogo = (props: iconProps) => {
+export const BubblLogo = (props: any) => {
   const { color } = props;
   return (
     <svg
