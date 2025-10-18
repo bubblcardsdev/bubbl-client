@@ -27,7 +27,7 @@ RUN npm ci --omit=dev || npm install --omit=dev --force
 COPY --from=builder /app/.next ./.next/
 COPY --from=builder /app/public ./public/
 # Optional: copy next.config.ts if it exists
-# COPY --from=builder /app/next.config.ts .
+COPY --from=builder /app/next.config.ts .
 
 ENV NODE_ENV=production
 EXPOSE 3000
