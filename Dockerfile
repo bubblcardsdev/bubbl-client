@@ -2,9 +2,10 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Faster, reproducible installs
+# Install dependencies
 COPY package*.json ./
-RUN npm install --force
+# Faster and more reproducible than npm install
+RUN npm ci || npm install --force
 
 # Copy the rest and build
 COPY . .
@@ -17,19 +18,19 @@ WORKDIR /app
 # PM2 + curl for healthcheck
 RUN npm install -g pm2 && apk add --no-cache curl
 
-# Only production deps in final image
+# Copy only what’s needed for runtime
 COPY package*.json ./
-RUN npm install --force
+# Install only production dependencies
+RUN npm ci --omit=dev || npm install --omit=dev --force
 
-# Bring over the built app (adjust for your framework)
-# Next.js example:
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-# If you have next.config.js, copy it too (ignore if missing)
-COPY --from=builder /app/next.config.js ./ || true
+# Bring over the build output
+COPY --from=builder /app/.next ./.next/
+COPY --from=builder /app/public ./public/
+# Optional: copy next.config.ts if it exists
+# COPY --from=builder /app/next.config.ts .
 
 ENV NODE_ENV=production
 EXPOSE 3000
 
-# Assumes package.json has: "start": "next start -p 3000"
+# Start the app with PM2
 CMD ["pm2-runtime", "start", "npm", "--", "start"]
