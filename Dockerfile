@@ -19,7 +19,7 @@ RUN npm install -g pm2 && apk add --no-cache curl
 
 # Only production deps in final image
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --force
 
 # Bring over the built app (adjust for your framework)
 # Next.js example:
