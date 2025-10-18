@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Faster, reproducible installs
 COPY package*.json ./
-RUN npm ci
+RUN npm install --force
 
 # Copy the rest and build
 COPY . .
