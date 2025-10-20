@@ -38,7 +38,7 @@ export type ProductSection = {
 
 const title: Record<string, { title: string; description: string }> = {
   festiveBundles: {
-    title: "Diwali Bundle Offers – Light Up Your Networking",
+    title: "Special offers! – Light Up Your Networking This Diwali",
     description:
       "Celebrate this festive season with exclusive Diwali discounts on Bubbl NFC cards. Share your identity with a single tap and make every connection memorable. Limited-time festive offer for individuals and teams.",
   },

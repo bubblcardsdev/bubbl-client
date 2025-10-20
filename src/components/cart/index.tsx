@@ -174,15 +174,16 @@ const Cart = () => {
                             ₹{quantity * originalPrice}
                           </p>
                         )}
-                        <p className="font-bold text-nowrap leading-[20px]">
-                          ₹{quantity * sellingPrice}/-
-                        </p>
+                        
                         {Number(discountPercentage) > 0 && (
                           <p className="text-[#9747FF] text-sm">
-                            {Number(discountPercentage)}% off
+                            {Number(discountPercentage).toFixed(2)}% off
                           </p>
                         )}
                       </div>
+                      <p className="font-bold text-nowrap leading-[20px]">
+                          ₹{quantity * sellingPrice}/-
+                        </p>
                       <div className="flex gap-6 mt-2">
                         <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2 text-sm">
                           <button

@@ -12,7 +12,7 @@ function BannerSection() {
         alt="ProductBanner "
         height={1000}
         width={1000}
-        className="md:w-[1000px] xl:max-w-[70%] min-w-[480px] w-full absolute bottom-0 lg:bottom-[-15%] left-1/2 -translate-x-1/2"
+        className="md:w-[600px] xl:w-[800px] min-w-[480px] w-full absolute bottom-0 lg:bottom-[-15%] left-1/2 -translate-x-1/2"
       />
     </section>
   );

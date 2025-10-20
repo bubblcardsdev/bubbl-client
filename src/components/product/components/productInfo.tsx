@@ -54,6 +54,7 @@ const ProductInfo = (props: BubblCardProps) => {
     deviceDescription,
     productDetails,
     availability,
+    deviceTypeId,
   } = ProductDetailMapper(details?.productDetail);
 
   function tabChanger(tab: string): void {
@@ -91,7 +92,7 @@ const ProductInfo = (props: BubblCardProps) => {
       </div>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}
-      {!isEmpty(colors) && colors?.length > 1 && (
+      {(!isEmpty(colors) && colors?.length > 1 && deviceTypeId !== 9) && (
         <div className="mt-4">
           <p className="font-normal tracking-wide">
             Select Color <span className="font-semibold">:</span>

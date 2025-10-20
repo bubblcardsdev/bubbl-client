@@ -131,13 +131,13 @@ function Products(props: ProductProps) {
                               {card?.productName}
                             </h3>
                             <p className="text-black font-bold text-[18px]">
-                              RS. {card?.sellingPrice ? card?.sellingPrice.toFixed(2) : 0}
+                              RS. {card?.sellingPrice ? card?.sellingPrice.toFixed(0) : 0}
                             </p>
                           </div>
 
                           {Number(card?.discount) > 0 && (
                             <div className="px-2">
-                              <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
+                              <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2">
                                 {Number(card?.discount).toFixed(2)}%
                               </p>
                             </div>
