@@ -43,17 +43,17 @@ const title: Record<string, { title: string; description: string }> = {
       "Celebrate this festive season with exclusive Diwali discounts on Bubbl NFC cards. Share your identity with a single tap and make every connection memorable. Limited-time festive offer for individuals and teams.",
   },
   basic: {
-    title: "Bubbl Basic Card",
+    title: "Bubbl Basics",
     description:
       "Pick from our line of Bubbl- Basics - Affordable, Eco-friendly and perfect for first time users who just want to get the feel of futuristic networking.",
   },
   custom: {
-    title: "Bubbl Custom Card",
+    title: "Bubbl Custom",
     description:
       " Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today",
   },
   others: {
-    title: "Bubbl  other product",
+    title: "Other Products",
     description:
       "Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today!",
   },
