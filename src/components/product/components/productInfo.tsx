@@ -42,17 +42,28 @@ const ProductInfo = (props: BubblCardProps) => {
   const [activeTab, setActiveTab] = useState("description");
   const router = useRouter();
 
-  const { name, shortDescription, sellingPrice, color, material, pattern,deviceDescription,productDetails,availability } =
-    ProductDetailMapper(details?.productDetail);
+  const {
+    name,
+    shortDescription,
+    sellingPrice,
+    originalPrice,
+    discountPercentage,
+    color,
+    material,
+    pattern,
+    deviceDescription,
+    productDetails,
+    availability,
+  } = ProductDetailMapper(details?.productDetail);
 
   function tabChanger(tab: string): void {
     setActiveTab(tab);
   }
 
-    const handleBuyNow = ()=>{
-    addToCart()
-    router.push("/cart")
-  }
+  const handleBuyNow = () => {
+    addToCart();
+    router.push("/cart");
+  };
 
   return (
     <>
@@ -60,9 +71,24 @@ const ProductInfo = (props: BubblCardProps) => {
       <p className="text-[#7F7F7F] text-[15px] font-[500] mt-2">
         {shortDescription}
       </p>
-      <p className="text-[34px] font-[700] mt-4 leading- letter-spaceing tracking-wide">
-        ₹ {Number(sellingPrice)?.toFixed(0)}
-      </p>
+      <div className="flex flex-col mt-4">
+        <div className="flex gap-3 flex-wrap">
+          {Number(discountPercentage) > 0 && (
+            <p className="line-through text-[22px] text-[#7F7F7F] font-medium">
+              ₹ {Number(originalPrice)?.toFixed(0)}
+            </p>
+          )}
+
+          {Number(discountPercentage) > 0 && (
+            <span className="text-[#AC6CFF] font-bold text-xs">
+              {discountPercentage}% off
+            </span>
+          )}
+        </div>
+        <p className="text-[32px] font-semibold leading- letter-spaceing tracking-wide">
+          ₹ {Number(sellingPrice)?.toFixed(0)}
+        </p>
+      </div>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}
       {!isEmpty(colors) && colors?.length > 1 && (
@@ -199,17 +225,26 @@ const ProductInfo = (props: BubblCardProps) => {
           </div>
         </div>
       )}
-      {availability ? <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
-        <button
-          onClick={addToCart}
-          className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
-        >
-          Add to cart
-        </button>
-        <button onClick={()=>handleBuyNow()} className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80">
-          Buy now
-        </button>
-      </div> : <p className="text-red-600 xs:block md:hidden font-semibold text-sm mt-6">Currently Unavailable</p>}
+      {availability ? (
+        <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
+          <button
+            onClick={addToCart}
+            className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
+          >
+            Add to cart
+          </button>
+          <button
+            onClick={() => handleBuyNow()}
+            className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80"
+          >
+            Buy now
+          </button>
+        </div>
+      ) : (
+        <p className="text-red-600 xs:block md:hidden font-semibold text-sm mt-6">
+          Currently Unavailable
+        </p>
+      )}
       {/* Description */}
       <div className="mt-10 border-t pt-4">
         <div className="flex flex-row gap-8">
@@ -233,9 +268,7 @@ const ProductInfo = (props: BubblCardProps) => {
           </h2>
         </div>
         <p className="text-[#7F7F7F] text-sm mt-2">
-          {activeTab == "description"
-            ? deviceDescription
-            : productDetails}
+          {activeTab == "description" ? deviceDescription : productDetails}
         </p>
 
         {name == "Full Custom" && (

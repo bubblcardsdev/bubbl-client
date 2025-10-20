@@ -2,7 +2,6 @@ import React from "react";
 import HeroSection from "./components/heroSection";
 import HowItWorks from "./components/howItWorks";
 import ValuedPartners from "./components/valuedPartners";
-import OurProducts from "./components/ourProducts";
 
 import Networking from "./components/networking";
 import TestiMonial from "./components/testimonial";

@@ -179,12 +179,12 @@ const ProductList: React.FC = () => {
                 className={`h-1 w-12 mb-2 ${currentImage === "front" ? "bg-purple-500" : "bg-gray-300"
                   } rounded-full mr-2 p-1`}
               />
-              <div
+              {secondaryImage && <div
                 role="button"
                 onClick={() => flipImage("back")}
                 className={`h-1 w-12 ${currentImage === "back" ? "bg-purple-500" : "bg-gray-300"
                   } rounded-full mr-2 p-1`}
-              />
+              />}
             </div>
           </div>
           <p className="text-center text-sm mt-2 capitalize">

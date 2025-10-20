@@ -65,7 +65,7 @@ const HeroSection = () => {
           className="w-full h-[calc(100dvh-60px)] object-cover"
           ref={videoRef}
         >
-          <source src="/HomePageIcons/Hero3D.mp4" type="video/mp4" />
+          <source src="/video/bubblvedio.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="absolute bottom-[10%] left-[50%] translate-x-[-50%]">

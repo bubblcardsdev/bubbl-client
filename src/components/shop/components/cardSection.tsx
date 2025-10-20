@@ -37,15 +37,20 @@ export type ProductSection = {
 };
 
 const title: Record<string, { title: string; description: string }> = {
-  custom: {
-    title: "Bubbl Custom Card",
+  festiveBundles: {
+    title: "Diwali Bundle Offers – Light Up Your Networking",
     description:
-      " Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today",
+      "Celebrate this festive season with exclusive Diwali discounts on Bubbl NFC cards. Share your identity with a single tap and make every connection memorable. Limited-time festive offer for individuals and teams.",
   },
   basic: {
     title: "Bubbl Basic Card",
     description:
       "Pick from our line of Bubbl- Basics - Affordable, Eco-friendly and perfect for first time users who just want to get the feel of futuristic networking.",
+  },
+  custom: {
+    title: "Bubbl Custom Card",
+    description:
+      " Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today",
   },
   others: {
     title: "Bubbl  other product",
@@ -109,11 +114,7 @@ function CardSection() {
   return (
     <section className="max-w-[1300px] mx-auto">
       <div className="py-8 flex flex-col items-center gap-[2vh] px-6">
-        
-        <Products
-          title={title}
-          data={data}
-        />
+        <Products title={title} data={data} />
         <div className="p-12 bg-[#F3F3F3]  rounded-lg mt-16  w-full ">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-gray-900 ">

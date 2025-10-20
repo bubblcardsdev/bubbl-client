@@ -66,8 +66,9 @@ function Products(props: ProductProps) {
   return (
     <div className="w-full top-6">
       {data &&
-        Object.keys(data).map((key: string, index: number) => {
+        Object.keys(title).map((key: string, index: number) => {
           const product: Array<Card> = data[key];
+          console.log(data, key, product);
           if (!product) return null;
           return (
             <div className="flex flex-col gap-6 w-full md:px-0" key={index}>
@@ -114,7 +115,7 @@ function Products(props: ProductProps) {
                           <div className=" flex justify-between items-center ">
                             <div className="w-max  border  rounded-lg  bg-white  lex items-center justify-center px-2 py-[4px] ml-2.5 ">
                               <p className="w-max content p-0 m-0 text-[#8C8C8C] inter text-[14px]">
-                                {card?.productName}
+                                {card?.deviceTypeName}
                               </p>
                             </div>
                             <div className="flex justify-center items-center relative  ">
@@ -130,14 +131,14 @@ function Products(props: ProductProps) {
                               {card?.productName}
                             </h3>
                             <p className="text-black font-bold text-[18px]">
-                              RS. {card?.sellingPrice ? card?.sellingPrice.toFixed(0) : 0}
+                              RS. {card?.sellingPrice ? card?.sellingPrice.toFixed(2) : 0}
                             </p>
                           </div>
 
-                          {Number(card.discount) > 0 && (
+                          {Number(card?.discount) > 0 && (
                             <div className="px-2">
                               <p className=" bg-[#AC6CFF] rounded-md text-white py-0.5 px-2 text-sm">
-                                {card?.discount ? card?.discount.toFixed(0) : 0}%
+                                {Number(card?.discount).toFixed(2)}%
                               </p>
                             </div>
                           )}

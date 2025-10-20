@@ -4,8 +4,8 @@ export const ProductDetailMapper = (data: any) => {
   const productId = get(data, "productId", null);
   const name = get(data, "name", null);
   const shortDescription = get(data, "shortDescription", null);
-  const originalPrice = get(data, "originalPrice", 0);
-  const sellingPrice = get(data, "sellingPrice", 0);
+  const originalPrice = Number(get(data, "originalPrice", 0)) || 0;
+  const sellingPrice = Number(get(data, "sellingPrice", 0)) || 0;
   const deviceDescription = get(data, "deviceDescription", null);
   const productDetails = get(data, "productDetails", null);
   const primaryImage = get(data, "DeviceImageInventories[0].imageUrl", null);
@@ -17,7 +17,7 @@ export const ProductDetailMapper = (data: any) => {
   const color = get(data, "color", "");
   const material = get(data, "material", "");
   const pattern = get(data, "pattern", "");
-  const discountPercentage = get(data, "discountPercentage", 0);
+  const discountPercentage = Number(get(data, "discountPercentage", 0)) || 0;
   const deviceTypeId = get(data,"deviceTypeId", null);
   const availability = get(data, "availability", true);
   return {
