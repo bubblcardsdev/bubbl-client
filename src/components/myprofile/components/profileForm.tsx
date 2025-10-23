@@ -291,8 +291,7 @@ const ProfileForm = ({
                     <option value="Personal">Personal</option>
                     <option value="Mobile">Mobile</option>
                      <option value="Mobile">Office</option>
-                    {/* <option value="custom">Custom</option> */}
-                    /* If user already saved a custom type, show it */
+                   
                     {mobile.phoneNumberType &&
                       !["Home", "Work", "Personal", "Mobile","Office"].includes(
                         mobile?.phoneNumberType
