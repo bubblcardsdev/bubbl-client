@@ -265,6 +265,7 @@ const ProfileForm = ({
           {formData?.phoneNumbers?.map((mobile: any, idx: number) => {
             if (mobile?.activeStatus) {
               return (
+                <>
                 <div
                   key={idx}
                   className="flex items-center gap-5 bg-[#2a2a2a] px-0 py-0 rounded-lg mt-1"
@@ -360,14 +361,18 @@ const ProfileForm = ({
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
+                 {errors?.[`phoneNumbers.${idx}.phoneNumber`] && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors[`phoneNumbers.${idx}.phoneNumber`]}
+          </p>
+        )}
+                </>
               );
             }
           })}
 
           {/* Validation error */}
-          {errors.phoneNumbers && (
-            <p className="text-red-500 text-xs mt-1">{errors.phoneNumbers}</p>
-          )}
+         
 
           {/* Add New Mobile Button */}
           {formData?.phoneNumbers?.filter((value: any) => value?.activeStatus)
@@ -421,6 +426,7 @@ const ProfileForm = ({
           {formData?.emailIds?.map((email: any, idx: number) => {
             if (email?.activeStatus) {
               return (
+                <>
                 <div
                   key={idx}
                   className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-0 w-full rounded-lg mt-1"
@@ -455,12 +461,16 @@ const ProfileForm = ({
                     <Trash2 className="w-4 h-4 text-white" />
                   </button>
                 </div>
+                 {errors?.[`emailIds.${idx}.emailId`] && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors[`emailIds.${idx}.emailId`]}
+          </p>
+        )}
+        </>
               );
             }
           })}
-          {errors?.emailIds && (
-            <p className="text-red-500 text-xs mt-1">{errors?.emailIds}</p>
-          )}
+         
           {formData?.emailIds?.length < 2 && (
             <button
               onClick={() => addToArray("emailIds")}
