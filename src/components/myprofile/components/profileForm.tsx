@@ -60,7 +60,7 @@ const ProfileForm = ({
   setMode: any;
   handleRemoveImage: any;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
@@ -284,14 +284,16 @@ const ProfileForm = ({
                         );
                       }
                     }}
-                    className="bg-[#2a2a2a] text-white  rounded-lg px-1 outline-none hover:cursor-pointer w-[65px] text-sm placeholder:text-sm "
+                    className="bg-[#2a2a2a] text-white  rounded-lg px-1 outline-none hover:cursor-pointer w-[100px] text-sm placeholder:text-sm "
                   >
-                    <option value="home">Home</option>
-                    <option value="work">Work</option>
-                    {/* <option value="custom">Custom</option> */}
-                    {/* If user already saved custom, show it */}
+                    <option value="Home">Home</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Mobile">Mobile</option>
+                     <option value="Mobile">Office</option>
+                   
                     {mobile.phoneNumberType &&
-                      !["home", "work"].includes(
+                      !["Home", "Work", "Personal", "Mobile","Office"].includes(
                         mobile?.phoneNumberType
                       ) && (
                         <option value={mobile?.phoneNumberType}>
@@ -509,7 +511,9 @@ const ProfileForm = ({
                   <Trash2 className="w-4 h-4 text-white" />
                 </button>
                 {errors?.websites && (
-                  <p className="text-red-500 text-xs mt-1">{errors?.websites}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors?.websites}
+                  </p>
                 )}
               </div>
             );
@@ -517,7 +521,7 @@ const ProfileForm = ({
         })}
 
         {formData?.websites?.filter((value: any) => value?.activeStatus)
-            ?.length < 1 && (
+          ?.length < 1 && (
           <button
             onClick={() => addToArray("websites")}
             className="mt-2  flex items-center gap-1 w-full justify-center rounded-lg bg-[#2a2a2a] p-3 outline-none text-white text-sm placeholder:text-sm"
@@ -609,7 +613,9 @@ const ProfileForm = ({
           className="w-full bg-[#2a2a2a] text-gray-300 placeholder:text-gray-400 p-3 border-none outline-none resize-none rounded-lg text-sm placeholder:text-sm"
         />
         {errors?.shortDescription && (
-          <p className="text-red-500 text-xs mt-1">{errors?.shortDescription}</p>
+          <p className="text-red-500 text-xs mt-1">
+            {errors?.shortDescription}
+          </p>
         )}
       </div>
       {/* theme color */}
@@ -698,7 +704,7 @@ const ProfileForm = ({
                 type="text"
                 value={socialItem?.socialMediaName || ""}
                 placeholder={item.placeholder}
-                onChange={(e) => {  
+                onChange={(e) => {
                   const updated = formData.socialMediaNames.map((s: any) =>
                     s.profileSocialMediaId === item.id
                       ? { ...s, socialMediaName: e.target.value }
@@ -708,7 +714,7 @@ const ProfileForm = ({
                     ...prev,
                     socialMediaNames: updated,
                   }));
-                    console.log(updated,"social/");
+                  console.log(updated, "social/");
                 }}
                 className="w-full bg-[#2a2a2a] p-[10px] outline-none text-white text-sm placeholder:text-sm"
               />
@@ -717,63 +723,65 @@ const ProfileForm = ({
         })}
       </div>
 
-    {/* Digital Links */}
-<div className="flex flex-col gap-4">
-  <h1 className="text-white text-sm font-medium">Digital Link</h1>
-  {Digitalpay.map((item: any, idx: number) => {
-    const link = formData.digitalPaymentLinks[idx]?.digitalPaymentLink || "";
-    const isValid = link === "" || /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link);
+      {/* Digital Links */}
+      <div className="flex flex-col gap-4">
+        <h1 className="text-white text-sm font-medium">Digital Link</h1>
+        {Digitalpay.map((item: any, idx: number) => {
+          const link =
+            formData.digitalPaymentLinks[idx]?.digitalPaymentLink || "";
+          const isValid = link === "" || /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link);
 
-    return (
-      <div key={idx} className="flex flex-col gap-1 w-full">
-        <div className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3">
-          <p className="text-gray-400">{item.icon}</p>
-          <input
-            type="text"
-            value={link}
-            onChange={(e) =>
-              handleNestedArrayChange(
-                "digitalPaymentLinks",
-                idx,
-                "digitalPaymentLink",
-                e.target.value
-              )
-            }
-            className={`w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm ${
-              !isValid ? "border border-red-500" : ""
-            }`}
-            placeholder="Enter UPI ID"
-          />
-        </div>
-        {!isValid && (
-          <p className="text-red-500 text-xs ml-3">Invalid UPI ID</p>
-        )}
+          return (
+            <div key={idx} className="flex flex-col gap-1 w-full">
+              <div className="flex items-center gap-2 bg-[#2a2a2a] w-full rounded-lg px-3">
+                <p className="text-gray-400">{item.icon}</p>
+                <input
+                  type="text"
+                  value={link}
+                  onChange={(e) =>
+                    handleNestedArrayChange(
+                      "digitalPaymentLinks",
+                      idx,
+                      "digitalPaymentLink",
+                      e.target.value
+                    )
+                  }
+                  className={`w-full bg-[#2a2a2a] p-[10px] rounded-lg outline-none text-white text-sm placeholder:text-sm ${
+                    !isValid ? "border border-red-500" : ""
+                  }`}
+                  placeholder="Enter UPI ID"
+                />
+              </div>
+              {!isValid && (
+                <p className="text-red-500 text-xs ml-3">Invalid UPI ID</p>
+              )}
+            </div>
+          );
+        })}
       </div>
-    );
-  })}
-</div>
-
-
 
       {/* Buttons */}
       <div className="sticky bottom-0 bg-[#1e1e1e] py-4 flex lg:justify-end md:justify-end sm:justify-between  xs:justify-between gap-3 z-10">
-        <button className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition" onClick={()=>router.push("/myprofile")}>
+        <button
+          className="bg-[#2a2a2a] text-white px-4 py-2 rounded-lg hover:bg-[#3a3a3a] transition"
+          onClick={() => router.push("/myprofile")}
+        >
           Cancel
         </button>
         <button
-  disabled={
-    !formData.digitalPaymentLinks?.every(
-      (link: any) =>
-        !link.digitalPaymentLink ||
-        /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link.digitalPaymentLink)
-    )
-  }
-  onClick={handleSave}
-  className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition 
+          disabled={
+            !formData.digitalPaymentLinks?.every(
+              (link: any) =>
+                !link.digitalPaymentLink ||
+                /^[\w.-]{2,}@[a-zA-Z]{2,}$/.test(link.digitalPaymentLink)
+            )
+          }
+          onClick={handleSave}
+          className="bg-[#a855f7] text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition 
              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#a855f7]"
->
-  Save
-</button>
+        >
+          Save
+        </button>
       </div>
     </div>
   );

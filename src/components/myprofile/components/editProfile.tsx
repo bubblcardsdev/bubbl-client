@@ -133,7 +133,7 @@ const INITIAL_FORM_DATA: any = {
       // phoneNumberId: null,
       countryCode: "+91",
       phoneNumber: "",
-      phoneNumberType: "work",
+      phoneNumberType: "Work",
       checkBoxStatus: true,
       activeStatus: true,
     },
