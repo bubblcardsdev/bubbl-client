@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import { socialLinkRules } from "../lib/constant";
 
 export const openInNewTab = (url: string) => {
   if (!url || typeof url !== "string") {

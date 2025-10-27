@@ -1,6 +1,5 @@
 import axios from "axios";
 import {
-  getAccessToken,
   getRefreshToken,
   setAccessToken,
   getCart,
