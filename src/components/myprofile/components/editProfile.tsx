@@ -39,34 +39,32 @@ const socialLinks = [
   },
   {
     id: 2,
-
     name: "Facebook",
     icon: <FacebookIconbackgroundFill />,
     placeholder: "Enter Facebook URL",
   },
   {
-    id: 3,
-
+    id: 4,
     name: "YouTube",
     icon: <YoutubeIconbackgroundFill />,
     placeholder: "Enter YouTube URL",
   },
   {
-    id: 4,
+    id: 3,
 
     name: "Twitter",
     icon: <TwitterIconbackgroundFill />,
     placeholder: "Enter Twitter URL",
   },
   {
-    id: 5,
+    id: 6,
 
     name: "WhatsApp",
     icon: <WhatsappIconbackgroundFill />,
     placeholder: "Enter WhatsApp number",
   },
   {
-    id: 6,
+    id: 5,
 
     name: "LinkedIn",
     icon: <LinkedinIconbackgroundFill />,
@@ -294,26 +292,26 @@ const EditProfile: React.FC = () => {
 
 
   const validateForm = (): boolean => {
-  const { error } = EditProfileSchema.validate(formData, {
-    abortEarly: false, // capture all errors
-  });
+    const { error } = EditProfileSchema.validate(formData, {
+      abortEarly: false, // capture all errors
+    });
 
-  if (!error) {
-    setErrors({});
-    return true;
-  }
+    if (!error) {
+      setErrors({});
+      return true;
+    }
 
-  const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {};
 
-  error.details.forEach((detail) => {
-    const path = detail.path.join("."); // e.g., phoneNumbers.0.phoneNumber
-    newErrors[path] = detail.message;
-  });
-console.log(newErrors,"?");
+    error.details.forEach((detail) => {
+      const path = detail.path.join("."); // e.g., phoneNumbers.0.phoneNumber
+      newErrors[path] = detail.message;
+    });
+    console.log(newErrors, "?");
 
-  setErrors(newErrors);
-  return false;
-};
+    setErrors(newErrors);
+    return false;
+  };
 
   const handleNestedArrayChange = (
     arrayKey: string,
@@ -487,26 +485,23 @@ console.log(newErrors,"?");
   const handleSave = async () => {
     try {
       const isValid = validateForm();
-    if (!isValid) {
-      // toast.error("Please fix the validation errors before saving!");
-      return;
-    }
+      if (!isValid) {
+        // toast.error("Please fix the validation errors before saving!");
+        return;
+      }
       const isCreate = router.pathname === "/createNewProfile";
       console.log(formData, "//formdata");
 
       // Map social media
       const updatedSocialMediaNames = (formData?.socialMediaNames || []).map(
         (item: any) => {
-          const normalizedLink = normalizeSocialLink(
-            item.profileSocialMediaId,
-            item.socialMediaName
-          );
+
           return {
             profileSocialMediaLinkId:
               item.profileSocialMediaLinkId || undefined,
             profileSocialMediaId: item.profileSocialMediaId || undefined,
-            socialMediaName: normalizedLink,
-            activeStatus: normalizedLink?.trim().length > 0,
+            socialMediaName: item.socialMediaName || "",
+            activeStatus: item.socialMediaName?.trim().length > 0,
           };
         }
       );
@@ -528,13 +523,13 @@ console.log(newErrors,"?");
         ...formData,
         socialMediaNames: isCreate
           ? (formData?.socialMediaNames || []).filter((s: any) =>
-              s.socialMediaName?.trim()
-            )
+            s.socialMediaName?.trim()
+          )
           : updatedSocialMediaNames,
         digitalPaymentLinks: isCreate
           ? (formData?.digitalPaymentLinks || []).filter((d: any) =>
-              d.digitalPaymentLink?.trim()
-            )
+            d.digitalPaymentLink?.trim()
+          )
           : updatedDigitalMediaNames,
         emailIds: formData?.emailIds || [],
         phoneNumbers: formData?.phoneNumbers || [],

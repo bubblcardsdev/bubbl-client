@@ -565,10 +565,10 @@ export type ActionKeys = keyof typeof actions;
 export const socialLinkRules: Record<number, (input: string) => string> = {
   1: (val) => `https://www.instagram.com/${val}`, // Instagram
   2: (val) => `https://www.facebook.com/${val}`, // Facebook
-  3: (val) => `https://www.youtube.com/${val}`, // YouTube
-  4: (val) => `https://twitter.com/${val}`, // Twitter
-  5: (val) => `https://wa.me/${val}`, // WhatsApp
-  6: (val) => `https://www.linkedin.com/in/${val}`, // LinkedIn
+  3: (val) => `https://twitter.com/${val}`, // Twitter
+  4: (val) => `https://www.youtube.com/${val}`, // YouTube
+  5: (val) => `https://www.linkedin.com/in/${val}`, // LinkedIn
+  6: (val) => `https://wa.me/${val}`, // WhatsApp
 };
 
 export const MODES = [

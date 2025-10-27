@@ -42,14 +42,14 @@ const FreeTemplateOpal = ({
   console.log(formData, "?");
 
   const [color, setColor] = useState<string>("");
-    const { object, onShow, onHide } = useShowHideWithRecord({
-      visible: false,
-      title: "",
-      data: "",
-    });
+  const { object, onShow, onHide } = useShowHideWithRecord({
+    visible: false,
+    title: "",
+    data: "",
+  });
   useEffect(() => {
     const selected =
-      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
+      theme.find((theme) => theme.name === selectedTheme)?.color || "#60449a";
     setColor(selected);
     console.log(selected, "theme");
   }, [selectedTheme]);
@@ -64,14 +64,14 @@ const FreeTemplateOpal = ({
   };
 
   const SocialIconsObj: any = {
-    "1": Instagram_icon,      // Instagram
-    "2": Facebook_icon_thin,  // Facebook
-    "3": OpalYoutubeIcon,     // Youtube
-    "4": Twitter_icon_thin,   // Twitter
-    "5": OpalWhatsappIcon,    // WhatsApp
-    "6": Linkedin_icon_thin,  // LinkedIn
+    "1": Instagram_icon,
+    "2": Facebook_icon_thin,
+    "3": Twitter_icon_thin,
+    "4": OpalYoutubeIcon,
+    "5": Linkedin_icon_thin,
+    "6": OpalWhatsappIcon,
   };
-   const newProfile = router.pathname !== "/createNewProfile";
+  const newProfile = router.pathname !== "/createNewProfile";
   return (
     <div className="w-full flex justify-center items-center">
       <ToastContainer />
@@ -84,34 +84,30 @@ const FreeTemplateOpal = ({
       <div className="w-full bg-[#EDEDED]  relative overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         {/* Header curved background */}
         <div
-          className="absolute top-0 left-0 w-full h-[100px] xs:h-[120px] sm:h-[140px] md:h-[165px] rounded-br-[250px] xs:rounded-br-[300px] sm:rounded-br-[400px] md:rounded-br-[550px]"
+          className="w-full h-[165px] rounded-br-[550px] relative"
           style={{ backgroundColor: color }}
-        ></div>
-        {/* Profile Image - Centered and responsive */}
-        <div className="relative flex justify-center pt-[50px] xs:pt-[60px] sm:pt-[70px] md:pt-[80px] pb-3 sm:pb-4">
-          <div className=" rounded-full p-0.5 sm:p-1 ">
-            <Image
-              src={formData?.profileImageUrl || "/profile.png"}
-              alt="profile_Img"
-              width={120}
-              height={120}
-              className="w-[100px] h-[100px] xs:w-[120px] xs:h-[120px] sm:w-[140px] sm:h-[140px] md:w-[170px] md:h-[170px] rounded-full object-cover"
-            />
-          </div>
+        >
+          <Image
+            src={formData?.profileImageUrl || "/profile.png"}
+            alt="profile_Img"
+            width={120}
+            height={120}
+            className="w-[150px] h-[150px] absolute bottom-0 translate-y-[50%] translate-x-[-50%] left-1/2  rounded-full object-cover"
+          />
         </div>
 
-        <div className="p-3 xs:p-4 sm:p-5 space-y-3 xs:space-y-4 sm:space-y-6">
+        <div className="p-3 xs:p-4 sm:p-5 space-y-3 xs:space-y-4 sm:space-y-6 mt-[80px]">
           {/* Action buttons and company logo section */}
-          <div className="flex justify-between items-start gap-2 xs:gap-3 sm:gap-4">
+          <div className="flex justify-between items-center gap-10">
             <div className="flex flex-col space-y-2 xs:space-y-3 sm:space-y-4 flex-1">
               <button
                 onClick={handleSave}
-                className="px-3 xs:px-4 sm:px-6 md:px-8 py-1.5 xs:py-2 sm:py-[10px] text-white rounded-[6px] text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap"
+                className="px-6 py-3 text-white rounded-[6px] text-xs xs:text-sm sm:text-base font-medium whitespace-nowrap"
                 style={{ backgroundColor: color }}
               >
                 Save Contact
               </button>
-              { newProfile&& (
+              {newProfile && (
                 <div className="flex space-x-2 xs:space-x-3 sm:space-x-4">
                   <button
                     onClick={() => navigatorShare(window.location.href)}
@@ -137,7 +133,7 @@ const FreeTemplateOpal = ({
             </div>
             {/* Company Logo - Responsive sizing */}
             <div className="flex-shrink-0">
-              <div className="w-[60px] h-[60px] xs:w-[70px] xs:h-[70px] sm:w-[90px] sm:h-[90px] md:w-[110px] md:h-[110px]  rounded-full flex items-center justify-center overflow-hidden bg-black ">
+              <div className="w-[110px] h-[110px]  rounded-full flex items-center justify-center overflow-hidden bg-black ">
                 <Image
                   src={formData?.companyLogoUrl || "/logo.png"}
                   width={110}
@@ -209,7 +205,7 @@ const FreeTemplateOpal = ({
                 <button
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate navigation
-                   onEmailClick(formData, onShow);
+                    onEmailClick(formData, onShow);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -234,7 +230,7 @@ const FreeTemplateOpal = ({
                 <button
                   onClick={async (e) => {
                     e.preventDefault(); // stop immediate navigation
-                  onWebsiteClick(formData, onShow);
+                    onWebsiteClick(formData, onShow);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black">
@@ -259,7 +255,7 @@ const FreeTemplateOpal = ({
                 <button
                   onClick={async (e) => {
                     e.preventDefault(); // prevent immediate redirect
-                   onAddressClick(formData);
+                    onAddressClick(formData);
                   }}
                 >
                   <div className="w-full bg-[#F4F4F4] rounded-md flex items-stretch overflow-hidden text-black text-left">
@@ -303,10 +299,10 @@ const FreeTemplateOpal = ({
                     const name: any = {
                       1: "Instagram",
                       2: "Facebook",
-                      3: "Youtube",
-                      4: "Twitter",
-                      5: "WhatsApp",
-                      6: "LinkedIn",
+                      3: "Twitter",
+                      4: "Youtube",
+                      5: "LinkedIn",
+                      6: "WhatsApp",
                     };
 
                     if (value?.socialMediaName?.length > 0) {

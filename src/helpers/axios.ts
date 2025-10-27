@@ -14,16 +14,6 @@ const axiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = getAccessToken();
-    if (accessToken) {
-      config.headers["x-access-token"] = { accessToken };
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 // ✅ Handle errors globally
 axiosInstance.interceptors.response.use(

@@ -1,5 +1,5 @@
 import { createTap } from "../services/profileApi";
-import { email, openInNewTab, copyText, call } from "../utils/commonLogics";
+import { email, openInNewTab, copyText, call, openSocialLinks } from "../utils/commonLogics";
 
 const socialActions: Record<
   number,
@@ -9,23 +9,24 @@ const socialActions: Record<
   5: (val) => email(val),
   6: (val) => openInNewTab(val),
   7: (val) => openInNewTab(val),
-  8: (val, socialMediaId) => openInNewTab(val, socialMediaId),
-  9: (val, socialMediaId) => openInNewTab(val, socialMediaId),
-  10: (val, socialMediaId) => openInNewTab(val, socialMediaId),
-  11: (val, socialMediaId) => openInNewTab(val, socialMediaId),
-  12: (val, socialMediaId) => openInNewTab(val, socialMediaId),
+  8: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
+  9: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
+  10: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
+  11: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
+  12: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
   13: (val) => copyText(val),
   14: (val) => copyText(val),
   15: (val) => copyText(val),
+  17: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
 };
 
 const SocialAction: any = {
   1: 8,
   2: 11,
-  3: 12,
-  4: 10,
-  5: 1,
-  6: 9,
+  3: 10,
+  4: 12,
+  5: 9,
+  6: 17,
 };
 
 const paymentAction: any = {
@@ -58,6 +59,7 @@ const onCallClick = (formData: any, onShow?: any) => {
     return;
   }
 
+  window.open(`tel:+${formData.phoneNumbers[0].countryCode} ${formData.phoneNumbers[0].phoneNumber}`,"_self");
   onClick(
     4,
     `+${formData.phoneNumbers[0].countryCode} ${formData.phoneNumbers[0].phoneNumber}`,
@@ -101,6 +103,7 @@ const onAddressClick = (formData: any) => {
 };
 
 const onSocialMediaClick = (value: any, formData: any) => {
+
   onClick(
     SocialAction?.[value?.profileSocialMediaId],
     value?.socialMediaName,

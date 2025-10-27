@@ -112,7 +112,7 @@ const ProfileForm = ({
         />
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between gap-6 px-6 text-white">
+      <div className="flex flex-row justify-between text-white">
         {["Profile Picture", "Company Logo"].map((label, index) => {
           const imageType = index === 0 ? "profile" : "company";
           const imageUrl =
@@ -161,7 +161,7 @@ const ProfileForm = ({
                 )}
               </div>
 
-              <span className="text-xs text-gray-500 mt-1">
+              <span className="text-xs text-gray-500 mt-3">
                 (120px * 120px)
               </span>
             </div>

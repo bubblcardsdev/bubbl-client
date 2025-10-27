@@ -62,10 +62,10 @@ const ProTemplateSpahire = ({
   const SocialIconsObj: any = {
     "1": saphireInstagramIcon,
     "2": saphireFacebookIcon,
-    "3": saphireYoutubeIcon,
-    "4": saphireTwitterIcon,
-    "5": saphireWhatsappIcon,
-    "6": saphireLinkedinIcon,
+    "3": saphireTwitterIcon,
+    "4": saphireYoutubeIcon,
+    "5": saphireLinkedinIcon,
+    "6": saphireWhatsappIcon,
   };
 
   const { object, onShow, onHide } = useShowHideWithRecord({
