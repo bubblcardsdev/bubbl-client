@@ -10,7 +10,6 @@ import FreeTemplateRuby from "./components/FreeTemplateRuby";
 import ProTemplateQuartz from "./components/ProTemplateQuartz";
 import ProTemplateNeno from "./components/ProTemplateNeno";
 import ProTemplateSaphire from "./components/ProTemplateSaphire";
-import { theme } from "../../utils/profileThemecolor";
 import { downloadVCard } from "../../utils/downloadVcard";
 import { generateVCard } from "../../utils/generateVCard";
 import { useRouter } from "next/router";
@@ -23,7 +22,6 @@ interface Props {
 function Profile(props: Props) {
   const { profileId = "", deviceUid = "", uniqueName = "" } = props;
   const [profileData, setProfileData] = useState<any>(null);
-  const [selectedTheme, setSelectedTheme] = useState<any>({});
   const [notFound, setNotFound] = useState(false);
   const router = useRouter();
   const formDataBuilder = (data: any) => {
@@ -47,10 +45,10 @@ function Profile(props: Props) {
       zipCode: data?.zipCode || "",
       state: data?.state || "",
       country: data?.country || "",
-      brandingFontColor: data?.deviceBranding?.[0]?.brandingFontColor || "",
+      brandingFontColor: data?.brandingFontColor || "",
       brandingBackGroundColor:
-        data?.deviceBranding?.[0]?.brandingBackGroundColor || "",
-      brandingAccentColor: data?.deviceBranding?.[0]?.brandingAccentColor || "",
+        data?.brandingBackGroundColor || "",
+      brandingAccentColor: data?.brandingAccentColor || "#60449a",
       brandingFont: data?.brandingFont || "",
       phoneNumberEnable: data?.phoneNumberEnable || "",
       emailEnable: data?.emailEnable || "",
@@ -81,15 +79,10 @@ function Profile(props: Props) {
       }
 
       if (res) {
-        setSelectedTheme((prev: any) => ({
-          ...prev,
-          brandingAccentColor:
-            res?.data?.deviceBranding?.[0]?.brandingAccentColor || "",
-        }));
+
 
         const obj = {
           ...res?.data?.profile,
-          deviceBranding: res?.data?.deviceBranding,
           profileImg: res?.data?.profileImgs?.[0]?.image,
           companyLogoUrl: res?.data?.profile?.brandingLogoUrl,
           deviceUid: res?.data?.deviceUid?.deviceUid
@@ -108,12 +101,7 @@ function Profile(props: Props) {
     getProfileData();
     }
   }, [notFound]);
-  const getThemeNameByColor = (color: string) => {
-    const found = theme.find(
-      (t) => t.color.toLowerCase() === color.toLowerCase()
-    );
-    return found ? found.name : null;
-  };
+
   // map templateId numbers (1–5) directly to components
   const templates: Record<number, any> = {
     1: FreeTemplateOpal,
@@ -143,7 +131,7 @@ function Profile(props: Props) {
     <Component
       formData={profileData}
       handleSave={handleSave}
-      selectedTheme={getThemeNameByColor(selectedTheme?.brandingAccentColor)}
+      selectedTheme={profileData.brandingAccentColor}
     />
   );
 }

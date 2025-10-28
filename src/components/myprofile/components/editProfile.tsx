@@ -28,7 +28,6 @@ import {
 } from "../../../services/profileApi";
 import { toast } from "react-toastify";
 import ProfileForm from "./profileForm";
-import { normalizeSocialLink } from "@/src/utils/commonLogics";
 import { EditProfileSchema } from "../../../validators/profile";
 const socialLinks = [
   {
@@ -190,10 +189,10 @@ const formDataBuilder = (data: any) => {
     zipCode: data?.zipCode || "",
     state: data?.state || "",
     country: data?.country || "",
-    brandingFontColor: data?.deviceBranding?.[0]?.brandingFontColor || "",
+    brandingFontColor: data?.brandingFontColor || "",
     brandingBackGroundColor:
-      data?.deviceBranding?.[0]?.brandingBackGroundColor || "",
-    brandingAccentColor: data?.deviceBranding?.[0]?.brandingAccentColor || "",
+      data?.brandingBackGroundColor || "",
+    brandingAccentColor: data?.brandingAccentColor || "#60449a",
     brandingFont: data?.brandingFont || "",
     phoneNumberEnable: data?.phoneNumberEnable || "",
     emailEnable: data?.emailEnable || "",
@@ -201,8 +200,8 @@ const formDataBuilder = (data: any) => {
     socialMediaEnable: data?.socialMediaEnable || "",
     digitalMediaEnable: data?.digitalMediaEnable || "",
     phoneNumbers: (data?.profilePhoneNumbers || []).slice(0, 2),
-    emailIds: data?.profileEmails || [],
-    websites: data?.profileWebsites || [],
+    emailIds: (data?.profileEmails || []).slice(0, 2) || [],
+    websites: (data?.profileWebsites || []).slice(0, 2),
     socialMediaNames: [
       ...(data?.profileSocialMediaLinks || []),
       ...(INITIAL_FORM_DATA?.socialMediaNames?.filter(
@@ -225,7 +224,7 @@ const EditProfile: React.FC = () => {
   const { id }: any = router.query;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [selected, setSelected] = useState<string>("green");
+  const [selected, setSelected] = useState<string>("#00b71a");
   const [errors, setErrors] = useState<Record<string, string>>({});
   // Crop modal
   const [openCropModal, setOpenCropModal] = useState(false);
@@ -260,6 +259,7 @@ const EditProfile: React.FC = () => {
       const response = formDataBuilder(obj);
       setCurrentIndex(Number(response?.templateId) - 1);
       setFormData(response);
+      setSelected(response?.brandingAccentColor || "#00b71a")
     } catch (err: any) {
       // setError("Failed to fetch profiles");
       console.error(err);
@@ -268,20 +268,7 @@ const EditProfile: React.FC = () => {
     }
   };
   useEffect(() => {
-    if (!id) {
-      const saved =
-        typeof window !== "undefined" && localStorage.getItem("selectedTheme");
-      if (saved) {
-        setSelected(saved);
-        const found = theme.find((t: any) => t.name === saved);
-        if (found) {
-          setFormData((prev: any) => ({
-            ...prev,
-            brandingAccentColor: found.color,
-          }));
-        }
-      }
-    } else {
+    if (id) {
       fetchProfiles();
     }
   }, [id]);
@@ -475,11 +462,9 @@ const EditProfile: React.FC = () => {
   // Color select: keep selected theme name and update brandingAccentColor in state
   const handleColorSelect = (themeName: string) => {
     setSelected(themeName);
-    localStorage.setItem("selectedTheme", themeName);
-    const found = theme.find((t: any) => t.name === themeName);
-    if (found) {
-      handleInputChange("brandingAccentColor", found.color);
-    }
+
+    handleInputChange("brandingAccentColor", themeName);
+
   };
 
   const handleSave = async () => {
