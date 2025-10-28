@@ -17,7 +17,6 @@ import {
   NenoWhatsappIcon,
 } from "../../common/icons";
 
-import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
   navigatorShare,
@@ -53,9 +52,8 @@ const ProTemplateNeno = ({
   const [color, setColor] = useState<string>("");
 
   useEffect(() => {
-    const selected =
-      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
-    setColor(selected);
+
+    setColor(selectedTheme);
   }, [selectedTheme]);
 
   const SocialIconsObj: any = {

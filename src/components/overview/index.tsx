@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import OverviewCards from "./components/overviewCards";
-import { LeadsTableMenuIcon } from "../common/icons";
+// import { LeadsTableMenuIcon } from "../common/icons";
 import {
-  DeleteLead,
+  // DeleteLead,
   GetAllLeadsByIdData,
   GetOverViewData,
 } from "../../services/leadsApi";
 import MonoColorLoader from "../common/monoColorLoader";
-import ThreeDotMenu from "../common/threeDotMenu";
+// import ThreeDotMenu from "../common/threeDotMenu";
 import { TableColumn } from "@/src/lib/interface";
 import Table from "../common/table";
-import PopupConfirm from "../common/popupConfirm";
-import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+// import PopupConfirm from "../common/popupConfirm";
+// import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 
 // ✅ Utility for formatting date
 const formatDate = (dateString: string) => {
@@ -28,15 +28,15 @@ const Overview = () => {
   const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [overviewData, setOverviewData] = useState<any>(null);
-  const initial = {
-    editVisible: false,
-    editData: null,
-    editTitle: null,
-    deleteVisible: false,
-    deleteData: null,
-    deleteTitle: null,
-  };
-  const { object, onShow, onHide } = useShowHideWithRecord(initial);
+  // const initial = {
+  //   editVisible: false,
+  //   editData: null,
+  //   editTitle: null,
+  //   deleteVisible: false,
+  //   deleteData: null,
+  //   deleteTitle: null,
+  // };
+  // const { object, onShow, onHide } = useShowHideWithRecord(initial);
 
   const fetchOverview = async () => {
     try {
@@ -109,40 +109,40 @@ const Overview = () => {
         <div className="text-sm text-white">{formatDate(lead.createdAt)}</div>
       ),
     },
-    {
-      key: "actions",
-      header: "Actions",
-      render: (lead) => (
-        <ThreeDotMenu
-          options={[
-            {
-              label: "Edit",
-              onClick: () => onShow("editVisible", "editData", lead, ""),
-            },
-            {
-              label: "Delete",
-              onClick: () => onShow("deleteVisible", "deleteData", lead, ""),
-              className: "text-red-400",
-            },
-          ]}
-          icon={<LeadsTableMenuIcon />}
-        />
-      ),
-    },
+    // {
+    //   key: "actions",
+    //   header: "Actions",
+    //   render: (lead) => (
+    //     <ThreeDotMenu
+    //       options={[
+    //         {
+    //           label: "Edit",
+    //           onClick: () => onShow("editVisible", "editData", lead, ""),
+    //         },
+    //         {
+    //           label: "Delete",
+    //           onClick: () => onShow("deleteVisible", "deleteData", lead, ""),
+    //           className: "text-red-400",
+    //         },
+    //       ]}
+    //       icon={<LeadsTableMenuIcon />}
+    //     />
+    //   ),
+    // },
   ];
 
-  const handleDelete = async () => {
-    try {
-      const response = await DeleteLead(object?.deleteData?.id);
+  // const handleDelete = async () => {
+  //   try {
+  //     const response = await DeleteLead(object?.deleteData?.id);
 
-      if (response) {
-        onHide();
-        await fetchLeads();
-      }
-    } catch (error) {
-      console.error("Error deleting lead:", error);
-    }
-  };
+  //     if (response) {
+  //       onHide();
+  //       await fetchLeads();
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting lead:", error);
+  //   }
+  // };
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -153,12 +153,12 @@ const Overview = () => {
       <h2 className="text-2xl font-semibold text-white">Recent Leads</h2>
 
       <Table data={leads} columns={columns} />
-      <PopupConfirm
+      {/* <PopupConfirm
         message="Are you Sure Do you want to delete?"
         visible={object.deleteVisible}
         onCancel={onHide}
         onConfirm={handleDelete}
-      />
+      /> */}
 
     </div>
   );

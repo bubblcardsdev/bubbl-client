@@ -29,7 +29,8 @@ export default function DeviceCards() {
     modeTitle: "",
   };
 
-  const router = useRouter();
+    const router = useRouter();
+  const defaultUID = router?.query?.deviceUid;
 
   const initialState = router?.query?.deviceUid ? true : false;
   const [show, setShow] = useState(initialState);
@@ -125,7 +126,7 @@ export default function DeviceCards() {
 
   useEffect(() => {
     getMydevices();
-  }, []);
+  }, [defaultUID]);
 
   return (
     <div className="text-white mt-4">
