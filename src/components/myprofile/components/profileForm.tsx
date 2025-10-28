@@ -290,7 +290,7 @@ const ProfileForm = ({
                     <option value="Work">Work</option>
                     <option value="Personal">Personal</option>
                     <option value="Mobile">Mobile</option>
-                    <option value="Mobile">Office</option>
+                    <option value="Office">Office</option>
 
                     {mobile.phoneNumberType &&
                       ![
