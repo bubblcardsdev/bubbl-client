@@ -289,12 +289,16 @@ const ProfileForm = ({
                     <option value="Work">Work</option>
                     <option value="Personal">Personal</option>
                     <option value="Mobile">Mobile</option>
-                     <option value="Mobile">Office</option>
-                   
+                    <option value="Office">Office</option>
+
                     {mobile.phoneNumberType &&
-                      !["Home", "Work", "Personal", "Mobile","Office"].includes(
-                        mobile?.phoneNumberType
-                      ) && (
+                      ![
+                        "Home",
+                        "Work",
+                        "Personal",
+                        "Mobile",
+                        "Office",
+                      ].includes(mobile?.phoneNumberType) && (
                         <option value={mobile?.phoneNumberType}>
                           {mobile?.phoneNumberType}
                         </option>
@@ -460,10 +464,11 @@ const ProfileForm = ({
           {errors?.emailIds && (
             <p className="text-red-500 text-xs mt-1">{errors?.emailIds}</p>
           )}
-          {formData?.emailIds?.length < 2 && (
+          {formData?.emailIds?.filter((value: any) => value?.activeStatus)
+            ?.length < 2 && (
             <button
               onClick={() => addToArray("emailIds")}
-              className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white  placeholder:text-sm"
+              className="mt-2 text-sm flex items-center gap-1 w-full rounded-lg bg-[#2a2a2a] p-3 outline-none text-white"
             >
               <Plus className="w-4 h-4" /> Add Email
             </button>
