@@ -61,7 +61,6 @@ const ProfileForm = ({
   handleRemoveImage: any;
 }) => {
   const router = useRouter();
-
   return (
     <div className="w-full lg:max-w-[650px] bg-[#1e1e1e] rounded-2xl p-5 space-y-6">
       {/* Profile Title & Layout */}
@@ -650,15 +649,15 @@ const ProfileForm = ({
           <div className="flex gap-5  p-3 rounded-lg bg-[#2c2c2c]">
             {theme.map((t: any) => (
               <button
-                key={t.name}
+                key={t.color}
                 className={clsx(
                   "w-6 h-6 rounded-full flex items-center justify-center transition duration-200",
-                  { "ring-2 ring-white": selected === t.name }
+                  { "ring-2 ring-white": selected === t.color }
                 )}
                 style={{ backgroundColor: t.color }}
-                onClick={() => handleColorSelect(t.name)}
+                onClick={() => handleColorSelect(t.color)}
               >
-                {selected === t.name && (
+                {selected === t.color && (
                   <Check className="w-4 h-4 text-white" />
                 )}
               </button>

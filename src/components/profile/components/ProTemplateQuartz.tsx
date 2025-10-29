@@ -17,7 +17,6 @@ import {
   QuartzYoutubeIcon,
   DownArrowIcon,
 } from "../../common/icons";
-import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 
 import { useRouter } from "next/router";
@@ -41,10 +40,8 @@ const ProTemplateQuartz = ({
   // };
   const [color, setColor] = useState<string>("");
   useEffect(() => {
-    const selected =
-      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
-    setColor(selected);
-    console.log(selected, "theme");
+
+    setColor(selectedTheme);
   }, [selectedTheme]);
   const SocialIconsObj: any = {
     "1": QuartzInstagramIcon, // Instagram

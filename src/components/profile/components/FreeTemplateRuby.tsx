@@ -18,7 +18,6 @@ import {
   WhatsappIconbackgroundFill,
   ShareIcon,
 } from "../../common/icons";
-import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
   navigatorShare,
@@ -53,10 +52,8 @@ const FreeTemplateRuby = ({
     data: "",
   });
   useEffect(() => {
-    const selected =
-      theme.find((theme) => theme.name === selectedTheme)?.color || "#1f1f1f";
-    setColor(selected);
-    console.log(selected, "theme");
+
+    setColor(selectedTheme);
   }, [selectedTheme]);
 
   const SocialIconsObj: any = {
