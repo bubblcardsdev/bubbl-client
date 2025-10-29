@@ -23,7 +23,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(reducer, defaultGlobalState);
   const value: any = { state, dispatch };
   const router = useRouter();
-useEffect(() => {
+  useEffect(() => {
     // Load stored cart for all pages except /cart
     if (typeof window !== "undefined" && router.pathname !== "/cart") {
       const storedCart = getCart();
@@ -45,7 +45,7 @@ useEffect(() => {
             payload: decoded.planId ?? 1, // default to 1 if missing
           });
           console.log(PLAN_ID, decoded.planId);
-          
+
         } catch (err) {
           console.error("Failed to decode token:", err);
         }
