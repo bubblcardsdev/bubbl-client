@@ -168,6 +168,8 @@ const INITIAL_FORM_DATA: any = {
     activeStatus: true,
   })),
   profileImageUrl: "",
+  profileImageKey:"",
+  companyLogoKey:"",
   companyLogoUrl: "",
 };
 const formDataBuilder = (data: any) => {
@@ -419,13 +421,19 @@ const EditProfile: React.FC = () => {
   };
 
   // Image change and crop flow (same as your original behavior)
-  const handleImageChange = (
+  const handleImageChange =async(
     event: React.ChangeEvent<HTMLInputElement>,
     type: "profile" | "company"
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
     if (type == "profile") {
+      const response = await UploadProfileImage(file,id)
+      console.log(response,"?");
+      const {key:profileImageKey} = response?.data 
+      // need to add cropped image
+setFormData((prev:any) => ({ ...prev,profileImageKey }));
+      
       setProfileImg(file);
     } else if (type == "company") {
       setCompanyLogoImg(file);

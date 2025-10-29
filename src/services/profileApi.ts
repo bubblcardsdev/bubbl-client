@@ -276,13 +276,15 @@ export const DuplicateProfileApi = async (id: string | number) => {
 
 export const UploadProfileImage = async (
   file: File | any,
-  id: number | string
+  id?: number | string
 ) => {
   try {
     const formData: any = new FormData();
     formData.append("squareImage", file);
     formData.append("rectangleImage", file);
+    if(id){
     formData.append("profileId", id);
+    }
 
     const response = await axiosInstance.post("upload/profileImage", formData, {
       headers: {
