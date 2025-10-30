@@ -302,12 +302,15 @@ export const UploadProfileImage = async (
 
 export const UploadbrandinglogoImage = async (
   file: File | any,
-  id: number | string
+  id?: number | string
 ) => {
   try {
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
-    formData.append("profileId", id);
+    if(id){
+ formData.append("profileId", id);
+    }
+   
 
     const response = await axiosInstance.post("upload/brandinglogo", formData, {
       headers: {
