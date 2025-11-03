@@ -4,8 +4,8 @@ import { useState, useContext } from "react";
 export default function Pricings() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const { state }: any = useContext(UserContext);
-  const { planId } = state;
 
+   const planId = state?.plan?.data?.planId ?? 1
   // Plan details mapped
   const plans = [
     {

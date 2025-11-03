@@ -1,2 +1,2 @@
 export const CART = "cart";
-export const PLAN_ID="planId"
+export const PLAN="plan"
