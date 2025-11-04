@@ -37,11 +37,11 @@ export type ProductSection = {
 };
 
 const title: Record<string, { title: string; description: string }> = {
-  festiveBundles: {
-    title: "Special offers! – Light Up Your Networking This Diwali",
-    description:
-      "Celebrate this festive season with exclusive Diwali discounts on Bubbl NFC cards. Share your identity with a single tap and make every connection memorable. Limited-time festive offer for individuals and teams.",
-  },
+  // festiveBundles: {
+  //   title: "Special offers! – Light Up Your Networking This Diwali",
+  //   description:
+  //     "Celebrate this festive season with exclusive Diwali discounts on Bubbl NFC cards. Share your identity with a single tap and make every connection memorable. Limited-time festive offer for individuals and teams.",
+  // },
   basic: {
     title: "Bubbl Basics",
     description:
@@ -54,7 +54,7 @@ const title: Record<string, { title: string; description: string }> = {
   },
   others: {
     title: "Other Products",
-    description:
+    description: 
       "Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today!",
   },
   // bundle_devices: {
