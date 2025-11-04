@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
@@ -12,7 +13,6 @@ import {
 } from "../../services/leadsApi";
 import { toast } from "react-toastify";
 import LeadsForm from "./components/leadsForm";
-import LeadsTable from "./components/LeadsTable";
 import LeadsTableHeader from "./components/leadsTableHeader";
 import { downloadLeadsAsXLSX } from "../../utils/downloadUtils";
 import Joi from "joi";
@@ -422,48 +422,48 @@ const Leads = () => {
   const mobileFilterPopoverRef = useRef<HTMLDivElement | null>(null);
 
   const leadsPerPage = 7;
-  const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
+  // const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
 
   const paginatedLeads = filteredLeads.slice(
     (currentPage - 1) * leadsPerPage,
     currentPage * leadsPerPage
   );
 
-  const toggleCheckbox = (data: any, id: number | any, all: boolean) => {
-    setSelectedLeads((prev: Set<number>) => {
-      const updated = new Set(prev);
+  // const toggleCheckbox = (data: any, id: number | any, all: boolean) => {
+  //   setSelectedLeads((prev: Set<number>) => {
+  //     const updated = new Set(prev);
 
-      if (all) {
-        // Select or unselect all leads
-        if (updated.size === filteredLeads?.length) {
-          // already all selected → unselect all
-          updated.clear();
-          setLeadToDelete([]);
-        } else {
-          // select all
-          filteredLeads?.forEach((lead: any) => updated.add(lead.id));
-          setLeadToDelete(filteredLeads?.map((lead: any) => lead.id) || []);
-        }
-      } else {
-        // Toggle single checkbox
-        if (updated.has(id)) {
-          updated.delete(id);
-          setLeadToDelete((prev: number[]) =>
-            prev.filter((leadId) => leadId !== id)
-          );
-        } else {
-          updated.add(id);
-          if (data) {
-            setLeadToDelete((prev: number[]) =>
-              prev.includes(data.id) ? prev : [...prev, data.id]
-            );
-          }
-        }
-      }
+  //     if (all) {
+  //       // Select or unselect all leads
+  //       if (updated.size === filteredLeads?.length) {
+  //         // already all selected → unselect all
+  //         updated.clear();
+  //         setLeadToDelete([]);
+  //       } else {
+  //         // select all
+  //         filteredLeads?.forEach((lead: any) => updated.add(lead.id));
+  //         setLeadToDelete(filteredLeads?.map((lead: any) => lead.id) || []);
+  //       }
+  //     } else {
+  //       // Toggle single checkbox
+  //       if (updated.has(id)) {
+  //         updated.delete(id);
+  //         setLeadToDelete((prev: number[]) =>
+  //           prev.filter((leadId) => leadId !== id)
+  //         );
+  //       } else {
+  //         updated.add(id);
+  //         if (data) {
+  //           setLeadToDelete((prev: number[]) =>
+  //             prev.includes(data.id) ? prev : [...prev, data.id]
+  //           );
+  //         }
+  //       }
+  //     }
 
-      return updated;
-    });
-  };
+  //     return updated;
+  //   });
+  // };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -781,7 +781,7 @@ const Leads = () => {
                     <button
                       onClick={() => {
                         setShowDeleteConfirm(true);
-                        setLeadToDelete((prev: any) => [...prev, lead?.id]);
+                        
                       }}
                       className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700"
                     >
