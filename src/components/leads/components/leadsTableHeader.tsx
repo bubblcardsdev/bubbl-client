@@ -200,13 +200,14 @@
 // };
 
 // export default LeadsTableHeader;
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   SearchIcon,
   FilterIcon,
   LeadsDownloadIcon,
 } from "../../common/icons";
+import Modal from "../../common/modal";
 
 interface LeadsTableHeaderProps {
   searchTerm: string;
@@ -225,6 +226,8 @@ interface LeadsTableHeaderProps {
   setIsDrawerOpen: (open: boolean) => void;
   setCurrentAction: (action: string) => void;
   onDownload?: () => void;
+  onHide?: boolean;
+  visible?: boolean
 }
 
 const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
@@ -244,6 +247,11 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
   setIsDrawerOpen,
   setCurrentAction,
   onDownload,
+  onHide,
+
+
+
+
 }) => {
   const filterRef = useRef<HTMLDivElement | null>(null);
 
@@ -262,7 +270,6 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
   }, [isOpen, setIsOpen]);
 
   const quickDateFilters = ["Today", "This Week", "This Month"];
-
   return (
     <div className="mt-[10px] flex items-center justify-between rounded-xl bg-[#3D3D3D] p-2 lg:flex md:flex sm:hidden xs:hidden">
       {/* Search */}
@@ -289,13 +296,37 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
           </button>
 
           {isOpen && (
-            <div
-              ref={filterRef}
-              className="absolute right-0 z-10 w-[600px] overflow-hidden rounded-xl shadow-lg"
+            <Modal
+              visible={isOpen}
+              onClose={() => setIsOpen(false)}
+              title="Filter Leads"
+              showHeader
+              showFooter
+              stickyHeader
+              stickyFooter
+              closeOnBackdrop={false}
+              headerClassName="border-b-0"
+              bodyClassName="pt-0 pb-6"
+              className="lg:max-w-[600px] xl:max-w-[600px] px-3 py-2"
+              footerContent={
+                <div className="flex items-center justify-between w-full">
+                  <button
+                    onClick={resetFilters}
+                    className="text-sm text-[#9E7FFF] hover:underline"
+                  >
+                    Reset All
+                  </button>
+                  <button
+                    onClick={applyFilters}
+                    className="rounded-md bg-[#9E7FFF] px-4 py-2 text-sm font-semibold"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              }
             >
-              <div className="w-full max-w-sm space-y-6 rounded-xl bg-[#1F1F1F] p-6 text-white shadow-lg">
-                <h2 className="text-lg font-semibold">Filter by:</h2>
-
+              {/* Body */}
+              <div className="w-full space-y-6 text-white">
                 {/* Date Range */}
                 <div className="space-y-3">
                   <p className="text-sm text-gray-300">Date Range</p>
@@ -303,40 +334,36 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
                     <input
                       type="date"
                       value={tempStartDate}
-                      className="w-full rounded-md bg-[#2A2A2A] px-4 py-2 text-sm"
-                      onChange={(e) =>
-                        handleDateRangeChange("start", e.target.value)
-                      }
+                      className="w-full rounded-md bg-[#2A2A2A] px-4 py-2 text-sm "
+                      onChange={(e) => handleDateRangeChange("start", e.target.value)}
+                      onFocus={(e) => e.target.showPicker?.()}
                     />
                     <input
                       type="date"
                       value={tempEndDate}
                       className="w-full rounded-md bg-[#2A2A2A] px-4 py-2 text-sm"
-                      onChange={(e) =>
-                        handleDateRangeChange("end", e.target.value)
-                      }
+                      onChange={(e) => handleDateRangeChange("end", e.target.value)}
+                      min={tempStartDate || undefined}
+                      onFocus={(e) => e.target.showPicker?.()}
                     />
                   </div>
 
-                  {/* Quick Date Filters */}
-                  <div className="flex gap-3">
-                    {quickDateFilters.map((label) => {
+                  {/* Quick Filters */}
+                  {/* <div className="flex gap-3">
+                    {quickDateFilters.map((label: string) => {
                       const key = label.toLowerCase();
                       return (
                         <button
                           key={label}
                           onClick={() => handleDateFilter(key)}
-                          className={`w-full rounded-md py-2 text-sm hover:bg-[#3A3A3A] ${
-                            tempDateFilter === key
-                              ? "bg-[#9747FF]"
-                              : "bg-[#2A2A2A]"
-                          }`}
+                          className={`w-full rounded-md py-2 text-sm hover:bg-[#3A3A3A] ${tempDateFilter === key ? "bg-[#9747FF]" : "bg-[#2A2A2A]"
+                            }`}
                         >
                           {label}
                         </button>
                       );
                     })}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Lead Type */}
@@ -355,25 +382,10 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
                     <ChevronDown className="pointer-events-none absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
                   </div>
                 </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-between pt-2">
-                  <button
-                    onClick={resetFilters}
-                    className="text-sm text-[#9E7FFF] hover:underline"
-                  >
-                    Reset All
-                  </button>
-                  <button
-                    onClick={applyFilters}
-                    className="rounded-md bg-[#9E7FFF] px-4 py-2 text-sm font-semibold"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
               </div>
-            </div>
+            </Modal>
           )}
+
         </div>
 
         {/* Download */}
