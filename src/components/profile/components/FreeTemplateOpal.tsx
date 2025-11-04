@@ -19,7 +19,6 @@ import {
   Linkedin_icon_thin,
 } from "../../common/icons";
 
-import { theme } from "../../../utils/profileThemecolor";
 import QrGenerator from "./QrGenerator";
 import {
   navigatorShare,
@@ -48,10 +47,8 @@ const FreeTemplateOpal = ({
     data: "",
   });
   useEffect(() => {
-    const selected =
-      theme.find((theme) => theme.name === selectedTheme)?.color || "#60449a";
-    setColor(selected);
-    console.log(selected, "theme");
+
+    setColor(selectedTheme);
   }, [selectedTheme]);
 
   const router = useRouter();

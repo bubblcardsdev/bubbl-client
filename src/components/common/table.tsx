@@ -16,6 +16,7 @@ export default function Table<T>({
   emptyMessage = "",
   onRowClick,
 }: TableProps<T>) {
+  console.log(data, "data")
   if (!data || data.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center p-6 gap-4 w-full h-[400px] bg-[#282828] text-white text-opacity-40 rounded-2xl">
@@ -37,9 +38,8 @@ export default function Table<T>({
           className={`min-w-full bg-[#282828] divide-y divide-[#ffffff] divide-opacity-10 rounded-2xl ${tableClassName}`}
         >
           <thead
-            className={`${
-              stickyHeader ? "sticky top-0 z-10" : ""
-            } bg-[#282828] border-b border-[#ffffff] border-opacity-10 rounded-2xl ${theadClassName}`}
+            className={`${stickyHeader ? "sticky top-0 z-10" : ""
+              } bg-[#282828] border-b border-[#ffffff] border-opacity-10 rounded-2xl ${theadClassName}`}
           >
             <tr>
               {columns.map((col) => (

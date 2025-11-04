@@ -28,7 +28,6 @@ import {
 } from "../../../services/profileApi";
 import { toast } from "react-toastify";
 import ProfileForm from "./profileForm";
-import { normalizeSocialLink } from "@/src/utils/commonLogics";
 import { EditProfileSchema } from "../../../validators/profile";
 const socialLinks = [
   {
@@ -169,6 +168,8 @@ const INITIAL_FORM_DATA: any = {
     activeStatus: true,
   })),
   profileImageUrl: "",
+  profileImageKey:"",
+  companyLogoKey:"",
   companyLogoUrl: "",
 };
 const formDataBuilder = (data: any) => {
@@ -190,10 +191,10 @@ const formDataBuilder = (data: any) => {
     zipCode: data?.zipCode || "",
     state: data?.state || "",
     country: data?.country || "",
-    brandingFontColor: data?.deviceBranding?.[0]?.brandingFontColor || "",
+    brandingFontColor: data?.brandingFontColor || "",
     brandingBackGroundColor:
-      data?.deviceBranding?.[0]?.brandingBackGroundColor || "",
-    brandingAccentColor: data?.deviceBranding?.[0]?.brandingAccentColor || "",
+      data?.brandingBackGroundColor || "",
+    brandingAccentColor: data?.brandingAccentColor || "#60449a",
     brandingFont: data?.brandingFont || "",
     phoneNumberEnable: data?.phoneNumberEnable || false,
     emailEnable: data?.emailEnable || false,
@@ -201,8 +202,8 @@ const formDataBuilder = (data: any) => {
     socialMediaEnable: data?.socialMediaEnable || false,
     digitalMediaEnable: data?.digitalMediaEnable || false,
     phoneNumbers: (data?.profilePhoneNumbers || []).slice(0, 2),
-    emailIds: data?.profileEmails || [],
-    websites: data?.profileWebsites || [],
+    emailIds: (data?.profileEmails || []).slice(0, 2) || [],
+    websites: (data?.profileWebsites || []).slice(0, 2),
     socialMediaNames: [
       ...(data?.profileSocialMediaLinks || []),
       ...(INITIAL_FORM_DATA?.socialMediaNames?.filter(
@@ -225,7 +226,7 @@ const EditProfile: React.FC = () => {
   const { id }: any = router.query;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [selected, setSelected] = useState<string>("green");
+  const [selected, setSelected] = useState<string>("#00b71a");
   const [errors, setErrors] = useState<Record<string, string>>({});
   // Crop modal
   const [openCropModal, setOpenCropModal] = useState(false);
@@ -260,6 +261,7 @@ const EditProfile: React.FC = () => {
       const response = formDataBuilder(obj);
       setCurrentIndex(Number(response?.templateId) - 1);
       setFormData(response);
+      setSelected(response?.brandingAccentColor || "#00b71a")
     } catch (err: any) {
       // setError("Failed to fetch profiles");
       console.error(err);
@@ -268,20 +270,7 @@ const EditProfile: React.FC = () => {
     }
   };
   useEffect(() => {
-    if (!id) {
-      const saved =
-        typeof window !== "undefined" && localStorage.getItem("selectedTheme");
-      if (saved) {
-        setSelected(saved);
-        const found = theme.find((t: any) => t.name === saved);
-        if (found) {
-          setFormData((prev: any) => ({
-            ...prev,
-            brandingAccentColor: found.color,
-          }));
-        }
-      }
-    } else {
+    if (id) {
       fetchProfiles();
     }
   }, [id]);
@@ -432,30 +421,61 @@ const EditProfile: React.FC = () => {
   };
 
   // Image change and crop flow (same as your original behavior)
-  const handleImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    type: "profile" | "company"
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (type == "profile") {
+ const handleImageChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  type: "profile" | "company"
+) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  // Set preview for cropping
+  const previewUrl = URL.createObjectURL(file);
+  setCropSrc(previewUrl);
+  setSelectedImageType(type);
+  setOpenCropModal(true);
+};
+
+
+const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
+  if (!selectedImageType) return; // safety
+
+  const file = new File([croppedBlob], "croppedImage.jpg", { type: "image/jpeg" });
+
+  try {
+    // Choose correct API based on selectedImageType
+    const response =
+      selectedImageType === "profile"
+        ? await UploadProfileImage(file, id)
+        : await UploadbrandinglogoImage(file, id);
+
+    const { key: uploadedKey } = response?.data || {};
+
+    if (selectedImageType === "profile") {
+      setFormData((prev: any) => ({
+        ...prev,
+        profileImageUrl: previewUrl,      // frontend preview
+        profileImageKey: uploadedKey || "", // backend key (S3)
+      }));
       setProfileImg(file);
-    } else if (type == "company") {
+    } else {
+      // company / branding
+      setFormData((prev: any) => ({
+        ...prev,
+        companyLogoUrl: previewUrl,        // frontend preview
+        companyLogoKey: uploadedKey || "", // backend key (S3)
+        brandingLogoUrl: uploadedKey || "", // if backend expects this field
+      }));
       setCompanyLogoImg(file);
     }
-    const previewUrl = URL.createObjectURL(file);
-    setCropSrc(previewUrl);
-    setSelectedImageType(type);
-    setOpenCropModal(true);
-  };
-
-  const handleCroppedImage = (croppedBlob: Blob, previewUrl: string) => {
-    const imageKey =
-      selectedImageType === "profile" ? "profileImageUrl" : "companyLogoUrl";
-    setFormData((prev: any) => ({ ...prev, [imageKey]: previewUrl }));
+  } catch (err) {
+    console.error("Cropped image upload failed:", err);
+    // Optional: show toast or set an error state
+  } finally {
     setOpenCropModal(false);
     setSelectedImageType(null);
-  };
+  }
+};
+
 
   const handleRemoveImage = (type: "profile" | "company") => {
     if (type === "profile") {
@@ -475,11 +495,9 @@ const EditProfile: React.FC = () => {
   // Color select: keep selected theme name and update brandingAccentColor in state
   const handleColorSelect = (themeName: string) => {
     setSelected(themeName);
-    localStorage.setItem("selectedTheme", themeName);
-    const found = theme.find((t: any) => t.name === themeName);
-    if (found) {
-      handleInputChange("brandingAccentColor", found.color);
-    }
+
+    handleInputChange("brandingAccentColor", themeName);
+
   };
 
   const handleSave = async () => {
@@ -517,6 +535,22 @@ const EditProfile: React.FC = () => {
         enableStatus: item.enableStatus ?? true,
         activeStatus: item.digitalPaymentLink?.trim().length > 0,
       }));
+     const filteredEmailIds = (formData?.emailIds || []).filter((item: any) => {
+  // Keep if it has an existing ID
+  if (item.emailIdNumber) return true;
+
+  // Otherwise, only keep if emailId is non-empty
+  return item.emailId && item.emailId.trim().length > 0;
+});
+
+// Filter phone numbers
+        const filteredPhoneNumbers = (formData?.phoneNumbers || []).filter((item: any) => {
+  // Keep if it has an existing ID
+  if (item.phoneNumberId) return true;
+
+  // Otherwise, only keep if phoneNumber is non-empty
+  return item.phoneNumber && item.phoneNumber.trim().length > 0;
+         });
 
       // Build base payload
       let payload: any = {
@@ -531,8 +565,8 @@ const EditProfile: React.FC = () => {
             d.digitalPaymentLink?.trim()
           )
           : updatedDigitalMediaNames,
-        emailIds: formData?.emailIds || [],
-        phoneNumbers: formData?.phoneNumbers || [],
+        emailIds: filteredEmailIds || [],
+        phoneNumbers: filteredPhoneNumbers || [],
         websites: formData?.websites || [],
       };
 
@@ -551,16 +585,22 @@ const EditProfile: React.FC = () => {
       // Remove image URLs before sending
       delete payload?.profileImageUrl;
       delete payload?.companyLogoUrl;
+      delete payload?.brandingLogoUrl
 
       console.log("Final Payload:", payload);
       if (id) {
+      delete payload?.profileImageUrl;
+      delete payload?.profileImageKey;
+      delete payload?.companyLogoUrl;
+      delete payload?.companyLogoKey;
+      delete payload?.brandingLogoUrl
         // ---- Update ----
         const response = await UpdateProfile(id, payload);
 
         if (!formData?.profileImageUrl) await DeleteProfileImageApi(id);
         if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
-        if (profileImg) await UploadProfileImage(profileImg, id); // need to call
-        if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
+        // if (profileImg) await UploadProfileImage(profileImg, id); // need to call
+        // if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
 
         await fetchProfiles();
         toast.success("Profile updated successfully!");
@@ -570,10 +610,10 @@ const EditProfile: React.FC = () => {
         const response: any = await CreateMyProfileApi(payload);
         if (!response) return;
 
-        if (profileImg && response?.profile?.id)
-          await UploadProfileImage(profileImg, response?.profile?.id);
-        if (companyLogoImg && response?.profile?.id)
-          await UploadbrandinglogoImage(companyLogoImg, response?.profile.id);
+        // if (profileImg && response?.profile?.id)
+        //   await UploadProfileImage(profileImg, response?.profile?.id);
+        // if (companyLogoImg && response?.profile?.id)
+        //   await UploadbrandinglogoImage(companyLogoImg, response?.profile.id);
 
         // if (response?.data?.message === "This profile name already exists") {
         //   setErrors((prev: any) => ({
