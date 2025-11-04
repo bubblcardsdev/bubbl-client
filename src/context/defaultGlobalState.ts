@@ -1,4 +1,7 @@
 export const defaultGlobalState = {
    cart: [],
-   planId:1
+   plan:{
+      data: null,
+      etag: null,
+   }
 }

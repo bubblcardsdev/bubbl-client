@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import Drawer from "../common/Drawer";
-import { SearchIcon, FilterIcon } from "../common/icons";
+import { SearchIcon, FilterIcon, LeadsTableMenuIcon } from "../common/icons";
 // import useWindowSize from "@/src/hooks/useWindowSize";
 import {
   GetAllLeadsByIdData,
@@ -12,11 +13,16 @@ import {
 } from "../../services/leadsApi";
 import { toast } from "react-toastify";
 import LeadsForm from "./components/leadsForm";
-import LeadsTable from "./components/LeadsTable";
 import LeadsTableHeader from "./components/leadsTableHeader";
 import { downloadLeadsAsXLSX } from "../../utils/downloadUtils";
 import Joi from "joi";
 import { isEmpty } from "lodash";
+import Table from "../common/table";
+import ThreeDotMenu from "../common/threeDotMenu";
+
+import { TableColumn } from "@/src/lib/interface";
+import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
+import PopupConfirm from "../common/popupConfirm";
 // import { ChevronDown } from "lucide-react";
 //interface for Lead data
 interface Lead {
@@ -126,13 +132,13 @@ const formatDateToDDMMYYYY = (isoDateString: string): string => {
 
 const Leads = () => {
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
-  const[mobileFilterOpen,setMobileFilterOpen]=useState<boolean>(false);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenAction, setIsOpenAction] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [leadsData, setLeadsData] = useState<Lead[]>([]);
-    // const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   // const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<any>(INITIAL_LEAD_FORM_DATA);
   const [searchTerm, setSearchTerm] = useState("");
@@ -143,6 +149,7 @@ const Leads = () => {
   const [sortOrder, setSortOrder] = useState("newest");
   const [currentAction, setCurrentAction] = useState("save");
 
+  const [filteredLeadsdata, setFilteredLeadsdata] = useState<any>([]);
   // Validation state
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
@@ -153,10 +160,19 @@ const Leads = () => {
   const [tempEndDate, setTempEndDate] = useState("");
   const [tempLeadTypeFilter, setTempLeadTypeFilter] = useState("");
   const [tempSortOrder, setTempSortOrder] = useState("newest");
-
   // Delete confirmation states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [leadToDelete, setLeadToDelete] = useState<Lead | any | null>([]);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | any | null>([]);
+
+  const initial = {
+    editVisible: false,
+    editData: null,
+    editTitle: null,
+    deleteVisible: false,
+    deleteData: null,
+    deleteTitle: null,
+  };
+  const { object, onShow, onHide } = useShowHideWithRecord(initial);
 
   // Get filtered leads based on all filter criteria (using applied filters, not temp ones)
   const getFilteredLeads = () => {
@@ -216,7 +232,6 @@ const Leads = () => {
         return leadDate >= start && leadDate <= end;
       });
     }
-
     // Lead type filter
     if (leadTypeFilter) {
       filtered = filtered.filter(
@@ -249,19 +264,47 @@ const Leads = () => {
     setMobileFilterOpen(false);
   };
 
+
+
   // Apply filters (apply temp states to actual filter states)
+  // const applyFilters = () => {
+  //   // setSearchTerm(tempSearchTerm);
+  //   // setDateFilter(tempDateFilter);
+  //   // setStartDate(tempStartDate);
+  //   // setEndDate(tempEndDate);
+  //   // setLeadTypeFilter(tempLeadTypeFilter);
+  //   // setSortOrder(tempSortOrder);
+  //   // setIsOpen(false);
+  //   // setMobileFilterOpen(false);
+  //   // setCurrentPage(1);
+  //   console.log("apply filter")
+  // };
+
   const applyFilters = () => {
-    // setSearchTerm(tempSearchTerm);
-    setDateFilter(tempDateFilter);
-    setStartDate(tempStartDate);
-    setEndDate(tempEndDate);
-    setLeadTypeFilter(tempLeadTypeFilter);
-    setSortOrder(tempSortOrder);
+
+    // Always filter from the full data, not already filtered data
+    let filtered = [...leadsData];
+
+    if (tempStartDate && tempEndDate) {
+      const startOnly = tempStartDate;
+      const endOnly = tempEndDate;
+
+      filtered = filtered.filter((lead: any) => {
+        const createdDateOnly = lead.createdAt.slice(0, 10); // Faster than Date object
+        return createdDateOnly >= startOnly && createdDateOnly <= endOnly;
+      });
+
+    } else {
+      console.log("⚠️ No filters applied — showing all");
+    }
+
+    setFilteredLeadsdata(filtered);
     setIsOpen(false);
-    setMobileFilterOpen(false);
-    setCurrentPage(1);
   };
 
+
+
+  // console.log("Lead created:", new Date(lead.createdAt));
   // Handle quick date filter selection (temp state)
   const handleDateFilter = (filter: string) => {
     setTempDateFilter(filter);
@@ -295,6 +338,7 @@ const Leads = () => {
       const data = await GetAllLeadsByIdData();
       const leads = data?.getLeads || []; // adjust to your API shape
       setLeadsData(leads);
+      setFilteredLeadsdata(leads);
     } catch (err: any) {
       // setError("Failed to fetch leads");
       toast.error("Failed to fetch leads");
@@ -378,53 +422,53 @@ const Leads = () => {
   const mobileFilterPopoverRef = useRef<HTMLDivElement | null>(null);
 
   const leadsPerPage = 7;
-  const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
+  // const totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
 
   const paginatedLeads = filteredLeads.slice(
     (currentPage - 1) * leadsPerPage,
     currentPage * leadsPerPage
   );
 
-  const toggleCheckbox = (data: any, id: number | any, all: boolean) => {
-    setSelectedLeads((prev: Set<number>) => {
-      const updated = new Set(prev);
+  // const toggleCheckbox = (data: any, id: number | any, all: boolean) => {
+  //   setSelectedLeads((prev: Set<number>) => {
+  //     const updated = new Set(prev);
 
-      if (all) {
-        // Select or unselect all leads
-        if (updated.size === filteredLeads?.length) {
-          // already all selected → unselect all
-          updated.clear();
-          setLeadToDelete([]);
-        } else {
-          // select all
-          filteredLeads?.forEach((lead: any) => updated.add(lead.id));
-          setLeadToDelete(filteredLeads?.map((lead: any) => lead.id) || []);
-        }
-      } else {
-        // Toggle single checkbox
-        if (updated.has(id)) {
-          updated.delete(id);
-          setLeadToDelete((prev: number[]) =>
-            prev.filter((leadId) => leadId !== id)
-          );
-        } else {
-          updated.add(id);
-          if (data) {
-            setLeadToDelete((prev: number[]) =>
-              prev.includes(data.id) ? prev : [...prev, data.id]
-            );
-          }
-        }
-      }
+  //     if (all) {
+  //       // Select or unselect all leads
+  //       if (updated.size === filteredLeads?.length) {
+  //         // already all selected → unselect all
+  //         updated.clear();
+  //         setLeadToDelete([]);
+  //       } else {
+  //         // select all
+  //         filteredLeads?.forEach((lead: any) => updated.add(lead.id));
+  //         setLeadToDelete(filteredLeads?.map((lead: any) => lead.id) || []);
+  //       }
+  //     } else {
+  //       // Toggle single checkbox
+  //       if (updated.has(id)) {
+  //         updated.delete(id);
+  //         setLeadToDelete((prev: number[]) =>
+  //           prev.filter((leadId) => leadId !== id)
+  //         );
+  //       } else {
+  //         updated.add(id);
+  //         if (data) {
+  //           setLeadToDelete((prev: number[]) =>
+  //             prev.includes(data.id) ? prev : [...prev, data.id]
+  //           );
+  //         }
+  //       }
+  //     }
 
-      return updated;
-    });
-  };
+  //     return updated;
+  //   });
+  // };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         mobileFilterPopoverRef.current &&
-        ! mobileFilterPopoverRef.current.contains(event.target as Node)
+        !mobileFilterPopoverRef.current.contains(event.target as Node)
       ) {
         setTimeout(() => {
           setMobileFilterOpen(false);
@@ -465,37 +509,112 @@ const Leads = () => {
   };
 
   // multi delete
-  const deleteMultipleLeads = async (ids: number[]) => {
+  // const deleteMultipleLeads = async (ids: number[]) => {
+  //   try {
+  //     const promises = ids.map((id) => DeleteLead(id)); // fire all requests
+  //     const results = await Promise.all(promises); // wait for all
+
+  //     // check if all deletes were successful
+  //     const allSuccess = results.every((res) => res?.success);
+
+  //     if (allSuccess) {
+  //       //remove deleted IDs from state
+  //       setLeadToDelete((prev: any) =>
+  //         prev.filter((id: any) => !ids.includes(id))
+  //       );
+  //       setSelectedLeads(new Set());
+
+  //       // trigger your custom task (example: refresh leads list)
+  //       await fetchProfiles(); // or any function you use to reload data
+
+  //       //optional: show success toast
+  //       toast.success("Selected leads deleted successfully!");
+  //     } else {
+  //       toast.error("Some leads could not be deleted.");
+  //     }
+
+  //     return results;
+  //   } catch (error) {
+  //     console.error("Error deleting multiple leads:", error);
+  //     toast.error("Error deleting selected leads.");
+  //     throw error;
+  //   }
+  // };
+  const handleDelete = async () => {
+    console.log("delete")
     try {
-      const promises = ids.map((id) => DeleteLead(id)); // fire all requests
-      const results = await Promise.all(promises); // wait for all
-
-      // check if all deletes were successful
-      const allSuccess = results.every((res) => res?.success);
-
-      if (allSuccess) {
-        //remove deleted IDs from state
-        setLeadToDelete((prev: any) =>
-          prev.filter((id: any) => !ids.includes(id))
-        );
-        setSelectedLeads(new Set());
-
-        // trigger your custom task (example: refresh leads list)
-        await fetchProfiles(); // or any function you use to reload data
-
-        //optional: show success toast
-        toast.success("Selected leads deleted successfully!");
-      } else {
-        toast.error("Some leads could not be deleted.");
+      const response = await DeleteLead(object?.deleteData?.id);
+      if (response) {
+        onHide();
+        await fetchProfiles();
       }
-
-      return results;
     } catch (error) {
-      console.error("Error deleting multiple leads:", error);
-      toast.error("Error deleting selected leads.");
-      throw error;
+      console.error("Error deleting lead:", error);
     }
   };
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short", // shows "Sep"
+      year: "numeric",
+    });
+  };
+  const columns: TableColumn<any>[] = [
+    {
+      key: "name",
+      header: "Name",
+      headerClassName: "text-white/40",
+      cellClassName: "truncate",
+      render: (lead: any) => <div className="text-sm text-white">{lead.name}</div>,
+    },
+    {
+      key: "phoneNumber",
+      header: "Phone Number",
+      cellClassName: "truncate",
+      render: (lead: any) => (
+        <div className="text-sm text-white">{lead.mobileNumber}</div>
+      ),
+    },
+    {
+      key: "mailId",
+      header: "Mail Id",
+      cellClassName: "truncate",
+      render: (lead: any) => (
+        <div className="text-sm text-white">{lead.emailId}</div>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      cellClassName: "truncate",
+      render: (lead: any) => (
+        <div className="text-sm text-white">{formatDate(lead.createdAt)}</div>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (lead: any) => (
+        <ThreeDotMenu
+          options={[
+            {
+              label: "Edit",
+              onClick: () => onShow("editVisible", "editData", lead, ""),
+            },
+            {
+              label: "Delete",
+              onClick: () => onShow("deleteVisible", "deleteData", lead, ""),
+              className: "text-red-400",
+            },
+          ]}
+          icon={<LeadsTableMenuIcon />}
+        />
+      ),
+    },
+  ];
+
 
   return (
     <div className="text-white bg-[#282828]  rounded-3xl p-[20px]">
@@ -520,7 +639,7 @@ const Leads = () => {
         setCurrentAction={setCurrentAction}
         onDownload={handleDownloadLeads}
       />
-      <LeadsTable
+      {/* <LeadsTable
         toggleCheckbox={toggleCheckbox}
         setLeadToDelete={setLeadToDelete}
         leadToDelete={leadToDelete}
@@ -537,7 +656,7 @@ const Leads = () => {
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
         totalPages={totalPages}
-      />
+      /> */}
       <Drawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
@@ -662,7 +781,7 @@ const Leads = () => {
                     <button
                       onClick={() => {
                         setShowDeleteConfirm(true);
-                        setLeadToDelete((prev: any) => [...prev, lead?.id]);
+                        
                       }}
                       className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-gray-700"
                     >
@@ -675,14 +794,14 @@ const Leads = () => {
           ))}
         </div>
       </div>
-       <div
-       ref={mobileFilterPopoverRef}
+      <div
+        ref={mobileFilterPopoverRef}
         className={`fixed bottom-0  w-full overflow-auto lg:hidden md:hidden sm:block xs:block  left-0 right-0 z-50 transform transition-transform duration-300 ease-in-out 
           ${mobileFilterOpen ? "translate-y-15" : "translate-y-full"
           }`}
       >
-        <div className="bg-[#1f1f1f] text-white rounded-t-2xl p-4">
-          <div className="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-4 sticky top-0" />
+        <div className="bg-[#1f1f1f] text-white rounded-t-2xl p-4 ">
+          <div className="w-12 h-1.5 bg-gray-600 rounded-full mx-auto mb-4 sticky top-0 z-50" />
           <div className=" flex flex-col">
             <p className="text-[12px] text-gray-300 mb-4  fixed">Filter by:</p>
             <p className="text-sm font-medium mt-[30px]">Date Range</p>
@@ -768,10 +887,16 @@ const Leads = () => {
             </button>
           </div>
         </div>
-      </div> 
+      </div>
 
-
-      {showDeleteConfirm && (
+      <Table data={filteredLeadsdata} columns={columns} />
+      <PopupConfirm
+        message="Are you Sure Do you want to delete?"
+        visible={object.deleteVisible}
+        onCancel={onHide}
+        onConfirm={handleDelete}
+      />
+      {/* {showDeleteConfirm && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[#282828] rounded-md p-6  w-[350px] text-start">
             <p className="text-lg font-bold text-white">Delete Confirmation</p>
@@ -779,7 +904,7 @@ const Leads = () => {
               Are you sure you want to delete?
             </p>
             <div className="flex gap-3 mt-6 justify-center">
-              {/* Cancel button */}
+
               <button
                 className="  bg-[#9747FF] text-white hover:bg-[#6d0bed] hover:text-white py-1 px-4 rounded-md transition"
                 onClick={() => setShowDeleteConfirm(false)}
@@ -787,7 +912,6 @@ const Leads = () => {
                 Cancel
               </button>
 
-              {/* Delete button */}
               <button
                 className="bg-red-600 hover:bg-red-700 text-white py-1 px-4 rounded-md transition"
                 onClick={() => {
@@ -800,7 +924,7 @@ const Leads = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
