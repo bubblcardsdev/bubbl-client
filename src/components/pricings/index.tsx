@@ -22,7 +22,6 @@ export default function Pricings() {
     };
     fetchPlans();
   }, []);
-  console.log(plans, "plans");
   const isLoader = plans?.length <= 0;
   return (
     <div>
