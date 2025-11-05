@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     if (
       !accessToken ||
       noAuthPaths.includes(router.pathname) ||
-      router.pathname.startsWith("profile")
+      router.pathname.startsWith("/profile")
     ) {
       return;
     }
