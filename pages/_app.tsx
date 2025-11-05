@@ -23,26 +23,26 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           typeof storedCart === "string" ? JSON.parse(storedCart) : storedCart;
         dispatch({ type: CART, payload: cartData });
       }
+      const accessToken = localStorage.getItem("accessToken");
+      const noAuthPaths = [
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/plans",
+        "/shop",
+        "/cart",
+        "/about",
+        "/",
+      ];
+      if (
+        !accessToken ||
+        noAuthPaths.includes(router.pathname) ||
+        router.pathname.startsWith("/profile")
+      ) {
+        return;
+      }
+      getUserPlanDetails();
     }
-    const accessToken = localStorage.getItem("accessToken");
-    const noAuthPaths = [
-      "/login",
-      "/signup",
-      "/forgot-password",
-      "/plans",
-      "/shop",
-      "/cart",
-      "/about",
-      "/",
-    ];
-    if (
-      !accessToken ||
-      noAuthPaths.includes(router.pathname) ||
-      router.pathname.startsWith("/profile")
-    ) {
-      return;
-    }
-    getUserPlanDetails();
   }, []);
 
   async function getUserPlanDetails() {
