@@ -24,10 +24,28 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         dispatch({ type: CART, payload: cartData });
       }
     }
-getUserPlanDetails();
+    const accessToken = localStorage.getItem("accessToken");
+    const noAuthPaths = [
+      "/login",
+      "/signup",
+      "/forgot-password",
+      "/plans",
+      "/shop",
+      "/cart",
+      "/about",
+      "/",
+    ];
+    if (
+      !accessToken ||
+      noAuthPaths.includes(router.pathname) ||
+      router.pathname.startsWith("profile")
+    ) {
+      return;
+    }
+    getUserPlanDetails();
   }, []);
 
-async function getUserPlanDetails() {
+  async function getUserPlanDetails() {
     try {
       const currentEtag = state.plan?.etag;
       const response = await getUserPlanService(currentEtag);
