@@ -240,7 +240,9 @@ export const UpdateProfile = async (
         headers: authHeader(),
       }
     );
-if(response?.data?.status === 200){
+  console.log(response,"????");
+  
+if(response?.status === 200){
     toast.success("Profile updated successfully!");
 }
 
