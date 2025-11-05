@@ -23,19 +23,38 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           typeof storedCart === "string" ? JSON.parse(storedCart) : storedCart;
         dispatch({ type: CART, payload: cartData });
       }
+      const accessToken = localStorage.getItem("accessToken");
+      const noAuthPaths = [
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/plans",
+        "/shop",
+        "/cart",
+        "/about",
+        "/",
+      ];
+      if (
+        !accessToken ||
+        noAuthPaths.includes(router.pathname) ||
+        router.pathname.startsWith("/profile")
+      ) {
+        return;
+      }
+      getUserPlanDetails();
     }
-if (typeof window !== "undefined") {
-  const excludedPaths = ["/", "/login", "/signup", "/home", "/shop", "/plans", "/about"];
+// if (typeof window !== "undefined") {
+//   const excludedPaths = ["/", "/login", "/signup", "/home", "/shop", "/plans", "/about"];
 
-  const isExcludedPath = excludedPaths.includes(router.pathname);
-  // console.log(isExcludedPath, router.pathname, "/ex");
-  if (!isExcludedPath) {
-    getUserPlanDetails();
-  }
-}
+//   const isExcludedPath = excludedPaths.includes(router.pathname);
+//   // console.log(isExcludedPath, router.pathname, "/ex");
+//   if (!isExcludedPath) {
+//     getUserPlanDetails();
+//   }
+// }
   }, []);
 
-async function getUserPlanDetails() {
+  async function getUserPlanDetails() {
     try {
       const currentEtag = state.plan?.etag;
       const response = await getUserPlanService(currentEtag);
