@@ -27,6 +27,7 @@ import {
 } from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 import MultiPopup from "./multiPopup";
+import { useRouter } from "next/router";
 
 const ProTemplateSpahire = ({
   formData,
@@ -38,6 +39,7 @@ const ProTemplateSpahire = ({
   handleSave: () => void;
 }) => {
   const [color, setColor] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     
@@ -342,7 +344,7 @@ const ProTemplateSpahire = ({
           <p className="text-sm font-semibold  text-black">
             Go Digital - Save Paper, Trees & Our Earth.
           </p>
-          <button className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">
+          <button onClick={()=>router.push("/")} className="bg-[#9000FF] text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-[#9000FF]">
             Join Now
           </button>
           <p className="text-xs text-gray-500">Powered by bubbl.cards ®</p>

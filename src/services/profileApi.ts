@@ -240,7 +240,12 @@ export const UpdateProfile = async (
         headers: authHeader(),
       }
     );
+if(response?.data?.status === 200){
+    toast.success("Profile updated successfully!");
+}
+
     return response?.data ?? null;
+    
   } catch (error) {
     console.error(
       "Update Profile API Error:",
