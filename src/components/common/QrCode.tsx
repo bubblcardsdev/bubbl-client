@@ -22,7 +22,7 @@ const QrCodeImage = (props: Props) => {
   // const { deviceIdQR, qrBubbl, qrImageUrl } = props;
     const { deviceIdQR } = props;
 
-  const url = `https://dev.bubbl.cards/profile/?profileId=${deviceIdQR}`;
+  const url = `https://bubbl.cards/profile/?profileId=${deviceIdQR}`;
   const [urlOpened, setUrlOpened] = useState(false);
 
   useEffect(() => {
