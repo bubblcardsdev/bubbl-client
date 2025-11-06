@@ -43,15 +43,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       }
       getUserPlanDetails();
     }
-// if (typeof window !== "undefined") {
-//   const excludedPaths = ["/", "/login", "/signup", "/home", "/shop", "/plans", "/about"];
 
-//   const isExcludedPath = excludedPaths.includes(router.pathname);
-//   // console.log(isExcludedPath, router.pathname, "/ex");
-//   if (!isExcludedPath) {
-//     getUserPlanDetails();
-//   }
-// }
   }, []);
 
   async function getUserPlanDetails() {

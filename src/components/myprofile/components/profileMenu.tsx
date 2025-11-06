@@ -15,17 +15,23 @@ const ProfileMenu = (props: Props) => {
   const { data, refetch } = props;
 
   //  delete profile
-  const deleteProfile = async () => {
-    await DeleteProfileApi(data.id)
-      ?.then(() => {
-        toast.success("Profile deleted successfully");
-        refetch();
-      })
-      ?.catch((err: any) => {
-        console.error("Delete failed", err);
-        toast.error("Failed to delete profile");
-      });
-  };
+const deleteProfile = async () => {
+  try {
+    const res = await DeleteProfileApi(data.id);
+
+    console.log("Delete response:", res);
+
+    // Check success response flag
+    if (!res?.success) {
+      throw new Error(res?.message || "Failed to delete profile");
+    }
+
+    toast.success("Profile deleted successfully");
+    await refetch();
+  } catch (err: any) {
+    console.error("Delete failed:", err);
+    }
+};
 
   //  duplicate profile
   const handleDuplicate = async () => {
