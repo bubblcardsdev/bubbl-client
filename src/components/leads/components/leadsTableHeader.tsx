@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+// import { ChevronDown } from "lucide-react";
 import {
   SearchIcon,
   FilterIcon,
@@ -35,9 +35,9 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
   setIsOpen,
   tempStartDate,
   tempEndDate,
-  tempLeadTypeFilter,
+  // tempLeadTypeFilter,
   handleDateRangeChange,
-  setTempLeadTypeFilter,
+  // setTempLeadTypeFilter,
   resetFilters,
   applyFilters,
   setIsDrawerOpen,
@@ -53,7 +53,6 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
         setTimeout(() => setIsOpen(false), 300);
       }
     };
-
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -61,7 +60,7 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
   }, [isOpen, setIsOpen]);
 
   return (
-    <div className="mt-[10px] flex items-center justify-between rounded-xl bg-[#3D3D3D] p-2 lg:flex md:flex sm:hidden xs:hidden">
+    <div className="mt-[10px] flex items-center justify-between rounded-xl bg-[#3D3D3D] p-2 lg:flex md:flex ">
       {/* Search */}
       <div className="flex w-full max-w-[200px] items-center rounded-xl border-2 border-[#393939] bg-[#232323] px-2 py-1.5">
         <SearchIcon className="mr-2 text-gray-400" color="#2B2B2B" />
@@ -73,7 +72,6 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
       {/* Actions */}
       <div className="ml-4 flex items-center gap-3">
         {/* Filter */}
@@ -137,27 +135,10 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
                       onFocus={(e) => e.target.showPicker?.()}
                     />
                   </div>
-
-                  {/* Quick Filters */}
-                  {/* <div className="flex gap-3">
-                    {quickDateFilters.map((label: string) => {
-                      const key = label.toLowerCase();
-                      return (
-                        <button
-                          key={label}
-                          onClick={() => handleDateFilter(key)}
-                          className={`w-full rounded-md py-2 text-sm hover:bg-[#3A3A3A] ${tempDateFilter === key ? "bg-[#9747FF]" : "bg-[#2A2A2A]"
-                            }`}
-                        >
-                          {label}
-                        </button>
-                      );
-                    })}
-                  </div> */}
                 </div>
 
                 {/* Lead Type */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label className="text-sm text-gray-300">Lead Type</label>
                   <div className="relative">
                     <select
@@ -171,7 +152,7 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
                     </select>
                     <ChevronDown className="pointer-events-none absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
                   </div>
-                </div>
+                </div> */}
               </div>
             </Modal>
           )}
@@ -192,12 +173,12 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
             setIsDrawerOpen(true);
             setCurrentAction("save");
           }}
-          className="rounded-md bg-[#4F4F4F] px-3 py-1.5 text-sm text-white hover:bg-[#505050]"
+          className="rounded-md bg-[#4F4F4F] px-3 py-1.5 text-sm text-white hover:bg-[#505050] flex gap-2"
         >
-          + Add lead
+         <span className=" md:block xs:hidden">+</span>  Add 
         </button>
       </div>
-    </div>
+    </div>   
   );
 };
 

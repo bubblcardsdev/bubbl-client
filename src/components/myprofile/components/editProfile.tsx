@@ -504,7 +504,7 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
     try {
       const isValid = validateForm();
       if (!isValid) {
-        // toast.error("Please fix the validation errors before saving!");
+        toast.error("Please fix the validation errors before saving!");
         return;
       }
       const isCreate = router.pathname === "/createNewProfile";
@@ -603,7 +603,6 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
         // if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
 
         await fetchProfiles();
-        toast.success("Profile updated successfully!");
         console.log("Update response:", response);
       } else {
         // ---- Create ----
