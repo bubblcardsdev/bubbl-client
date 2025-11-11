@@ -128,6 +128,23 @@ const Leads = () => {
         )
       );
     }
+    const formatDateToDDMMYYYY = (isoDateString: string): string => {
+      try {
+        const date = new Date(isoDateString);
+        if (isNaN(date.getTime())) {
+          return isoDateString; // Return original if invalid
+        }
+
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+      } catch (error) {
+        console.error("Error formatting date:", error);
+        return isoDateString; // Return original if error
+      }
+    };
     // Date range filter
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -159,12 +176,11 @@ const Leads = () => {
         return leadDate >= monthAgo;
       });
     } else if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      end.setHours(23, 59, 59, 999);
- 
+      const start = new Date(startDate).getUTCDate();
+      const end = new Date(endDate).getUTCDate();
+      // Adds 1 day minus 1 millisecond → covers entire day
       filtered = filtered.filter((lead) => {
-        const leadDate = new Date(lead.updatedAt);
+        const leadDate = new Date(lead.updatedAt).getUTCDate();
         return leadDate >= start && leadDate <= end;
       });
     }
@@ -226,7 +242,6 @@ const Leads = () => {
       setTempDateFilter("");
     }
   };
-
   // Reset pagination when filters change
   useEffect(() => {
     // setCurrentPage(1);
