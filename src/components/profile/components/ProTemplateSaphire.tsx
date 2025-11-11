@@ -27,6 +27,7 @@ import {
 } from "@/src/helpers/profile";
 import { useShowHideWithRecord } from "@/src/hooks/useShowHideWithRecord";
 import MultiPopup from "./multiPopup";
+import { ToastContainer } from "react-toastify";
 
 const ProTemplateSpahire = ({
   formData,
@@ -73,6 +74,7 @@ const ProTemplateSpahire = ({
   });
   return (
     <div className="w-full mx-auto overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
+      <ToastContainer />
       <Image
         src={formData?.profileImageUrl || "/profile.png"}
         alt=""
@@ -124,7 +126,7 @@ const ProTemplateSpahire = ({
             style={{ border: "2px solid " + color }}
           >
             <button className="flex-1 h-fit w-[10px]" onClick={handleSave}>
-              <span className="text-md font-semibold" style={{ color: color }}>
+              <span  className="text-md font-semibold" style={{ color: color }}>
                 Save Contact
               </span>
             </button>
