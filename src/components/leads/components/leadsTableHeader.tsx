@@ -173,9 +173,9 @@ const LeadsTableHeader: React.FC<LeadsTableHeaderProps> = ({
             setIsDrawerOpen(true);
             setCurrentAction("save");
           }}
-          className="rounded-md bg-[#4F4F4F] px-3 py-1.5 text-sm text-white hover:bg-[#505050]"
+          className="rounded-md bg-[#4F4F4F] px-3 py-1.5 text-sm text-white hover:bg-[#505050] flex gap-2"
         >
-          + Add 
+         <span className=" md:block xs:hidden">+</span>  Add 
         </button>
       </div>
     </div>   
