@@ -19,7 +19,7 @@ export default function Table<T>({
   console.log(data, "data")
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center p-6 gap-4 w-full h-[400px] bg-[#282828] text-white text-opacity-40 rounded-2xl">
+      <div className="flex flex-col justify-center items-center p-6 gap-4 w-full h-[400px] bg-[#282828] text-white text-opacity-40">
         {emptyIcon || <NoDataIcon />}
         <p className="text-center">
           {emptyMessage ||
@@ -28,18 +28,17 @@ export default function Table<T>({
       </div>
     );
   }
-
   return (
-    <div className={`overflow-x-auto rounded-2xl ${containerClassName}`}>
+    <div className={`overflow-x-auto  ${containerClassName}`}>
       <div
-        className={`h-[400px] overflow-y-auto bg-[#282828] ${tableWrapperClassName}`}
+        className={`h-[500px] overflow-y-auto bg-[#282828] ${tableWrapperClassName}`}
       >
         <table
-          className={`min-w-full bg-[#282828] divide-y divide-[#ffffff] divide-opacity-10 rounded-2xl ${tableClassName}`}
+          className={`min-w-full bg-[#282828] divide-y divide-[#ffffff] divide-opacity-10  ${tableClassName}`}
         >
           <thead
             className={`${stickyHeader ? "sticky top-0 z-10" : ""
-              } bg-[#282828] border-b border-[#ffffff] border-opacity-10 rounded-2xl ${theadClassName}`}
+              } bg-[#282828] border-b border-[#ffffff] border-opacity-10  ${theadClassName}`}
           >
             <tr>
               {columns.map((col) => (
