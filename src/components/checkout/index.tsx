@@ -1,9 +1,13 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { createOrder, recordPaymentFailure } from "../../services/chechout";
+import {
+  applyPromoCode,
+  createOrder,
+  recordPaymentFailure,
+} from "../../services/chechout";
 import { CartItem } from "@/src/lib/interface";
 import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
@@ -37,10 +41,13 @@ const CheckoutPage = () => {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loading, setLoading] = useState(false);
+  const [promo, setPromo] = useState<any>(null);
 
   const {
     state: { cart },
   }: any = useContext(UserContext);
+
+  const coupon = router.query.coupon as string | undefined;
   const validate = () => {
     const newErrors: Partial<FormData> = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -101,12 +108,14 @@ const CheckoutPage = () => {
       const payload: {
         productData: { productId: string; quantity: number }[];
         shippingFormData: FormData;
+        promoCode?: string;
       } = {
         productData: cart.map((item: CartItem) => ({
           productId: item?.productId,
           quantity: item.quantity,
         })),
         shippingFormData: checkoutFormData,
+        promoCode: coupon || undefined,
       };
       const response = await createOrder(payload);
       console.log(response, "?");
@@ -159,7 +168,31 @@ const CheckoutPage = () => {
     : 0;
 
   const discount = orginalPriceTotal - subTotal; // Example: 0% discount
-  const total = subTotal + shipping;
+  const total = subTotal + shipping - (promo?.promo?.discountApplied || 0);
+console.log(coupon, "coupon");
+  const applyCoupon = async (cards: any) => {
+    try {
+      if (!coupon) return;
+      const response = await applyPromoCode({
+        promoCode: coupon,
+        productData: cards.map((item: CartItem) => ({
+          productId: item?.productId,
+          quantity: item.quantity,
+        })),
+      },  false);
+      if (response) {
+        setPromo(response);
+      }
+    } catch (err) {
+      console.error("Error applying coupon:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      applyCoupon(cart);
+    }
+  }, [cart, coupon]);
   return (
     <div className="max-w-[1300px] mx-auto flex p-6 lg:gap-40 md:gap-14 lg:flex-row md:flex-row sm:flex-col-reverse xs:flex-col-reverse md:mb-20">
       <div className="lg:w-[64%] sm:w-full ">
@@ -436,12 +469,17 @@ const CheckoutPage = () => {
             <span className=" text-[14px]">-₹{discount.toFixed(2)}</span>
           </div>
 
-          {/* <div className="flex justify-between">
-              <span className=" text-[#7F7F7F]">GST 18%</span>
-              <span className=" text-[14px]">₹{gst.toFixed(2)}</span>
-            </div> */}
+          {promo?.promo && <div className="flex justify-between text-sm sm:text-base">
+                  <span>
+                    <p className=" text-[#7F7F7F]">Coupon Applied</p>
+                    <p className=" text-[#7F7F7F] text-xs">
+                      ( {promo?.promo?.code} )
+                    </p>
+                  </span>
+                  <p>- ₹{promo?.promo?.discountApplied}</p>
+                </div>}
         </div>
-        <div className=" mt-4 pt-4">
+        <div className=" mt-4">
           <div className="flex justify-between text-lg font-semibold">
             <span className=" text-[#7F7F7F]">Total</span>
             <span className="">₹{total.toFixed(2)}</span>
