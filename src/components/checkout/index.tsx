@@ -179,7 +179,10 @@ const CheckoutPage = () => {
 
   const applyCoupon = async (cards: any) => {
     try {
-      if (!coupon) return;
+      if (!coupon) {
+        setPromo(null);
+        return;
+      }
       const response = await applyPromoCode({
         promoCode: coupon,
         productData: cards.map((item: CartItem) => ({
@@ -189,6 +192,9 @@ const CheckoutPage = () => {
       },  false);
       if (response) {
         setPromo(response);
+      }
+      else {
+        setPromo(null);
       }
     } catch (err) {
       console.error("Error applying coupon:", err);
