@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 import { getAccessToken } from "../helpers/localStorage";
+import { safeToast } from "../utils/utils";
+import axios from "axios";
 
 interface CheckoutFormData {
   firstName: string;
@@ -12,6 +14,13 @@ interface CheckoutFormData {
   state: string;
   zipcode: string;
   country: string;
+}
+
+interface PromoDetails {
+  promo: {
+    code: string;
+    discountApplied: number;
+  };
 }
 
 export const CheckoutApi = async (data: {
@@ -31,6 +40,7 @@ export const CheckoutApi = async (data: {
 export const createOrder = async (data: {
   productData: { productId: string; quantity: number }[];
   shippingFormData: CheckoutFormData;
+  promoCode?: string;
 }) => {
   try {
     const token = getAccessToken();
@@ -64,6 +74,44 @@ export const initiatePayment = async (data: {
     }
   } catch (error) {
     console.error("Error fetching data:", error);
+  }
+};
+
+export const applyPromoCode = async (
+  data: {
+    promoCode: string;
+    productData: { productId: string; quantity: number }[];
+  },
+  showToast: boolean = true
+): Promise<PromoDetails | null> => {
+  try {
+    const token = getAccessToken();
+    const response = await axiosInstance.post("/order/applyPromo", data, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    if (!response?.data?.success) {
+      if (showToast) {
+        safeToast.error(response?.data?.message || "Something went wrong");
+      }
+      return null;
+    }
+    if (showToast) {
+      safeToast.success("Promo code applied successfully");
+    }
+    return response?.data?.data;
+  } catch (error) {
+    const errMsg = axios.isAxiosError(error)
+      ? error.response?.data?.data?.message ||
+        error.response?.data?.message ||
+        error.message
+      : "Something went wrong";
+
+    if (showToast) {
+      safeToast.error(errMsg);
+    }
+    return null;
   }
 };
 
@@ -134,7 +182,10 @@ export const getOrderDetailsService = async (orderId: number) => {
 
     return response.data;
   } catch (err: any) {
-    console.error("Error fetching order details:", err.response?.data || err.message);
-    toast.error(err.response?.data?.message  || "Something went wrong")
+    console.error(
+      "Error fetching order details:",
+      err.response?.data || err.message
+    );
+    toast.error(err.response?.data?.message || "Something went wrong");
   }
 };

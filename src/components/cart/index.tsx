@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { getAccessToken, getCart, setCart } from "../../helpers/localStorage";
@@ -8,21 +8,30 @@ import { CartItem } from "@/src/lib/interface";
 import { fetchAllDevices } from "@/src/services/alldevicesApi";
 import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
-import { Minus,Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
+import { applyPromoCode } from "@/src/services/chechout";
+
+interface PromoDetails{
+  promo: {
+    code: string;
+    discountApplied: number;
+  }
+}
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
   const router = useRouter();
 
   const { state, dispatch }: any = useContext(UserContext);
+  const [coupon, setCoupon] = useState<string>("");
+  const [couponApplied, setCouponApplied] = useState<boolean>(false);
+  const [promo, setPromo] = useState<PromoDetails | null>(null);
 
   const { cart: cards } = state;
 
   const handleBuyNow = () => {
-    console.log(isEmpty(cards),"?",cards);
-    
     if (!isEmpty(cards)) {
-      router.push("/checkout");
+      router.push(`/checkout${coupon ? `?coupon=${coupon}` : ""}`);
     }
   };
 
@@ -63,22 +72,25 @@ const Cart = () => {
   }, []);
 
   const handleIncrease = (productId: string) => {
-  const updatedCards = !isEmpty(cards)
-    ? cards.map((card: any) => {
-        if (card.productId === productId) {
-          return {
-            ...card,
-            quantity: card.quantity < 100 ? card.quantity + 1 : 10,
-          };
-        }
-        return card;
-      })
-    : [];
-  dispatch({ type: CART, payload: updatedCards });
-  if (typeof window !== "undefined") {
-    setCart(JSON.stringify(updatedCards));
-  }
-};
+    const updatedCards = !isEmpty(cards)
+      ? cards.map((card: any) => {
+          if (card.productId === productId) {
+            return {
+              ...card,
+              quantity: card.quantity < 100 ? card.quantity + 1 : 10,
+            };
+          }
+          return card;
+        })
+      : [];
+    dispatch({ type: CART, payload: updatedCards });
+    if (typeof window !== "undefined") {
+      setCart(JSON.stringify(updatedCards));
+    }
+    if(couponApplied){
+      applyCoupon(updatedCards);
+    }
+  };
 
   const handleDecrease = (productId: string) => {
     const updatedCards = !isEmpty(cards)
@@ -98,6 +110,9 @@ const Cart = () => {
     dispatch({ type: CART, payload: updatedCards });
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
+    }
+    if(couponApplied){
+      applyCoupon(updatedCards);
     }
   };
 
@@ -123,9 +138,40 @@ const Cart = () => {
         0
       )
     : 0;
-    const discount = orginalPriceTotal - subTotal;
+  const discount = orginalPriceTotal - subTotal;
   const shipping = 0; // Example fixed shipping cost
-  const total = subTotal + shipping;
+  const total = subTotal + shipping - (promo?.promo?.discountApplied || 0);
+
+  const applyCoupon = async (cards: any) => {
+    try {
+      if(!coupon) {
+        removeCoupon();
+        return;
+      }
+      const response = await applyPromoCode({
+        promoCode: coupon,
+        productData: cards.map((item: CartItem) => ({
+          productId: item?.productId,
+          quantity: item.quantity,
+        })),
+      });
+      if (response) {
+        setCouponApplied(true);
+        setPromo(response);
+      }
+      else {
+        removeCoupon();
+      }
+    } catch (err) {
+      console.error("Error applying coupon:", err);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCoupon("");
+    setCouponApplied(false);
+    setPromo(null);
+  };
 
   return (
     <div className="max-w-[1300px] mx-auto min-h-[70vh] pt-[50px] md:pt-[100px] mb-4 p-6">
@@ -149,10 +195,13 @@ const Cart = () => {
                   originalPrice,
                   name,
                   deviceType,
-                  discountPercentage
+                  discountPercentage,
                 } = value;
                 return (
-                  <div key={productId} className="flex w-full items-center gap-6">
+                  <div
+                    key={productId}
+                    className="flex w-full items-center gap-6"
+                  >
                     <button
                       onClick={() => router.push(`/product/${productId}`)}
                       className="rounded-[8px] w-[90px] h-[75px] shrink-0 flex items-center justify-center  box-border bg-[#E5E5E5]"
@@ -174,7 +223,7 @@ const Cart = () => {
                             ₹{quantity * originalPrice}
                           </p>
                         )}
-                        
+
                         {Number(discountPercentage) > 0 && (
                           <p className="text-[#9747FF] text-sm">
                             {Number(discountPercentage).toFixed(2)}% off
@@ -182,8 +231,8 @@ const Cart = () => {
                         )}
                       </div>
                       <p className="font-bold text-nowrap leading-[20px]">
-                          ₹{quantity * sellingPrice}/-
-                        </p>
+                        ₹{quantity * sellingPrice}/-
+                      </p>
                       <div className="flex gap-6 mt-2">
                         <div className="flex rounded-[8px] items-center border border-black gap-x-4 h-fit px-2 text-sm">
                           <button
@@ -223,9 +272,25 @@ const Cart = () => {
               <input
                 type="text"
                 placeholder="Discount code"
+                value={coupon}
+                onChange={(e) => setCoupon(e?.target?.value ? e.target.value.toUpperCase() : "")}
                 className="w-full bg-transparent outline-none placeholder-gray-400 text-[#ACACAC] "
               />
-              <button className=" text-purple-600 font-[500] ">Apply</button>
+              {couponApplied ? (
+                <button
+                  className=" text-purple-600 font-[500]"
+                  onClick={removeCoupon}
+                >
+                  Remove
+                </button>
+              ) : (
+                <button
+                  className=" text-purple-600 font-[500]"
+                  onClick={() => applyCoupon(cards)}
+                >
+                  Apply
+                </button>
+              )}
             </div>
             <div className="space-y-4">
               <div className="flex justify-between text-sm sm:text-base">
@@ -242,6 +307,17 @@ const Cart = () => {
                 <p className=" text-[#7F7F7F]">Discount</p>
                 <p> ₹{discount.toFixed(2)}</p>
               </div>
+              {couponApplied && (
+                <div className="flex justify-between text-sm sm:text-base">
+                  <span>
+                    <p className=" text-[#7F7F7F]">Coupon Applied</p>
+                    <p className=" text-[#7F7F7F] text-xs">
+                      ( {promo?.promo?.code} )
+                    </p>
+                  </span>
+                  <p>- ₹{promo?.promo?.discountApplied}</p>
+                </div>
+              )}
               <div className="flex justify-between font-semibold text-sm sm:text-base">
                 <p>
                   Total <br />
