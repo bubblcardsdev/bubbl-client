@@ -145,8 +145,7 @@ const Cart = () => {
   const applyCoupon = async (cards: any) => {
     try {
       if(!coupon) {
-        setCouponApplied(false);
-        setPromo(null);
+        removeCoupon();
         return;
       }
       const response = await applyPromoCode({
@@ -161,8 +160,7 @@ const Cart = () => {
         setPromo(response);
       }
       else {
-        setCouponApplied(false);
-        setPromo(null);
+        removeCoupon();
       }
     } catch (err) {
       console.error("Error applying coupon:", err);
