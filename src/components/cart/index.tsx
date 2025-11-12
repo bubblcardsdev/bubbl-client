@@ -273,7 +273,7 @@ const Cart = () => {
                 type="text"
                 placeholder="Discount code"
                 value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
+                onChange={(e) => setCoupon(e?.target?.value ? e.target.value.toUpperCase() : "")}
                 className="w-full bg-transparent outline-none placeholder-gray-400 text-[#ACACAC] "
               />
               {couponApplied ? (
