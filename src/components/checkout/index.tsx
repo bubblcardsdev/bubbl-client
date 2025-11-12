@@ -13,6 +13,13 @@ import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
 import { UserContext } from "@/src/context/userContext";
 import { getToken } from "@/src/utils/utils";
+
+interface PromoDetails {
+  promo: {
+    code: string;
+    discountApplied: number;
+  };
+}
 interface FormData {
   firstName: string;
   lastName: string;
@@ -41,7 +48,7 @@ const CheckoutPage = () => {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loading, setLoading] = useState(false);
-  const [promo, setPromo] = useState<any>(null);
+  const [promo, setPromo] = useState<PromoDetails | null>(null);
 
   const {
     state: { cart },
@@ -118,7 +125,7 @@ const CheckoutPage = () => {
         promoCode: coupon || undefined,
       };
       const response = await createOrder(payload);
-      console.log(response, "?");
+     
       setOrder(response);
     } catch (err) {
       console.log(err);
@@ -169,7 +176,7 @@ const CheckoutPage = () => {
 
   const discount = orginalPriceTotal - subTotal; // Example: 0% discount
   const total = subTotal + shipping - (promo?.promo?.discountApplied || 0);
-console.log(coupon, "coupon");
+
   const applyCoupon = async (cards: any) => {
     try {
       if (!coupon) return;

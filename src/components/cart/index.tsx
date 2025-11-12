@@ -10,7 +10,13 @@ import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
 import { Minus, Plus } from "lucide-react";
 import { applyPromoCode } from "@/src/services/chechout";
-import { toast } from "react-toastify";
+
+interface PromoDetails{
+  promo: {
+    code: string;
+    discountApplied: number;
+  }
+}
 
 const Cart = () => {
   // const [hoverImage, setHoverImage] = useState<any>("");
@@ -19,13 +25,11 @@ const Cart = () => {
   const { state, dispatch }: any = useContext(UserContext);
   const [coupon, setCoupon] = useState<string>("");
   const [couponApplied, setCouponApplied] = useState<boolean>(false);
-  const [promo, setPromo] = useState<any>(null);
+  const [promo, setPromo] = useState<PromoDetails | null>(null);
 
   const { cart: cards } = state;
 
   const handleBuyNow = () => {
-    console.log(isEmpty(cards), "?", cards);
-
     if (!isEmpty(cards)) {
       router.push(`/checkout${coupon ? `?coupon=${coupon}` : ""}`);
     }
@@ -140,7 +144,7 @@ const Cart = () => {
 
   const applyCoupon = async (cards: any) => {
     try {
-      if(!coupon) return toast.error("Please enter your code.")
+      if(!coupon) return;
       const response = await applyPromoCode({
         promoCode: coupon,
         productData: cards.map((item: CartItem) => ({

@@ -16,6 +16,13 @@ interface CheckoutFormData {
   country: string;
 }
 
+interface PromoDetails {
+  promo: {
+    code: string;
+    discountApplied: number;
+  };
+}
+
 export const CheckoutApi = async (data: {
   productData: { productId: string; quantity: number }[];
   shippingFormData: CheckoutFormData;
@@ -75,8 +82,8 @@ export const applyPromoCode = async (
     promoCode: string;
     productData: { productId: string; quantity: number }[];
   },
-  toast: boolean = true
-) => {
+  showToast: boolean = true
+): Promise<PromoDetails | null> => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.post("/order/applyPromo", data, {
@@ -85,12 +92,12 @@ export const applyPromoCode = async (
       },
     });
     if (!response?.data?.success) {
-      if (toast) {
+      if (showToast) {
         safeToast.error(response?.data?.message || "Something went wrong");
       }
       return null;
     }
-    if (toast) {
+    if (showToast) {
       safeToast.success("Promo code applied successfully");
     }
     return response?.data?.data;
@@ -101,7 +108,7 @@ export const applyPromoCode = async (
         error.message
       : "Something went wrong";
 
-    if (toast) {
+    if (showToast) {
       safeToast.error(errMsg);
     }
     return null;
