@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 import {
   getLinkedDevices,
   switchMode,
@@ -130,6 +130,7 @@ export default function DeviceCards() {
 
   return (
     <div className="text-white mt-4">
+      <ToastContainer />
       {loading && (
         <MonoColorLoader message="Loading ..." size={100} color="#b97cff" />
       )}
@@ -138,6 +139,7 @@ export default function DeviceCards() {
           visible={show}
           onHide={() => setShow(false)}
           profiles={profiles}
+          refetch={getMydevices}
         />
       )}
       <div className="flex gap-3 justify-between mb-2 sm:pr-8">

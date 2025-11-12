@@ -11,7 +11,8 @@ import { useRouter } from "next/router";
 interface Props {
   visible: boolean;
   onHide: () => void;
-  profiles: any[];
+  profiles: DropdownOption[];
+  refetch: () => void; 
 }
 
 const CreateNewDevice = (props: Props) => {
@@ -39,6 +40,7 @@ const CreateNewDevice = (props: Props) => {
         toast.success("Device Linked Successfully");
         router.push("/mydevice");
         onHide();
+        props.refetch();
       }
       
     } catch (e) {
