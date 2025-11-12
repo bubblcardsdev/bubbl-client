@@ -20,7 +20,7 @@ const LivePreview = ({
     ruby: FreeTemplateRuby,
     saphire: ProTemplateSaphire,
     quartz: ProTemplateQuartz,
-    neno: ProTemplateNeno,
+    neon: ProTemplateNeno,
   };
   const Component = templates?.[currentTemplate?.value];
   const contact = {
