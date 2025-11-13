@@ -133,6 +133,7 @@ const Analytics = () => {
         }
       } catch (error) {
         console.error("Error fetching tap data:", error);
+        setChartOptions(false);
         setTotalTaps(0);
       }
     };
