@@ -88,13 +88,14 @@ const Analytics = () => {
               (item) => item?.day || item?.date || item?.month
             );
             const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
+            console.log(labels,values);
 
             setChartData({
-              labels,
+              labels: [],
               datasets: [
                 {
                   label: "No of taps",
-                  data: [...values],
+                  data: [],
                   borderColor: "#8B5CF6",
                   backgroundColor: "#8B5CF6",
                   tension: 0.4,
