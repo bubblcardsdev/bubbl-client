@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { GetTapsData } from "../../../services/analyticsApi";
+import { data } from "framer-motion/client";
 
 ChartJS.register(
   LineElement,
@@ -88,14 +89,14 @@ const Analytics = () => {
               (item) => item?.day || item?.date || item?.month
             );
             const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
-            console.log(labels,values);
+            console.log(labels, values);
 
             setChartData({
-              labels: [],
+              labels: [...labels],
               datasets: [
                 {
                   label: "No of taps",
-                  data: [],
+                  data: [...values],
                   borderColor: "#8B5CF6",
                   backgroundColor: "#8B5CF6",
                   tension: 0.4,
@@ -156,8 +157,8 @@ const Analytics = () => {
                   key={item}
                   onClick={() => setRange(item)}
                   className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${item === range
-                      ? "bg-purple-600 text-white"
-                      : "bg-[#4F4F4F] text-gray-300"
+                    ? "bg-purple-600 text-white"
+                    : "bg-[#4F4F4F] text-gray-300"
                     }`}
                 >
                   {item}
