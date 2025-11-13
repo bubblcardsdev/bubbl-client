@@ -36,7 +36,7 @@ const Analytics = () => {
         pointHoverBorderColor: "#8B5CF6",
         pointRadius: 4,
         pointHoverRadius: 6,
-        spanGaps: false,
+        spanGaps: true,
       },
     ],
   });
