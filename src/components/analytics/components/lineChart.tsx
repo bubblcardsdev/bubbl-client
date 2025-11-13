@@ -20,7 +20,33 @@ ChartJS.register(
 );
 
 const Analytics = () => {
-  const [chartData, setChartData] = useState<any>(null);
+  const [chartData, setChartData] = useState<any>({
+    labels: [],
+    datasets: [
+      {
+        label: "No of taps",
+        data: [],
+        borderColor: "#8B5CF6",
+        backgroundColor: "#8B5CF6",
+        tension: 0.4,
+        pointBorderColor: "#fff",
+        pointBackgroundColor: "#8B5CF6",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "#8B5CF6",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        spanGaps: false,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      },
+    ],
+  });
+  const [chartOptions, setChartOptions] = useState<boolean>(false);
   const [totalTaps, setTotalTaps] = useState(0);
   const [range, setRange] = useState("Yearly"); // default filter
 
@@ -79,7 +105,7 @@ const Analytics = () => {
               datasets: [
                 {
                   label: "No of taps",
-                  data: values,
+                  data: [...values],
                   borderColor: "#8B5CF6",
                   backgroundColor: "#8B5CF6",
                   tension: 0.4,
@@ -100,15 +126,13 @@ const Analytics = () => {
                 },
               ],
             });
-          } else {
-            setChartData(null);
+            setChartOptions(true);
           }
 
           setTotalTaps(response.totalTaps || 0);
         }
       } catch (error) {
         console.error("Error fetching tap data:", error);
-        setChartData(null);
         setTotalTaps(0);
       }
     };
@@ -161,7 +185,7 @@ const Analytics = () => {
 
           {/* Chart */}
           <div className="w-full h-[200px] sm:h-[260px] md:h-[300px] lg:h-[360px]">
-            {chartData ? (
+            {chartOptions ? (
               <Line data={chartData} options={options} />
             ) : (
               <div className="flex justify-center items-center h-full text-white text-xl">
