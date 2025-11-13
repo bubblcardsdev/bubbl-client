@@ -97,7 +97,7 @@ const templates = [
   { label: "Ruby", value: "ruby", image: "/ruby.png" },
   { label: "Saphire", value: "saphire", image: "/saphire.png" },
   { label: "Quartz", value: "quartz", image: "/quartz.png" },
-  { label: "Neno", value: "neno", image: "/neno.png" },
+  { label: "Neon", value: "neon", image: "/neno.png" },
 ];
 
 // initial (API-shaped) form data used to merge loaded data and to keep defaults
