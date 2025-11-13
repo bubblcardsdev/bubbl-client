@@ -84,10 +84,11 @@ const Analytics = () => {
           else if (range === "Yearly") dataArray = response.year || [];
 
           if (dataArray.length > 0) {
-            // const labels = dataArray.map(
-            //   (item) => item?.day || item?.date || item?.month
-            // );
-            // const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
+            const labels = dataArray.map(
+              (item) => item?.day || item?.date || item?.month
+            );
+            const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
+            console.log(labels,values);
 
             setChartData({
               labels: [],
