@@ -218,17 +218,24 @@ import {
 } from "chart.js";
 import { GetTapsData } from "../../../services/analyticsApi";
 
-// ✅ Register ChartJS elements once globally
-ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Title, Filler);
-
-type RangeType = "Weekly" | "Monthly" | "Yearly";
+// ✅ Register Chart.js modules once
+ChartJS.register(
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+  Filler
+);
 
 const Analytics: React.FC = () => {
   const [rawData, setRawData] = useState<any[]>([]);
   const [totalTaps, setTotalTaps] = useState<number>(0);
-  const [range, setRange] = useState<RangeType>("Yearly");
+  const [range, setRange] = useState<"Weekly" | "Monthly" | "Yearly">("Yearly");
 
-  // ✅ Fetch tap data
+  // ✅ Fetch analytics data
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
@@ -263,11 +270,12 @@ const Analytics: React.FC = () => {
     };
   }, [range]);
 
-  // ✅ Prepare chart data
+  // ✅ Memoized chart data
   const chartData = useMemo(() => {
-    const labels = rawData.map((item) => item?.day ?? item?.date ?? item?.month ?? "");
-    const values = rawData.map((item) => Number(item?.totalTaps ?? 0));
-
+    const labels = rawData.map(
+      (item: any) => item?.day ?? item?.date ?? item?.month ?? ""
+    );
+    const values = rawData.map((item: any) => Number(item?.totalTaps ?? 0));
     return {
       labels,
       datasets: [
@@ -290,7 +298,7 @@ const Analytics: React.FC = () => {
     };
   }, [rawData]);
 
-  // ✅ Strongly typed Chart.js options (fixes TS error)
+  // ✅ Fixed Chart.js options typing
   const options: ChartOptions<"line"> = useMemo(
     () => ({
       responsive: true,
@@ -315,8 +323,8 @@ const Analytics: React.FC = () => {
             color: "#aaa",
             font: { size: 10 },
             stepSize: 1,
-            // ✅ Fixed type-safe callback
-            callback: (value: string | number) => `${value}`,
+            // ✅ Explicitly return string or number
+            callback: (value: string | number) => String(value),
           },
           grid: { color: "rgba(255,255,255,0.06)" },
         },
@@ -333,9 +341,12 @@ const Analytics: React.FC = () => {
   return (
     <div className="w-full flex justify-center px-2 sm:px-4 lg:px-0">
       <div className="w-full rounded-2xl p-3 sm:p-4 md:p-6 text-white">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">Analytics Free</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
+              Analytics Free
+            </h2>
             <p className="text-gray-400 text-xs sm:text-sm md:text-base mt-1 leading-relaxed">
               Real time insights across all bubbl devices. Track your networking
               efforts with easy to use, Click-Level Analytics.
@@ -345,20 +356,26 @@ const Analytics: React.FC = () => {
           </div>
         </div>
 
+        {/* Card */}
         <div className="bg-[#282828] rounded-2xl p-3 sm:p-5">
-          <div className="flex flex-row sm:justify-between sm:items-center mb-6 gap-4">
-            <div className="text-center sm:text-left">
+          <div className="flex flex-row sm:flex-row sm:justify-between xs:justify-between sm:items-center mb-6 gap-4">
+            <div className="text-center sm:text-left lg:m-[10px_0_10px_0]">
               <p className="text-gray-400 text-sm mb-2">No of taps</p>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">{totalTaps}</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">
+                {totalTaps}
+              </h3>
             </div>
-
             <div className="flex flex-wrap justify-center sm:justify-end gap-2 text-sm">
-              {(["Weekly", "Monthly", "Yearly"] as RangeType[]).map((item) => (
+              {["Weekly", "Monthly", "Yearly"].map((item) => (
                 <button
                   key={item}
-                  onClick={() => setRange(item)}
+                  onClick={() =>
+                    setRange(item as "Weekly" | "Monthly" | "Yearly")
+                  }
                   className={`px-3 py-1 rounded-lg transition-colors ${
-                    item === range ? "bg-purple-600 text-white" : "bg-[#4F4F4F] text-gray-300"
+                    item === range
+                      ? "bg-purple-600 text-white"
+                      : "bg-[#4F4F4F] text-gray-300"
                   }`}
                 >
                   {item}
@@ -367,6 +384,7 @@ const Analytics: React.FC = () => {
             </div>
           </div>
 
+          {/* Chart */}
           <div className="w-full h-[200px] sm:h-[260px] md:h-[300px] lg:h-[360px]">
             {hasData ? (
               <Line data={chartData} options={options} />
@@ -381,5 +399,4 @@ const Analytics: React.FC = () => {
     </div>
   );
 };
-
 export default Analytics;
