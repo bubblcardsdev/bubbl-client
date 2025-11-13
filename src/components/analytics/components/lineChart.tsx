@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { GetTapsData } from "../../../services/analyticsApi";
-import { data } from "framer-motion/client";
+
 
 ChartJS.register(
   LineElement,
