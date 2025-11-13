@@ -87,12 +87,8 @@ const Analytics = () => {
             const labels = dataArray.map(
               (item) => item?.day || item?.date || item?.month
             );
-            const values = dataArray.map((item) => {
-              if (!item?.totalTaps) {
-                item.totalTaps = 0;
-              }
-              return item?.totalTaps;
-            });
+            const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
+            console.log(values, "lineChart");
             setChartData({
               labels,
               datasets: [
@@ -108,7 +104,7 @@ const Analytics = () => {
                   pointHoverBorderColor: "#8B5CF6",
                   pointRadius: 4,
                   pointHoverRadius: 6,
-                  spanGaps: false,
+                  spanGaps: true,
                 },
               ],
             });
@@ -158,11 +154,10 @@ const Analytics = () => {
                 <button
                   key={item}
                   onClick={() => setRange(item)}
-                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${
-                    item === range
+                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${item === range
                       ? "bg-purple-600 text-white"
                       : "bg-[#4F4F4F] text-gray-300"
-                  }`}
+                    }`}
                 >
                   {item}
                 </button>
