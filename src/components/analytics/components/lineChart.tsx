@@ -36,13 +36,6 @@ const Analytics = () => {
         pointRadius: 4,
         pointHoverRadius: 6,
         spanGaps: false,
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
       },
     ],
   });
@@ -116,13 +109,6 @@ const Analytics = () => {
                   pointRadius: 4,
                   pointHoverRadius: 6,
                   spanGaps: false,
-                  options: {
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                      },
-                    },
-                  },
                 },
               ],
             });
