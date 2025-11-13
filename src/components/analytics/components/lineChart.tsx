@@ -54,93 +54,34 @@ const Analytics = () => {
     },
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await GetTapsData(range);
-  //       if (response?.success) {
-  //         let dataArray: any[] = []
-
-  //         if (range === "Weekly") dataArray = response.week || [];
-  //         else if (range === "Monthly") dataArray = response.month || [];
-  //         else if (range === "Yearly") dataArray = response.year || [];
-
-  //         if (dataArray.length > 0) {
-  //           const labels = dataArray.map(
-  //             (item) => item?.day || item?.date || item?.month
-  //           );
-  //           const values = dataArray.map((item) => item?.totalTaps ?? null);
-
-  //           setChartData({
-  //             labels,
-  //             datasets: [
-  //               {
-  //                 label: "No of taps",
-  //                 data: values,
-  //                 borderColor: "#8B5CF6",
-  //                 backgroundColor: "#8B5CF6",
-  //                 tension: 0.4,
-  //                 pointBorderColor: "#fff",
-  //                 pointBackgroundColor: "#8B5CF6",
-  //                 pointHoverBackgroundColor: "#fff",
-  //                 pointHoverBorderColor: "#8B5CF6",
-  //                 pointRadius: 4,
-  //                 pointHoverRadius: 6,
-  //                 spanGaps:false,
-  //                 options: {
-  //                   scales: {
-  //                     y: {
-  //                       beginAtZero: true,
-  //                     },
-  //                   },
-  //                 },
-  //               },
-  //             ],
-  //           });
-  //         } else {
-  //           setChartData(null);
-  //         }
-
-  //         setTotalTaps(response.totalTaps || 0);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching tap data:", error);
-  //       setChartData(null);
-  //       setTotalTaps(0);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [range]);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await GetTapsData(range);
-
         if (response?.success) {
           let dataArray: any[] = [];
-
           if (range === "Weekly") dataArray = response.week || [];
           else if (range === "Monthly") dataArray = response.month || [];
           else if (range === "Yearly") dataArray = response.year || [];
 
-          // ✅ Filter out invalid entries
-          const validData = dataArray.filter((d) => d && d.totalTaps !== null);
-
-          if (validData.length > 0) {
-            const labels = validData.map(
-              (item) => item.day || item.date || item.month
+          if (dataArray.length > 0) {
+            const labels = dataArray.map(
+              (item) => item?.day || item?.date || item?.month
             );
-            const values = validData.map((item) => item.totalTaps ?? 0);
-
+            const values = dataArray.map((item) => {
+              if (!item?.totalTaps) {
+                item.totalTaps = 0;
+              }
+              return item?.totalTaps;
+            });
             setChartData({
               labels,
               datasets: [
                 {
-                  label: "No of Taps",
+                  label: "No of taps",
                   data: values,
                   borderColor: "#8B5CF6",
-                  backgroundColor: "rgba(139,92,246,0.2)",
+                  backgroundColor: "#8B5CF6",
                   tension: 0.4,
                   pointBorderColor: "#fff",
                   pointBackgroundColor: "#8B5CF6",
@@ -148,7 +89,14 @@ const Analytics = () => {
                   pointHoverBorderColor: "#8B5CF6",
                   pointRadius: 4,
                   pointHoverRadius: 6,
-                  spanGaps: true, // ✅ allow chart to skip nulls
+                  spanGaps: false,
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                      },
+                    },
+                  },
                 },
               ],
             });
@@ -157,9 +105,6 @@ const Analytics = () => {
           }
 
           setTotalTaps(response.totalTaps || 0);
-        } else {
-          setChartData(null);
-          setTotalTaps(0);
         }
       } catch (error) {
         console.error("Error fetching tap data:", error);
@@ -170,6 +115,7 @@ const Analytics = () => {
 
     fetchData();
   }, [range]);
+
   return (
     <div className="w-full flex justify-center px-2 sm:px-4 lg:px-0">
       <div className="w-full rounded-2xl p-3 sm:p-4 md:p-6 text-white">
