@@ -108,15 +108,9 @@ const Analytics = () => {
                   pointRadius: 4,
                   pointHoverRadius: 6,
                   spanGaps: false,
-                  options: {
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                      },
-                    },
-                  },
                 },
               ],
+
             });
             setLineChartData(true);
           }
@@ -163,11 +157,10 @@ const Analytics = () => {
                 <button
                   key={item}
                   onClick={() => setRange(item)}
-                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${
-                    item === range
-                      ? "bg-purple-600 text-white"
-                      : "bg-[#4F4F4F] text-gray-300"
-                  }`}
+                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${item === range
+                    ? "bg-purple-600 text-white"
+                    : "bg-[#4F4F4F] text-gray-300"
+                    }`}
                 >
                   {item}
                 </button>
