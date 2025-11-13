@@ -1,11 +1,11 @@
 import React from 'react'
 import  LineChart  from './components/lineChart'
-import DonutChart from './components/donutChart'
+// import DonutChart from './components/donutChart'
 const AnalyticsPage = () => {
   return (
     <div>
       <LineChart/>
-      <DonutChart/>
+      {/* <DonutChart/> */}
     </div>
   )
 }
