@@ -88,7 +88,7 @@ const Analytics = () => {
               (item) => item?.day || item?.date || item?.month
             );
             const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
-            console.log(values, "lineChart");
+
             setChartData({
               labels,
               datasets: [
