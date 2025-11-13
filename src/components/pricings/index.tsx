@@ -8,7 +8,7 @@ export default function Pricings() {
     "monthly"
   );
   const { state }: any = useContext(UserContext);
-  const { planId } = state;
+   const planId = state?.plan?.data?.planId ?? 1
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     const fetchPlans = async () => {
