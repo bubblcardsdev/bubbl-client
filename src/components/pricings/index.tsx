@@ -8,7 +8,9 @@ export default function Pricings() {
     "monthly"
   );
   const { state }: any = useContext(UserContext);
-   const planId = state?.plan?.data?.planId ?? 1
+  console.log(state,"?");
+  
+   const planId = state?.planId?.data?.planId ?? 1
   const [plans, setPlans] = useState([]);
   useEffect(() => {
     const fetchPlans = async () => {
@@ -120,14 +122,20 @@ export default function Pricings() {
                       </button>
                     ) : isFreePlan ? null : isZeroPrice ? (
                       <button
-                        onClick={() =>
-                          (window.location.href =
-                            "mailto:support@bubbl.cards?subject=Plan%20Inquiry&body=Hi%2C%20I%27m%20interested%20in%20upgrading%20my%20plan.")
-                        }
-                        className=" w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-zinc-200 mt-[10px]"
-                      >
-                        Contact us
-                      </button>
+  onClick={() => {
+    const subject = encodeURIComponent("Plan Inquiry");
+    const body = encodeURIComponent(
+      "Hi,\n\nI'm interested in upgrading my plan to teams.\n\nPlease share more details.\n\nThanks!"
+    );
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=support@bubbl.cards&su=${subject}&body=${body}`,
+      "_blank"
+    );
+  }}
+  className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-zinc-200 mt-[10px]"
+>
+  Contact us
+</button>
                     ) : (
                       <button className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-zinc-200 mt-[10px] ">
                         Upgrade Now
