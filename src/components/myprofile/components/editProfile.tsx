@@ -97,7 +97,7 @@ const templates = [
   { label: "Ruby", value: "ruby", image: "/ruby.png" },
   { label: "Saphire", value: "saphire", image: "/saphire.png" },
   { label: "Quartz", value: "quartz", image: "/quartz.png" },
-  { label: "Neno", value: "neno", image: "/neno.png" },
+  { label: "Neon", value: "neon", image: "/neno.png" },
 ];
 
 // initial (API-shaped) form data used to merge loaded data and to keep defaults
@@ -504,7 +504,7 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
     try {
       const isValid = validateForm();
       if (!isValid) {
-        // toast.error("Please fix the validation errors before saving!");
+        toast.error("Please fix the validation errors before saving!");
         return;
       }
       const isCreate = router.pathname === "/createNewProfile";
@@ -603,7 +603,6 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
         // if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
 
         await fetchProfiles();
-        toast.success("Profile updated successfully!");
         console.log("Update response:", response);
       } else {
         // ---- Create ----

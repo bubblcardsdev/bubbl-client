@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import axiosInstance from "../helpers/axios";
 import { authHeader, getApiErrorMessage, safeToast } from "../utils/utils";
 
@@ -43,13 +44,13 @@ export const switchProfile = async (data: SwitchProfileRequest) => {
     const response = await axiosInstance.post("/device/switchProfile", data, {
       headers: authHeader(),
     });
-
     if (!response?.data?.success) {
       // Backend responded but not successful
       safeToast.warning("Something went wrong");
       console.warn("[switchProfile] Something went wrong");
       return false;
     }
+    toast.success(response?.data?.message || "Profile switched successfully")
 
     return response?.data?.success || false;
   } catch (error: any) {
@@ -197,7 +198,7 @@ export const reNameDevice = async (
       console.warn("[removeDevice] Something went wrong");
       return false;
     }
-
+    toast.success(response?.data?.message || "Device name updated successfully")
     return response?.data?.success || false;
   } catch (error: any) {
     const message = getApiErrorMessage(error);
