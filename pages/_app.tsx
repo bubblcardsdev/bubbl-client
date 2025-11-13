@@ -43,7 +43,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       }
       getUserPlanDetails();
     }
-  }, []);
+  }, [router.pathname]);
 
   async function getUserPlanDetails() {
     try {

@@ -20,7 +20,6 @@ const PricingTable = () => {
 
   const isLoader = plans?.length <= 0;
 
-
   return (
  <div>
   {isLoader ? (
