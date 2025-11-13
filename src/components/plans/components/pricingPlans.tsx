@@ -20,22 +20,6 @@ const PricingTable = () => {
 
   const isLoader = plans?.length <= 0;
 
-  // 📧 Opens Gmail compose window directly
-  // const handleContactUs = () => {
-  //   const subject = encodeURIComponent("Plan Inquiry");
-  //   const body = encodeURIComponent(
-  //     "Hi,\n\nI'm interested in upgrading my plan.\n\nPlease share more details.\n\nThanks!"
-  //   );
-  //   window.open(
-  //     `https://mail.google.com/mail/?view=cm&fs=1&to=support@bubbl.cards&su=${subject}&body=${body}`,
-  //     "_blank"
-  //   );
-  // };
-
-  // const handleUpgrade = (planName: string) => {
-  //   console.log(`Upgrade clicked for ${planName}`);
-  //   // Later: router.push('/upgrade')
-  // };
 
   return (
  <div>
