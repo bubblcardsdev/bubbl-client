@@ -22,47 +22,44 @@ ChartJS.register(
 const Analytics = () => {
   const [chartData, setChartData] = useState<any>(null);
   const [totalTaps, setTotalTaps] = useState(0);
-  const [range, setRange] = useState("Weekly"); // default filter
+  const [range, setRange] = useState("Yearly"); // default filter
 
- const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      enabled: true,
-      backgroundColor: "#1f2937",
-      titleColor: "#fff",
-      bodyColor: "#fff",
-    },
-  },
-  scales: {
-    x: {
-      ticks: { color: "#aaa", font: { size: 10 } },
-      grid: { color: "rgba(255,255,255,0.1)" },
-    },
-    y: {
-      beginAtZero: true,         // ✅ start from 0
-      ticks: {
-        color: "#aaa",
-        font: { size: 10 },
-        stepSize: 1,             // ✅ force whole numbers
-        callback: (value:any) => Math.floor(Number(value)), // ensure integers
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "#1f2937",
+        titleColor: "#fff",
+        bodyColor: "#fff",
       },
-      grid: { color: "rgba(255,255,255,0.1)" },
     },
-  },
-};
-
+    scales: {
+      x: {
+        ticks: { color: "#aaa", font: { size: 10 } },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+      y: {
+        beginAtZero: true, // ✅ start from 0
+        ticks: {
+          color: "#aaa",
+          font: { size: 10 },
+          stepSize: 1, // ✅ force whole numbers
+          callback: (value: any) => Math.floor(Number(value)), // ensure integers
+        },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+    },
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await GetTapsData(range);
-
         if (response?.success) {
-          let dataArray: any[] = []
-
+          let dataArray: any[] = [];
           if (range === "Weekly") dataArray = response.week || [];
           else if (range === "Monthly") dataArray = response.month || [];
           else if (range === "Yearly") dataArray = response.year || [];
@@ -71,8 +68,12 @@ const Analytics = () => {
             const labels = dataArray.map(
               (item) => item?.day || item?.date || item?.month
             );
-            const values = dataArray.map((item) => item?.totalTaps ?? null);
-
+            const values = dataArray.map((item) => {
+              if (!item?.totalTaps) {
+                item.totalTaps = 0;
+              }
+              return item?.totalTaps;
+            });
             setChartData({
               labels,
               datasets: [
@@ -88,7 +89,7 @@ const Analytics = () => {
                   pointHoverBorderColor: "#8B5CF6",
                   pointRadius: 4,
                   pointHoverRadius: 6,
-                  spanGaps:false,
+                  spanGaps: false,
                   options: {
                     scales: {
                       y: {
