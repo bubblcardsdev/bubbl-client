@@ -65,7 +65,7 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
         </div>
       )} */}
       {/* {!isNoData && ( */}
-        <div className="w-full h-52 flex items-center justify-center">
+        <div className="w-full xl:p-5 flex items-center justify-center">
           
           <Doughnut data={data} options={CHART_OPTIONS} />
         </div>
