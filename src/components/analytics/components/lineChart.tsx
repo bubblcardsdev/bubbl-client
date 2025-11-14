@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { GetTapsData } from "../../../services/analyticsApi";
 
+
 ChartJS.register(
   LineElement,
   PointElement,
@@ -20,49 +21,64 @@ ChartJS.register(
 );
 
 const Analytics = () => {
-  const [chartData, setChartData] = useState<any>(null);
-  const [totalTaps, setTotalTaps] = useState(0);
-  const [range, setRange] = useState("Weekly"); // default filter
-
- const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      enabled: true,
-      backgroundColor: "#1f2937",
-      titleColor: "#fff",
-      bodyColor: "#fff",
-    },
-  },
-  scales: {
-    x: {
-      ticks: { color: "#aaa", font: { size: 10 } },
-      grid: { color: "rgba(255,255,255,0.1)" },
-    },
-    y: {
-      beginAtZero: true,         // ✅ start from 0
-      ticks: {
-        color: "#aaa",
-        font: { size: 10 },
-        stepSize: 1,             // ✅ force whole numbers
-        callback: (value:any) => Math.floor(Number(value)), // ensure integers
+  const [chartData, setChartData] = useState<any>({
+    labels: [],
+    datasets: [
+      {
+        label: "No of taps",
+        data: [],
+        borderColor: "#8B5CF6",
+        backgroundColor: "#8B5CF6",
+        pointBorderColor: "#fff",
+        pointBackgroundColor: "#8B5CF6",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "#8B5CF6",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        spanGaps: true,
       },
-      grid: { color: "rgba(255,255,255,0.1)" },
-    },
-  },
-};
+    ],
+  });
+  const [chartOptions, setChartOptions] = useState<boolean>(false);
+  const [totalTaps, setTotalTaps] = useState(0);
+  const [range, setRange] = useState("Yearly"); // default filter
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        backgroundColor: "#1f2937",
+        titleColor: "#fff",
+        bodyColor: "#fff",
+      },
+    },
+    scales: {
+      x: {
+        ticks: { color: "#aaa", font: { size: 10 } },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+      y: {
+        beginAtZero: true, // ✅ start from 0
+        ticks: {
+          color: "#aaa",
+          font: { size: 10 },
+          stepSize: 1, // ✅ force whole numbers
+          callback: (value: any) => Math.floor(Number(value)), // ensure integers
+        },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+    },
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await GetTapsData(range);
-
         if (response?.success) {
-          let dataArray: any[] = []
-
+          let dataArray: any[] = [];
           if (range === "Weekly") dataArray = response.week || [];
           else if (range === "Monthly") dataArray = response.month || [];
           else if (range === "Yearly") dataArray = response.year || [];
@@ -71,43 +87,35 @@ const Analytics = () => {
             const labels = dataArray.map(
               (item) => item?.day || item?.date || item?.month
             );
-            const values = dataArray.map((item) => item?.totalTaps ?? null);
+            const values = dataArray.map((item) => !item?.totalTaps ? 0 : item?.totalTaps);
+            console.log(labels, values);
 
             setChartData({
-              labels,
+              labels: [...labels],
               datasets: [
                 {
                   label: "No of taps",
-                  data: values,
+                  data: [...values],
                   borderColor: "#8B5CF6",
                   backgroundColor: "#8B5CF6",
-                  tension: 0.4,
                   pointBorderColor: "#fff",
                   pointBackgroundColor: "#8B5CF6",
                   pointHoverBackgroundColor: "#fff",
                   pointHoverBorderColor: "#8B5CF6",
                   pointRadius: 4,
                   pointHoverRadius: 6,
-                  spanGaps:false,
-                  options: {
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                      },
-                    },
-                  },
+                  spanGaps: true,
                 },
               ],
             });
-          } else {
-            setChartData(null);
+            setChartOptions(true);
           }
 
           setTotalTaps(response.totalTaps || 0);
         }
       } catch (error) {
         console.error("Error fetching tap data:", error);
-        setChartData(null);
+        setChartOptions(false);
         setTotalTaps(0);
       }
     };
@@ -146,11 +154,10 @@ const Analytics = () => {
                 <button
                   key={item}
                   onClick={() => setRange(item)}
-                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${
-                    item === range
-                      ? "bg-purple-600 text-white"
-                      : "bg-[#4F4F4F] text-gray-300"
-                  }`}
+                  className={`px-2 lg:h-[30px] md:h-[30px] sm:h-[24px] xs:h-[24px] rounded-lg transition-colors ${item === range
+                    ? "bg-purple-600 text-white"
+                    : "bg-[#4F4F4F] text-gray-300"
+                    }`}
                 >
                   {item}
                 </button>
@@ -160,7 +167,7 @@ const Analytics = () => {
 
           {/* Chart */}
           <div className="w-full h-[200px] sm:h-[260px] md:h-[300px] lg:h-[360px]">
-            {chartData ? (
+            {chartOptions ? (
               <Line data={chartData} options={options} />
             ) : (
               <div className="flex justify-center items-center h-full text-white text-xl">

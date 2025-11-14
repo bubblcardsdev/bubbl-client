@@ -65,7 +65,7 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
         </div>
       )} */}
       {/* {!isNoData && ( */}
-        <div className="w-full h-52 flex items-center justify-center">
+        <div className="w-full xl:p-5 flex items-center justify-center">
           
           <Doughnut data={data} options={CHART_OPTIONS} />
         </div>
@@ -141,11 +141,11 @@ export default function AnalyticsPro() {
   const [chartData, setChartData] = useState<any>(INITIAL_DATA);
 
   const [filter, setFilter] = useState({
-    deviceType: { deviceId: "All", range: "Weekly" },
-    modeUsage: { deviceId: "All", range: "Weekly" },
-    socialMedia: { deviceId: "All", range: "Weekly" },
-    paymentTap: { deviceId: "All", range: "Weekly" },
-    contactTap: { deviceId: "All", range: "Weekly" },
+    deviceType: { deviceId: "All", range: "Yearly" },
+    modeUsage: { deviceId: "All", range: "Yearly" },
+    socialMedia: { deviceId: "All", range: "Yearly" },
+    paymentTap: { deviceId: "All", range: "Yearly" },
+    contactTap: { deviceId: "All", range: "Yearly" },
   });
 
   // 🔹 Social Media
@@ -388,7 +388,7 @@ export default function AnalyticsPro() {
         Your pro data summary and activity.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-1 gap-4">
         {CHARTS.map(({ title, name }) => (
           <DonutChart
             key={name}
