@@ -85,8 +85,11 @@ function Profile(props: Props) {
           ...res?.data?.profile,
           profileImg: res?.data?.profileImgs?.[0]?.image,
           companyLogoUrl: res?.data?.profile?.brandingLogoUrl,
-          deviceUid: res?.data?.deviceUid?.deviceUid
+          deviceUid: deviceUid,
         };
+
+        
+        
         const response = formDataBuilder(obj);
         setProfileData(response);
       } else setNotFound(true);
