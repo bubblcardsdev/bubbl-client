@@ -15,17 +15,16 @@ import { generateVCard } from "../../utils/generateVCard";
 import { useRouter } from "next/router";
 import MonoColorLoader from "../common/monoColorLoader";
 interface Props {
-  deviceUid?: string;
   profileId?: string;
   uniqueName?: string;
 }
 function Profile(props: Props) {
-  const { profileId = "", deviceUid = "", uniqueName = "" } = props;
+  const { profileId = "", uniqueName = "" } = props;
   const [profileData, setProfileData] = useState<any>(null);
   const [notFound, setNotFound] = useState(false);
   const router = useRouter();
   const formDataBuilder = (data: any) => {
-    console.log(data,'d')
+    console.log(data, 'd')
     return {
       profileId: data?.id,
       profileUid: data?.profileUid,
@@ -67,11 +66,7 @@ function Profile(props: Props) {
   const getProfileData = async () => {
     try {
       let res = null;
-
-      if (deviceUid) {
-
-        res = await GetDeviceByUuid(deviceUid);
-      } else if (profileId) {
+      if (profileId) {
 
         res = await GetProfileByUuid(profileId);
       } else if (uniqueName) {
@@ -96,9 +91,9 @@ function Profile(props: Props) {
   };
 
   useEffect(() => {
-    if(typeof window !== "undefined"){
-      if (notFound) router.replace("/404",`${router.asPath}`, {shallow:true});
-    getProfileData();
+    if (typeof window !== "undefined") {
+      if (notFound) router.replace("/404", `${router.asPath}`, { shallow: true });
+      getProfileData();
     }
   }, [notFound]);
 
@@ -112,8 +107,8 @@ function Profile(props: Props) {
   };
 
   const Component = profileData ? templates[profileData.templateId] : null;
-  
-  if (!Component) return <MonoColorLoader containerClassName="bg-white/90"/>;
+
+  if (!Component) return <MonoColorLoader containerClassName="bg-white/90" />;
 
   const contact = {
     name: profileData?.firstName + " " + profileData?.lastName,

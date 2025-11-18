@@ -2,6 +2,7 @@ import axiosInstance from "../helpers/axios";
 import { toast } from "react-toastify";
 import { authHeader, getApiErrorMessage, safeToast } from "../utils/utils";
 import Router from "next/router";
+import { stat } from "fs";
 
 export type PhoneNumber = {
   countryCode: string;
@@ -118,6 +119,38 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
     console.error("Error fetching profile:", error);
     safeToast.error(getApiErrorMessage(error));
     return null;
+  }
+};
+
+export const GetTapProfile = async (deviceUid: string) => {
+  try {
+    const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+
+    if (response?.status == 201) {
+      toast.info("please register new Device");
+      return {
+        status: 201,
+        data: null
+      };
+    } else if (response?.status == 204) {
+      toast.warning("please link your Device");
+      return {
+        status: 204,
+        data: null
+      };
+    }
+
+    return {
+      status: 200,
+      data: response?.data?.data ?? null
+    };
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    safeToast.error(getApiErrorMessage(error));
+    return {
+      status: 404,
+      data: null
+    };;
   }
 };
 
@@ -240,7 +273,7 @@ export const UpdateProfile = async (
         headers: authHeader(),
       }
     );
-    if(response?.status === 200){
+    if (response?.status === 200) {
       toast.success("Profile updated successfuly")
     }
     return response?.data ?? null;
@@ -285,8 +318,8 @@ export const UploadProfileImage = async (
     const formData: any = new FormData();
     formData.append("squareImage", file);
     formData.append("rectangleImage", file);
-    if(id){
-    formData.append("profileId", id);
+    if (id) {
+      formData.append("profileId", id);
     }
 
     const response = await axiosInstance.post("upload/profileImage", formData, {
@@ -310,10 +343,10 @@ export const UploadbrandinglogoImage = async (
   try {
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
-    if(id){
- formData.append("profileId", id);
+    if (id) {
+      formData.append("profileId", id);
     }
-   
+
 
     const response = await axiosInstance.post("upload/brandinglogo", formData, {
       headers: {
