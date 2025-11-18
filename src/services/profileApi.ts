@@ -121,6 +121,38 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
   }
 };
 
+export const GetTapProfile = async (deviceUid: string) => {
+  try {
+    const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+    console.log(response, "response");
+    if (response?.status == 201) {
+      toast.info("please register new Device");
+      return {
+        status: 201,
+        data: null
+      };
+    } else if (response?.status == 204) {
+      toast.warning("please link your Device");
+      return {
+        status: 204,
+        data: null
+      };
+    }
+    return {
+      status: 200,
+      data: response?.data?.data ?? null
+    };
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    setTimeout(() => {
+      toast.error("Device Not Found");
+    }, 300);
+    return {
+      status: null,
+    };
+  };
+}
+
 export const GetProfileByUniqueName = async (uniqueName: string) => {
   try {
     const response = await axiosInstance.get(
