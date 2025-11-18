@@ -27,8 +27,9 @@ const CHART_OPTIONS = {
   cutout: "55%",
   plugins: {
     legend: {
-      labels: { color: "#aaa", boxWidth: 12 },
-      position: "bottom" as const,
+      display: false,
+      // labels: { color: "#aaa", boxWidth: 12 },
+      // position: "bottom" as const,
     },
   },
 };
@@ -38,7 +39,7 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
   //   !data ||
   //   data?.datasets?.[0]?.data?.reduce((a: number, b: number) => a + b, 0) == 0;
   return (
-    <div className="text-white p-4 rounded-xl shadow-md flex-1 bg-[#282829]">
+    <div className="text-white p-4 rounded-xl shadow-md  bg-[#282829]">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-sm font-semibold">{title}</h3>
         <select
@@ -65,10 +66,24 @@ function DonutChart({ title, data, name, filter, setFilter }: DonutChartProps) {
         </div>
       )} */}
       {/* {!isNoData && ( */}
-        <div className="w-full h-52 flex items-center justify-center">
-          
+      <div className="w-full flex items-center justify-center mb-4">
+        <div className="relative w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48">
           <Doughnut data={data} options={CHART_OPTIONS} />
+        </div>{" "}
+      </div>
+      {data?.labels && (
+        <div className="grid grid-cols-2 gap-y-2 text-[12px] text-gray-300">
+          {data.labels.map((label: string, index: number) => (
+            <div key={index} className="flex items-center gap-2">
+              <span
+                className="inline-block w-3 h-3 rounded-sm"
+                style={{ backgroundColor: CHART_COLORS[index] }}
+              />
+              {label}
+            </div>
+          ))}
         </div>
+      )}
       {/* )} */}
     </div>
   );
@@ -141,11 +156,11 @@ export default function AnalyticsPro() {
   const [chartData, setChartData] = useState<any>(INITIAL_DATA);
 
   const [filter, setFilter] = useState({
-    deviceType: { deviceId: "All", range: "Weekly" },
-    modeUsage: { deviceId: "All", range: "Weekly" },
-    socialMedia: { deviceId: "All", range: "Weekly" },
-    paymentTap: { deviceId: "All", range: "Weekly" },
-    contactTap: { deviceId: "All", range: "Weekly" },
+    deviceType: { deviceId: "All", range: "Yearly" },
+    modeUsage: { deviceId: "All", range: "Yearly" },
+    socialMedia: { deviceId: "All", range: "Yearly" },
+    paymentTap: { deviceId: "All", range: "Yearly" },
+    contactTap: { deviceId: "All", range: "Yearly" },
   });
 
   // 🔹 Social Media
@@ -388,7 +403,7 @@ export default function AnalyticsPro() {
         Your pro data summary and activity.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-1 gap-4">
         {CHARTS.map(({ title, name }) => (
           <DonutChart
             key={name}

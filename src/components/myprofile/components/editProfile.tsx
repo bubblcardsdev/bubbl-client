@@ -504,7 +504,7 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
     try {
       const isValid = validateForm();
       if (!isValid) {
-        toast.error("Please fix the validation errors before saving!");
+        toast.error("Please fill the required fields.");
         return;
       }
       const isCreate = router.pathname === "/createNewProfile";
