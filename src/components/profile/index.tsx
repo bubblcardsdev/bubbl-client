@@ -79,7 +79,6 @@ function Profile(props: Props) {
           ...res?.data?.profile,
           profileImg: res?.data?.profileImgs?.[0]?.image,
           companyLogoUrl: res?.data?.profile?.brandingLogoUrl,
-          deviceUid: deviceUid,
         };
 
         
