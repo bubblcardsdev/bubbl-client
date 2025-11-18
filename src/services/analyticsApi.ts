@@ -1,12 +1,12 @@
 import { getAccessToken } from "../helpers/localStorage";
 import axiosInstance from "../helpers/axios";
 
-export const GetPaymentTaps:any = async (filter:any) => {
+export const GetPaymentTaps: any = async (filter: any) => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getPaymentTaps",
-      filter||{ deviceId: "All", range: "Weekly" }, //  body
+      filter || { deviceId: "All", range: "Weekly" }, //  body
       {
         headers: {
           Authorization: token, // header
@@ -38,12 +38,12 @@ export const GetSocialTaps: any = async (filter: any) => {
   }
 };
 
-export const GetContactTaps:any = async (filter: any) => {
+export const GetContactTaps: any = async (filter: any) => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getContactTaps",
-     filter|| { deviceId: "All", range: "Weekly" }, // body
+      filter || { deviceId: "All", range: "Weekly" }, // body
       {
         headers: {
           Authorization: token, //  header
@@ -56,7 +56,7 @@ export const GetContactTaps:any = async (filter: any) => {
   }
 };
 
-export const GetDeviceType:any = async (filter: any) => {
+export const GetDeviceType: any = async (filter: any) => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
@@ -73,7 +73,7 @@ export const GetDeviceType:any = async (filter: any) => {
     console.error("Get Device Type API Error:", error?.response || error);
   }
 };
-export const GetModeUsageType:any = async (filter: any) => {
+export const GetModeUsageType: any = async (filter: any) => {
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
@@ -91,14 +91,14 @@ export const GetModeUsageType:any = async (filter: any) => {
     console.error("Get modeusage Type API Error:", error?.response || error);
   }
 };
-export const GetTapsData:any = async (timeRange:string) => {
-  console.log(timeRange,"?");
-  
+export const GetTapsData: any = async (timeRange: string) => {
+  // console.log(timeRange, "?");
+
   try {
     const token = getAccessToken();
     const response = await axiosInstance.put(
       "/analytics/getTapsData",
-       { deviceId: "All", range: timeRange }, // body
+      { deviceId: "All", range: timeRange }, // body
       {
         headers: {
           Authorization: token, //  header

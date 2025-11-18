@@ -37,3 +37,18 @@ export const SupportApi = async (FormData: FormDataType) => {
   }
 };
 export { FormDataType };
+
+//plans api intergrate
+
+export const PlansApi = async () => {
+   try {
+    const response = await axiosInstance.get(`plan/planDescription`);
+    if(!response?.data?.success) return null;
+    console.log(response?.data?.data,'response');
+    return response?.data?.data
+  } catch (error) {
+    console.log(error);
+    return null;
+
+  }
+};
