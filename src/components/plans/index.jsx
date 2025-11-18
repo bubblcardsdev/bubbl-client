@@ -1,9 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import PricingPlan from "./components/pricingPlans";
-import Footer from "../footerPage/index";
 import BubblCommunity from "../common/BubblCommunity";
-import { FullArrowIcon, RightTickIcon, MessageIcon } from "../common/icons";
 import Link from "next/link";
 
 function Plans() {
@@ -93,7 +91,7 @@ function Plans() {
           </div>
         </section>
         <PricingPlan />
-        <section className=" bg-[#121212] rounded-lg text-gray-300 lg:block md:block sm:hidden xs:hidden">
+        {/* <section className=" bg-[#121212] rounded-lg text-gray-300 lg:block md:block sm:hidden xs:hidden">
           <div className="max-w-6xl mx-auto">
             <table className="w-full border-collapse">
               <thead>
@@ -214,7 +212,7 @@ function Plans() {
               </tbody>
             </table>
           </div>
-        </section>
+        </section> */}
         <section className="min-h-[80vh] bg-black text-gray-300 lg:hidden md:hidden sm:block xs:block overflow-x-auto max-h-[300px] overflow-y-auto scrollbar-hide ">
           <div className="lg:hidden md:hidden sm:flex xs:flex justify-between items-center sm:px-4 xs:px-[5px] xs:gap-x-2 sticky top-0 z-10 bg-black py-2">
             <button
