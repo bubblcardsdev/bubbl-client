@@ -22,12 +22,10 @@ import MonoColorLoader from "@/src/components/common/monoColorLoader";
 function Tap({ deviceUid }: { deviceUid: string }) {
 
     const [profileData, setProfileData] = useState<any>(null);
-    const [notFound, setNotFound] = useState(false);
     const router = useRouter();
-    console.log(deviceUid, "deviceUid");
 
     const formDataBuilder = (data: any) => {
-        console.log(data, 'd')
+
         return {
             profileId: data?.id,
             profileUid: data?.profileUid,
@@ -69,8 +67,8 @@ function Tap({ deviceUid }: { deviceUid: string }) {
 
     const getProfileData = async () => {
         try {
-            let accessToken = localStorage.getItem("accessToken");
-            let res = await GetTapProfile(deviceUid);
+            const accessToken = localStorage.getItem("accessToken");
+            const res = await GetTapProfile(deviceUid);
 
             if (res.status === 200) {
 
@@ -87,22 +85,29 @@ function Tap({ deviceUid }: { deviceUid: string }) {
 
                 if (accessToken) router.push("/mydevice?deviceUid=" + deviceUid);
                 else {
-                    let reqUrl = "/mydevice?deviceUid=" + deviceUid;
+                    const reqUrl = "/mydevice?deviceUid=" + deviceUid;
                     localStorage.setItem("reqUrl", reqUrl);
-                    setNotFound(true);
+
                     router.push("/login");
                 };
 
             } else if (res.status == 204) {
                 if (accessToken) router.push("/mydevice");
                 else {
-                    let reqUrl = "/mydevice";
+                    const reqUrl = "/mydevice";
                     localStorage.setItem("reqUrl", reqUrl);
-                    setNotFound(true)
+
                     router.push("/login");
                 };
-            } else setNotFound(true);
-
+            } else {
+                const accessToken = localStorage.getItem("accessToken");
+                if (accessToken) router.push("/mydevice");
+                else {
+                    const reqUrl = "/mydevice";
+                    localStorage.setItem("reqUrl", reqUrl);
+                    router.push("/login");
+                };
+            };
 
         } catch (error) {
             console.error("Error calling Profile", error);
@@ -113,7 +118,7 @@ function Tap({ deviceUid }: { deviceUid: string }) {
 
     useEffect(() => {
         getProfileData();
-    }, [notFound]);
+    }, []);
 
 
 
@@ -127,7 +132,7 @@ function Tap({ deviceUid }: { deviceUid: string }) {
     };
 
     const Component = profileData ? templates[profileData.templateId] : null;
-    console.log(Component);
+
 
     if (!Component) return <MonoColorLoader containerClassName="bg-white/90" />;
 
@@ -147,12 +152,14 @@ function Tap({ deviceUid }: { deviceUid: string }) {
 
 
     return (
+        <>
+            <Component
+                formData={profileData}
+                handleSave={handleSave}
+                selectedTheme={profileData.brandingAccentColor}
+            />
+        </>
 
-        <Component
-            formData={profileData}
-            handleSave={handleSave}
-            selectedTheme={profileData.brandingAccentColor}
-        />
     );
 
 

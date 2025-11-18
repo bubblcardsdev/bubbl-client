@@ -137,7 +137,7 @@ export default function DeviceCards() {
       {show && (
         <CreateNewDevice
           visible={show}
-          onHide={() => setShow(false)}
+          onHide={() => {setShow(false); router.push("/mydevice");}}
           profiles={profiles}
           refetch={getMydevices}
         />

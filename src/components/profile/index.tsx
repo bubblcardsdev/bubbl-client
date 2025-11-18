@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  GetDeviceByUuid,
+import { 
   GetProfileByUuid,
   GetProfileByUniqueName,
 } from "../../services/profileApi";

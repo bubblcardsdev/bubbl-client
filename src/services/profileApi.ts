@@ -2,7 +2,7 @@ import axiosInstance from "../helpers/axios";
 import { toast } from "react-toastify";
 import { authHeader, getApiErrorMessage, safeToast } from "../utils/utils";
 import Router from "next/router";
-import { stat } from "fs";
+
 
 export type PhoneNumber = {
   countryCode: string;
@@ -125,7 +125,7 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
 export const GetTapProfile = async (deviceUid: string) => {
   try {
     const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
-
+    console.log(response, "response");
     if (response?.status == 201) {
       toast.info("please register new Device");
       return {
@@ -139,21 +139,20 @@ export const GetTapProfile = async (deviceUid: string) => {
         data: null
       };
     }
-
     return {
       status: 200,
       data: response?.data?.data ?? null
     };
   } catch (error) {
     console.error("Error fetching profile:", error);
-    safeToast.error(getApiErrorMessage(error));
+    setTimeout(() => {
+      toast.error("Device Not Found");
+    }, 300);
     return {
-      status: 404,
-      data: null
-    };;
-  }
-};
-
+      status: null,
+    };
+  };
+}
 export const GetProfileByUniqueName = async (uniqueName: string) => {
   try {
     const response = await axiosInstance.get(
