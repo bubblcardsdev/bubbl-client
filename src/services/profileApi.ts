@@ -121,37 +121,102 @@ export const GetDeviceByUuid = async (deviceUid: string) => {
   }
 };
 
+// export const GetTapProfile = async (deviceUid: string) => {
+//   try {
+//     const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+//     console.log(response, "response");
+//     if (response?.status == 201) {
+//       toast.info("please register new Device");
+//       return {
+//         status: 201,
+//         data: null
+//       };
+//     } else if (response?.status == 204) {
+//       toast.warning("please link your Device");
+//       return {
+//         status: 204,
+//         data: null
+//       };
+//     } else if (response?.status == 403) {
+//       toast.warning("Device is inactive. Please contact support.");
+//       return {
+//         status: null,
+//         data: null
+//       };
+//     } else if (response?.status == 404) {
+//       toast.warning("Device Not Found");
+//       return {
+//         status: null,
+//         data: null
+//       };
+//     }
+//     return {
+//       status: 200,
+//       data: response?.data?.data ?? null
+//     };
+//   } catch (error) {
+//     console.error("Error fetching profile:", error);
+//     setTimeout(() => {
+//       toast.error("Device Not Found");
+//     }, 300);
+//     return {
+//       status: null,
+//     };
+//   };
+// }
+
+
 export const GetTapProfile = async (deviceUid: string) => {
   try {
     const response = await axiosInstance.get(`profile?deviceUid=${deviceUid}`);
+
     console.log(response, "response");
-    if (response?.status == 201) {
-      toast.info("please register new Device");
-      return {
-        status: 201,
-        data: null
-      };
-    } else if (response?.status == 204) {
-      toast.warning("please link your Device");
-      return {
-        status: 204,
-        data: null
-      };
+
+    // 201 = new device (empty card)
+    if (response?.status === 201) {
+      toast.info("Please register new Device");
+      return { status: 201, data: null };
     }
+
+    // 204 = device exists but not linked to user
+    if (response?.status === 204) {
+      toast.warning("Please link your Device");
+      return { status: 204, data: null };
+    }
+
+    // 200 = OK Profile Found
     return {
       status: 200,
       data: response?.data?.data ?? null
     };
-  } catch (error) {
+  }
+  catch (error: any) {
     console.error("Error fetching profile:", error);
+
+    const status = error?.response?.status;
+    // CARD set to inactive by us
+    if (status === 403) {
+      setTimeout(() => {
+        toast.warning("Device is inactive. Please contact support.");
+      }, 300);
+      return { status: 403, data: null };
+    }
+    // CARD not listed in the db
+    if (status === 404) {
+      setTimeout(() => {
+        toast.warning("Device Not Found");
+      }, 300);
+      return { status: 404, data: null };
+    }
+
+    // Unknown error
     setTimeout(() => {
-      toast.error("Device Not Found");
+      toast.error("Something went wrong");
     }, 300);
-    return {
-      status: null,
-    };
-  };
-}
+
+    return { status: null };
+  }
+};
 
 export const GetProfileByUniqueName = async (uniqueName: string) => {
   try {
@@ -272,7 +337,7 @@ export const UpdateProfile = async (
         headers: authHeader(),
       }
     );
-    if(response?.status === 200){
+    if (response?.status === 200) {
       toast.success("Profile updated successfuly")
     }
     return response?.data ?? null;
@@ -317,8 +382,8 @@ export const UploadProfileImage = async (
     const formData: any = new FormData();
     formData.append("squareImage", file);
     formData.append("rectangleImage", file);
-    if(id){
-    formData.append("profileId", id);
+    if (id) {
+      formData.append("profileId", id);
     }
 
     const response = await axiosInstance.post("upload/profileImage", formData, {
@@ -342,10 +407,10 @@ export const UploadbrandinglogoImage = async (
   try {
     const formData: any = new FormData();
     formData.append("brandingLogo", file);
-    if(id){
- formData.append("profileId", id);
+    if (id) {
+      formData.append("profileId", id);
     }
-   
+
 
     const response = await axiosInstance.post("upload/brandinglogo", formData, {
       headers: {
