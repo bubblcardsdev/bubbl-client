@@ -180,7 +180,9 @@ export const GetTapProfile = async (deviceUid: string) => {
 
     // 204 = device exists but not linked to user
     if (response?.status === 204) {
-      toast.warning("Please link your Device");
+      setTimeout(() => {
+        toast.warning("Please link your Device");
+      }, 300);
       return { status: 204, data: null };
     }
 
