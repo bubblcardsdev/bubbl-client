@@ -39,7 +39,13 @@ const LoginPage = () => {
         toast.success("Logged in successfully!");
         const reqPath = getReqPath();
         removeReqPath()
-        router.push(reqPath || "/overview");
+        if(reqPath.split("?")[0] === "/login"){
+       router.push("/overview");
+        }
+        else{
+          router.push(reqPath || "/overview");
+        }
+        
       }
     } catch (err) {
       console.error("Unexpected error in handleSubmit:", err);

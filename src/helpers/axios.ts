@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
           localStorage.clear();
           if(cartItems) localStorage.setItem("cartItems", cartItems);
           localStorage.setItem("reqUrl", Router.asPath);
-          Router.push("/login?expired=1");
+          Router.push("/login");
           return Promise.reject(error);
         }
 
@@ -63,7 +63,7 @@ axiosInstance.interceptors.response.use(
         localStorage.clear();
         if(cartItems) localStorage.setItem("cartItems", cartItems);
         localStorage.setItem("reqUrl", Router.asPath);
-        Router.push("/login?expired=1"); // 👈 redirect if refresh fails
+        Router.push("/login"); // 👈 redirect if refresh fails
         return Promise.reject(refreshError);
       }
     }
@@ -75,7 +75,7 @@ axiosInstance.interceptors.response.use(
       localStorage.clear();
       if(cartItems) localStorage.setItem("cartItems", cartItems);
       localStorage.setItem("reqUrl", Router.asPath);
-      Router.push("/login?expired=1");
+      Router.push("/login");
     }
 
     return Promise.reject(error);

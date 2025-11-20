@@ -48,7 +48,7 @@ const Signup = () => {
   const stepFields: Record<number, (keyof FormData)[]> = {
     1: ["name"],
     2: ["role", "companyName"],
-    3: ["email"],
+    3: ["email", "mobile"],
     4: ["password", "confirmPassword"],
   };
   const [formData, setFormData] = useState<FormDataType>({
@@ -74,7 +74,7 @@ const Signup = () => {
     const schema = stepSchemas[step];
 
     const { error } = schema.validate(stepForm, { abortEarly: false });
-    console.log(error);
+    console.log(error,"///");
     if (!error) return true;
 
     const newErrors: Record<string, string> = {};
@@ -277,7 +277,7 @@ const Signup = () => {
                     htmlFor="mobile"
                     className="block text-sm font-medium text-[#909090] mb-2 "
                   >
-                    PhoneNumber
+                    PhoneNumber <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
