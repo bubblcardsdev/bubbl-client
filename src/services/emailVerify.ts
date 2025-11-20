@@ -3,7 +3,7 @@ import { AxiosResponse } from "axios";
 import { NextRouter } from "next/router";
 // import { RegisterApi } from "./registerApi";
 import { toast } from "react-toastify";
-import { getReqPath, removeReqPath, setEmailVerified } from "../helpers/localStorage";
+import { setEmailVerified } from "../helpers/localStorage";
 // import { FormDataType } from "../components/signup";
 // import { RegisterCreateProfile } from "./profile";
 export interface VerifyOtpResponse {
@@ -36,9 +36,9 @@ export const verifyEmailOtp = async (
     if (response?.data?.success === true) {
       setEmailVerified("true");
       toast.success("otp has been verified successfully");
-        const reqPath = getReqPath();
-        removeReqPath()
-        router.push(reqPath || "/overview");
+        // const reqPath = getReqPath();
+        // removeReqPath()
+        router.push("/login");
     } else {
       toast.error(response.data?.message || "OTP Verification failed");
     }

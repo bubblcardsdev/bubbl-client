@@ -126,7 +126,7 @@ const ProTemplateNeno = ({
                 {formData?.companyName || "Company Name"}
               </p>
               <p className="text-sm text-white leading-relaxed mt-3">
-                {formData?.shortDescription || "Description"}
+                {formData?.shortDescription || ""}
               </p>
 
               {/* Buttons */}
