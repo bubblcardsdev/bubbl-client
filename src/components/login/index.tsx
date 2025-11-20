@@ -39,7 +39,7 @@ const LoginPage = () => {
         toast.success("Logged in successfully!");
         const reqPath = getReqPath();
         removeReqPath()
-        if(reqPath.split("?")[0] === "/login"){
+        if(reqPath?.split("?")[0] === "/login"){
        router.push("/overview");
         }
         else{

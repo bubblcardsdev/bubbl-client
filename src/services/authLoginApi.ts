@@ -152,7 +152,7 @@ export const responseMessage = async (response: any) => {
     toast.success("Logged in successfully!");
     const reqPath = getReqPath();
     removeReqPath();
-     if(reqPath.split("?")[0] === "/login"){
+     if(reqPath?.split("?")[0] === "/login"){
        Router.push("/overview");
         }
         else{
