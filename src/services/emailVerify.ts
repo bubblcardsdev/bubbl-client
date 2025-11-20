@@ -36,9 +36,9 @@ export const verifyEmailOtp = async (
     if (response?.data?.success === true) {
       setEmailVerified("true");
       toast.success("otp has been verified successfully");
-        const reqPath = getReqPath();
-        removeReqPath()
-        router.push(reqPath || "/overview");
+        // const reqPath = getReqPath();
+        // removeReqPath()
+        router.push("/login");
     } else {
       toast.error(response.data?.message || "OTP Verification failed");
     }
