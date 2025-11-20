@@ -118,7 +118,7 @@ const Settings: React.FC = () => {
       newErrors.phone = "Invalid phone number";
     if (!formData.email.match(/^\S+@\S+\.\S+$/))
       newErrors.email = "Invalid email address";
-    if (!formData.DOB) newErrors.DOB = "DOB is required";
+    if (!formData.DOB) newErrors.dob  = "DOB is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.country) newErrors.country = "Country is required";
     return newErrors;

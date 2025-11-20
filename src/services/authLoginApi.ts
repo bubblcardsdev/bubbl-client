@@ -152,7 +152,12 @@ export const responseMessage = async (response: any) => {
     toast.success("Logged in successfully!");
     const reqPath = getReqPath();
     removeReqPath();
-    Router.push(reqPath || "/overview"); // success redirect Router.push(reqPath || "/overview");
+     if(reqPath?.split("?")[0] === "/login"){
+       Router.push("/overview");
+        }
+        else{
+          Router.push(reqPath || "/overview");
+        } // success redirect Router.push(reqPath || "/overview");
     return true;
   } catch (err: any) {
     console.error("Google login error:", err);
