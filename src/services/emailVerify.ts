@@ -3,7 +3,7 @@ import { AxiosResponse } from "axios";
 import { NextRouter } from "next/router";
 // import { RegisterApi } from "./registerApi";
 import { toast } from "react-toastify";
-import { getReqPath, removeReqPath, setEmailVerified } from "../helpers/localStorage";
+import { setEmailVerified } from "../helpers/localStorage";
 // import { FormDataType } from "../components/signup";
 // import { RegisterCreateProfile } from "./profile";
 export interface VerifyOtpResponse {
