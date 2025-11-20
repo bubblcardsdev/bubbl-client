@@ -20,7 +20,19 @@ export const stepSchemas: Record<number, Joi.ObjectSchema> = {
     email: Joi.string().trim().email({ tlds: { allow: false } }).required().messages({
       "string.empty": "Email is required.",
       "string.email": "Enter a valid email address.",
-    }),  
+    }),
+    phoneNumbers: Joi.string()
+  .trim()
+  .pattern(/^[0-9]+$/)
+  .min(7)    // set your minimum digit count
+  .max(15)   // set your maximum digit count
+  .required()
+  .messages({
+    "string.empty": "Phone number is required.",
+    "string.min": "Phone number must be at least {#limit} digits.",
+    "string.max": "Phone number must not exceed {#limit} digits.",
+    "string.pattern.base": "Phone number must contain digits only.",
+  }),
   }),
 
   4: Joi.object({
