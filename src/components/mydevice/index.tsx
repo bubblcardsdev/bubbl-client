@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { toast,ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {
   getLinkedDevices,
   switchMode,
@@ -29,7 +29,7 @@ export default function DeviceCards() {
     modeTitle: "",
   };
 
-    const router = useRouter();
+  const router = useRouter();
   const defaultUID = router?.query?.deviceUid;
 
   const initialState = router?.query?.deviceUid ? true : false;
@@ -72,15 +72,15 @@ export default function DeviceCards() {
         setMyDevices((prev) =>
           !isEmpty(prev)
             ? prev.map((record: MyDevice) => {
-                if (record.deviceId === device?.deviceId) {
-                  return {
-                    ...record,
-                    profileId: Number(profile.value),
-                    profileName: profile.label,
-                  };
-                }
-                return record;
-              })
+              if (record.deviceId === device?.deviceId) {
+                return {
+                  ...record,
+                  profileId: Number(profile.value),
+                  profileName: profile.label,
+                };
+              }
+              return record;
+            })
             : []
         );
       }
@@ -105,16 +105,16 @@ export default function DeviceCards() {
         setMyDevices((prev) =>
           !isEmpty(prev)
             ? prev.map((record: MyDevice) => {
-                if (record.deviceId === device?.deviceId) {
-                  return {
-                    ...record,
-                    modeId: Number(mode.value),
-                    mode: mode.label,
-                    modeUrl: modeUrl || null,
-                  };
-                }
-                return record;
-              })
+              if (record.deviceId === device?.deviceId) {
+                return {
+                  ...record,
+                  modeId: Number(mode.value),
+                  mode: mode.label,
+                  modeUrl: modeUrl || null,
+                };
+              }
+              return record;
+            })
             : []
         );
         toast.success("Mode changed successfully!");
@@ -137,7 +137,7 @@ export default function DeviceCards() {
       {show && (
         <CreateNewDevice
           visible={show}
-          onHide={() => setShow(false)}
+          onHide={() => { setShow(false); router.push("/mydevice") }}
           profiles={profiles}
           refetch={getMydevices}
         />
@@ -215,7 +215,7 @@ export default function DeviceCards() {
                         ""
                       )
                     }
-                    
+
                     onHide={onHide}
                     label="Switch Profiles"
                     visible={

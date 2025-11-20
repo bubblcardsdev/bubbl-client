@@ -1,4 +1,4 @@
-import Profile from "@/src/components/profile";
+import Tap from "@/src/components/tap";
 
 interface Props {
   query: {
@@ -7,8 +7,7 @@ interface Props {
 }
 
 export default function ProfilePage(props: Props) {
-  return <Profile deviceUid={props?.query?.deviceUid || ""}/>;
-  // return <h1>Profile {props?.query?.deviceUid}</h1>;
+  return <Tap deviceUid={props?.query?.deviceUid || ""} />;
 }
 
 
