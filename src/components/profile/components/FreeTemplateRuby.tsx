@@ -80,6 +80,8 @@ const FreeTemplateRuby = ({
         list={object.data}
         onClose={onHide}
         title={object.title}
+        deviceId={object.deviceUid || null}
+        actionId={object.actionId || null}
       />
       <div className="relative w-full shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         <div className=" bg-grey-500  rounded-t-2xl max-h-[250px]">

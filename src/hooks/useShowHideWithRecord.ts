@@ -6,9 +6,13 @@ export const useShowHideWithRecord = (initial: any) => {
     visibleKey: string,
     datakey: string,
     data: any,
-    title: string
+    title: string,
+    deviceUid?:string,
+    actionId?:string,
   ) => {
-    setObject({ ...object, [visibleKey]: true, [datakey]: data, title: title });
+    console.log(deviceUid,"???",actionId);
+    
+    setObject({ ...object, [visibleKey]: true, [datakey]: data, title: title,deviceUid,actionId });
   };
 
   const onHide = () => {
