@@ -37,7 +37,7 @@ async function createDeviceTap() {
     try {
         await createTap(1, deviceUid);
     } catch (err) {
-        console.log("err in taping profile");
+        console.log("err in taping profile",err);
     }
 }
 
