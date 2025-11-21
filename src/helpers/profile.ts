@@ -17,7 +17,7 @@ const socialActions: Record<
   13: (val) => copyText(val),
   14: (val) => copyText(val),
   15: (val) => copyText(val),
-  17: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
+  16: (val, socialMediaId) => openSocialLinks(socialMediaId,val),
 };
 
 const SocialAction: any = {
@@ -26,7 +26,7 @@ const SocialAction: any = {
   3: 10,
   4: 12,
   5: 9,
-  6: 17,
+  6: 16,
 };
 
 const paymentAction: any = {
@@ -45,6 +45,8 @@ const onClick = async (
   if (action) {
     console.log(value, "social", socialMediaId);
     await action(value, socialMediaId);
+    console.log(actionId,socialMediaId,"++");
+    
     if (deviceUid) {
       await createTap(actionId, deviceUid);
     }
@@ -53,8 +55,10 @@ const onClick = async (
 
 const onCallClick = (formData: any, onShow?: any) => {
   if (formData?.phoneNumbers?.length > 1) {
+    console.log(formData,"???");
+    
     if (onShow) {
-      onShow("visible", "data", formData?.phoneNumbers, "Mobile");
+      onShow("visible", "data", formData?.phoneNumbers, "Mobile",formData.deviceUid,4);
     }
     return;
   }
@@ -70,7 +74,7 @@ const onCallClick = (formData: any, onShow?: any) => {
 const onEmailClick = (formData: any, onShow?: any) => {
   if (formData?.emailIds?.length > 1) {
     if (onShow) {
-      onShow("visible", "data", formData?.emailIds, "Email");
+      onShow("visible", "data", formData?.emailIds, "Email",formData.deviceUid,5);
     }
     return;
   }

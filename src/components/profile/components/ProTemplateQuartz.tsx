@@ -70,6 +70,8 @@ const ProTemplateQuartz = ({
         list={object.data}
         onClose={onHide}
         title={object.title}
+        deviceId={object.deviceUid || null}
+        actionId={object.actionId || null}
       />
       {/* Profile Image */}
       <div className="bg-[#D9D9D9] h-[400px]">

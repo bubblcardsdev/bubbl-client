@@ -87,6 +87,8 @@ const ProTemplateSpahire = ({
         list={object.data}
         onClose={onHide}
         title={object.title}
+        deviceId={object.deviceUid || null}
+        actionId={object.actionId || null}
       />
       <div className="lg:px-4 md:px-4 sm:px-6 xs:px-6 py-8 w-full bg-white flex flex-col gap-6">
         {/* Profile header */}
