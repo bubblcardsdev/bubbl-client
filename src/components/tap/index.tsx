@@ -4,7 +4,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import { GetTapProfile } from "@/src/services/profileApi";
+import { createTap, GetTapProfile } from "@/src/services/profileApi";
 import { downloadVCard } from "@/src/utils/downloadVcard";
 import { generateVCard } from "@/src/utils/generateVCard";
 
@@ -24,12 +24,30 @@ function Tap({ deviceUid }: { deviceUid: string }) {
     const [profileData, setProfileData] = useState<any>(null);
     const router = useRouter();
 
+
+useEffect(() => {
+    console.log(deviceUid);
+    
+    if (deviceUid) {
+        createDeviceTap();
+    }
+}, [deviceUid]);
+
+async function createDeviceTap() {
+    try {
+        await createTap(1, deviceUid);
+    } catch (err) {
+        console.log("err in taping profile");
+    }
+}
+
+
     const formDataBuilder = (data: any) => {
 
         return {
             profileId: data?.id,
             profileUid: data?.profileUid,
-            deviceUid: data?.deviceUid,
+            deviceUid: deviceUid,
             userId: data?.userId,
             profileName: data?.profileName || "",
             templateId: data?.templateId,

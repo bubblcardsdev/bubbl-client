@@ -77,6 +77,8 @@ const FreeTemplateOpal = ({
         list={object.data}
         onClose={onHide}
         title={object.title}
+        deviceId={object.deviceUid || null}
+        actionId={object.actionId || null}
       />
       <div className="w-full bg-[#EDEDED]  relative overflow-hidden shadow-[1px_1px_4px_0px_rgb(163_162_162_/_60%)] sm:max-w-[380px]">
         {/* Header curved background */}

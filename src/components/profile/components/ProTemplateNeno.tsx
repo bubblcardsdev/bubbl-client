@@ -83,6 +83,8 @@ const ProTemplateNeno = ({
         list={object.data}
         onClose={onHide}
         title={object.title}
+        deviceId={object.deviceUid || null}
+        actionId={object.actionId || null}
       />
       <div className="w-full">
         {/* Profile Image */}
