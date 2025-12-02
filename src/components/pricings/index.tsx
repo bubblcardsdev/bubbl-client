@@ -21,7 +21,7 @@ const [isVerifying, setIsVerifying] = useState<boolean>(false);
 const failureHandledRef = useRef(false);
 const [isProcessing, setIsProcessing] = useState(false);
 
-let planId = state?.planId?.data?.planId ?? 1;
+const planId = state?.planId?.data?.planId ?? 1;
 console.log(state, "?");
 
 const [plans, setPlans] = useState([]);
@@ -154,7 +154,7 @@ try {
   const paymentId = res?.error?.metadata?.payment_id || null;
   const orderId = res?.error?.metadata?.order_id || null;
 
-  let reason =
+  const reason =
     res?.error?.description ||
     res?.error?.reason ||
     "Payment cancelled by user";
