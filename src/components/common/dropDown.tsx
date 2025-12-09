@@ -61,14 +61,14 @@ const DropDown = (props: Props) => {
                       onHide();
                       onSelect(p);
                     }}
-                    className="px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
+                    className=" flex items-center px-3 py-2 hover:bg-[#3A3A3A] cursor-pointer text-xs sm:text-sm text-white transition-colors text-left"
                   >
                     {p.label}{" "}
                     {p?.isPro && (
                       <span
-                        className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+                        className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
                text-transparent bg-clip-text text-[8px] font-bold uppercase 
-               tracking-wider px-1 shrink-0 select-none"
+               tracking-wider px-1 shrink-0 select-none ml-2"
                       >
                         PRO
                       </span>
