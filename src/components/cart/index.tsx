@@ -10,12 +10,13 @@ import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
 import { Minus, Plus } from "lucide-react";
 import { applyPromoCode } from "@/src/services/chechout";
+import { trackCheckout } from "@/src/services/seo";
 
-interface PromoDetails{
+interface PromoDetails {
   promo: {
     code: string;
     discountApplied: number;
-  }
+  };
 }
 
 const Cart = () => {
@@ -87,7 +88,7 @@ const Cart = () => {
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
     }
-    if(couponApplied){
+    if (couponApplied) {
       applyCoupon(updatedCards);
     }
   };
@@ -111,7 +112,7 @@ const Cart = () => {
     if (typeof window !== "undefined") {
       setCart(JSON.stringify(updatedCards));
     }
-    if(couponApplied){
+    if (couponApplied) {
       applyCoupon(updatedCards);
     }
   };
@@ -144,7 +145,7 @@ const Cart = () => {
 
   const applyCoupon = async (cards: any) => {
     try {
-      if(!coupon) {
+      if (!coupon) {
         removeCoupon();
         return;
       }
@@ -158,8 +159,7 @@ const Cart = () => {
       if (response) {
         setCouponApplied(true);
         setPromo(response);
-      }
-      else {
+      } else {
         removeCoupon();
       }
     } catch (err) {
@@ -273,7 +273,11 @@ const Cart = () => {
                 type="text"
                 placeholder="Discount code"
                 value={coupon}
-                onChange={(e) => setCoupon(e?.target?.value ? e.target.value.toUpperCase() : "")}
+                onChange={(e) =>
+                  setCoupon(
+                    e?.target?.value ? e.target.value.toUpperCase() : ""
+                  )
+                }
                 className="w-full bg-transparent outline-none placeholder-gray-400 text-[#ACACAC] "
               />
               {couponApplied ? (
@@ -330,7 +334,11 @@ const Cart = () => {
             </div>
             <button
               className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-300 ease-in-out"
-              onClick={handleBuyNow}
+              // onClick={handleBuyNow}
+              onClick={() => {
+                trackCheckout(total);
+                handleBuyNow();
+              }}
               disabled={isEmpty(cards)}
             >
               Buy Now
