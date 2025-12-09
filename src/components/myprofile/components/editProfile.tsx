@@ -601,8 +601,8 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
         if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
         // if (profileImg) await UploadProfileImage(profileImg, id); // need to call
         // if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
-
-        await fetchProfiles();
+if(response) await fetchProfiles();
+        
         console.log("Update response:", response);
       } else {
         // ---- Create ----
