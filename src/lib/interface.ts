@@ -187,6 +187,7 @@ export type TableProps<T> = {
 export interface DropdownOption {
   label: string;
   value: string | number;
+  isPro?:boolean;
 }
 
 export interface Props {
