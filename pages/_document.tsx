@@ -45,10 +45,10 @@ export default function Document() {
       </Head>
 
       <body className="antialiased">
-        {/*  Google Tag Manager (noscript) */}
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-MGS55KRC"
+            src="https://www.googletagmanager.com/ns.html?id=G-N9ZKWPCNYH"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
@@ -61,3 +61,4 @@ export default function Document() {
     </Html>
   );
 }
+

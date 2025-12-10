@@ -86,9 +86,7 @@ export const ProceedToCheckout: React.FC<RazorpayButtonProps> = ({
         onSuccess(response);
       },
       modal: {
-        ondismiss: () => {
-          console.log("hi from there");
-          
+        ondismiss: () => {          
           setIsLoading(false);
         
         },
