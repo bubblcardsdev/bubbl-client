@@ -5,7 +5,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { ProductDetailMapper } from "@/src/lib/mapper";
 import { useRouter } from "next/router";
 import { get, isEmpty } from "lodash";
-
+import { trackAddToCart, trackButtonClick } from "@/src/services/seo";
 interface ColorType {
   name: string;
   colorName: string;
@@ -92,7 +92,7 @@ const ProductInfo = (props: BubblCardProps) => {
       </div>
       <p className="text-gray-600 text-sm">incl. of all Tax</p>
       {/* Color Selection */}
-      {(!isEmpty(colors) && colors?.length > 1 && deviceTypeId !== 9) && (
+      {!isEmpty(colors) && colors?.length > 1 && deviceTypeId !== 9 && (
         <div className="mt-4">
           <p className="font-normal tracking-wide">
             Select Color <span className="font-semibold">:</span>
@@ -229,13 +229,24 @@ const ProductInfo = (props: BubblCardProps) => {
       {availability ? (
         <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
           <button
-            onClick={addToCart}
+            onClick={() => {
+              trackAddToCart({
+                id: details?.productDetail?.id || "unknown",
+                name: name,
+                price: sellingPrice,
+              });
+              addToCart();
+            }}
             className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
           >
             Add to cart
           </button>
           <button
-            onClick={() => handleBuyNow()}
+            onClick={() => {
+              trackButtonClick("buy_now");
+              handleBuyNow();
+            }}
+            // onClick={() => handleBuyNow()}
             className="bg-black w-full md:max-w-[200px] h-[40px] text-white rounded-md hover:opacity-80"
           >
             Buy now

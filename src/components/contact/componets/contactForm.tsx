@@ -2,6 +2,7 @@
 import { ContactApi } from "@/src/services/contactApi";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { trackFormSubmit } from "@/src/services/seo";
 
 interface FormDataType {
   firstName: string;
@@ -113,7 +114,14 @@ const ContactForm = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          // onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            trackFormSubmit("contact_form");
+            handleSubmit(e);
+          }}
+          className="space-y-4"
+        >
           {/* First and Last Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
