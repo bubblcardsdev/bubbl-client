@@ -575,10 +575,12 @@ export const MODES = [
   {
     value: 2,
     label: "Bubbl profile",
+    isPro:false
   },
   {
     value: 3,
     label: "Direct URL",
+    isPro:true
   },
 ];
 

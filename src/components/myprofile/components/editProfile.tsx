@@ -93,11 +93,11 @@ const Digitalpay = [
 ];
 
 const templates = [
-  { label: "Opal", value: "opal", image: "/opal.png" },
-  { label: "Ruby", value: "ruby", image: "/ruby.png" },
-  { label: "Saphire", value: "saphire", image: "/saphire.png" },
-  { label: "Quartz", value: "quartz", image: "/quartz.png" },
-  { label: "Neon", value: "neon", image: "/neno.png" },
+  { label: "Opal", value: "opal", image: "/opal.png",isPro:false },
+  { label: "Ruby", value: "ruby", image: "/ruby.png",isPro:true},
+  { label: "Saphire", value: "saphire", image: "/saphire.png",isPro:true },
+  { label: "Quartz", value: "quartz", image: "/quartz.png",isPro:true },
+  { label: "Neon", value: "neon", image: "/neno.png",isPro:true },
 ];
 
 // initial (API-shaped) form data used to merge loaded data and to keep defaults
@@ -601,8 +601,8 @@ const handleCroppedImage = async (croppedBlob: Blob, previewUrl: string) => {
         if (!formData?.companyLogoUrl) await DeletePbrandinglogoImage(id);
         // if (profileImg) await UploadProfileImage(profileImg, id); // need to call
         // if (companyLogoImg) await UploadbrandinglogoImage(companyLogoImg, id); // need to call seperately
-
-        await fetchProfiles();
+if(response) await fetchProfiles();
+        
         console.log("Update response:", response);
       } else {
         // ---- Create ----

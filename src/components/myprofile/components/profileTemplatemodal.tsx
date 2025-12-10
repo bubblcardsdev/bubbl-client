@@ -1,5 +1,5 @@
 "use client";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Crown } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -7,6 +7,7 @@ type Template = {
   label: string;
   value: string;
   image: string;
+  isPro: boolean;
 };
 
 type Props = {
@@ -100,17 +101,21 @@ export default function ProfileTemplateModal({
               return (
                 <div
                   key={template.value}
-                  className={`flex flex-col items-center  w-[160px]`}
+                  className="flex flex-col items-center w-[160px]"
                 >
-                  {/* Image */}
+                  {/* Image Wrapper */}
                   <div
-                    className={`w-full h-[300px] overflow-hidden shadow-md rounded-xl cursor-pointer border-2 transition-all duration-300 ${
-                      isSelected
-                        ? "border-white bg-[#2a2a2a]"
-                        : "border-[#333] bg-[#1a1a1a]"
-                    }`}
+                    className={`relative w-full h-[300px] overflow-hidden shadow-md rounded-xl cursor-pointer border-2 transition-all duration-300 ${isSelected ? "border-white bg-[#2a2a2a]" : "border-[#333] bg-[#1a1a1a]"
+                      }`}
                     onClick={() => setCurrentIndex(index)}
                   >
+                    {/* PRO Badge */}
+                    {template.isPro && (
+                      <Crown className="absolute top-2 right-2 text-yellow-500 fill-yellow-500"/>
+                      
+                    )}
+
+                    {/* Image */}
                     <Image
                       src={template.image}
                       alt={template.label}
@@ -131,14 +136,13 @@ export default function ProfileTemplateModal({
                       className="w-4 h-4 mb-1 accent-white cursor-pointer"
                     />
                     <span
-                      className={`text-sm ${
-                        isSelected ? "text-white" : "text-gray-400"
-                      }`}
+                      className={`text-sm ${isSelected ? "text-white" : "text-gray-400"}`}
                     >
                       {template.label}
                     </span>
                   </div>
                 </div>
+
               );
             })}
           </div>
