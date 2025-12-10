@@ -16,9 +16,9 @@ export default function Document() {
         j=d.createElement(s),
         dl=l!='dataLayer'?'&l='+l:'';
         j.async=true;
-        j.src='https://www.googletagmanager.com/gtm.js?id=${process.env.NEXT_PUBLIC_GTM_ID}' + dl;
+        j.src='https://www.googletagmanager.com/gtm.js?id=GTM-MGS55KRC' + dl;
         f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+      })(window,document,'script','dataLayer','GTM-MGS55KRC');
     `,
   }}
 />
