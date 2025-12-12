@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { NewsLetterApi } from "../../services/newsLetterApi";
+import { trackButtonClick } from "@/src/services/seo";
 
 const BubblCommunity = () => {
   const [emailId, setEmailId] = useState("");
@@ -56,7 +57,10 @@ const BubblCommunity = () => {
             required
           />
           <button
-            onClick={handleSubscribe}
+            id="subscribe"
+            onClick={() => {
+              trackButtonClick("subscribe");
+              handleSubscribe}}
             disabled={loading}
             className="px-7 py-2 bg-[#9747FF] text-white font-medium rounded-lg hover:bg-[#a66bf4] transition-colors lg:w-fit md:w-full sm:w-full xs:w-full disabled:opacity-50"
           >

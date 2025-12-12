@@ -3,6 +3,7 @@ import Image from "next/image";
 import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/router";
 import { getOrderDetailsService } from "@/src/services/chechout";
+import { trackButtonClick } from "@/src/services/seo";
 
 interface Product {
   productId: string;
@@ -88,7 +89,12 @@ const PaymentResponse = () => {
       <div className="h-screen flex flex-col items-center justify-center text-gray-600">
         <p className="text-lg font-medium">{error}</p>
         <button
-          onClick={() => router.push("/shop")}
+        id='backToShop'
+          onClick={() => {router.push("/shop")
+            trackButtonClick("backToShop");
+          }
+            
+          }
           className="mt-4 bg-black text-white px-5 py-2 rounded-lg text-sm hover:opacity-80 transition-all"
         >
           Back to Shop

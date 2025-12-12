@@ -1,5 +1,6 @@
 "use client";
 import { ContactApi } from "@/src/services/contactApi";
+import { trackButtonClick } from "@/src/services/seo";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { trackFormSubmit } from "@/src/services/seo";
@@ -115,6 +116,7 @@ const ContactForm = () => {
         </div>
 
         <form
+          id="contact_form"
           // onSubmit={handleSubmit}
           onSubmit={(e) => {
             trackFormSubmit("contact_form");
@@ -252,6 +254,10 @@ const ContactForm = () => {
           </div> */}
 
           <button
+            id="contact-button"
+            onClick={() => {
+              trackButtonClick("buy_now");
+            }}
             type="submit"
             className="w-full bg-[#9747FF] text-white py-2.5 px-4 rounded-lg hover:bg-purple-600"
           >
