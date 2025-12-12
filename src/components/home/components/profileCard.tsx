@@ -13,6 +13,7 @@ import useWindowSize from "@/src/hooks/useWindowSize";
 import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
 import { ColorSelector, ModeColorSelector } from "../../common/ColorSelector";
+import { trackButtonClick } from "@/src/services/seo";
 
 export default function ProfileCard() {
   const router = useRouter();
@@ -87,8 +88,9 @@ export default function ProfileCard() {
    <TranslateYwithFadeIn>
 <div className="flex justify-center mt-3">
           <button
+          id='exploreMore'
             className="px-4 sm:px-6 md:px-8 py-2 bg-[#9747FF] text-white text-sm sm:text-base rounded-[10px] hover:bg-purple-500 transition-colors"
-            onClick={() => router.push("/shop")}
+            onClick={() => {  trackButtonClick("exploreMore");router.push("/shop")}}
           >
             Explore more
           </button>

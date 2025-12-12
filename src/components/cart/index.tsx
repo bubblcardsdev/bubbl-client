@@ -10,7 +10,7 @@ import { UserContext } from "@/src/context/userContext";
 import { CART } from "@/src/context/action";
 import { Minus, Plus } from "lucide-react";
 import { applyPromoCode } from "@/src/services/chechout";
-import { trackCheckout } from "@/src/services/seo";
+import { trackButtonClick, trackCheckout } from "@/src/services/seo";
 
 interface PromoDetails {
   promo: {
@@ -261,7 +261,7 @@ const Cart = () => {
                 );
               })
             ) : (
-              <p>no Data here</p>
+              <p className="text-center text-lg text-black">No Data here</p>
             )}
           </div>
         </div>
@@ -282,6 +282,7 @@ const Cart = () => {
               />
               {couponApplied ? (
                 <button
+                id="removeCoupon"
                   className=" text-purple-600 font-[500]"
                   onClick={removeCoupon}
                 >
@@ -289,6 +290,7 @@ const Cart = () => {
                 </button>
               ) : (
                 <button
+                id="applyCoupon"
                   className=" text-purple-600 font-[500]"
                   onClick={() => applyCoupon(cards)}
                 >
@@ -333,10 +335,12 @@ const Cart = () => {
               </div>
             </div>
             <button
+              id="buyNow"
               className="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-300 ease-in-out"
               // onClick={handleBuyNow}
               onClick={() => {
                 trackCheckout(total);
+                trackButtonClick("Buy Now");
                 handleBuyNow();
               }}
               disabled={isEmpty(cards)}

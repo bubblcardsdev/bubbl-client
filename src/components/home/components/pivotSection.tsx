@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
+import { trackButtonClick } from "@/src/services/seo";
 
 export default function PivotSection() {
   const router = useRouter();
@@ -24,8 +25,9 @@ export default function PivotSection() {
         <FadeInSection>
           <div className="flex justify-center mt-[2%] mb-[2%]">
             <button
+            id='shopNow'
               className="px-4 sm:px-6 md:px-8 py-2 bg-[#9747FF] text-white text-sm sm:text-base rounded-[10px] hover:bg-purple-500 transition-colors"
-              onClick={() => router.push("/shop")}
+              onClick={() =>{ trackButtonClick("shopNow");router.push("/shop")}}
             >
               Shop Now
             </button>

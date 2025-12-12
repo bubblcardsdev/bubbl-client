@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import CoverflowCarousel from "../../common/carouselList";
 import FadeInSection from "../../common/fadeInSection";
 import TranslateYwithFadeIn from "../../common/translate";
+import { trackButtonClick } from "@/src/services/seo";
 
 const FutureNetworking = () => {
   const router = useRouter();
@@ -57,8 +58,11 @@ const FutureNetworking = () => {
         <TranslateYwithFadeIn>
  <div className="flex justify-center mt-16">
           <button
+          id='getInTouch'
             className="px-4 sm:px-6 md:px-8 py-2 bg-[#9747FF] text-white text-sm sm:text-base rounded-[10px] hover:bg-purple-500 transition-colors"
-            onClick={() => router.push("/shop")}
+            onClick={() => {
+                trackButtonClick("getInTouch")
+              router.push("/shop")}}
           >
             Get In Touch
           </button>

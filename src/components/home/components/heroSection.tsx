@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import TranslateYwithFadeIn from "../../common/translate";
 import { useEffect, useRef, useState } from "react";
+import { trackButtonClick } from "@/src/services/seo";
 
 const HeroSection = () => {
   const router = useRouter();
@@ -81,8 +82,11 @@ const HeroSection = () => {
             <TranslateYwithFadeIn key="button">
               {" "}
               <button
+              id='shopnow'
                 className=" px-6 py-2 bg-[#9747FF] text-white text-base rounded-[10px] hover:bg-purple-500 transition-colors"
-                onClick={() => router.push("/shop")}
+                onClick={() =>{
+                   trackButtonClick("shopnow")
+                  router.push("/shop")}}
               >
                 Shop now
               </button>{" "}

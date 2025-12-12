@@ -84,7 +84,7 @@ const ProTemplateQuartz = ({
         />
       </div>
 
-      <div className="px-4 py-8 w-full space-y-6 bg-[#E9BCFF] relative">
+      <div className="px-4 py-8 w-full space-y-6 bg-white relative">
         {/* Save Contact + QR */}
         {router.asPath.slice(1) !== "createNewProfile" && (
           <div className="flex items-center justify-between gap-6 ml-2 mt-10">
