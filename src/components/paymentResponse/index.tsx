@@ -57,6 +57,12 @@ const PaymentResponse = () => {
     if (order_id) {
       getOrderDetails();
     }
+    router.beforePopState(()=>{
+      router.push("/shop") 
+      return false; // Prevent default back navigation
+    })
+
+
   }, [order_id]);
 
   const getOrderDetails = async () => {
