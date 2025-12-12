@@ -60,7 +60,8 @@ const BubblCommunity = () => {
             id="subscribe"
             onClick={() => {
               trackButtonClick("subscribe");
-              handleSubscribe}}
+              handleSubscribe()
+            }}
             disabled={loading}
             className="px-7 py-2 bg-[#9747FF] text-white font-medium rounded-lg hover:bg-[#a66bf4] transition-colors lg:w-fit md:w-full sm:w-full xs:w-full disabled:opacity-50"
           >
