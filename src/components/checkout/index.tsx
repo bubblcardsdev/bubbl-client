@@ -13,7 +13,7 @@ import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
 import { UserContext } from "@/src/context/userContext";
 import { getToken } from "@/src/utils/utils";
-import {  trackPurchase ,trackAbandonedCart} from "@/src/services/seo";
+import {  trackPurchase ,trackAbandonedCart, trackButtonClick} from "@/src/services/seo";
 
 interface PromoDetails {
   promo: {
@@ -215,6 +215,7 @@ const CheckoutPage = () => {
       <div className="lg:w-[64%] sm:w-full ">
         <form
           // onSubmit={handleSubmit}
+          id="checkout-form"
           onSubmit={(e) => {
             trackAbandonedCart(cart, subTotal);
             handleSubmit(e);
@@ -422,6 +423,10 @@ const CheckoutPage = () => {
 
           {!order ? (
             <button
+              id="checkout-button"
+              onClick={()=>{
+                trackButtonClick("checkout-button")
+              }}
               type="submit"
               className="w-full bg-purple-600 text-white py-3 px-4 rounded-md text-center"
             >

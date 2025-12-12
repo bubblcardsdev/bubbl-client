@@ -5,6 +5,7 @@ import { fetchAllDevices } from "../../../services/alldevicesApi";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { NewsLetterApi } from "../../../services/newsLetterApi";
+import { trackButtonClick } from "@/src/services/seo";
 
 // TYPES
 interface DeviceItem {
@@ -54,7 +55,7 @@ const title: Record<string, { title: string; description: string }> = {
   },
   others: {
     title: "Other Products",
-    description: 
+    description:
       "Bubbl aims to replace paper business cards with sustainable options. We offer custom branding and bulk orders for corporate clients. Join us today!",
   },
   // bundle_devices: {
@@ -134,8 +135,11 @@ function CardSection() {
                   required
                 />
                 <button
+                  id="subscribe"
                   type="submit"
-                  onClick={handleSubscribe}
+                  onClick={() => {
+                    trackButtonClick("subscribe");
+                    handleSubscribe}}
                   disabled={loading}
                   className="px-6 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600 transition-colors duration-200 "
                 >

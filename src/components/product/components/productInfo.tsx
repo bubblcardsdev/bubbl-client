@@ -229,19 +229,23 @@ const ProductInfo = (props: BubblCardProps) => {
       {availability ? (
         <div className="xs:flex mt-10 md:hidden flex-col md:flex-row gap-4 justify-center">
           <button
+            id="add_to_cart_button"
             onClick={() => {
               trackAddToCart({
                 id: details?.productDetail?.id || "unknown",
                 name: name,
                 price: sellingPrice,
               });
+              trackButtonClick("add_to_cart");
               addToCart();
             }}
+            // onClick={() => addToCart()}
             className="border border-black w-full md:max-w-[200px] h-[40px] rounded-md hover:border-[#9747FF] hover:bg-[#9747FF] hover:text-white"
           >
             Add to cart
           </button>
           <button
+            id="buy_now_button"
             onClick={() => {
               trackButtonClick("buy_now");
               handleBuyNow();
