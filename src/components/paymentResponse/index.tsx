@@ -47,9 +47,22 @@ const PaymentResponse = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!router.isReady) return;
+    const firstVisit = sessionStorage.getItem(`visited_${order_id}`);
+    if (firstVisit) {
+      router.replace("/shop");
+      return;
+    }
+    sessionStorage.setItem(`visited_${order_id}`, "true");
     if (order_id) {
       getOrderDetails();
     }
+    router.beforePopState(()=>{
+      router.push("/shop") 
+      return false; // Prevent default back navigation
+    })
+
+
   }, [order_id]);
 
   const getOrderDetails = async () => {

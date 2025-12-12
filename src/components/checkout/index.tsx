@@ -13,6 +13,7 @@ import { isEmpty } from "lodash";
 import ProceedToCheckout from "@/src/helpers/razorPayScript";
 import { UserContext } from "@/src/context/userContext";
 import { getToken } from "@/src/utils/utils";
+import {  trackPurchase ,trackAbandonedCart} from "@/src/services/seo";
 
 interface PromoDetails {
   promo: {
@@ -125,7 +126,7 @@ const CheckoutPage = () => {
         promoCode: coupon || undefined,
       };
       const response = await createOrder(payload);
-     
+
       setOrder(response);
     } catch (err) {
       console.log(err);
@@ -135,6 +136,8 @@ const CheckoutPage = () => {
   };
 
   const handleSuccessResponse = async (res: any) => {
+    // Track successful purchase
+    trackPurchase(res.razorpay_order_id, total);
     router.push(
       `/order-confirmation?razorpay_payment_id=${res.razorpay_payment_id}&razorpay_order_id=${res.razorpay_order_id}&razorpay_signature=${res.razorpay_signature}`
     );
@@ -154,18 +157,18 @@ const CheckoutPage = () => {
 
   const subTotal = !isEmpty(cart)
     ? cart.reduce(
-        (acc: number, item: CartItem) =>
-          acc + item.sellingPrice * item.quantity,
-        0
-      )
+      (acc: number, item: CartItem) =>
+        acc + item.sellingPrice * item.quantity,
+      0
+    )
     : 0;
 
   const orginalPriceTotal = !isEmpty(cart)
     ? cart.reduce(
-        (acc: number, item: CartItem) =>
-          acc + item.originalPrice * item.quantity,
-        0
-      )
+      (acc: number, item: CartItem) =>
+        acc + item.originalPrice * item.quantity,
+      0
+    )
     : 0;
 
   const shipping = checkoutFormData?.country
@@ -189,7 +192,7 @@ const CheckoutPage = () => {
           productId: item?.productId,
           quantity: item.quantity,
         })),
-      },  false);
+      }, false);
       if (response) {
         setPromo(response);
       }
@@ -206,10 +209,17 @@ const CheckoutPage = () => {
       applyCoupon(cart);
     }
   }, [cart, coupon]);
+
   return (
     <div className="max-w-[1300px] mx-auto flex p-6 lg:gap-40 md:gap-14 lg:flex-row md:flex-row sm:flex-col-reverse xs:flex-col-reverse md:mb-20">
       <div className="lg:w-[64%] sm:w-full ">
-        <form onSubmit={handleSubmit}>
+        <form
+          // onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            trackAbandonedCart(cart, subTotal);
+            handleSubmit(e);
+          }}
+        >
           <h1 className="text-[26px] font-bold mb-1">
             Checkout <span>{cart.length} items</span>
           </h1>
@@ -483,14 +493,14 @@ const CheckoutPage = () => {
           </div>
 
           {promo?.promo && <div className="flex justify-between text-sm sm:text-base">
-                  <span>
-                    <p className=" text-[#7F7F7F]">Coupon Applied</p>
-                    <p className=" text-[#7F7F7F] text-xs">
-                      ( {promo?.promo?.code} )
-                    </p>
-                  </span>
-                  <p>- ₹{promo?.promo?.discountApplied}</p>
-                </div>}
+            <span>
+              <p className=" text-[#7F7F7F]">Coupon Applied</p>
+              <p className=" text-[#7F7F7F] text-xs">
+                ( {promo?.promo?.code} )
+              </p>
+            </span>
+            <p>- ₹{promo?.promo?.discountApplied}</p>
+          </div>}
         </div>
         <div className=" mt-4">
           <div className="flex justify-between text-lg font-semibold">
