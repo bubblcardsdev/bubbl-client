@@ -74,13 +74,13 @@ const ProTemplateQuartz = ({
         actionId={object.actionId || null}
       />
       {/* Profile Image */}
-      <div className="bg-[#D9D9D9] h-[400px]">
+      <div className="bg-[#D9D9D9] min-h-[380px] w-full h-auto">
         <Image
           src={formData?.profileImageUrl || "/profile.png"}
           alt=""
           width={500}
           height={500}
-          className="object-fill w-full h-full"
+          className="object-cover w-full h-full"
         />
       </div>
 
